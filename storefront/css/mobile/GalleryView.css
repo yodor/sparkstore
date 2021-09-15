@@ -1,0 +1,9 @@
+
+.GalleryViewItemRenderer {
+    margin-right: 0px;
+    display: block;
+}
+
+.GalleryViewItemRenderer .image_slot .ImagePopup IMG {
+    width: 100%;
+}

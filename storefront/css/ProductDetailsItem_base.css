@@ -1,0 +1,382 @@
+.images {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.images .image_preview {
+    vertical-align: top;
+    display: inline-block;
+    max-width: 648px;
+    box-sizing: border-box;
+    text-align:center;
+    width:648px;
+    overflow:hidden;
+    position:relative;
+}
+
+.images .image_preview .discount_label {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: red;
+    color: white;
+    border-radius: 25px;
+    padding: 10px;
+    margin-top:10px;
+    margin-right:10px;
+    display:none;
+}
+
+.images .image_preview.promo .discount_label {
+    display:block;
+}
+
+.images .image_preview A {
+    vertical-align: top;
+    display: inline-block;
+
+}
+
+.images .image_preview IMG {
+    display: inline-block;
+    border: 1px solid #cccccc;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.images .image_gallery {
+    display: block;
+    vertical-align: top;
+    margin-top: 1.5em;
+    margin-bottom:2.0em;
+}
+
+.images .image_gallery .list {
+    display: block;
+    max-width:648px;
+    text-align:center;
+}
+
+.images .image_gallery .list .item {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    cursor: pointer;
+    margin-right: 1.5em;
+    border: 1px solid #cccccc;
+}
+.images .image_gallery .list.single {
+    display:none !important;
+}
+.images .image_gallery .list .item[active='1'] {
+    outline:1px solid #ff6600;
+}
+
+
+.side_pane {
+    display: inline-block;
+    max-width: 490px;
+    min-width: 490px;
+    /*   outline:1px dotted gray; */
+    vertical-align: top;
+    text-align: left;
+    /*   float:right; */
+    margin-left: 20px;
+    font-size: 1em;
+    box-sizing: border-box;
+
+}
+.side_pane .disabled {
+    display:none;
+}
+
+.side_pane .group {
+    display:block;
+
+
+    padding-top:1em;
+    padding-bottom:1em;
+}
+
+.side_pane .group[enabled="0"] {
+    display:none;
+}
+
+.side_pane .group:first-child {
+    border-top:0;
+
+    padding-top:0;
+
+}
+
+.side_pane .group .item {
+    display:block;
+    vertical-align:top;
+}
+
+.side_pane LABEL:after {
+    content: ": ";
+}
+
+
+.side_pane .group.description {
+    border-bottom: 1px solid #c6c6c6;
+}
+
+.side_pane .group.description .summary .value {
+    font-size:130%;
+}
+
+.side_pane .group.description .product_name {
+
+    /*     text-align:center; */
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+
+}
+
+.side_pane .group.attributes {
+    border-bottom: 1px solid #c6c6c6;
+}
+
+.side_pane .price_info {
+
+    font-size: 2em;
+    /*     text-align:center; */
+    margin-bottom: 10px;
+    font-weight:bold;
+}
+
+.side_pane .group.pricing {
+    display: inline-block;
+}
+
+.side_pane .price_info .old {
+    text-decoration: line-through;
+}
+
+.side_pane .sizing_colors .current_color {
+    /*     text-align:center; */
+    margin-bottom: 5px;
+    box-sizing: border-box;
+
+}
+
+.side_pane .sizing_colors .current_color .value {
+
+
+    font-size: 1.1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-transform: capitalize;
+}
+
+.side_pane .stock_amount {
+
+    /*     text-align:center; */
+    margin-bottom: 10px;
+    display:none;
+}
+
+.side_pane .stock_amount LABEL {
+    /*     display:block; */
+}
+
+.side_pane .attributes {
+    display: table;
+    width: 100%;
+    font-size:130%;
+}
+
+.side_pane .attributes .item {
+    display: table-row;
+}
+
+.side_pane .attributes .item > LABEL {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    padding: 6px;
+    white-space: nowrap;
+}
+
+.side_pane .attributes .item > LABEL:after {
+    content: ":";
+}
+
+.side_pane .attributes .item SPAN.value {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
+.side_pane .group.cart_link {
+
+    text-align: center;
+    float:right;
+    min-width:10em;
+    /*margin-top:0.5em;*/
+}
+
+.side_pane .cart_link A {
+
+    padding: 0.5em;
+
+    display: block;
+    text-decoration: none;
+    color: white;
+    background-color:black;
+    font-size:150%;
+    text-transform:uppercase;
+    text-align:left;
+}
+.side_pane .cart_link A SPAN {
+    vertical-align: top;
+    margin-top:0.3em;
+    margin-left:0.6em;
+    display:inline-block;
+
+}
+
+.side_pane .cart_link .icon {
+    width:32px;
+    height:32px;
+    background-repeat:no-repeat;
+    display:inline-block;
+    background-position: center center;
+    background-size:contain;
+    margin:0;
+}
+.side_pane .cart_link .cart_add .icon {
+    background-image:url("../images/cart.svg");
+}
+
+.side_pane .cart_link .order_phone .icon {
+    background-image:url("../images/phone_icon.svg");
+}
+
+.side_pane .cart_link .order_phone {
+    background-color:#999999;
+    margin-top:2em;
+}
+
+.side_pane .summary {
+
+}
+
+.side_pane .long_description {
+    font-size:130%;
+    margin-top:2em;
+    margin-bottom:2em;
+    word-break: break-word;
+}
+
+.long_description IFRAME {
+    width:100%;
+    height:360px;
+}
+
+.side_pane .group .item.color_chooser {
+    display: block;
+}
+
+.side_pane .group.colors .current_color {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.color_chooser .color_button {
+    display: inline-block;
+    border: 1px solid #cccccc;
+
+    margin-right:0.25em;
+    margin-bottom:0.25em;
+
+    cursor: pointer;
+
+    vertical-align: top;
+
+    padding: 0.25em;
+
+}
+
+.color_chooser .color_button[active="1"] {
+    outline: 1px dashed #ff6600;
+}
+
+.color_chooser .color_button IMG {
+
+    display: block;
+    width: 64px;
+    height: 64px;
+
+}
+
+.color_chooser .color_button SPAN {
+    cursor: pointer;
+    vertical-align: top;
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+}
+
+
+.size_chooser {
+
+    display: block;
+    vertical-align: top;
+    margin-bottom: 10px;
+    /*   text-align:center; */
+
+    border-bottom: 1px solid #c6c6c6;
+    padding-bottom:1em;
+
+}
+
+.size_chooser .value {
+
+}
+
+.size_chooser LABEL {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.size_chooser .product_size {
+
+    font-size: 1em;
+
+}
+.side_pane .group.sizing .current_size {
+    display: block;
+    margin-bottom: 0.5em;
+}
+.size_chooser .size_button {
+    display: inline-block;
+    border: 1px solid #cccccc;
+
+    margin-right:0.25em;
+    margin-bottom:0.25em;
+
+    cursor: pointer;
+
+    vertical-align: top;
+
+    padding: 0.25em;
+    min-width:2em;
+    box-sizing:border-box;
+    text-align:center;
+
+    font-size:160%;
+}
+
+.size_chooser .size_button[active="1"] {
+    outline: 1px dashed #ff6600;
+}
+

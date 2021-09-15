@@ -1,0 +1,51 @@
+@import url("./mobile/FormRenderer.css") (max-width: 768px);
+@import url("./mobile/TableView.css") (max-width: 768px);
+
+@media screen and (max-width: 940px) {
+    .main .content .columns {
+        display:block;
+    }
+    .main .content .columns .column {
+        display:block;
+    }
+    .main .content .columns .column.account_menu {
+        text-align:center;
+        display:block;
+    }
+    .main .content .columns .column.account_menu .menu_links {
+        display:inline-block;
+        text-align:left;
+    }
+    .account .columns .column.account_menu {
+        width:auto;
+    }
+
+
+}
+@media screen and (max-width: 768px) {
+    .order_details .viewport {
+        display:block;
+    }
+    .order_details .viewport .line {
+        display:block;
+    }
+    .order_details .viewport .line.heading {
+        display:none;
+        border:0;
+    }
+
+    .order_details .viewport .line.heading span:first-child {
+        display:inline-block;
+    }
+    .order_details .viewport .line .item {
+        display:block;
+        text-align:center;
+    }
+}
+
+@media screen and (max-width: 475px) {
+    .account .panel {
+        width:100%;
+        min-width:auto;
+    }
+}

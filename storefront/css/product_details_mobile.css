@@ -1,0 +1,13 @@
+@media screen and (max-width: 1184px) {
+    .main_content.container {
+        padding:20px;
+
+    }
+
+    .product_group {
+        display:block;
+        text-align:center;
+    }
+
+
+}

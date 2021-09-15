@@ -1,0 +1,193 @@
+.actions_list .Action {
+    color:red;
+}
+
+.main .content .columns {
+    display:table;
+    width:100%;
+
+}
+.main .content .columns .column {
+    display:table-cell;
+    padding:20px;
+    vertical-align: top;
+    text-align:center;
+}
+
+.account .columns .column .Caption {
+    padding-top:0;
+}
+
+.account .panel {
+    display:inline-block;
+    min-width:430px;
+    box-sizing:border-box;
+    border:1px solid #eaeaea;
+    padding:1.5em;
+    text-align:left;
+}
+.account .panel FORM {
+    width:100%;
+    box-sizing: border-box;
+}
+
+
+.account .login_component {
+    border:0;
+    width:100%;
+}
+.account .login_component .inner {
+    display:block;
+    width:100%;
+    box-sizing: border-box;
+}
+.account .login_component .LoginFormRenderer {
+    border:0;
+    padding:0;
+}
+
+
+.login .main .content .columns {
+    display:block;
+}
+.login .main .content .columns .column {
+    display:block;
+    text-align:center;
+}
+
+.login .main .column.register .panel {
+    text-align:center;
+}
+
+
+
+.register .register_component .addon {
+    display:block;
+    font-size:90%;
+    color:#aaaaaa;
+    font-style: italic;
+}
+
+
+
+.register_complete .success_message {
+    display:block;
+    text-align:center;
+}
+.register_complete .success_message .tick_mark {
+    display:inline-block;
+    background-image:url("../images/icon_tick_red.jpg");
+    width:128px;
+    height:128px;
+    background-size:contain;
+    background-position:center center;
+    background-repeat:no-repeat;
+
+}
+
+.register_complete .success_message SPAN {
+    display:block;
+}
+
+
+
+.account .columns .column.account_menu {
+    width:270px;
+    padding:0;
+    padding-top:20px;
+    text-align:left;
+}
+
+.menu_links {
+    display: block;
+}
+
+.menu_links .item {
+
+    display:block;
+    padding:0.5em;
+    padding-top:0;
+    margin-bottom:0.5em;
+    border-bottom:2px solid #cccccc;
+    font-size:1.2em;
+    text-decoration:none;
+    color:black;
+
+}
+
+.group .item LABEL:after {
+    content: ": ";
+}
+.group .FormValueList .item LABEL:after {
+    content: "";
+}
+
+
+.viewport {
+
+    display:table;
+    border-collapse:separate;
+    border:1px solid #cccccc;
+    margin-top:20px;
+    margin-bottom:20px;
+    width:100%;
+}
+
+.viewport .line {
+    display: table-row;
+}
+
+.viewport .line SPAN {
+    display: table-cell;
+    font-weight: bold;
+    padding: 5px;
+    border:1px solid #cccccc;
+    text-align: center;
+}
+
+.viewport .line .item {
+    display: table-cell;
+    vertical-align: middle;
+    border:1px solid #cccccc;
+    padding: 5px;
+}
+
+.viewport .line .item.pos {
+    text-align: center;
+}
+
+.viewport .line .item.qty {
+    text-align: center;
+}
+
+.viewport .line .item.price {
+    text-align: right;
+}
+
+.viewport .line .item.amount {
+    text-align: right;
+}
+
+.FormRenderer[name='RegisterClient'] .SubmitLine .TextSpace {
+    display: none;
+}
+
+
+.order_details .FormValueList  {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.order_details .FormValueList label {
+    display:none;
+
+}
+.order_details .group .item {
+    line-height:150%;
+}
+.order_details .group.total {
+    text-align:right;
+}
+
+.order_details .ColorButton[action='print'] {
+    float:right;
+}

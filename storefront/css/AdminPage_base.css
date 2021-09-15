@@ -1,0 +1,172 @@
+
+.group .item LABEL:after {
+    content: ": ";
+}
+
+.group .FormValueList .item LABEL:after {
+    content: "";
+}
+.orders .confirmed .TableView TD[column='order_date'] {
+    white-space: nowrap;
+
+}
+
+.orders .confirmed .TableView TD[column='userID'] {
+    white-space: nowrap;
+
+}
+
+.orders .confirmed .TableView TD[column='items'] {
+    white-space: nowrap;
+}
+
+.orders .confirmed .TableView TD[column='note'] {
+    max-width: 100px;
+}
+
+.KeywordSearch .fields {
+    vertical-align: bottom;
+}
+
+.KeywordSearch .buttons {
+    vertical-align: bottom;
+}
+
+
+/*.admin_layout .page_area .page_caption .page_actions .Action[action='Multi-Add'] {*/
+/*    background-image: url("../sparkfront/images/page_actions/green_plus.png");*/
+/*}*/
+
+.multi_add .FormRenderer[layout="VBox"] .InputComponent {
+    display:inline-block;
+
+
+}
+.multi_add .InputField.SelectField SELECT {
+    min-height:350px;
+    min-width:150px;
+}
+.multi_add .note {
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.inventory.list .FormRenderer[name='InventoryFilterInputForm'] {
+    display:block;
+}
+.inventory.list .FormRenderer[name='InventoryFilterInputForm'] .InputComponent {
+    display:inline-block;
+    margin-right:10px;
+}
+.inventory.list .ColorButton[action='deleteAll'] {
+    float:right;
+    margin-top:-40px;
+    clear:both;
+}
+.inventory.list .TableView {
+    display:block;
+}
+
+.products.list .TableView .viewport .ImageCellRenderer {
+    /*max-width:200px;*/
+}
+
+.products.list .FormRenderer[name='ProductFilterInputForm'] {
+    display:inline-block;
+}
+.products.list .FormRenderer[name='ProductFilterInputForm'] .InputComponent {
+    display:inline-block;
+    margin-right:10px;
+}
+.products.list .FormRenderer[name='KeywordSearchForm'] {
+    display:inline-block;
+    margin-top:20px;
+}
+
+.orders.details .panel {
+    display:block;
+}
+.orders.details .panel.order_items .group {
+    display:block;
+}
+.orders.details .group {
+    display:inline-block;
+    vertical-align:top;
+    padding:10px;
+}
+
+
+.orders.details .viewport {
+
+    display:table;
+    border-collapse:separate;
+    border:1px solid #cccccc;
+    margin-top:20px;
+    margin-bottom:20px;
+
+}
+
+.orders.details .viewport .line {
+    display: table-row;
+}
+
+.orders.details .viewport .line SPAN {
+    display: table-cell;
+    font-weight: bold;
+    padding: 5px;
+    border:1px solid #cccccc;
+    text-align: center;
+}
+
+.orders.details .viewport .line .item {
+    display: table-cell;
+    vertical-align: middle;
+    border:1px solid #cccccc;
+    padding: 5px;
+}
+
+.orders.details .viewport .line .item.pos {
+    text-align: center;
+}
+
+.orders.details .viewport .line .item.qty {
+    text-align: center;
+}
+
+.orders.details .viewport .line .item.price {
+    text-align: right;
+}
+
+.orders.details .viewport .line .item.amount {
+    text-align: right;
+}
+
+.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='price'] {
+    display:none;
+}
+.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='buy_price'] {
+    display:none;
+}
+.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='promo_price'] {
+    display:none;
+}
+.DataIteratorField {
+    box-sizing:border-box;
+    padding:20px;
+}
+.DataIteratorField .Caption {
+    text-align:right;
+}
+.DataIteratorItem.SourceAttributeItem {
+    margin-bottom:10px;
+}
+.DataIteratorItem.SourceAttributeItem .SourceAttributeValue {
+    background-color: white;
+    border-top: 1px solid #b7b7b7;
+    border-left: 1px solid #b7b7b7;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    margin: 0;
+    padding: 0.2em;
+    width:100%;
+}

@@ -1,0 +1,818 @@
+* {
+    font-family: 'Montserrat', 'Arial', sans-serif;
+
+}
+
+body {
+    /*   background-color:#ababab; */
+    font-size:16px;
+}
+
+.Caption {
+    color: #aaaaaa;
+    padding-left:0;
+    padding-right:0;
+    display: block;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+.BreadcrumbList {
+
+}
+.BreadcrumbList .BreadcrumbListItem {
+    color: #aaaaaa;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    padding-bottom: 1em;
+}
+.BreadcrumbList .Action {
+    color: #aaaaaa;
+    text-transform: uppercase;
+}
+.section {
+    display:table;
+    width:100%;
+    border-spacing:0;
+    box-sizing:border-box;
+    border-collapse:collapse;
+    padding:0;
+    border:0;
+    margin:0;
+}
+
+.section .ProductsTape {
+    margin-top:1em;
+    text-align: center;
+}
+
+.home .section A {
+    text-decoration: none;
+}
+
+.home .section A .Caption {
+    background-color:black;
+    display:block;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+.home .section A:hover .Caption {
+    color: #ff6600;
+}
+
+A.Caption {
+    text-decoration:none;
+    color: #aaaaaa;
+}
+A.Caption:visited {
+    color: #aaaaaa;
+    text-decoration:none;
+}
+A.Caption:hover {
+    color: #ff6600;
+    text-decoration:none;
+}
+A.Caption:active {
+    color: #aaaaaa;
+    text-decoration:none;
+}
+
+.section .full {
+    display:table-row;
+}
+
+.section .space {
+    display:table-cell;
+
+}
+
+.content {
+    display:table-cell;
+    max-width:1200px;
+    width:1200px;
+    white-space:normal;
+    box-sizing:border-box;
+    border-spacing:0;
+    vertical-align: top;
+    padding:0;
+    margin:0;
+    border:0;
+}
+.section.main .content {
+
+
+}
+.section.header {
+    max-height:90px;
+    height:90px;
+
+}
+.section.header .content {
+    background-color:black;
+    white-space:nowrap;
+    position:relative;
+}
+.section.header .content .logo {
+    display:table-cell;
+    width:450px;
+    max-width:450px;
+
+    height:90px;
+
+    vertical-align: top;
+
+    background-image:url(../images/logo_header.svg);
+    background-repeat:no-repeat;
+    background-position:center center;
+    /*background-size: 70%;*/
+    background-origin:content-box;
+    box-sizing:border-box;
+
+    text-decoration:none;
+}
+
+.section.header .content .marquee {
+    display: table-cell;
+
+    background-color:transparent;
+    color:gray;
+    vertical-align: top;
+    padding-top:15px;
+
+    font-size: 48px;
+    text-transform:uppercase;
+}
+
+/**/
+/* footer */
+/**/
+.section.footer {
+    position: fixed;
+    z-index:10;
+    height:36px;
+    max-height:36px;
+
+    bottom:0;
+
+}
+.section.footer .content {
+    background-color:black;
+    color:white;
+
+    text-align:center;
+    box-shadow:0px -2px 4px  rgba(0,0,0,0.5);
+    position:relative;
+}
+.section.footer .content .social {
+    display:inline-block;
+
+    box-sizing:border-box;
+    text-align:center;
+
+    height:36px;
+    max-height:36px;
+}
+.section.footer .content .social A {
+    text-decoration: none;
+    color:white;
+}
+.section.footer .content .social A:hover {
+    text-decoration: underline;
+}
+.section.footer .content .social .slot {
+
+    display:inline-block;
+    background-position:center center;
+    background-repeat:no-repeat;
+    vertical-align:top;
+    background-size:cover;
+
+    margin: 6px 10px;
+}
+
+.section.footer .content .social .slot.facebook {
+    background-image:url("../images/facebook_icon.svg");
+    width:24px;
+    height:24px;
+}
+.section.footer .content .social .slot.instagram {
+    background-image:url("../images/instagram_icon.svg");
+    width:24px;
+    height:24px;
+}
+.section.footer .content .social .slot.contacts {
+    background-image:url("../images/mail_icon.svg");
+    width:24px;
+    height:24px;
+}
+.section.footer .content .social .slot.youtube {
+    background-image:url("../images/youtube_icon.svg");
+    width:24px;
+    height:24px;
+}
+.section.footer .content .social .slot.phone {
+    background-image:url("../images/phone_icon.svg");
+    width:24px;
+    height:24px;
+}
+.section.footer .content .social .slot.terms {
+    background-image:url("../images/document_icon.svg");
+    width:24px;
+    height:24px;
+}
+
+
+    /**/
+/* menu */
+/**/
+.section.menu {
+    position: sticky;
+    top:0;
+    z-index:10;
+}
+.section.menu.sticky .content {
+    box-shadow:0px 2px 4px  rgba(0,0,0,0.5);
+}
+.section.menu .content {
+
+    background-repeat:repeat-y;
+    box-sizing:border-box;
+    position:relative;
+
+}
+
+.section.menu .content .menuwrap {
+
+    background-color:#e6e6e6;
+    box-sizing:border-box;
+    position:relative;
+    min-height:50px;
+
+}
+.section.menu .content .menuwrap .MenuBar {
+    display:inline-block;
+    vertical-align:top;
+
+    background-color:#e6e6e6;
+
+}
+.section.menu .group {
+    display:inline-block;
+
+    float:right;
+    box-sizing:border-box;
+    margin-top:10px;
+}
+.section.menu .content .search_pane {
+    /*display:none;*/
+    display:inline-block;
+    vertical-align:top;
+    /*margin-top:10px;*/
+    box-sizing:border-box;
+}
+
+
+
+.section.menu .content .search_pane FORM {
+    margin:0;
+    display:inline-block;
+    /*height:100%;*/
+}
+.section.menu .content .search_pane FORM .InputComponent {
+
+}
+.section.menu .content .search_pane FORM .InputComponent .InputField {
+    height: 32px;
+    display:inline-block;
+    box-sizing:border-box;
+    /*margin-top:7px;*/
+
+}
+.section.menu .content .search_pane FORM .InputComponent INPUT {
+    width:80%;
+}
+.section.menu .content .search_pane FORM .SubmitLine {
+    display:inline-block;
+    vertical-align:top;
+    float:right;
+
+    margin-left:-45px;
+    margin-top:-4px;
+    padding-right:10px;
+}
+.section.menu .content .search_pane FORM .SubmitLine .TextSpace {
+    display:none;
+}
+.section.menu .content .search_pane FORM .SubmitLine .Buttons * {
+    outline:none;
+    box-shadow: none;
+}
+.section.menu .content .search_pane FORM .SubmitLine .Buttons [action='clear'] {
+    display:none;
+}
+.section.menu .content .search_pane FORM .SubmitLine .Buttons [action='search'] {
+
+    width:28px;
+    height:30px;
+    min-width:28px;
+    min-height:30px;
+    max-width:28px;
+    max-height:30px;
+    overflow:hidden;
+    border:0;
+    margin:0;
+    margin-top:5px;
+    padding:0;
+    background-image:url("../images/search_icon.svg");
+    background-position:center center;
+    background-size:80%;
+    background-repeat:no-repeat;
+    background-color:transparent;
+}
+
+.section.menu .content .search_pane .InputComponent[field='keyword'] LABEL {
+    display:none;
+}
+.section.menu .content .customer_pane {
+    display:inline-block;
+    vertical-align: top;
+    height:100%;
+    /*margin-top:8px;*/
+    box-sizing:border-box;
+    padding-left:20px;
+    padding-right:20px;
+    margin-right:10px;
+}
+
+.section.menu .content .customer_pane .button {
+    width:32px;
+    height:32px;
+    display:inline-block;
+    vertical-align: top;
+    /*border:1px solid red;*/
+
+    cursor:pointer;
+    margin: 0 8px;
+    position:relative;
+    text-decoration: none;
+}
+.section.menu .content .customer_pane .button .icon {
+    filter: invert(0.5);
+    display:inline-block;
+    width:100%;
+    height:100%;
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: 100%;
+}
+
+.section.menu .content .customer_pane .button.account .icon {
+    background-image:url("../images/user_icon.svg");
+    filter: invert(0.5);
+}
+.section.menu .content .customer_pane .button.account.logged {
+
+}
+.section.menu .content .customer_pane .button.account.logged:after {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    background-color:#ff6600;
+    content:' ';
+    border-radius:15px;
+    bottom:0;
+    right:0;
+    position:absolute;
+}
+
+.section.menu .content .customer_pane .button.cart {
+
+}
+.section.menu .content .customer_pane .button.cart .icon {
+    background-image: url("../images/cart.svg");
+}
+
+.section.menu .content .customer_pane .button.cart[item_count] .icon {
+    /*red*/
+    filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);
+}
+
+.section.menu .content .customer_pane .button.cart .items_dot {
+    border-radius:15px;
+    font-size:60%;
+    font-weight:bold;
+    background-color:black;
+    color:white;
+    position:absolute;
+    right:-0.8em;
+    top:-0.5em;
+    padding:0.25em;
+    width:15px;
+    height:15px;
+    display:inline-block;
+    text-align:center;
+    /*box-sizing:border-box;*/
+}
+
+.section.menu .content .MenuBar {
+    background-color:black;
+    color:#cc9933;
+}
+
+.main .full .space.left {
+    /*background-color:#e6e6e6;*/
+}
+.main .full .space.right {
+    /*background-color:#e6e6e6;*/
+}
+
+.main .full .content {
+    /*background-color:transparent;*/
+}
+
+.main .full .content .wrap {
+    text-align:center;
+}
+
+.MainPage .main .content {
+
+    box-sizing:border-box;
+
+}
+
+
+
+/*home*/
+.StorePage.home .main .content {
+    /*padding-top:4em;*/
+}
+
+
+.StorePage.home .main .content .banner {
+    display: block;
+    margin-bottom: 40px;
+    /*height:378px;*/
+
+    position:relative;
+    max-height:381px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.StorePage.home .main .content .banner IMG {
+    width:100%;
+    position:absolute;
+    left:0;
+    top:0;
+
+}
+.StorePage.home .main .content .banner IMG:last-child {
+    position:relative;
+    vertical-align:top;
+    animation: fadein 1s;
+}
+.StorePage.home .main .content .products {
+    font-size:80%;
+}
+
+/* DynamicPages - content/index.php */
+.DynamicPagesBean {
+    display: block;
+    overflow: hidden;
+}
+
+.DynamicPagesBean .photo {
+
+    display: block;
+}
+
+.DynamicPagesBean .photo IMG {
+    /*   height:160px; */
+    display: block;
+    width: 100%;
+}
+
+.DynamicPagesBean .PagePhotos {
+    max-height: 80px;
+    display: block;
+}
+
+.DynamicPagesBean .PagePhotos IMG {
+    height: 80px;
+    display: inline-block;
+}
+
+.DynamicPagesBean .item_title {
+    font-size: 18px;
+    display: block;
+    padding-top: 15px;
+
+}
+
+.DynamicPagesBean .content {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* --DynamicPages - content/index.php */
+
+/* mce_browser */
+body.mce_browser .FormRenderer {
+    width: 100%;
+    display: block;
+}
+
+body.mce_browser .FormRenderer .InputComponent {
+    display: block;
+    width: 100%;
+}
+
+body.mce_browser .FormRenderer .SubmitLine {
+    display: block;
+    width: 100%;
+    text-align: right;
+}
+
+body.mce_browser .FormRenderer .SubmitLine .TextSpace {
+    display: inline-block;
+
+}
+
+body.mce_browser .FormRenderer .SubmitLine .Buttons {
+    display: inline-block;
+}
+
+
+/* You can use the clearfix to do "layout preserving" the same way overflow: hidden does */
+/* add class="clearfix" class to the parent, and remove overflow: hidden; */
+.clearfix:before,
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+/* IE < 8 */
+
+
+.login_component .submit_line {
+
+}
+
+.login_component .submit_line .forgot_password {
+
+
+}
+
+.login_component .submit_line BUTTON {
+    float: right;
+}
+
+.home .section .products {
+
+    /*margin-left: -5px;*/
+    /*margin-right: -5px;*/
+    text-align: center;
+    margin-bottom:2em;
+}
+.home .section .products .ProductListItem .product_link IMG {
+    /*width:280px;*/
+}
+
+.Action {
+    color:black;
+}
+.Caption.category_path {
+    padding-top:0;
+}
+
+.category_path .Action {
+
+    font-weight: normal;
+    color: #c6c6c6;
+    text-decoration: none;
+}
+
+.category_path .Action:after {
+    content: "//";
+    padding-left: 5px;
+    /*padding-right: 5px;*/
+    font-size:120%;
+    color: #c6c6c6;
+
+
+}
+
+.category_path .Action:last-child:after {
+    display: none;
+
+}
+
+A:hover, A:visited {
+    text-decoration:underline;
+    color:#ff6600;
+}
+.ColorButton[action] {
+    background:#ff6600;
+    color: white;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+.ColorButton {
+    background-color:#ff6600;
+    color: white;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.ColorButton:visited {
+    /*color: #0c2226;*/
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.ColorButton:hover {
+    /*color: #2b7a88;*/
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.StorePage.contacts .section.main .content {
+    padding:1.5em;
+    padding-bottom:5em;
+}
+.StorePage.contacts .section.main .content .Caption {
+    text-align:left;
+}
+
+.StorePage.contacts .section.main .content .columns {
+    display:table;
+}
+.StorePage.contacts .section.main .content .columns .column {
+    display:table-cell;
+    vertical-align:top;
+
+}
+.StorePage.contacts .section.main .content .columns .column.map {
+
+}
+.StorePage.contacts .section.main .content .columns .column.map .panel.map {
+    width:800px;
+    height:450px;
+
+}
+
+
+.StorePage.contacts .section.main .content .columns .column.map IFRAME {
+    width:100%;
+    height:100%;
+}
+
+.StorePage.contacts .section.main .content .details {
+    display:block;
+    margin-left:1.5em;
+    border-bottom: 1px solid #aeaeae;
+    padding-bottom: 1.5em;
+    margin-bottom:1.5em;
+    cursor:pointer;
+}
+
+.StorePage.contacts .section.main .content .details:hover {
+    background-color:#efefef;
+}
+
+.StorePage.contacts .section.main .content .details:last-child {
+    border-bottom:0;
+}
+
+.StorePage.contacts .section.main .content .details A {
+    color:black;
+}
+.StorePage.contacts .section.main .content .details .item {
+    display:block;
+    line-height:1.5em;
+}
+
+.StorePage.contacts .section.main .content .details .item.city {
+    font-weight:bold;
+}
+
+.StorePage.contacts .section.main .content FORM .InputField.TextArea TEXTAREA {
+    width:800px;
+    height:200px;
+}
+
+.StorePage.contacts .content .banner {
+    display:block;
+    height:240px;
+    background-image:url("../images/contacts_banner.jpg");
+    background-position:center center;
+    background-size:cover;
+}
+
+/*about*/
+.StorePage.about .main .content .banner {
+    display: block;
+    margin-bottom: 20px;
+    /*height:378px;*/
+
+    position:relative;
+    max-height:360px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.StorePage.about .main .content .banner IMG {
+    width:100%;
+    position:absolute;
+    left:0;
+    top:0;
+
+}
+.StorePage.about .main .content .banner IMG:last-child {
+    position:relative;
+    vertical-align:top;
+    animation: fadein 1s;
+}
+
+.StorePage.about .full .content .wrap {
+    text-align:left;
+    padding:20px;
+}
+
+.StorePage.terms_usage .columns {
+    display:block;
+}
+.StorePage.terms_usage .columns .column {
+    display:block;
+    text-align:left;
+}
+.StorePage.terms_usage .columns .column.page_data {
+    text-align:left;
+}
+.StorePage.terms_usage .columns .column .terms_menu {
+    display:block;
+}
+.StorePage.terms_usage .columns .column .terms_menu .item {
+    display:block;
+    white-space:nowrap;
+    padding-bottom:10px;
+    border-bottom:1px solid #eaeaea;
+    padding-top:10px;
+    text-decoration:none;
+}
+
+.PaginatorBottomComponent .cell {
+    display:block;
+    text-align:center;
+}
+
+.PaginatorComponent .page_navigation.long {
+    font-size:120%;
+}
+.PaginatorComponent .page_navigation.long A {
+    display:table-cell;
+    width:40px;
+    height:40px;
+    max-width:40px;
+    max-height:40px;
+    vertical-align:middle;
+
+}
+.PaginatorComponent .page_navigation.long A.selected {
+
+}
+
+.TreeView .NodeChilds .NodeOuter {
+    padding-top:0.8em;
+}

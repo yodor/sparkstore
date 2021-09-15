@@ -1,0 +1,215 @@
+.section.main .content {
+    padding-top:20px;
+    text-align:center;
+    font-size:80%;
+}
+.section.main .content .column {
+    display: table-cell;
+    vertical-align: top;
+    box-sizing: border-box;
+    text-align:left;
+}
+
+/*.section.main .content .column.left:not([section='Галерия']) {*/
+/*    display:none;*/
+/*}*/
+
+.section.main .content .column.left {
+    width:270px;
+    padding-left:20px;
+    padding-right:20px;
+
+}
+
+.section.main .content .column.left .panel {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.section.main .content .column.left .panel .viewport {
+    display:inline-block;
+}
+
+
+.section.main .content .column.left .panel .Caption {
+    color: #aaaaaa;
+    font-weight: normal;
+    display: block;
+    padding-top:0;
+    text-align:left;
+
+    cursor:pointer;
+    font-size:110%;
+}
+
+.section.main .content .column.left .panel .Caption .toggle {
+    width:2em;
+    height:25px;
+    display:none;
+    /*border:1px solid red;*/
+
+    vertical-align: text-bottom;
+    /*margin-top: -4px;*/
+    margin-right: 5px;
+
+}
+.panel .Caption .toggle:after,
+.panel .Caption .toggle:before,
+.panel .Caption .toggle DIV {
+    background-color: gray;
+    border-radius: 3px;
+    content: '';
+    display: block;
+    height: 4px;
+    margin: 5px 0;
+}
+
+.section.main .content .column.product_list {
+    /*padding-right:20px;*/
+}
+
+.TreeView .Action {
+    color:black;
+}
+
+.TreeView .Node[active='1'] .Action {
+    color:red;
+    font-weight:normal !important;
+    text-decoration:none !important;
+    font-weight:bold !important;
+}
+
+
+.TreeView .Node {
+    font-size: 1.2em;
+}
+
+FORM[name='ProductListFilterInputForm'] {
+    display: block !important;
+    text-align: center !important;
+}
+
+.filters  {
+    display: block;
+}
+
+.filters .InputComponent {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.filters .InputField {
+    display: block;
+}
+
+.filters .InputField .FieldElements {
+    display: block;
+}
+
+.filters .InputField.SelectField SELECT {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.filters .label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+
+    color: black;
+    /*   font-family: 'Roboto Condensed', sans-serif; */
+
+}
+
+.filters .InputComponent.Slider .label {
+    display: inline-block;
+}
+
+.filters .InputComponent.Slider .value {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.filters .InputComponent.Slider .InputField {
+    display: block;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.filters.panel  {
+    text-align:center;
+}
+.filters.panel BUTTON {
+    margin-top: 20px;
+
+}
+
+
+
+
+.ItemView {
+    width:100%;
+    box-sizing:border-box;
+    position:relative;
+}
+
+.ItemView .Caption {
+    float: left;
+    position: absolute;
+    top: 0;
+    padding-top:0;
+    padding-bottom:0;
+}
+
+.ItemView .viewport {
+    /*margin-left: -5px;*/
+    /*margin-right: -5px;*/
+    text-align:center;
+}
+
+.ItemView .PaginatorTopComponent {
+    background: none;
+    background-color: transparent !important;
+    border-spacing:0;
+    color:black;
+}
+
+.ItemView .PaginatorBottomComponent {
+    background: none;
+    background-color: transparent !important;
+    color:black;
+}
+
+.PaginatorTopComponent .view_mode {
+    display: none;
+}
+
+.PaginatorTopComponent .sort_fields {
+    text-align: right;
+    padding-right:20px;
+}
+
+.PaginatorTopComponent .sort_fields .direction {
+    margin-left: 10px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+.PaginatorTopComponent .page_navigation.short {
+    display: none;
+}
+
+
+
+/*.InputComponent {
+  margin-bottom:10px;
+  
+}
+.InputComponent.Slider .InputField {
+  margin-top:5px;
+}
+.TableView {
+  width:100%;
+}*/

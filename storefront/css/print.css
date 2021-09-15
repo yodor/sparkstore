@@ -1,0 +1,31 @@
+@media print {
+    .AdminPage.orders.details * {
+        visibility: hidden;
+    }
+    .AdminPage.orders.details .page_area * {
+        visibility: visible;
+    }
+    .AdminPage.orders.details .page_area {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .AccountPage.order_details * {
+        visibility: hidden;
+    }
+
+    .AccountPage.order_details .column.details * {
+        visibility: visible;
+    }
+
+    .AccountPage.order_details .column.details .ColorButton {
+        display:none;
+    }
+
+    .AccountPage.order_details .column.details {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}

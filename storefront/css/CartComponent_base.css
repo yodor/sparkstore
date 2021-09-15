@@ -1,0 +1,147 @@
+.CartComponent {
+    margin-bottom: 40px;
+
+}
+
+.CartComponent .cart_view {
+    width: 100%;
+    border-collapse: collapse;
+
+    border-spacing: 0;
+    border-bottom: 1px solid black;
+
+}
+
+.CartComponent TR[label='heading'] TH {
+    border-bottom: 1px solid black;
+    padding: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.CartComponent TD {
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+
+}
+
+
+.CartComponent TD[field='cart_empty'] {
+    padding: 20px;
+    font-size: 1.3em;
+    white-space: break-spaces;
+}
+
+.CartComponent TR[label='item'] TD {
+    border-bottom: 1px solid black;
+    padding: 10px;
+}
+.CartComponent TR[label='item'] TD LABEL {
+    display:none;
+}
+.CartComponent TR[label='item'] TD[field='position'] {
+    font-size: 1.5em;
+}
+
+.CartComponent TR[label='item'] TD[field='position'] A.item_remove {
+
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.7em;
+
+    color: #ff6600;
+
+}
+
+.CartComponent TR[label='item'] TD[field='product_model'] {
+    font-size: 1.3em;
+    text-align: left;
+    white-space: break-spaces;
+}
+
+/*.CartComponent TR[label='item'] TD[field='qty'] .qty {
+    display:block;
+    text-align:center;
+}*/
+
+.CartComponent TR[label='item'] TD[field='qty'] A.qty_adjust {
+    display: inline;
+    text-decoration: none;
+
+    font-size: 2.5em;
+
+    vertical-align: -0.1em;
+
+    color: #ff6600;
+}
+
+
+.CartComponent TR[label='item'] TD[field='qty'] SPAN.cart_qty {
+
+    font-size: 1.5em;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.CartComponent TR[label='item'] TD[field='price'] {
+    font-size: 1.5em;
+    text-align: center;
+    padding: 20px;
+
+}
+
+.CartComponent TR[label='item'] TD[field='price'] SPAN {
+    vertical-align: -0.2em;
+}
+
+.CartComponent TR[label='item'] TD[field='line-total'] {
+    font-size: 1.5em;
+    text-align: right;
+    padding-right: 0px;
+    padding-left: 0px;
+
+}
+
+.CartComponent TR[label='item'] TD[field='line-total'] SPAN {
+    vertical-align: -0.2em;
+}
+
+.CartComponent TR[label='summary-total'] TD {
+    text-align: right;
+    font-size: 1.5em;
+    padding-top: 5px;
+}
+
+.CartComponent TR[label='summary-total'] TD[field='items_total'] {
+    text-align: left;
+    font-size: 1.0em;
+}
+
+.CartComponent TR[label='summary-total'] TD.label {
+    padding-right: 10px;
+    font-size: 1.2em;
+}
+
+.CartComponent TR[label='summary-delivery'] TD {
+    text-align: right;
+    font-size: 1.5em;
+}
+
+.CartComponent TR[label='summary-delivery'] TD.label {
+    padding-right: 10px;
+    font-size: 1.2em;
+}
+
+.CartComponent TR[label='summary-order-total'] TD {
+    text-align: right;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.CartComponent TR[label='summary-order-total'] TD.label {
+    padding-right: 10px;
+    font-size: 1.2em;
+}
+

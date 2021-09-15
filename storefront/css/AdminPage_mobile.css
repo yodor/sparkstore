@@ -1,0 +1,5 @@
+@import url("../sparkfront/css/mobile/admin.css") (max-width: 1000px);
+@import url("../sparkfront/css/mobile/MenuBarComponent.css") (max-width: 1000px);
+@import url("../sparkfront/css/mobile/FormRenderer.css") (max-width: 1000px);
+@import url("../sparkfront/css/mobile/TableView.css") (max-width: 1000px);
+@import url("../sparkfront/css/mobile/InputRenderer.css") (max-width: 1000px);

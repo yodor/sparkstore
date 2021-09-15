@@ -1,0 +1,85 @@
+
+
+@media screen and (max-width: 780px) {
+    .CartComponent {
+        text-align:center;
+    }
+   .CartComponent .cart_view {
+        display:inline-block;
+        width:auto;
+        
+    } 
+    .CartComponent TABLE TBODY {
+        display:inline-block;
+    }
+    .CartComponent TD  {
+        display:block;
+        
+    }
+    .CartComponent TR {
+        display:block;
+        box-sizing:border-box;
+        padding-left:1em;
+        padding-right:1em;
+    }
+    .CartComponent TR[label='heading'] {
+        display:none;
+    }
+    .CartComponent TR[label='heading'] TH {
+        display:none;
+    }
+    .CartComponent TR[label='item'] {
+        display:block;
+    }
+    .CartComponent TR[label='item'] {
+        border-bottom:1px solid gray;
+        padding-bottom:10px;
+/*         border-top:1px dashed #cfcfcf; */
+    }
+    .CartComponent TR[label='item'] TD {
+        border-bottom:none;
+        padding:0px;
+    }
+    .CartComponent TR[label='item'] TD SPAN {
+        vertical-align:baseline !important;
+        display:inline-block !important;
+    }
+    .CartComponent TR[label='item'] TD LABEL {
+        display:inline-block;
+        
+    }
+    .CartComponent TR[label='item'] TD[field='position'] {
+        display:block;
+/*         background:gray; */
+        margin-bottom:10px;
+    }
+    .CartComponent TR[label='item'] TD[field='qty'] {
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    .CartComponent TR[label='item'] TD[field='qty'] LABEL {
+        font-size:1.5em;
+    }
+    .CartComponent TR[label='item'] TD[field='qty'] SPAN {
+        font-size:1.5em;
+    }
+    .CartComponent TR[label='item'] TD[field='product_photo'] {
+        display:inline-block;
+    }
+    .CartComponent TR[label='item'] TD[field='product_model'] {
+        display:inline-block;
+        margin-left:10px;
+    }
+    .CartComponent TR[label='item'] TD[field='price'] {
+        text-align:center;
+        padding:0px;
+    }
+    .CartComponent TR[label='item'] TD[field='line-total'] {
+        text-align:center;
+        padding:0px;
+    }
+    .CartComponent TR TD.label {
+        font-size:1.5em !important;
+        padding-right:0px !important;
+    }
+}

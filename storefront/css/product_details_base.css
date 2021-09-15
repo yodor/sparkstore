@@ -1,0 +1,22 @@
+.section.main .content {
+    padding: 1em;
+    box-sizing: border-box;
+    padding-bottom:2em;
+    font-size:80%;
+}
+
+.column.details {
+    display: block;
+    margin-top: 1em;
+}
+
+/*other products from this category*/
+.column.details .product_group {
+    display: block;
+    text-align:center;
+}
+
+.tabs {
+    text-align:left;
+    display:block;
+}

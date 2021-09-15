@@ -1,0 +1,22 @@
+@media (max-width: 570px) {
+    .section.main .content .column {
+        display:block;
+    }
+    .section.main .content .column.left {
+        width:auto;
+    }
+
+    .section.main .content .category_path {
+        padding-left:20px;
+        padding-right:20px;
+    }
+    .section.main .content .column.left .panel .viewport {
+        display:none;
+    }
+    .section.main .content .column.left .panel .Caption .toggle {
+        display:inline-block;
+    }
+}
+
+
+

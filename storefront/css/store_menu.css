@@ -1,0 +1,106 @@
+
+.MenuBar {
+
+
+}
+
+/* Menu */
+
+.MenuBar {
+
+
+
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+    display: inline-block;
+
+    z-index: 10;
+
+    /*display:none !important;*/
+}
+
+/*.MenuBar .toggle {*/
+/*    display:none !important;*/
+/*}*/
+
+.MenuBar .MenuBarComponent {
+    display: table;
+    height:50px;
+    border:0;
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    background-color:#e6e6e6;
+}
+
+/* CSS3 position: fixed */
+.MenuBar.fixed {
+    position: fixed;
+    width: 100%;
+    box-shadow: 0 0 40px #222;
+    -webkit-box-shadow: 0 0 40px #222;
+    -moz-box-shadow: 0 0 40px #222;
+    z-index: 100;
+}
+
+.MenuBar[name='ConstructedMenu'] {
+    z-index: 0;
+}
+.MenuBar .MenuBarComponent {
+    border-collapse: separate;
+}
+
+.MenuBar .MenuBarComponent .MenuSeparator {
+    /*display: table-cell;*/
+    display:none;
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer {
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    border-top:5px solid transparent;
+    border-bottom:5px solid transparent;
+    background-color:transparent;
+    padding-left:1.5em;
+    padding-right:1.5em;
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer .MenuItemLink {
+    border:0;
+    font-weight:normal;
+    text-transform:uppercase;
+    font-size:110%;
+}
+
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer .MenuItemOuter {
+    padding-top:0;
+    padding-bottom:0;
+
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer.Hover {
+    /*background-color:transparent;*/
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer.Hover .MenuItemLink{
+    color:black;
+    /*font-weight:bold;*/
+}
+.MenuBar .MenuBarComponent .MenuBarItemRenderer.Hover {
+    border-top:5px solid transparent;
+    border-bottom:5px solid #ff6600;
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer[active="1"] .MenuItemLink {
+    border:0;
+    font-weight:bold;
+}
+
+.MenuBar .MenuBarComponent .MenuBarItemRenderer[active="1"] {
+    border-top:5px solid transparent;
+    border-bottom:5px solid #ff6600;
+}
+

@@ -1,0 +1,119 @@
+
+.TableView {
+    display: block;
+}
+
+.TableView tbody {
+    display: block;
+}
+
+.TableView TR {
+    display: block;
+    border-bottom: 1px dashed #50a9f9;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.TableView TR.odd {
+    background-color: #f3f6fb;
+}
+
+/*header sorting */
+.TableView tbody TR:first-child {
+    text-align: center;
+}
+
+.TableView .viewport TD {
+    display: block;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    font-size: 1.2em;
+    padding-left: 0;
+    padding-right: 0;
+
+}
+
+.TableView .viewport .TableCellRenderer {
+    text-align: left;
+
+
+}
+
+.TableView .viewport TD.odd {
+    border: none;
+    text-align: left;
+}
+
+.TableView .viewport TD.even {
+    border: none;
+    text-align: left;
+}
+
+.TableView .viewport TH {
+    display: inline-block;
+}
+
+.TableView .viewport TD:not([title='']):before {
+    content: attr(title) ": ";
+}
+
+.TableView .viewport .ImageCellRenderer {
+
+}
+
+.TableView .viewport .ImageCellRenderer:not([title='']):before {
+    content: attr(title) ": ";
+    display: block;
+}
+
+.TableView .viewport .ActionsCellRenderer {
+
+    display: block;
+    position: relative;
+    text-align: right !important;
+
+}
+
+.TableView .viewport .ActionsCellRenderer .actions_list {
+    text-align: right;
+    white-space: normal;
+}
+
+.TableView .viewport .ActionsCellRenderer .actions_list .Action {
+    display: inline-block;
+
+}
+
+.TableView .viewport .ActionsCellRenderer .actions_list .Action[action*='Separator'] {
+    color: #cccccc;
+    font-weight: bold;
+    padding-left: 2px;
+    padding-right: 3px;
+}
+
+.TableView .viewport .ActionsCellRenderer .actions_list .Action[action='RowSeparator'] {
+    display: block;
+}
+
+.TableView .viewport .ActionsCellRenderer:not([title='']):before {
+    content: attr(title) ": ";
+    display: block;
+    text-align: center;
+
+    color: black;
+    background-color: #d3e7f9;
+}
+
+.TableView TH[column='actions'] {
+    display: none;
+}
+
+.TableView .viewport .ImageList {
+    display: block;
+}
+
+.TableView .viewport .ImageList .Item {
+    display: inline-block;
+    padding: 3px;
+
+}

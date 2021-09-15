@@ -1,0 +1,183 @@
+@import url("./mobile/MenuBarComponent.css") (max-width: 786px);
+
+@media screen and (max-width: 1200px) {
+    .home .section.main .banner IMG {
+        width:100%;
+    }
+
+    .StorePage.contacts .section.main .content {
+        text-align:center;
+    }
+    .StorePage.contacts .section.main .content .Caption {
+        text-align:center;
+    }
+
+    .StorePage.contacts .section.main .content .columns .column.addresses {
+        display:block;
+        text-align:center;
+        margin-top:20px;
+    }
+    .StorePage.contacts .section.main .content .columns .column.addresses {
+        text-align:center;
+    }
+    .StorePage.contacts .section.main .content .columns .column.addresses .details {
+        display:inline-block;
+        text-align:left;
+        margin-top:0;
+        margin-left:0;
+        min-width:300px;
+
+    }
+
+    .StorePage.contacts .section.main .content .columns .column.map {
+        display:block;
+        width:100%;
+        box-sizing:border-box;
+    }
+    .StorePage.contacts .section.main .content .columns .column.map .panel.map {
+        display:block;
+        width:100%;
+        box-sizing:border-box;
+    }
+    .StorePage.contacts .section.main .content .columns {
+        display:block;
+        box-sizing:border-box;
+    }
+
+    .StorePage.contacts .section.main .content .BeanFormEditor {
+        width:100%;
+    }
+    .StorePage.contacts .section.main .content .BeanFormEditor .FormRenderer {
+        width:100%;
+    }
+    .StorePage.contacts .section.main .content FORM .InputField.TextArea TEXTAREA {
+        max-width:800px;
+        min-width:100%;
+        width:100%;
+    }
+}
+
+@media screen and (max-width: 1160px) {
+    .section.menu {
+        text-align:center;
+    }
+    .section.menu .group {
+        float:none;
+        display:block;
+        padding-top:10px;
+        padding-bottom:10px;
+        margin-top:auto;
+    }
+
+}
+@media screen and (max-width: 900px) {
+    .section.header .content .logo {
+        display:block;
+        background-origin:content-box;
+        background-size:contain;
+        max-width:inherit;
+        width:auto;
+        padding-top:15px;
+        padding-bottom:15px;
+        padding-left:25px;
+        padding-right:25px;
+    }
+    .section.header .content .marquee {
+        display:block;
+
+    }
+}
+@media screen and (max-width: 786px) {
+
+    .MenuBar {
+        display:inline-block;
+        text-align:left;
+    }
+
+    .MenuBar .MenuBarComponent .MenuBarItemRenderer {
+        background-color: #e6e6e6;
+    }
+    .section.menu .group {
+        display:inline-block;
+    }
+    /*.section.header .content .marquee {*/
+    /*    font-size:inherit;*/
+    /*    padding-top:5px;*/
+    /*}*/
+
+    .MenuBar .toggle {
+        /*margin-top:2px;*/
+    }
+
+    .section.menu  {
+        text-align:center;
+
+    }
+    .section.menu .MenuBar {
+        float:left;
+        text-align:left;
+        margin-top:8px;
+
+    }
+
+    /*.section.menu .content .search_pane FORM .InputComponent .InputField {*/
+    /*    margin-top:2px;*/
+    /*    margin-bottom:2px;*/
+    /*    height:35px;*/
+    /*}*/
+
+    /*.section.menu .content .search_pane FORM .SubmitLine {*/
+    /*    margin-top:0;*/
+    /*}*/
+
+    /*.section.menu .content .customer_pane {*/
+    /*    margin-top:4px;*/
+    /*}*/
+
+
+    .section.menu .MenuBar .MenuBarComponent {
+        position:absolute;
+        top:50px;
+        height:auto;
+        width:100%;
+        box-shadow:0px 9px 9px  rgba(0,0,0,0.5);
+        border-top:1px dotted #cecece;
+        z-index:2;
+    }
+    /*.PaginatorBottomComponent .cell {*/
+    /*    display:block;*/
+    /*    text-align:center;*/
+    /*    padding-bottom:1em;*/
+    /*}*/
+}
+@media screen and (max-width:444px) {
+    .section.header .content .marquee {
+        padding-top: 0;
+        font-size: 2em;
+    }
+
+    .section.menu .content .customer_pane {
+        padding-right:0px;
+    }
+    .section.menu .content .search_pane {
+        width:190px;
+
+    }
+    .section.menu .content .menuwrap {
+        text-align:right;
+    }
+}
+@media screen and (max-width: 560px) {
+    .products {
+        text-align:center;
+    }
+
+}
+@media screen and (max-width:359px) {
+    .section.menu .content .customer_pane {
+        display:block;
+    }
+    .section.menu .content .search_pane {
+        display:block;
+    }
+}
