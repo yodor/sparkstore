@@ -1,0 +1,6 @@
+php*error*
+error*log
+*.zip
+.ftpquota
+.well-known
+.idea
