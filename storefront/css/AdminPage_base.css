@@ -171,6 +171,6 @@
     width:100%;
 }
 
-.config.list .StoreConfigForm {
+.config.list FORM[name='StoreConfigForm'] {
     min-width:800px;
 }
