@@ -170,3 +170,7 @@
     padding: 0.2em;
     width:100%;
 }
+
+.config.list .StoreConfigForm {
+    min-width:800px;
+}
