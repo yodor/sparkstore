@@ -7,7 +7,7 @@ include_once("beans/UsersBean.php");
 include_once("utils/MainMenu.php");
 include_once("utils/MenuItem.php");
 
-class AccountPage extends StorePage
+class AccountPageBase extends StorePage
 {
     protected $account_menu = NULL;
     protected $authorized_access = TRUE;

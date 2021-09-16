@@ -13,7 +13,7 @@ include_once("store/components/ProductListFilter.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
 
-class ProductListPage extends StorePage
+class ProductListPageBase extends StorePage
 {
 
     /**
@@ -422,7 +422,8 @@ class ProductListPage extends StorePage
 
             echo "</div>"; //tree
 
-            echo "<div class='filters panel'>";
+            if ($this->filters instanceof ProductListFilter) {
+                echo "<div class='filters panel'>";
 
                 echo "<div class='Caption' ><div class='toggle' onclick='togglePanel(this)'><div></div></div>" . tr("Филтри") . "</div>";
 
@@ -430,7 +431,8 @@ class ProductListPage extends StorePage
                 $this->renderProductFilters();
                 echo "</div>";
 
-            echo "</div>";//filters
+                echo "</div>";//filters
+            }
 
         echo "</div>"; //column left
 

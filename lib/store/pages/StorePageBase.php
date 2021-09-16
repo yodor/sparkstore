@@ -131,7 +131,7 @@ class StorePageBase extends SparkPage
         //$this->addCSS("//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");
 
         //$this->addJS("//code.jquery.com/ui/1.11.4/jquery-ui.js");
-        $this->addJS(SPARK_LOCAL . "/js/URI.js");
+        //$this->addJS(SPARK_LOCAL . "/js/URI.js");
 
         $pc = new ProductCategoriesBean();
         $qry = $pc->query("category_name");
@@ -164,17 +164,17 @@ class StorePageBase extends SparkPage
         $header_callback = function(ClosureComponent $parent) {
             $this->renderHeader();
         };
-        $this->_header->content()->append(new ClosureComponent($header_callback));
+        $this->_header->content()->append(new ClosureComponent($header_callback, false));
 
         $menu_callback = function(ClosureComponent $parent) {
             $this->renderMenu();
         };
-        $this->_menu->content()->append(new ClosureComponent($menu_callback));
+        $this->_menu->content()->append(new ClosureComponent($menu_callback, false));
 
         $footer_callback = function(ClosureComponent $parent) {
             $this->renderFooter();
         };
-        $this->_footer->content()->append(new ClosureComponent($footer_callback));
+        $this->_footer->content()->append(new ClosureComponent($footer_callback, false));
     }
 
     protected function headStart()

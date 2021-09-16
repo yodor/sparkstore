@@ -1,5 +1,5 @@
 <?php
-include_once("store/pages/ProductListPage.php");
+include_once("class/pages/ProductListPage.php");
 
 include_once("store/components/ProductsTape.php");
 
@@ -7,7 +7,7 @@ include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
 
 
-class ProductDetailsPage extends ProductListPage
+class ProductDetailsPageBase extends ProductListPage
 {
 
     protected $sellable = NULL;

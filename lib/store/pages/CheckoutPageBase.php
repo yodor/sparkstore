@@ -3,7 +3,7 @@ include_once("store/components/CartComponent.php");
 include_once("components/ClosureComponent.php");
 include_once("components/Action.php");
 
-class CheckoutPage extends StorePage
+class CheckoutPageBase extends StorePage
 {
 
     public $modify_enabled = FALSE;

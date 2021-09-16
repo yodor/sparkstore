@@ -1,5 +1,5 @@
 <?php
-include_once("store/utils/ProductsSQL.php");
+include_once("class/utils/ProductsSQL.php");
 include_once("beans/DBViewBean.php");
 
 class SellableProducts extends DBViewBean

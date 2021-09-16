@@ -1,6 +1,5 @@
 * {
     font-family: 'Montserrat', 'Arial', sans-serif;
-
 }
 
 body {
@@ -104,13 +103,11 @@ A.Caption:active {
     border:0;
 }
 .section.main .content {
-
-
+    padding-bottom:50px;
 }
 .section.header {
     max-height:90px;
     height:90px;
-
 }
 .section.header .content {
     background-color:black;
