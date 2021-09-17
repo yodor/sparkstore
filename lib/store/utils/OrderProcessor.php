@@ -1,7 +1,7 @@
 <?php
 // $GLOBALS["DEBUG_OUTPUT"] = 1;
 
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 include_once("store/beans/OrdersBean.php");
 include_once("store/beans/OrderItemsBean.php");
 include_once("store/beans/CourierAddressesBean.php");
@@ -128,6 +128,10 @@ class OrderProcessor
                 if (!$cartItem instanceof CartItem) continue;
                 $order_total = $order_total + $cartItem->getLineTotal();
             }
+
+            $discount_amount = $cart->getDiscount()->amount();
+            $order["discount_amount"] = $discount_amount;
+            $order_total = $order_total - $discount_amount;
 
             $order_total = $order_total + $option->getPrice();
             $order["total"] = $order_total;

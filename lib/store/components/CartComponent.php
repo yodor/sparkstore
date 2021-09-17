@@ -1,6 +1,6 @@
 <?php
 include_once("components/Component.php");
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductColorPhotosBean.php");
 include_once("store/beans/ProductsBean.php");
@@ -15,6 +15,7 @@ class CartComponent extends Component implements IHeadContents
     protected $total = 0.0;
     protected $order_total = 0.0;
     protected $delivery_price = 0.0;
+    protected $discount_amount = 0.0;
 
     /**
      * Products
@@ -258,7 +259,8 @@ class CartComponent extends Component implements IHeadContents
     protected function renderImpl()
     {
 
-        $items = Cart::Instance()->items();
+        $cart = Cart::Instance();
+        $items = $cart->items();
 
         echo "<tr label='heading'>";
         echo "
@@ -324,23 +326,42 @@ class CartComponent extends Component implements IHeadContents
         if ($total > 0) {
             $this->total = $total;
 
-            echo "<tr label='summary-total'>";
+            echo "<tr class='summary items_total' label='items_total'>";
             //             echo "<td colspan=4 rowspan=3 field='items_total'>";
             //             echo $num_items_total." ";
             //             echo ($num_items_total>1)? tr("Продукта") : tr("Продукт");
             //             echo "</td>";
 
-            echo "<td colspan=5 class='label amount_total'>";
+            echo "<td colspan=5 class='label'>";
             echo tr("Продукти общо") . ": ";
             echo "</td>";
 
-            echo "<td class='value amount_total'>";
+            echo "<td class='value'>";
             echo formatPrice($total);
             echo "</td>";
 
             echo "</tr>";
 
-            $selected_courier = Cart::Instance()->getDelivery()->getSelectedCourier();
+            $discount = $cart->getDiscount();
+            $this->discount_amount = $discount->amount();
+
+            $order_total = $order_total - $this->discount_amount;
+
+            if ($discount->amount()) {
+                echo "<tr class='summary discount' label='discount'>";
+
+                echo "<td colspan=5 class='label'>";
+                echo tr("Отстъпки") . ": ";
+                echo "</td>";
+
+                echo "<td class='value'>";
+                echo $discount->label();
+                echo "</td>";
+
+                echo "</tr>";
+            }
+
+            $selected_courier = $cart->getDelivery()->getSelectedCourier();
             $selected_option = NULL;
             if ($selected_courier) {
                 $selected_option = $selected_courier->getSelectedOption();
@@ -348,13 +369,13 @@ class CartComponent extends Component implements IHeadContents
 
             if ($selected_option != NULL) {
 
-                echo "<tr label='summary-delivery'>";
+                echo "<tr class='summary delivery' label='delivery'>";
 
-                echo "<td colspan=5 class='label delivery' >";
+                echo "<td colspan=5 class='label' >";
                 echo tr("Доставка") . ": ";
                 echo "</td>";
 
-                echo "<td class='value delivery'>";
+                echo "<td class='value'>";
 
 
                 $delivery_price = $selected_option->getPrice();
@@ -373,19 +394,19 @@ class CartComponent extends Component implements IHeadContents
 
                 echo "</tr>";
 
-                echo "<tr label='summary-order-total'>";
-
-                echo "<td colspan=5 class='label order_total'>";
-                echo tr("Поръчка общо") . ": ";
-                echo "</td>";
-
-                echo "<td class='value order_total'>";
-                echo formatPrice($order_total);
-                echo "</td>";
-
-                echo "</tr>";
-
             }
+
+            echo "<tr class='summary order_total' label='order_total'>";
+
+            echo "<td colspan=5 class='label'>";
+            echo tr("Поръчка общо") . ": ";
+            echo "</td>";
+
+            echo "<td class='value'>";
+            echo formatPrice($order_total);
+            echo "</td>";
+
+            echo "</tr>";
 
         }
 

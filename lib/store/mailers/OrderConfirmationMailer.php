@@ -3,7 +3,7 @@ include_once("mailers/Mailer.php");
 include_once("store/beans/OrdersBean.php");
 include_once("store/beans/OrderItemsBean.php");
 include_once("beans/UsersBean.php");
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 
 class OrderConfirmationMailer extends Mailer
 {

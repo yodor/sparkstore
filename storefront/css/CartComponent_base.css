@@ -100,41 +100,24 @@
     vertical-align: -0.2em;
 }
 
-.CartComponent TR[label='summary-total'] TD {
+.CartComponent TR.summary TD {
     text-align: right;
-    font-size: 1.5em;
+    font-size: 1.1em;
     padding: 10px;
+}
+
+.CartComponent TR.summary TD.label {
+
+}
+.CartComponent TR.summary TD.value {
 
 }
 
-.CartComponent TR[label='summary-total'] TD[field='items_total'] {
-    text-align: left;
-    font-size: 1.0em;
+.CartComponent .summary.order_total .label {
+    font-weight:bold;
+    font-size:1.1em;
 }
-
-.CartComponent TR[label='summary-total'] TD.label {
-
+.CartComponent .summary.order_total .value {
+    font-weight:bold;
+    font-size:1.1em;
 }
-
-.CartComponent TR[label='summary-delivery'] TD {
-    text-align: right;
-    font-size: 1.5em;
-}
-
-.CartComponent TR[label='summary-delivery'] TD.label {
-    padding-right: 10px;
-    font-size: 1.2em;
-}
-
-.CartComponent TR[label='summary-order-total'] TD {
-    text-align: right;
-    font-size: 1.5em;
-    font-weight: bold;
-    padding-bottom: 5px;
-}
-
-.CartComponent TR[label='summary-order-total'] TD.label {
-    padding-right: 10px;
-    font-size: 1.2em;
-}
-

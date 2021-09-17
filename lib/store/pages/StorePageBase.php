@@ -21,7 +21,7 @@ include_once("utils/CurrencyConverter.php");
 
 include_once("store/beans/ProductCategoriesBean.php");
 
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 
 class SectionContainer extends Container {
 

@@ -1,7 +1,7 @@
 <?php
 include_once("mailers/Mailer.php");
 include_once("store/forms/ClientAddressInputForm.php");
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 include_once("store/components/CartComponent.php");
 
 class FastOrderAdminMailer extends Mailer

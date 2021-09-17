@@ -2,7 +2,7 @@
 include_once("forms/InputForm.php");
 include_once("input/validators/NumericValidator.php");
 include_once("iterators/ArrayDataIterator.php");
-include_once("store/utils/Cart.php");
+include_once("store/utils/cart/Cart.php");
 
 class DeliveryConfigForm extends InputForm
 {

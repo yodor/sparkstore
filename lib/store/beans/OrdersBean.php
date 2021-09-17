@@ -11,6 +11,7 @@ class OrdersBean extends DBTableBean
     protected $createString = "CREATE TABLE `orders` (
   `orderID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `total` decimal(10,2) NOT NULL,
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.0,
   `delivery_price` decimal(10,2) NOT NULL,
   `delivery_courier` int(11) NOT NULL,
   `delivery_option` int(11) NOT NULL,
