@@ -12,6 +12,11 @@ class ProductDetailsPageBase extends ProductListPage
 
     protected $sellable = NULL;
 
+    /**
+     * @var SellableDataParser
+     */
+    protected $dataParser = NULL;
+
     public function __construct()
     {
         parent::__construct();
@@ -46,7 +51,7 @@ class ProductDetailsPageBase extends ProductListPage
 
             if ($num < 1) throw new Exception("Product does not exist or is not accessible now");
 
-            $this->sellable = new SellableItem($prodID);
+            $this->sellable = new SellableItem($prodID, $this->dataParser);
 
             while ($item = $qry->nextResult()) {
 
@@ -141,7 +146,7 @@ class ProductDetailsPageBase extends ProductListPage
     protected function constructTitle()
     {
         $title = array();
-        $title[] = "Продукти";
+        $title[] = tr($this->products_title);
 
         $category_path = $this->getCategoryPath();
 

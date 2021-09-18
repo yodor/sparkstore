@@ -6,11 +6,15 @@ include_once("store/beans/ProductPhotosBean.php");
 
 include_once("store/utils/SellableItem.php");
 
-class ProductDetailsItem extends Component implements IHeadContents
+class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
     protected $categories = array();
     protected $url = "";
     protected $sellable = null;
+
+    //main photo size
+    protected $width = -1;
+    protected $height = -1;
 
     public function __construct(SellableItem $item)
     {
@@ -20,6 +24,8 @@ class ProductDetailsItem extends Component implements IHeadContents
         $this->setAttribute("itemtype", "http://schema.org/Product");
 
         $this->sellable = $item;
+
+        $this->setPhotoSize(640,640);
 
     }
 
@@ -38,6 +44,22 @@ class ProductDetailsItem extends Component implements IHeadContents
         return $arr;
     }
 
+    public function setPhotoSize(int $width, int $height)
+    {
+        $this->width = $width;
+        $this->height = $height;
+    }
+
+    public function getPhotoWidth(): int
+    {
+        return $this->width;
+    }
+
+    public function getPhotoHeight(): int
+    {
+        return $this->height;
+    }
+
     public function setSellable(SellableItem $item)
     {
         $this->sellable = $item;
@@ -52,6 +74,7 @@ class ProductDetailsItem extends Component implements IHeadContents
     {
         $this->url = $url;
     }
+
     protected function renderImagePane()
     {
         $product_name = $this->sellable->getTitle();
@@ -59,7 +82,7 @@ class ProductDetailsItem extends Component implements IHeadContents
         $photo_href = "";
 
         if ($main_photo instanceof StorageItem) {
-            $photo_href = $main_photo->hrefImage(640,640);
+            $photo_href = $main_photo->hrefImage($this->width,$this->height);
         }
 
         echo "<div class='images'>";
@@ -90,128 +113,169 @@ class ProductDetailsItem extends Component implements IHeadContents
         echo "</div>"; // images
     }
 
+    protected function renderGroupDescription()
+    {
+        echo "<div class='group description'>";
+
+            echo "<div class='item product_name'>";
+                echo "<span itemprop='name' class='value'>". $this->sellable->getTitle() . "</span>";
+            echo "</div>";
+
+            if ($this->sellable->getCaption()) {
+                echo "<div class='item product_summary'>";
+                    echo "<span class='value'>" . stripAttributes($this->sellable->getCaption()) . "</span>";
+                echo "</div>";
+            }
+
+        echo "</div>";//group product_description
+    }
+
+    protected function renderGroupColors()
+    {
+        echo "<div class='group colors'>";
+
+        echo "<div class='item current_color'>";
+        echo "<label>" . tr("Избор на цвят") . "</label>";
+        echo "<span class='value'></span>";
+        echo "</div>";
+
+        echo "<div class='item color_chooser'>";
+        echo "<span class='value'>";
+        //            echo "<span class='color_button'></span>";
+        echo "</span>";
+        echo "</div>";//color_chooser
+
+        echo "</div>"; //group colors
+    }
+
+    protected function renderGroupSizing()
+    {
+        echo "<div class='group sizing' >";
+
+        echo "<div class='item current_size'>";
+        echo "<label>" . tr("Избор на размер") . "</label>";
+        echo "<span class='value'></span>";
+        echo "</div>";
+
+        echo "<div class='item size_chooser' model='size_button'>";
+        $empty_label = tr("Избери цвят");
+        echo "<span class='value' empty_label='$empty_label'>";
+        echo "<div>".$empty_label."</div>";
+        echo "</span>";
+        echo "</div>"; //size_chooser
+
+        echo "</div>"; //group sizing
+    }
+
+    protected function renderGroupAttributes()
+    {
+        echo "<div class='group attributes' >";
+
+        echo "</div>"; //attributes
+    }
+
+    protected function renderGroupStockAmount()
+    {
+        $piID = $this->sellable->getActiveInventoryID();
+
+        $priceInfo = $this->sellable->getPriceInfo($piID);
+
+        echo "<div class='group stock_amount disabled'>";
+
+        echo "<div class='item stock_amount'>";
+        echo "<label>" . tr("Наличност")."</label>";
+        echo "<span class='value'>".$priceInfo->getStockAmount()."</span>";
+        echo "<span class='unit'> бр.</span>";
+        echo "</div>";
+
+        echo "</div>"; //stock_amount
+    }
+
+    protected function renderGroupPricing()
+    {
+        $piID = $this->sellable->getActiveInventoryID();
+
+        $priceInfo = $this->sellable->getPriceInfo($piID);
+
+
+        echo "<div class='group pricing'>";
+
+        echo "<div class='item price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
+
+        $enabled= ($this->sellable->isPromotion($piID)) ? "" : "disabled";
+
+        echo "<div class='old $enabled'>";
+        echo "<span class='value'>" . sprintf("%0.2f", $priceInfo->getOldPrice()) . "</span>";
+        echo "&nbsp;<span class='currency'>лв.</span>";
+        echo "</div>";
+
+        echo "<div class='sell'>";
+        echo "<span class='value' itemprop='price'>" . sprintf("%0.2f", $priceInfo->getSellPrice()) . "</span>";
+        echo "<meta itemprop='priceCurrency' content='BGN'>";
+        echo "&nbsp;<span class='currency'>лв.</span>";
+        echo "</div>";
+
+        echo "</div>"; //price_info
+
+        echo "</div>"; //pricing
+    }
+
+    public function renderGroupCartLink()
+    {
+        echo "<div class='group cart_link'>";
+
+        echo "<a class='cart_add' href='javascript:addToCart()'>";
+        echo "<span class='icon'></span>";
+        echo "<span>".tr("Поръчай")."</span>";
+        echo "</a>";
+
+        $config = ConfigBean::Factory();
+        $config->setSection("store_config");
+        $phone = $config->get("phone", "");
+        if ($phone) {
+            echo "<a class='order_phone' href='tel:$phone'>";
+            //echo "<label>".tr("Телефон за поръчки")."</label>";
+            echo "<span class='icon'></span>";
+            echo "<span>$phone</span>";
+            echo "</a>";
+        }
+
+        echo "</div>";
+    }
+
+    protected function renderGroupLongDescription()
+    {
+        if ($this->sellable->getDescription()) {
+            echo "<div class='item description long_description'>";
+            echo "<div itemprop='description' class='contents'>";
+            echo $this->sellable->getDescription();
+            echo "</div>";
+            echo "</div>"; //item
+        }
+    }
+
     public function renderSidePane()
     {
         echo "<div class='side_pane' >";
 
             //title + short description
-            echo "<div class='group description'>";
+            $this->renderGroupDescription();
 
-                echo "<div class='item product_name'>";
-                echo "<span itemprop='name' class='value'>". $this->sellable->getTitle() . "</span>";
-                echo "</div>";
+            $this->renderGroupColors();
 
-                if ($this->sellable->getCaption()) {
-                    echo "<div class='item product_summary'>";
-                    echo "<span class='value'>" . stripAttributes($this->sellable->getCaption()) . "</span>";
-                    echo "</div>";
-                }
+            $this->renderGroupSizing();
 
-            echo "</div>";//group product_description
+            $this->renderGroupAttributes();
 
+            $this->renderGroupStockAmount();
 
-            echo "<div class='group colors'>";
+            $this->renderGroupPricing();
 
-                echo "<div class='item current_color'>";
-                    echo "<label>" . tr("Избор на цвят") . "</label>";
-                    echo "<span class='value'></span>";
-                echo "</div>";
-
-                echo "<div class='item color_chooser'>";
-                    echo "<span class='value'>";
-                    //            echo "<span class='color_button'></span>";
-                    echo "</span>";
-                echo "</div>";//color_chooser
-
-            echo "</div>"; //group colors
-
-            echo "<div class='group sizing' >";
-
-                echo "<div class='item current_size'>";
-                    echo "<label>" . tr("Избор на размер") . "</label>";
-                    echo "<span class='value'></span>";
-                echo "</div>";
-
-                echo "<div class='item size_chooser' model='size_button'>";
-                    $empty_label = tr("Избери цвят");
-                    echo "<span class='value' empty_label='$empty_label'>";
-                    echo "<div>".$empty_label."</div>";
-                    echo "</span>";
-                echo "</div>"; //size_chooser
-
-            echo "</div>"; //group sizing
-
-            echo "<div class='group attributes' >";
-
-            echo "</div>"; //attributes
-
-
-            $piID = $this->sellable->getActiveInventoryID();
-
-            $priceInfo = $this->sellable->getPriceInfo($piID);
-
-            echo "<div class='group stock_amount disabled'>";
-
-                echo "<div class='item stock_amount'>";
-                    echo "<label>" . tr("Наличност")."</label>";
-                    echo "<span class='value'>".$priceInfo->getStockAmount()."</span>";
-                    echo "<span class='unit'> бр.</span>";
-                echo "</div>";
-
-            echo "</div>"; //stock_amount
-
-            echo "<div class='group pricing'>";
-
-            echo "<div class='item price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
-
-
-                $enabled= ($this->sellable->isPromotion($piID)) ? "" : "disabled";
-
-                echo "<div class='old $enabled'>";
-                echo "<span class='value'>" . sprintf("%0.2f", $priceInfo->getOldPrice()) . "</span>";
-                echo "&nbsp;<span class='currency'>лв.</span>";
-                echo "</div>";
-
-                echo "<div class='sell'>";
-                echo "<span class='value' itemprop='price'>" . sprintf("%0.2f", $priceInfo->getSellPrice()) . "</span>";
-                echo "<meta itemprop='priceCurrency' content='BGN'>";
-                echo "&nbsp;<span class='currency'>лв.</span>";
-                echo "</div>";
-
-                echo "</div>"; //sell_price
-
-            echo "</div>"; //pricing
-
-
-            echo "<div class='group cart_link'>";
-
-                echo "<a class='cart_add' href='javascript:addToCart()'>";
-                    echo "<span class='icon'></span>";
-                    echo "<span>".tr("Поръчай")."</span>";
-                echo "</a>";
-
-                $config = ConfigBean::Factory();
-                $config->setSection("store_config");
-                $phone = $config->get("phone", "");
-                if ($phone) {
-                    echo "<a class='order_phone' href='tel:$phone'>";
-                    //echo "<label>".tr("Телефон за поръчки")."</label>";
-                    echo "<span class='icon'></span>";
-                    echo "<span>$phone</span>";
-                    echo "</a>";
-                }
-
-            echo "</div>";
+            $this->renderGroupCartLink();
 
             echo "<div class='clear'></div>";
 
-            if ($this->sellable->getDescription()) {
-                echo "<div class='item description long_description'>";
-                    echo "<div itemprop='description' class='contents'>";
-                        echo $this->sellable->getDescription();
-                    echo "</div>";
-                echo "</div>"; //item
-            }
+            $this->renderGroupLongDescription();
 
         echo "</div>"; //side_pane
     }
@@ -237,6 +301,7 @@ class ProductDetailsItem extends Component implements IHeadContents
             echo "</div>"; //item
         }
     }
+
     protected function renderTabs()
     {
         echo "<div class='tabs'>";

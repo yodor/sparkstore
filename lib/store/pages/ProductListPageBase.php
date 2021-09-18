@@ -15,6 +15,7 @@ include_once("store/beans/SellableProducts.php");
 
 class ProductListPageBase extends StorePage
 {
+    protected $products_title = "Продукти";
 
     /**
      * @var SellableProducts|null
@@ -116,12 +117,6 @@ class ProductListPageBase extends StorePage
         $this->view->setItemRenderer(new ProductListItem());
         $this->view->setItemsPerPage(12);
 
-        $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
-        $this->view->getPaginator()->addSortField($sort_price);
-
-        $sort_prod = new PaginatorSortField("prodID", "Най-нови", "", "DESC");
-        $this->view->getPaginator()->addSortField($sort_prod);
-
         $this->view->getTopPaginator()->view_modes_enabled = TRUE;
 
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
@@ -129,6 +124,15 @@ class ProductListPageBase extends StorePage
 
         $this->breadcrumb = new BreadcrumbList();
 
+    }
+
+    protected function initSortFields()
+    {
+        $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
+        $this->view->getPaginator()->addSortField($sort_price);
+
+        $sort_prod = new PaginatorSortField("prodID", "Най-нови", "", "DESC");
+        $this->view->getPaginator()->addSortField($sort_prod);
     }
 
     /**
@@ -153,10 +157,14 @@ class ProductListPageBase extends StorePage
 
         //default products select all products from all categories
         $products_list = clone $this->select;
-        $products_list->group_by = " prodID, color ";
+        $products_list->group_by = SellableProducts::DefaultGrouping();
         //echo $products_list->getSQL();
         $this->view->setIterator(new SQLQuery($products_list, "prodID"));
+
+        $this->initSortFields();
     }
+
+
 
     public function setSellableProducts(SellableProducts $bean)
     {
@@ -246,7 +254,7 @@ class ProductListPageBase extends StorePage
         }
 
         //setup grouping for the list item view
-        $this->select->group_by = " prodID, color ";
+        $this->select->group_by = SellableProducts::DefaultGrouping();
 
         //primary key is prodID as we group by prodID(Products) not piID(ProductInventory)
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
@@ -310,7 +318,7 @@ class ProductListPageBase extends StorePage
             $title[] = $this->section;
         }
         else {
-            $title[] = "Продукти";
+            $title[] = tr($this->products_title);
         }
 
         foreach ($this->category_path as $idx => $catinfo) {
@@ -360,7 +368,7 @@ class ProductListPageBase extends StorePage
         $this->breadcrumb->render();
     }
 
-    protected function constructPathActions()
+    protected function constructPathActions() : array
     {
         $actions = array();
 
@@ -368,6 +376,7 @@ class ProductListPageBase extends StorePage
 
         $link = new URLBuilder();
         $link->buildFrom(LOCAL."/products/list.php");
+
         if ($this->section) {
             $link->add(new URLParameter("section", $this->section));
         }
@@ -379,7 +388,7 @@ class ProductListPageBase extends StorePage
             $actions[] = new Action($this->section, $link->url(), array());
         }
         else {
-            $actions[] = new Action(tr("Продукти"), $link->url(), array());
+            $actions[] = new Action(tr($this->products_title), $link->url(), array());
         }
 
         $link->add(new DataParameter("catID"));

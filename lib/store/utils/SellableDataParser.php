@@ -4,6 +4,7 @@ include_once("store/utils/SellableItem.php");
 include_once("store/utils/SellableDataParser.php");
 include_once("store/beans/ProductColorPhotosBean.php");
 include_once("store/beans/ProductPhotosBean.php");
+include_once("store/beans/SellableProducts.php");
 
 class SellableDataParser
 {
@@ -45,18 +46,8 @@ class SellableDataParser
             $item->setKeywords($result->get("keywords"));
         }
 
-        //
-        $attr_list = explode("|", $result->get("inventory_attributes"));
-        $attr_all = array();
-        if (count($attr_list)>0) {
-            foreach ($attr_list as $idx => $pair) {
-                $name_value = explode(":", $pair);
-                if(count($name_value)>1) {
-                    //var_dump($name_value);
-                    $attr_all[] = array("name" => $name_value[0], "value" => $name_value[1]);
-                }
-            }
-        }
+        $attr_all = SellableProducts::ParseAttributes($result->get("inventory_attributes"));
+
         $item->setAttributes($piID, $attr_all);
 
         $pclrID = (int)$result->get("pclrID");

@@ -162,7 +162,20 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderImpl()
     {
+        $this->renderMeta();
 
+        echo "<div class='wrap'>";
+
+            $this->renderPhoto();
+            $this->renderColorChips();
+            $this->renderDetails();
+
+        echo "</div>"; //wrap
+
+    }
+
+    protected function renderMeta()
+    {
         $title_alt = attributeValue($this->data["product_name"]);
         $details_url = $this->detailsURL->url();
 
@@ -178,14 +191,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         }
 
         echo "<meta itemprop='description' content='".attributeValue($description_content)."'>";
-
-        echo "<div class='wrap'>";
-
-            $this->renderPhoto();
-            $this->renderColorChips();
-            $this->renderDetails();
-
-        echo "</div>"; //wrap
 
     }
 
@@ -223,36 +228,39 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
             //echo "<div class='stock_amount'><label>".tr("Наличност").": </label>".$this->item["stock_amount"]."</div>";
 
-            if ($this->data["sell_price"] > 0) {
-
-                echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
-
-
-                    echo "<div class='price old'>";
-                    if ($this->isPromo()) {
-                        echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
-                    }
-                    else {
-                        echo "<BR>";
-                    }
-                    echo "</div>";
-
-                    echo "<meta itemprop='priceCurrency' content='" . DEFAULT_CURRENCY . "'>";
-                    echo "<div class='price sell'>";
-                        echo "<span itemprop='price'>". sprintf("%1.2f", $this->data["sell_price"]) . "</span> ";
-                        echo tr("лв.");
-                    echo "</div>";
-
-                //                if ($this->data["price_min"] != $this->data["sell_price"] || $this->data["price_max"] != $this->data["sell_price"]) {
-                //                    echo "<div class='series_price'>" . sprintf("%1.2f", $this->data["price_min"]) . " " . tr("лв.") . " - " . sprintf("%1.2f", $this->data["price_max"]) . " " . tr("лв.") . "</div>";
-                //                }
-
-                echo "</div>";
-
-            }
+            $this->renderPrice();
 
         echo "</a>";
 
+    }
+    protected function renderPrice()
+    {
+        if ($this->data["sell_price"] > 0) {
+
+            echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
+
+            echo "<div class='price old'>";
+            if ($this->isPromo()) {
+                echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
+            }
+            else {
+                echo "<BR>";
+            }
+            echo "</div>";
+
+            echo "<meta itemprop='priceCurrency' content='" . DEFAULT_CURRENCY . "'>";
+            echo "<div class='price sell'>";
+            echo "<span itemprop='price'>" . sprintf("%1.2f", $this->data["sell_price"]) . "</span> ";
+            echo tr("лв.");
+            echo "</div>";
+
+            //                if ($this->data["price_min"] != $this->data["sell_price"] || $this->data["price_max"] != $this->data["sell_price"]) {
+            //                    echo "<div class='series_price'>" . sprintf("%1.2f", $this->data["price_min"]) . " " . tr("лв.") . " - " . sprintf("%1.2f", $this->data["price_max"]) . " " . tr("лв.") . "</div>";
+            //                }
+
+            echo "</div>";
+
+        }
     }
 
     protected function renderColorChips()
@@ -302,6 +310,22 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     }
 
+    public static function AttributesMeta(array $attributes, array $supported)
+    {
+
+        foreach ($attributes as $idx => $item) {
+            if ($item["name"] && $item["value"]) {
+                $attributeName = mb_strtolower($item["name"]);
+                $attributeValue = mb_strtolower($item["value"]);
+                foreach ($supported as $itemProp=>$matches) {
+                    if (in_array($attributeName, $matches)) {
+                        echo "<meta itemprop='$itemProp' content='".attributeValue($attributeValue)."'>";
+                    }
+                }
+            }
+        }
+
+    }
 }
 
 ?>

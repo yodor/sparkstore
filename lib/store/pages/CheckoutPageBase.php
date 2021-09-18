@@ -74,7 +74,7 @@ class CheckoutPageBase extends StorePage
         return $this->navigation;
     }
 
-    public function drawCartItems($heading_text = "")
+    public function drawCartItems(string $heading_text = "")
     {
         //$this->ccmp->setCart($this->cart);
         $this->ccmp->setHeadingText($heading_text);
