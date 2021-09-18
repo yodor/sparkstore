@@ -12,12 +12,27 @@ class ProductsTape extends Component
     protected $action = null;
     protected $query = null;
 
+    protected static $defaultItemRenderer = NULL;
+
+    public static function SetDefaultItemRenderer(DataIteratorItem $item)
+    {
+        self::$defaultItemRenderer = $item;
+    }
+
+    public static function GetDefaultItemRenderer() : DataIteratorItem
+    {
+        if (is_null(self::$defaultItemRenderer)) {
+            self::$defaultItemRenderer = new ProductListItem();
+        }
+        return self::$defaultItemRenderer;
+    }
+
     public function __construct(string $title = "")
     {
         parent::__construct();
 
-        $this->list_item = new ProductListItem();
-        $this->list_item->setPhotoSize(275, 275);
+        $this->list_item = ProductsTape::GetDefaultItemRenderer();
+
 
         $this->action = new Action();
         $this->action->translation_enabled = false;

@@ -1,4 +1,5 @@
 <?php
+include_once("class/pages/StorePage.php");
 include_once("beans/ConfigBean.php");
 
 include_once("auth/UserAuthenticator.php");
@@ -12,7 +13,7 @@ class AccountPageBase extends StorePage
     protected $account_menu = NULL;
     protected $authorized_access = TRUE;
 
-    public function __construct($authorized_access = TRUE)
+    public function __construct(bool $authorized_access = TRUE)
     {
         $this->authorized_access = $authorized_access;
 

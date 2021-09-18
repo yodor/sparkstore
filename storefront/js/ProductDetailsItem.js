@@ -129,8 +129,8 @@ function updateImagePreview(elm) {
     imageURL.searchParams.set("cmd", "image");
     imageURL.searchParams.set("class", itemClass);
     imageURL.searchParams.set("id", itemID);
-    imageURL.searchParams.set("width", 640);
-    imageURL.searchParams.set("height", 640);
+    imageURL.searchParams.set("width", sellable.sellable.width);
+    imageURL.searchParams.set("height", sellable.sellable.height);
 
     $(".images .image_preview IMG").attr("src", imageURL.href);
 
@@ -139,7 +139,6 @@ function updateImagePreview(elm) {
     let imagePopup = $(".images .image_preview .ImagePopup");
     imagePopup.attr("itemClass", itemClass);
     imagePopup.attr("itemID", itemID);
-
 
 }
 

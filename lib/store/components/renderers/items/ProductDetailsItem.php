@@ -48,6 +48,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     {
         $this->width = $width;
         $this->height = $height;
+
+        if ($this->sellable) {
+            $this->sellable->setPhotoSize($width, $height);
+        }
     }
 
     public function getPhotoWidth(): int
@@ -82,7 +86,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $photo_href = "";
 
         if ($main_photo instanceof StorageItem) {
-            $photo_href = $main_photo->hrefImage($this->width,$this->height);
+            $photo_href = $main_photo->hrefImage($this->width, $this->height);
         }
 
         echo "<div class='images'>";

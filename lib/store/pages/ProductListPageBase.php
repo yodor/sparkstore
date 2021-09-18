@@ -1,4 +1,6 @@
 <?php
+include_once("class/pages/StorePage.php");
+
 include_once("components/NestedSetTreeView.php");
 include_once("components/renderers/items/TextTreeItem.php");
 include_once("components/Action.php");
@@ -119,10 +121,11 @@ class ProductListPageBase extends StorePage
 
         $this->view->getTopPaginator()->view_modes_enabled = TRUE;
 
+        $this->breadcrumb = new BreadcrumbList();
+
+
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
-
-        $this->breadcrumb = new BreadcrumbList();
 
     }
 

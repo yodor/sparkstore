@@ -1,7 +1,7 @@
 <?php
 include_once("store/utils/SellableDataParser.php");
 
-class SellableItem implements JsonSerializable {
+class SellableItem implements JsonSerializable, IPhotoRenderer {
 
 
     protected $dataParser = null;
@@ -21,6 +21,9 @@ class SellableItem implements JsonSerializable {
     protected $keywords = "";
 
     protected $main_photo = null;
+
+    protected $width = -1;
+    protected $height = -1;
 
     //access by piID
     protected $rawData = array();
@@ -332,6 +335,35 @@ class SellableItem implements JsonSerializable {
     public function jsonSerialize() : array
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * Set the preferred size of the main photo (used from the JS code image gallery)
+     * @param int $width
+     * @param int $height
+     */
+    public function setPhotoSize(int $width, int $height)
+    {
+        $this->width = $width;
+        $this->height = $height;
+    }
+
+    /**
+     * Get the main photo preferred width
+     * @return int
+     */
+    public function getPhotoWidth(): int
+    {
+        return $this->width;
+    }
+
+    /**
+     * Get the main photo preferred height
+     * @return int
+     */
+    public function getPhotoHeight(): int
+    {
+        return $this->height;
     }
 }
 ?>

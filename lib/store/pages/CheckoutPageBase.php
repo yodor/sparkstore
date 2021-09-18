@@ -1,4 +1,6 @@
 <?php
+include_once("class/pages/StorePage.php");
+
 include_once("store/components/CartComponent.php");
 include_once("components/ClosureComponent.php");
 include_once("components/Action.php");

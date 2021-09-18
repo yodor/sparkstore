@@ -345,7 +345,7 @@ class CartComponent extends Component implements IHeadContents
             $discount = $cart->getDiscount();
             $this->discount_amount = $discount->amount();
 
-            $order_total = $order_total - $this->discount_amount;
+            $order_total = (float)$order_total - (float)$this->discount_amount;
 
             if ($discount->amount()) {
                 echo "<tr class='summary discount' label='discount'>";
