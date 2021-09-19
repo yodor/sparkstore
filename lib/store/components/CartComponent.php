@@ -53,16 +53,6 @@ class CartComponent extends Component implements IHeadContents
      */
     protected $table;
 
-    /**
-     * @var DBDriver
-     */
-    protected $db;
-
-    /**
-     * @var ProductPricesSQL
-     */
-    protected $price_select;
-
     public function __construct()
     {
         parent::__construct();
@@ -135,7 +125,7 @@ class CartComponent extends Component implements IHeadContents
 
         $piID = $cartItem->getID();
 
-        $item = $this->inventory->getByID($cartItem->getID());
+        $item = $this->inventory->getByID($piID);
 
         $prodID = $item["prodID"];
 
@@ -260,7 +250,6 @@ class CartComponent extends Component implements IHeadContents
     {
 
         $cart = Cart::Instance();
-        $items = $cart->items();
 
         echo "<tr label='heading'>";
         echo "
@@ -276,7 +265,7 @@ class CartComponent extends Component implements IHeadContents
 
         $total = 0;
 
-        if (count($items) == 0) {
+        if ($cart->itemsCount() == 0) {
             echo "<tr>";
             echo "<td colspan=6 field='cart_empty'>";
             echo tr("Вашата кошница е празна");
@@ -288,7 +277,9 @@ class CartComponent extends Component implements IHeadContents
             $items_listed = 0;
             $num_items_total = 0;
 
-            foreach ($items as $piID => $cartItem) {
+            $itemsAll = $cart->items();
+
+            foreach ($itemsAll as $piID => $cartItem) {
 
                 if (!$cartItem instanceof CartItem) continue;
 

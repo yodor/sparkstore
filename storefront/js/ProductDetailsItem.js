@@ -301,7 +301,6 @@ function renderActiveSellable()
 
 function addToCart() {
 
-
     let stock_amount = parseInt($(".stock_amount .value").html());
 
     let available_colors = $(".color_chooser .value .color_button").length;
@@ -331,10 +330,9 @@ function addToCart() {
     // }
 
     let url = new URL(LOCAL+"/checkout/cart.php", location.href);
-    url.searchParams.set("add", "");
+    url.searchParams.set("add","");
     url.searchParams.set("piID", selected_piID);
 
-    //window.location.href = LOCAL + "checkout/cart.php?addItem&piID=" + selected_piID;
     window.location.href=url.href;
 
 }

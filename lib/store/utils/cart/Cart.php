@@ -22,6 +22,7 @@ class Cart
      * @var null|Cart
      */
     protected static $instance = NULL;
+    protected static $session_key = NULL;
 
     const SESSION_KEY = "spark_cart";
 
@@ -64,7 +65,11 @@ class Cart
 
     static public function SessionKey() : string
     {
-        return Cart::SESSION_KEY."-".Cart::VERSION."-".SITE_TITLE;
+        if (self::$session_key) {
+            return self::$session_key;
+        }
+        self::$session_key = md5(Cart::SESSION_KEY."-".Cart::VERSION."-".SITE_TITLE);
+        return self::$session_key;
     }
 
     private function __construct()
@@ -121,9 +126,7 @@ class Cart
     public function removeItem(CartItem $item)
     {
         $itemID = $item->getID();
-        if (isset($this->items[$itemID])) {
-            unset($this->items[$itemID]);
-        }
+        $this->remove($itemID);
     }
 
     public function items(): array

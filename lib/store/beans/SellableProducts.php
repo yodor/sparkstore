@@ -21,10 +21,13 @@ class SellableProducts extends DBViewBean
         return " prodID, color ";
     }
 
-    static public function ParseAttributes(string $attributes)
+    static public function ParseAttributes(?string $attributes)
     {
-        $attr_list = explode("|", $attributes);
         $attr_all = array();
+        if (is_null($attributes)) return $attr_all;
+
+        $attr_list = explode("|", $attributes);
+
         if (is_array($attr_list)) {
             foreach ($attr_list as $idx => $pair) {
                 list($name, $value) = explode(":", $pair);

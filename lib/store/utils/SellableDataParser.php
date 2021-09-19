@@ -46,9 +46,10 @@ class SellableDataParser
             $item->setKeywords($result->get("keywords"));
         }
 
-        $attr_all = SellableProducts::ParseAttributes($result->get("inventory_attributes"));
-
-        $item->setAttributes($piID, $attr_all);
+        if ($result->get("inventory_attributes")) {
+            $attr_all = SellableProducts::ParseAttributes($result->get("inventory_attributes"));
+            $item->setAttributes($piID, $attr_all);
+        }
 
         $pclrID = (int)$result->get("pclrID");
         $piID = (int)$result->get("piID");
