@@ -198,6 +198,21 @@ class StorePageBase extends SparkPage
 
         $this->renderLDJSON($org_data);
 
+
+        $www_data = array(
+            "@context"=> "http://schema.org",
+            "@type"=> "WebSite",
+            "name"=> mb_strtoupper(SITE_TITLE). " - ОФИЦИАЛНА СТРАНИЦА",
+            "url"=> SITE_URL,
+            "potentialAction"=> array(
+                "@type"=> "SearchAction",
+                "target"=> SITE_URL."/products/list.php?filter=search&keyword={search_term_string}",
+                "query-input"=> "required name=search_term_string"
+            )
+        );
+
+        $this->renderLDJSON($www_data);
+
     }
 
     public function renderLDJSON(array $data)
