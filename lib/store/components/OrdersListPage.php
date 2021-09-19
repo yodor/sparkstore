@@ -8,7 +8,7 @@ include_once("store/components/renderers/cells/OrderClientCellRenderer.php");
 include_once("components/renderers/cells/BooleanCellRenderer.php");
 include_once("components/renderers/cells/DateCellRenderer.php");
 
-include_once("class/utils/OrderListSQL.php");
+include_once("store/utils/OrderListSQL.php");
 
 
 class OrdersListPage extends BeanListPage
