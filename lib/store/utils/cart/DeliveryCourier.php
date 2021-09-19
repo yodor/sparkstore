@@ -66,7 +66,7 @@ class DeliveryCourier {
      */
     public static function Supported() : array
     {
-        return array(DeliveryCourier::COURIER_EKONT, DeliveryCourier::COURIER_SPEEDY);
+        return array(DeliveryCourier::COURIER_EKONT);//, DeliveryCourier::COURIER_SPEEDY);
     }
 
     public function setSelectedOption(int $id)
