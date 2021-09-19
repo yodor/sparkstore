@@ -6,6 +6,8 @@ class SellableProducts extends DBViewBean
 {
     protected $products = null;
 
+    protected static $default_grouping = " prodID, color ";
+
     public function __construct()
     {
         $this->products  = new ProductsSQL();
@@ -18,7 +20,12 @@ class SellableProducts extends DBViewBean
 
     static public function DefaultGrouping()
     {
-        return " prodID, color ";
+        return self::$default_grouping;
+    }
+
+    static public function SetDefaultGrouping(string $grouping)
+    {
+        self::$default_grouping = $grouping;
     }
 
     static public function ParseAttributes(?string $attributes)
