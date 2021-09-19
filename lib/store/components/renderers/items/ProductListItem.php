@@ -61,8 +61,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->detailsURL->add(new DataParameter("prodID"));
         $this->detailsURL->add(new DataParameter("piID"));
 
+        $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
         $this->setAttribute("itemtype", "http://schema.org/Product");
+
 
     }
 
