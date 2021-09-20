@@ -6,10 +6,10 @@
 .images .image_preview {
     vertical-align: top;
     display: inline-block;
-    max-width: 648px;
+    max-width: 640px;
     box-sizing: border-box;
     text-align:center;
-    width:648px;
+    width:640px;
     overflow:hidden;
     position:relative;
 }
@@ -54,7 +54,7 @@
 
 .images .image_gallery .list {
     display: block;
-    max-width:648px;
+    max-width:640px;
     text-align:center;
 }
 
