@@ -90,6 +90,7 @@ class StorePageBase extends SparkPage
     protected $_menu = null;
     protected $_main = null;
     protected $_footer = null;
+    protected $_cookies = null;
 
     public function __construct()
     {
@@ -133,6 +134,11 @@ class StorePageBase extends SparkPage
         //$this->addJS("//code.jquery.com/ui/1.11.4/jquery-ui.js");
         //$this->addJS(SPARK_LOCAL . "/js/URI.js");
 
+
+
+        $this->addJS(STORE_LOCAL."/js/StoreCookies.js");
+
+
         $pc = new ProductCategoriesBean();
         $qry = $pc->query("category_name");
         $num = $qry->exec();
@@ -158,6 +164,10 @@ class StorePageBase extends SparkPage
         $this->_main = new SectionContainer();
         $this->_main->addClassName("main");
 
+        $this->_cookies = new SectionContainer();
+        $this->_cookies->addClassName("cookies");
+//        $this->_cookies->setAttribute("accepted", 0);
+
         $this->_footer = new SectionContainer();
         $this->_footer->addClassName("footer");
 
@@ -171,10 +181,17 @@ class StorePageBase extends SparkPage
         };
         $this->_menu->content()->append(new ClosureComponent($menu_callback, false));
 
+        $cookies_callback = function(ClosureComponent $parent) {
+            $this->renderCookiesInfo();
+        };
+        $this->_cookies->content()->append(new ClosureComponent($cookies_callback, false));
+
         $footer_callback = function(ClosureComponent $parent) {
             $this->renderFooter();
         };
         $this->_footer->content()->append(new ClosureComponent($footer_callback, false));
+
+
     }
 
     protected function headStart()
@@ -325,7 +342,22 @@ class StorePageBase extends SparkPage
             echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
             echo "<a class='slot phone' title='phone' href='tel:$phone'></a>";
         echo "</div>";
+
+
     }
+
+    protected function renderCookiesInfo()
+    {
+        echo "<div class='info'>";
+
+        echo "<a class='ColorButton' href='javascript:acceptCookies()'>";
+        echo tr("Добре");
+        echo "</a>";
+        echo tr("Сайтът използва '<i>бисквитки</i>', за да подобри услугите. Продължавайки разглеждането му автоматично се съгласявате с тяхното използване.");
+
+        echo "</div>";
+    }
+
 
     protected function selectActiveMenu()
     {
@@ -350,7 +382,9 @@ class StorePageBase extends SparkPage
         $this->_main->spaceRight()->render();
         $this->_main->finishRender();
 
+        $this->_cookies->render();
         $this->_footer->render();
+
 
         echo "\n";
         echo "\n<!-- finishRender StorePage-->\n";
@@ -373,6 +407,37 @@ class StorePageBase extends SparkPage
 
 
             observer.observe(document.querySelector(".section.header"));
+
+
+            let storeCookies = new StoreCookies();
+
+            function acceptCookies()
+            {
+                storeCookies.accept();
+                updateCookies();
+            }
+
+            function updateCookies()
+            {
+                let isAccepted = storeCookies.isAccepted();
+
+                $(".section.cookies").attr("checked", 1);
+
+                if (isAccepted) {
+                    $(".section.cookies").attr("accepted", 1);
+                }
+                else {
+                    $(".section.cookies").attr("accepted", 0);
+                }
+            }
+
+            onPageLoad(function(){
+
+                updateCookies();
+
+
+            });
+
         </script>
 <?php
         parent::finishRender();

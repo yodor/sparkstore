@@ -223,6 +223,39 @@ A.Caption:active {
     height:24px;
 }
 
+.section.cookies {
+    position: fixed;
+    z-index: 11;
+
+
+    bottom: 36px;
+
+    background-color:rgba(1.0,0.0,0.0,0.8);
+
+    display:none;
+}
+
+.section.cookies[accepted="1"] {
+    display:none;
+}
+
+.section.cookies[accepted="0"] {
+    display:table;
+}
+
+.section.cookies .content {
+
+    padding:60px;
+
+}
+.section.cookies .content .info {
+
+    color:white;
+
+}
+.section.cookies .content .info .ColorButton {
+    float:right;
+}
 
     /**/
 /* menu */
