@@ -3,6 +3,7 @@ include_once("beans/ConfigBean.php");
 include_once("store/utils/cart/CartItem.php");
 include_once("store/utils/cart/ZeroDiscount.php");
 include_once("store/utils/cart/Delivery.php");
+include_once("store/utils/cart/ICartListener.php");
 
 class Cart
 {
