@@ -223,7 +223,7 @@ function renderColorButtons(selected_pclrID)
         color_button.attr("title", color_name);
         color_button.attr("active", 0);
 
-        if (typeof value == "object") {
+        if (value && typeof value == "object") {
             let imageURL = new URL(value.storageURL, location.href);
             imageURL.searchParams.set("cmd", "image");
             imageURL.searchParams.set("class", value.className);
