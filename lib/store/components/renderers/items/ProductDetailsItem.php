@@ -81,20 +81,28 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function renderImagePane()
     {
-        $product_name = $this->sellable->getTitle();
-        $main_photo = $this->sellable->getMainPhoto();
-        $photo_href = "";
 
-        if ($main_photo instanceof StorageItem) {
-            $photo_href = $main_photo->hrefImage($this->width, $this->height);
-        }
 
         echo "<div class='images'>";
 
             echo "<div class='image_preview'>";
-                echo "<a class='ImagePopup' itemClass='{$main_photo->className}' itemID='{$main_photo->id}' title='".attributeValue($product_name)."'>";
+
+                $product_name = $this->sellable->getTitle();
+                $main_photo = $this->sellable->getMainPhoto();
+                $photo_href = "";
+                $photo_class = "";
+                $photo_id = "";
+
+                if ($main_photo instanceof StorageItem) {
+                    $photo_href = $main_photo->hrefImage($this->width, $this->height);
+                    $photo_class = $main_photo->className;
+                    $photo_id = $main_photo->id;
+                }
+
+                echo "<a class='ImagePopup' itemClass='{$photo_class}' itemID='{$photo_id}' title='".attributeValue($product_name)."'>";
                     echo "<img itemprop='image' alt='".attributeValue($product_name)."' src='$photo_href'>";
                 echo "</a>";
+
 
                 $piID = $this->sellable->getActiveInventoryID();
                 $priceInfo = $this->sellable->getPriceInfo($piID);
@@ -108,7 +116,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 }
                 echo "</div>";
 
-            echo "</div>";
+            echo "</div>"; //image_preview
 
             //image galleries per color
             echo "<div class='image_gallery'>";
