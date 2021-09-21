@@ -8,7 +8,7 @@ class Cart
 {
     protected $items = array();
 
-    protected $delivery = null;
+    protected $delivery = NULL;
 
     protected $note = "";
 
@@ -17,6 +17,8 @@ class Cart
     protected $data = array();
 
     protected $discountProcessor = NULL;
+
+    protected $cartListeners = NULL;
 
     /**
      * @var null|Cart
@@ -63,12 +65,12 @@ class Cart
         return self::$instance;
     }
 
-    static public function SessionKey() : string
+    static public function SessionKey(): string
     {
         if (self::$session_key) {
             return self::$session_key;
         }
-        self::$session_key = md5(Cart::SESSION_KEY."-".Cart::VERSION."-".SITE_TITLE);
+        self::$session_key = md5(Cart::SESSION_KEY . "-" . Cart::VERSION . "-" . SITE_TITLE);
         return self::$session_key;
     }
 
@@ -79,11 +81,18 @@ class Cart
         $this->delivery->initialize();
 
         $this->note = "";
-        $this->require_invoice = false;
+        $this->require_invoice = FALSE;
         $this->data = array();
 
         $this->discountProcessor = new ZeroDiscount();
         $this->discountProcessor->initialize();
+
+        $this->cartListeners = array();
+    }
+
+    public function addCartListener(ICartListener $listener)
+    {
+        $this->cartListeners[] = $listener;
     }
 
     public function store()
@@ -91,15 +100,72 @@ class Cart
         Session::Set(Cart::SessionKey(), serialize($this));
     }
 
+    protected function emit(Closure $closure, string $oprName, CartItem $item)
+    {
+        if (is_array($this->cartListeners) && count($this->cartListeners)>0) {
+            foreach ($this->cartListeners as $idx => $listener) {
+                if ($listener instanceof ICartListener) {
+                    $listener->before($oprName, $item, $this);
+                    $closure();
+                    $listener->after($oprName, $item, $this);
+                }
+            }
+        }
+        else {
+            $closure();
+        }
+    }
+
     public function addItem(CartItem $item)
     {
         $itemID = $item->getID();
         if ($this->contains($itemID)) {
-            $exist_item = $this->get($itemID);
-            $exist_item->increment($item->getQuantity());
+
+            $closure = function() use ($itemID, $item) {
+                $exist_item = $this->get($itemID);
+                $exist_item->increment($item->getQuantity());
+            };
+            $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
+
         }
         else {
-            $this->items[$itemID] = $item;
+
+            $closure = function() use ($itemID, $item) {
+                $this->items[$itemID] = $item;
+            };
+            $this->emit($closure, ICartListener::ITEM_ADD, $item);
+
+        }
+    }
+
+    public function increment(int $piID)
+    {
+        if ($this->contains($piID)) {
+            $item = $this->get($piID);
+            $closure = function() use ($item) {
+                $item->increment();
+            };
+            $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
+
+
+        }
+    }
+
+    public function decrement(int $piID)
+    {
+        if ($this->contains($piID)) {
+
+            $item = $this->get($piID);
+
+            $closure = function() use ($item) {
+                $item->decrement();
+            };
+            $this->emit($closure, ICartListener::ITEM_QTY_DECREMENT, $item, $this);
+
+            if ($item->getQuantity()<1) {
+                $this->removeItem($item);
+            }
+
         }
     }
 
@@ -119,7 +185,14 @@ class Cart
     public function remove(int $itemID)
     {
         if (isset($this->items[$itemID])) {
-            unset($this->items[$itemID]);
+
+            $item = $this->items[$itemID];
+
+            $closure = function() use ($item, $itemID) {
+                unset($this->items[$itemID]);
+            };
+
+            $this->emit($closure, ICartListener::ITEM_REMOVE, $item);
         }
     }
 
@@ -146,7 +219,11 @@ class Cart
 
     public function clear()
     {
-        $this->items = array();
+        $closure = function() {
+            $this->items = array();
+        };
+        $this->emit($closure, ICartListener::CART_CLEAR, null);
+
     }
 
     public function getItemsTotal(): float

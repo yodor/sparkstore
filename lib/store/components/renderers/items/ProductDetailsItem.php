@@ -191,6 +191,14 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $piID = $this->sellable->getActiveInventoryID();
 
         $priceInfo = $this->sellable->getPriceInfo($piID);
+        $stock_amount = (int)$priceInfo->getStockAmount();
+
+        if ($stock_amount>0) {
+            echo "<link itemprop='availability' href='https://schema.org/InStock'>";
+        }
+        else {
+            echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
+        }
 
         echo "<div class='group stock_amount disabled'>";
 
@@ -208,9 +216,15 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $piID = $this->sellable->getActiveInventoryID();
 
         $priceInfo = $this->sellable->getPriceInfo($piID);
+        $stock_amount = (int)$priceInfo->getStockAmount();
+
+        $instock = "no_stock";
+        if ($stock_amount>0) {
+            $instock = "in_stock='{$stock_amount}'";
+        }
 
 
-        echo "<div class='group pricing'>";
+        echo "<div class='group pricing' $instock>";
 
         echo "<div class='item price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
 
@@ -234,23 +248,43 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     public function renderGroupCartLink()
     {
-        echo "<div class='group cart_link'>";
+        $piID = $this->sellable->getActiveInventoryID();
 
-        echo "<a class='cart_add' href='javascript:addToCart()'>";
-        echo "<span class='icon'></span>";
-        echo "<span>".tr("Поръчай")."</span>";
-        echo "</a>";
+        $priceInfo = $this->sellable->getPriceInfo($piID);
+        $stock_amount = (int)$priceInfo->getStockAmount();
 
-        $config = ConfigBean::Factory();
-        $config->setSection("store_config");
-        $phone = $config->get("phone", "");
-        if ($phone) {
-            echo "<a class='order_phone' href='tel:$phone'>";
-            //echo "<label>".tr("Телефон за поръчки")."</label>";
-            echo "<span class='icon'></span>";
-            echo "<span>$phone</span>";
-            echo "</a>";
+        $instock = "no_stock";
+        if ($stock_amount>0) {
+            $instock = "in_stock='{$stock_amount}'";
         }
+
+        echo "<div class='group cart_link' $instock>";
+
+            if ($stock_amount<1) {
+                echo "<a class='nostock'>";
+                    echo "<span class='icon'></span>";
+                    echo "<label>" . tr("Няма наличност") . "</label>";
+                echo "</a>";
+            }
+            else {
+                echo "<a class='cart_add' href='javascript:addToCart()'>";
+                    echo "<span class='icon'></span>";
+                    echo "<label>" . tr("Поръчай") . "</label>";
+                echo "</a>";
+            }
+
+            $config = ConfigBean::Factory();
+            $config->setSection("store_config");
+            $phone = $config->get("phone", "");
+            if ($phone) {
+                echo "<a class='order_phone' href='tel:$phone'>";
+                //echo "<label>".tr("Телефон за поръчки")."</label>";
+                    echo "<span class='icon'></span>";
+                    echo "<label>$phone</label>";
+                echo "</a>";
+            }
+
+
 
         echo "</div>";
     }
