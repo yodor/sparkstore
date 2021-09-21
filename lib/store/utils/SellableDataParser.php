@@ -115,14 +115,21 @@ class SellableDataParser
         }
         else {
             //no chip assigned - use first image from the gallery if there is at least one coloring scheme setup
-            $gallery_items = $item->galleryItems($pclrID);
-            if (isset($gallery_items[0])) {
-                $item->setColorChip($pclrID, $gallery_items[0]);
-            }
-            else {
+            if (!$item->haveGalleryItems($pclrID)) {
                 //use the color code as color button
                 $item->setColorChip($pclrID, null);
             }
+            else {
+                $gallery_items = $item->galleryItems($pclrID);
+                if (isset($gallery_items[0])) {
+                    $item->setColorChip($pclrID, $gallery_items[0]);
+                }
+                else {
+                    //use the color code as color button
+                    $item->setColorChip($pclrID, null);
+                }
+            }
+
         }
 
 
@@ -149,14 +156,8 @@ class SellableDataParser
             $photos_query->select->limit = " 1 ";
             $num = $photos_query->exec();
             if ($photo_row = $photos_query->next()) {
-
                 $main_photo = new StorageItem($photo_row["ppID"], "ProductPhotosBean");
                 $item->setMainPhoto($main_photo);
-                // $this->gallery_href = STORAGE_LOCAL . "?cmd=image&height=648&width=648";
-
-                // $this->big_href = STORAGE_LOCAL . "?cmd=image&class=ProductPhotosBean&id=$this->photoID&height=648&width=648";
-                //$big_href = STORAGE_LOCAL . "?cmd=image";
-
             }
         }
 
