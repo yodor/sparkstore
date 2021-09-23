@@ -181,7 +181,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $title_alt = attributeValue($this->data["product_name"]);
         $details_url = $this->detailsURL->url();
 
-        echo "<meta itemprop='position' content='".attributeValue($this->position)."'>";
         echo "<meta itemprop='url' content='".attributeValue(fullURL($details_url))."'>";
         echo "<meta itemprop='category' content='".attributeValue($this->data["category_name"])."'>";
         $description_content = $this->data["product_name"];
