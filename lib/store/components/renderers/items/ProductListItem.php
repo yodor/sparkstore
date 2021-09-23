@@ -61,10 +61,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->detailsURL->add(new DataParameter("prodID"));
         $this->detailsURL->add(new DataParameter("piID"));
 
+
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
-        $this->setAttribute("itemtype", "http://schema.org/Product");
-
+        $this->setAttribute("itemtype", "http://schema.org/ListItem");
 
     }
 
@@ -164,9 +164,20 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderImpl()
     {
-        $this->renderMeta();
+        $title_alt = attributeValue($this->data["product_name"]);
+        $details_url = attributeValue(fullURL($this->detailsURL->url()));
+        $img_href = $this->photo->hrefImage($this->width, $this->height);
 
-        echo "<div class='wrap'>";
+        //meta for ListItem
+        echo "<meta itemprop='position' content='{$this->position}'>";
+        echo "<meta itemprop='name' content='{$title_alt}'>";
+        echo "<meta itemprop='url' content='{$details_url}'>";
+        echo "<meta itemprop='image' content='{$img_href}'>";
+
+        echo "<div class='wrap' itemscope itemtype='http://schema.org/Product'>";
+
+            //meta for product
+            $this->renderMeta();
 
             $this->renderPhoto();
             $this->renderColorChips();
