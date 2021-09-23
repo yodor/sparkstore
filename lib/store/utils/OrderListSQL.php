@@ -16,7 +16,7 @@ class OrderListSQL extends SQLSelect
 
         $this->fields()->set("derived.*");
 
-        $this->from = " ( ".$select->getSQL(false, false)." ) as derived";
+        $this->from = " ( ".$select->getSQL()." ) as derived";
 
     }
 }
