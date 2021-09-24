@@ -75,7 +75,10 @@ class ProductsTape extends Component
             if ($this->title) {
                 $this->action->render();
             }
+            $position = 0;
             while ($row = $this->query->next()) {
+                $position++;
+                $this->list_item->setPosition($position);
                 $this->list_item->setData($row);
                 $this->list_item->render();
             }

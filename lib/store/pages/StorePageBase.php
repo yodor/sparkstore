@@ -216,6 +216,12 @@ class StorePageBase extends SparkPage
         $this->renderLDJSON($org_data);
 
 
+        $this->renderSearchLD();
+
+    }
+
+    protected function renderSearchLD()
+    {
         $www_data = array(
             "@context"=> "http://schema.org",
             "@type"=> "WebSite",
@@ -229,7 +235,6 @@ class StorePageBase extends SparkPage
         );
 
         $this->renderLDJSON($www_data);
-
     }
 
     public function renderLDJSON(array $data)
