@@ -97,7 +97,6 @@ class ProductListPageBase extends StorePage
         //Initialize product categories tree
         $treeView = new NestedSetTreeView();
         $treeView->setName("products_tree");
-        $treeView->open_all = FALSE;
 
         //item renderer for the tree view
         $ir = new TextTreeItem();
