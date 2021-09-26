@@ -300,9 +300,15 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         }
     }
 
-    public function renderSidePane()
+    protected function sidePaneStart()
     {
         echo "<div class='side_pane' >";
+    }
+
+    public function renderSidePane()
+    {
+
+        $this->sidePaneStart();
 
             //title + short description
             $this->renderGroupDescription();
@@ -323,6 +329,11 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
             $this->renderGroupLongDescription();
 
+        $this->sidePaneFinish();
+    }
+
+    protected function sidePaneFinish()
+    {
         echo "</div>"; //side_pane
     }
 
