@@ -101,7 +101,12 @@ class Cart
         Session::Set(Cart::SessionKey(), serialize($this));
     }
 
-    protected function emit(Closure $closure, string $oprName, CartItem $item)
+    /**
+     * @param Closure $closure
+     * @param string $oprName
+     * @param ?CartItem $item
+     */
+    protected function emit(Closure $closure, string $oprName, ?CartItem $item)
     {
         if (is_array($this->cartListeners) && count($this->cartListeners)>0) {
             foreach ($this->cartListeners as $idx => $listener) {
@@ -117,6 +122,10 @@ class Cart
         }
     }
 
+    /**
+     * @param CartItem $item
+     * @throws Exception
+     */
     public function addItem(CartItem $item)
     {
         $itemID = $item->getID();
@@ -139,6 +148,10 @@ class Cart
         }
     }
 
+    /**
+     * @param int $piID
+     * @throws Exception
+     */
     public function increment(int $piID)
     {
         if ($this->contains($piID)) {
@@ -152,6 +165,10 @@ class Cart
         }
     }
 
+    /**
+     * @param int $piID
+     * @throws Exception
+     */
     public function decrement(int $piID)
     {
         if ($this->contains($piID)) {
@@ -170,6 +187,11 @@ class Cart
         }
     }
 
+    /**
+     * @param int $itemID
+     * @return CartItem
+     * @throws Exception
+     */
     public function get(int $itemID): CartItem
     {
         if (isset($this->items[$itemID])) {
@@ -178,11 +200,18 @@ class Cart
         throw new Exception("'$itemID' not found");
     }
 
+    /**
+     * @param int $itemID
+     * @return bool
+     */
     public function contains(int $itemID) : bool
     {
         return isset($this->items[$itemID]);
     }
 
+    /**
+     * @param int $itemID
+     */
     public function remove(int $itemID)
     {
         if (isset($this->items[$itemID])) {
@@ -197,17 +226,26 @@ class Cart
         }
     }
 
+    /**
+     * @param CartItem $item
+     */
     public function removeItem(CartItem $item)
     {
         $itemID = $item->getID();
         $this->remove($itemID);
     }
 
+    /**
+     * @return array
+     */
     public function items(): array
     {
         return $this->items;
     }
 
+    /**
+     * @return int
+     */
     public function itemsCount(): int
     {
         $num_items = 0;
@@ -218,6 +256,9 @@ class Cart
         return $num_items;
     }
 
+    /**
+     *
+     */
     public function clear()
     {
         $closure = function() {
@@ -227,6 +268,9 @@ class Cart
 
     }
 
+    /**
+     * @return float
+     */
     public function getItemsTotal(): float
     {
         $items_total = 0.0;
@@ -237,51 +281,84 @@ class Cart
         return $items_total;
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     */
     public function setData(string $name, string $value)
     {
         $this->data[$name] = $value;
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function getData(string $name) : string
     {
         return $this->data[$name];
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function haveData(string $name) : bool
     {
         return isset($this->data[$name]);
     }
 
+    /**
+     * @param string $text
+     */
     public function setNote(string $text)
     {
         $this->note = mb_substr($text, 0, Cart::NOTE_MAX_LENGTH);
     }
 
+    /**
+     * @return string
+     */
     public function getNote() : string
     {
         return $this->note;
     }
 
+    /**
+     * @param bool $mode
+     */
     public function setRequireInvoice(bool $mode)
     {
         $this->require_invoice = $mode;
     }
 
+    /**
+     * @return bool
+     */
     public function getRequireInvoice() : bool
     {
         return $this->require_invoice;
     }
 
+    /**
+     * @return Delivery
+     */
     public function getDelivery() : Delivery
     {
         return $this->delivery;
     }
 
+    /**
+     * @return IDiscountProcessor
+     */
     public function getDiscount() : IDiscountProcessor
     {
         return $this->discountProcessor;
     }
 
+    /**
+     * @param IDiscountProcessor $proc
+     */
     public function setDiscount(IDiscountProcessor $proc) {
         $this->discountProcessor = $proc;
     }
