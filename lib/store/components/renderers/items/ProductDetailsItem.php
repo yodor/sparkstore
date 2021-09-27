@@ -16,6 +16,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected $width = -1;
     protected $height = -1;
 
+    protected $side_pane = null;
+
     public function __construct(SellableItem $item)
     {
         parent::__construct();
@@ -26,6 +28,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->sellable = $item;
 
         $this->setPhotoSize(640,640);
+
+        $this->side_pane = new Container();
+        $this->side_pane->setWrapperEnabled(true);
+        $this->side_pane->setComponentClass("side_pane");
 
     }
 
@@ -302,7 +308,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function sidePaneStart()
     {
-        echo "<div class='side_pane' >";
+        $this->side_pane->startRender();
     }
 
     public function renderSidePane()
@@ -334,7 +340,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function sidePaneFinish()
     {
-        echo "</div>"; //side_pane
+        $this->side_pane->finishRender();
     }
 
     protected function renderFeaturesTab()
