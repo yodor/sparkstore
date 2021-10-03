@@ -91,7 +91,7 @@
 }
 .MenuBar .MenuBarComponent .MenuBarItemRenderer.Hover {
     border-top:5px solid transparent;
-    border-bottom:5px solid #ff6600;
+    border-bottom:5px solid var(--theme-accent);
 }
 
 .MenuBar .MenuBarComponent .MenuBarItemRenderer[active="1"] .MenuItemLink {
@@ -101,6 +101,6 @@
 
 .MenuBar .MenuBarComponent .MenuBarItemRenderer[active="1"] {
     border-top:5px solid transparent;
-    border-bottom:5px solid #ff6600;
+    border-bottom:5px solid var(--theme-accent);
 }
 

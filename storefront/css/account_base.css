@@ -1,5 +1,5 @@
 .actions_list .Action {
-    color:red;
+    color:var(--theme-accent);
 }
 
 .main .content .columns {

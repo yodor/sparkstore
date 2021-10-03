@@ -1,6 +1,15 @@
 * {
     font-family: 'Montserrat', 'Arial', sans-serif;
 }
+:root {
+    --theme-accent: #ff6600;
+    --theme-accent-light: #ff6600;
+    --theme-accent-dark: #ff6600;
+    --theme-filter-colorize-white: invert(1%) sepia(3%) saturate(594%) hue-rotate(235deg) brightness(122%) contrast(100%);
+    --theme-filter-checkout-icon: invert(49%) sepia(51%) saturate(5288%) hue-rotate(2deg) brightness(104%) contrast(103%);
+    /*red*/
+    /*filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);*/
+}
 
 body {
     /*   background-color:#ababab; */
@@ -61,7 +70,7 @@ body {
 }
 
 .home .section A:hover .Caption {
-    color: #ff6600;
+    color: var(--theme-accent);
 }
 
 A.Caption {
@@ -73,7 +82,7 @@ A.Caption:visited {
     text-decoration:none;
 }
 A.Caption:hover {
-    color: #ff6600;
+    color: var(--theme-accent);
     text-decoration:none;
 }
 A.Caption:active {
@@ -412,7 +421,7 @@ A.Caption:active {
     display:inline-block;
     width:10px;
     height:10px;
-    background-color:#ff6600;
+    background-color: var(--theme-accent);
     content:' ';
     border-radius:15px;
     bottom:0;
@@ -428,8 +437,8 @@ A.Caption:active {
 }
 
 .section.menu .content .customer_pane .button.cart[item_count] .icon {
-    /*red*/
-    filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);
+    filter: var(--theme-filter-checkout-icon);
+
 }
 
 .section.menu .content .customer_pane .button.cart .items_dot {
@@ -659,10 +668,10 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 
 A:hover, A:visited {
     text-decoration:underline;
-    color:#ff6600;
+    color: var(--theme-accent);
 }
 .ColorButton[action] {
-    background:#ff6600;
+    background: var(--theme-accent);
     color: white;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -671,7 +680,7 @@ A:hover, A:visited {
     text-transform: uppercase;
 }
 .ColorButton {
-    background-color:#ff6600;
+    background-color: var(--theme-accent);
     color: white;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;

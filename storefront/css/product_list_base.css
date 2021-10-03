@@ -72,17 +72,43 @@
     color:black;
 }
 
+.TreeView .Node {
+    font-size: 1.2em;
+}
+
+
+.TreeView .Node:hover {
+    background-color: var(--theme-accent);
+}
+
+.TreeView .Node:hover .Handle .Button {
+    filter: var(--theme-filter-colorize-white);
+}
+
+.TreeView .Node:hover .Action {
+    color: white;
+    font-weight:normal !important;
+    text-decoration:none !important;
+    font-weight:bold !important;
+}
+
+.TreeView .Node[active='1'] {
+    background-color: var(--theme-accent);
+}
+
+.TreeView .Node[active='1'] .Handle .Button {
+    filter: var(--theme-filter-colorize-white);
+}
+
 .TreeView .Node[active='1'] .Action {
-    color:red;
+    color: white;
     font-weight:normal !important;
     text-decoration:none !important;
     font-weight:bold !important;
 }
 
 
-.TreeView .Node {
-    font-size: 1.2em;
-}
+
 
 FORM[name='ProductListFilterInputForm'] {
     display: block !important;

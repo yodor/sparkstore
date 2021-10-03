@@ -73,7 +73,7 @@
     display:none !important;
 }
 .images .image_gallery .list .item[active='1'] {
-    outline:1px solid #ff6600;
+    outline:1px solid var(--theme-accent);
 }
 
 
@@ -326,7 +326,7 @@
 }
 
 .color_chooser .color_button[active="1"] {
-    outline: 1px dashed #ff6600;
+    outline: 1px dashed var(--theme-accent);
 }
 
 .color_chooser .color_button IMG {
@@ -399,6 +399,6 @@
 }
 
 .size_chooser .size_button[active="1"] {
-    outline: 1px dashed #ff6600;
+    outline: 1px dashed var(--theme-accent);
 }
 
