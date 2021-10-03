@@ -194,6 +194,11 @@ class StorePageBase extends SparkPage
 
     }
 
+    public function getAuthContext() : ?AuthContext
+    {
+        return $this->context;
+    }
+
     protected function headStart()
     {
         parent::headStart();

@@ -5,6 +5,8 @@ include_once("store/beans/ProductFeaturesBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 
 include_once("store/utils/SellableItem.php");
+include_once("store/forms/QueryProductForm.php");
+include_once("store/responders/json/QueryProductResponder.php");
 
 class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
@@ -17,6 +19,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected $height = -1;
 
     protected $side_pane = null;
+
+    protected $queryProductForm = NULL;
+
+    protected $queryProductEnabled = true;
 
     public function __construct(SellableItem $item)
     {
@@ -33,6 +39,29 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->side_pane->setWrapperEnabled(true);
         $this->side_pane->setComponentClass("side_pane");
 
+        $this->queryProductForm = new QueryProductForm();
+        $renderer = new FormRenderer($this->queryProductForm);
+
+        $responder = new QueryProductResponder();
+
+    }
+
+    public function setQueryProductEnabled(bool $mode)
+    {
+        $this->queryProductEnabled = $mode;
+    }
+    public function isQueryProductEnabled() : bool
+    {
+        return $this->queryProductEnabled;
+    }
+
+    public function setQueryProductForm(InputForm $form)
+    {
+        $this->queryProductForm = $form;
+    }
+    public function getQueryProductForm() : InputForm
+    {
+        return $this->queryProductForm;
     }
 
     public function requiredStyle(): array
@@ -267,32 +296,67 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "<div class='group cart_link' $instock>";
 
             if ($stock_amount<1) {
-                echo "<a class='nostock'>";
+                echo "<a class='button nostock'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Няма наличност") . "</label>";
                 echo "</a>";
             }
             else {
-                echo "<a class='cart_add' href='javascript:addToCart()'>";
+                echo "<a class='button cart_add' href='javascript:addToCart()'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Поръчай") . "</label>";
                 echo "</a>";
             }
 
+
             $config = ConfigBean::Factory();
             $config->setSection("store_config");
             $phone = $config->get("phone", "");
             if ($phone) {
-                echo "<a class='order_phone' href='tel:$phone'>";
+                echo "<a class='button order_phone' href='tel:$phone'>";
                 //echo "<label>".tr("Телефон за поръчки")."</label>";
                     echo "<span class='icon'></span>";
                     echo "<label>$phone</label>";
                 echo "</a>";
             }
 
-
+            if ($this->queryProductEnabled) {
+                echo "<a class='button query_product' href='javascript:showProductQueryForm()'>";
+                echo "<span class='icon'></span>";
+                echo "<label>" . tr("Запитване") . "</label>";
+                echo "</a>";
+            }
 
         echo "</div>";
+    }
+
+    protected function renderGroupQueryProductForm()
+    {
+
+        if ($this->queryProductEnabled) {
+            echo "<div class='group query_product'>";
+
+                $page = SparkPage::Instance();
+                $authContext = $page->getAuthContext();
+                if ($authContext instanceof AuthContext) {
+
+                    $this->queryProductForm->getInput("fullname")->setValue($authContext->getData()->get("fullname"));
+                    $this->queryProductForm->getInput("email")->setValue($authContext->getData()->get("email"));
+
+                }
+
+                $renderer = $this->queryProductForm->getRenderer();
+                $submit_button = $renderer->getSubmitButton();
+
+                $submit_button->setType("button");
+                $submit_button->setValue("");
+                $submit_button->setAttribute("onClick", "javascript:sendProductQuery()");
+
+                $renderer->render();
+
+            echo "</div>";
+        }
+
     }
 
     protected function renderGroupLongDescription()
@@ -332,6 +396,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             $this->renderGroupCartLink();
 
             echo "<div class='clear'></div>";
+
+            $this->renderGroupQueryProductForm();
 
             $this->renderGroupLongDescription();
 

@@ -336,3 +336,68 @@ function addToCart() {
     window.location.href=url.href;
 
 }
+
+function showProductQueryForm()
+{
+    let form = $("FORM[name='QueryProductForm']");
+
+    let isShown = form.attr("shown");
+
+    //isShown = true
+    if (typeof isShown !== 'undefined' && isShown !== false) {
+        //hide the form
+        form.removeAttr("shown");
+        form.trigger("reset");
+    }
+    else {
+        form.attr("shown", 1);
+    }
+
+}
+
+function sendProductQuery()
+{
+    let form = document.forms.QueryProductForm;
+
+
+    let name = form.elements['fullname'].value;
+
+    if (!name) {
+        showAlert("Моля въведете Вашето име");
+        return;
+    }
+
+    let email = form.elements['email'].value;
+    if (!email) {
+        showAlert("Моля въведете Вашият email адрес");
+        return;
+    }
+
+    let query = form.elements['query'].value;
+    if (!query) {
+        showAlert("Моля въведете запитване");
+        return;
+    }
+
+    let emailError = validateEmailText(email);
+    if (emailError) {
+        showAlert("Моля въведете валиден email адрес");
+        return;
+    }
+
+
+    let req = new JSONRequest();
+    req.setResponder("query_product");
+    req.setFunction("sendQuery");
+    req.setPostParameter("itemID", sellable.piID);
+    req.setPostParameter("name", name);
+    req.setPostParameter("email", email);
+    req.setPostParameter("query", query);
+    req.onSuccess = function(json_result){
+        showAlert("Заявката Ви беше приета");
+        $(form).removeAttr("shown");
+        $(form).trigger("reset");
+    };
+
+    req.start();
+}
