@@ -250,6 +250,9 @@
 .side_pane .button.order_phone .icon {
     background-image:url("../images/phone_icon.svg");
 }
+.side_pane .button.query_product .icon {
+    background-image:url("../images/question_icon.svg");
+}
 
 .side_pane .button LABEL {
     vertical-align: top;
