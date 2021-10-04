@@ -89,7 +89,7 @@ class QueryProductResponder extends JSONResponder
             $this->mailer->prepareMessage();
             $this->mailer->send();
 
-            echo "Заявката Ви е приета";
+            echo tr("Your query was accepted");
         }
         else {
             throw new Exception("Incorrect itemID");

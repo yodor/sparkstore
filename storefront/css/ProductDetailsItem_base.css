@@ -433,3 +433,12 @@
     outline: 1px dashed var(--theme-accent);
 }
 
+.side_pane FORM progress {
+    display:none;
+}
+.side_pane FORM[working='1'] progress {
+    display:inherit;
+}
+.side_pane FORM[working='1'] button {
+    display:none;
+}

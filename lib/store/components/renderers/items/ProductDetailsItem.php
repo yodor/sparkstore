@@ -41,7 +41,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         $this->queryProductForm = new QueryProductForm();
         $renderer = new FormRenderer($this->queryProductForm);
-
+        $renderer->getButtons()->setContents("<progress></progress>");
         $responder = new QueryProductResponder();
 
     }

@@ -339,22 +339,27 @@ function addToCart() {
 
 function showProductQueryForm()
 {
-    let form = $("FORM[name='QueryProductForm']");
+    let form = document.forms.QueryProductForm;
 
-    let isShown = form.attr("shown");
+    let isShown = $(form).attr("shown");
 
     //isShown = true
     if (typeof isShown !== 'undefined' && isShown !== false) {
         //hide the form
-        form.removeAttr("shown");
-        form.trigger("reset");
+        resetProductQueryForm();
     }
     else {
-        form.attr("shown", 1);
+        $(form).attr("shown", 1);
     }
 
 }
-
+function resetProductQueryForm()
+{
+    let form = document.forms.QueryProductForm;
+    $(form).removeAttr("shown");
+    $(form).removeAttr("working");
+    $(form).trigger("reset");
+}
 function sendProductQuery()
 {
     let form = document.forms.QueryProductForm;
@@ -385,6 +390,7 @@ function sendProductQuery()
         return;
     }
 
+    $(form).attr("working", 1);
 
     let req = new JSONRequest();
     req.setResponder("query_product");
@@ -393,10 +399,11 @@ function sendProductQuery()
     req.setPostParameter("name", name);
     req.setPostParameter("email", email);
     req.setPostParameter("query", query);
-    req.onSuccess = function(json_result){
-        showAlert("Заявката Ви беше приета");
-        $(form).removeAttr("shown");
-        $(form).trigger("reset");
+    req.onSuccess = function(result){
+
+        showAlert(result.json_result.contents);
+        resetProductQueryForm();
+
     };
 
     req.start();
