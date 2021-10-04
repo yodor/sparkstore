@@ -217,7 +217,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected function renderGroupAttributes()
     {
         echo "<div class='group attributes' >";
-
+        echo "<div class='viewport'></div>";
         echo "</div>"; //attributes
     }
 

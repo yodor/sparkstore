@@ -17,7 +17,7 @@ function updatePrice() {
 
     let attrib = sellable.getAttributes(piID);
 
-    $(".group.attributes").empty();
+    $(".group.attributes .viewport").empty();
 
     let item_template = "<div class='item'><label></label><span class='value'></span></div>";
 
@@ -44,7 +44,7 @@ function updatePrice() {
                 let attribute_item = $(item_template);
                 attribute_item.find("LABEL").first().text(name);
                 attribute_item.find(".value").first().text(value);
-                $(".group.attributes").append(attribute_item);
+                $(".group.attributes .viewport").append(attribute_item);
 
             });
         }
