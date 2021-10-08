@@ -16,6 +16,9 @@
     .images .image_preview {
         width:auto;
     }
+    .images .image_gallery .list {
+        max-width:inherit;
+    }
 
 }
 @media screen and (max-width: 834px) {
