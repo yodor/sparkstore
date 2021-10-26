@@ -141,15 +141,15 @@
     text-align: right;
 }
 
-.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='price'] {
-    display:none;
-}
-.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='buy_price'] {
-    display:none;
-}
-.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='promo_price'] {
-    display:none;
-}
+/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='price'] {*/
+/*    display:none;*/
+/*}*/
+/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='buy_price'] {*/
+/*    display:none;*/
+/*}*/
+/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='promo_price'] {*/
+/*    display:none;*/
+/*}*/
 .DataIteratorField {
     box-sizing:border-box;
     padding:20px;
@@ -173,4 +173,7 @@
 
 .config.list FORM[name='StoreConfigForm'] {
     min-width:800px;
+}
+.config.list FORM[name='StoreConfigForm'] TEXTAREA {
+    min-height:100px;
 }
