@@ -345,12 +345,20 @@ class StorePageBase extends SparkPage
         $phone = $cfg->get("phone", "");
 
         echo "<div class='social'>";
-            echo "<a class='slot facebook' title='facebook' href='{$facebook_href}'></a>";
-            echo "<a class='slot instagram' title='instagram' href='{$instagram_href}'></a>";
-            echo "<a class='slot youtube' title='youtube' href='{$youtube_href}'></a>";
-            echo "<a class='slot contacts' title='contacts' href='".LOCAL."/contacts.php'></a>";
+            if ($facebook_href) {
+                echo "<a class='slot facebook' title='facebook' href='{$facebook_href}'></a>";
+            }
+            if ($instagram_href) {
+                echo "<a class='slot instagram' title='instagram' href='{$instagram_href}'></a>";
+            }
+            if ($youtube_href) {
+                echo "<a class='slot youtube' title='youtube' href='{$youtube_href}'></a>";
+            }
             echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
-            echo "<a class='slot phone' title='phone' href='tel:$phone'></a>";
+            echo "<a class='slot contacts' title='contacts' href='".LOCAL."/contacts.php'></a>";
+            if ($phone) {
+                echo "<a class='slot phone' title='phone' href='tel:$phone'></a>";
+            }
         echo "</div>";
 
 
