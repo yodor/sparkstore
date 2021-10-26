@@ -83,6 +83,8 @@ class ProductListPageBase extends StorePage
 
     protected $breadcrumb = null;
 
+    public $treeViewUseAgregateSelect = true;
+
     public function __construct()
     {
         parent::__construct();
@@ -278,7 +280,9 @@ class ProductListPageBase extends StorePage
         //echo $aggregateSelect->getSQL();
 
         //$aggregateSelect->fields()->removeValue("related_count");
-        $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
+        if ($this->treeViewUseAgregateSelect) {
+            $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
+        }
 
     }
 
