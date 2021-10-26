@@ -1,6 +1,5 @@
 <?php
 include_once("forms/InputForm.php");
-include_once("store/beans/BrandsBean.php");
 include_once("input/validators/URLValidator.php");
 
 class BrandInputForm extends InputForm
