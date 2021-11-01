@@ -161,7 +161,7 @@ class ProductInputForm extends InputForm
 
 //        echo $sel->getSQL();
 
-        $class_name = "Книги";
+        $class_name = "Продукти";
 
         //$class_name = $item_row["class_name"];
         $sel->where()->add("ca.class_name", "'$class_name'");
