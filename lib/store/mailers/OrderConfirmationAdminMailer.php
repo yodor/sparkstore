@@ -5,7 +5,7 @@ include_once("store/beans/OrderItemsBean.php");
 include_once("beans/UsersBean.php");
 include_once("store/utils/cart/Cart.php");
 
-class OrderConfirmationMailer extends Mailer
+class OrderConfirmationAdminMailer extends Mailer
 {
 
     public function __construct(int $orderID)
