@@ -254,7 +254,12 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
 
     public function getAttributes(int $piID) : array
     {
-        return $this->attributes[$piID];
+        if (isset($this->attributes[$piID])) {
+            return $this->attributes[$piID];
+        }
+        else {
+            return array();
+        }
     }
 
     public function getAttributesAll() : array
