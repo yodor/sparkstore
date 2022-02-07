@@ -1,6 +1,7 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
+include_once("input/validators/SimplePhoneValidator.php");
 
 class ClientAddressInputForm extends InputForm
 {
@@ -16,6 +17,7 @@ class ClientAddressInputForm extends InputForm
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
+        $field->setValidator(new SimplePhoneValidator());
         $this->addInput($field);
 
         if (!$this->fast_order) {
