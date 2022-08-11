@@ -130,6 +130,16 @@ class ProductListPageBase extends StorePage
 
     }
 
+    public function getItemView() : ItemView
+    {
+        return $this->view;
+    }
+
+    public function getTreeView() : NestedSetTreeView
+    {
+        return $this->treeView;
+    }
+
     protected function initSortFields()
     {
         $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
