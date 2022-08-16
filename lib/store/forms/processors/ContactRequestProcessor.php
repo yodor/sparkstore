@@ -19,11 +19,7 @@ class ContactRequestProcessor extends FormProcessor
     protected function processImpl(InputForm $form)
     {
         parent::processImpl($form);
-
-        $this->mailer = new ContactRequestMailer();
         $this->mailer->send();
-
-
     }
 
 }
