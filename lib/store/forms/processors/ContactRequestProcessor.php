@@ -9,6 +9,7 @@ class ContactRequestProcessor extends FormProcessor
 {
 
     protected $mailer = NULL;
+    protected $mailer_enabled = true;
 
     public function __construct()
     {
@@ -16,9 +17,19 @@ class ContactRequestProcessor extends FormProcessor
         $this->mailer = new ContactRequestMailer();
     }
 
+    public function setMailerEnabled(boolean $mode)
+    {
+        $this->mailer_enabled = $mode;
+    }
+
     protected function processImpl(InputForm $form)
     {
         parent::processImpl($form);
+
+        if (!$this->mailer_enabled) {
+            debug("Mailer is not enabled for this processor");
+            return;
+        }
 
         if ($form->haveInput("fullname")) {
             $name = $form->getInput("fullname")->getValue();
