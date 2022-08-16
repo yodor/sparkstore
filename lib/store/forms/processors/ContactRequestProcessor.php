@@ -29,7 +29,7 @@ class ContactRequestProcessor extends FormProcessor
         debug ("Mail accepted for delivery: ".$success);
         ob_start();
         var_dump($this->mailer);
-        $contents = ob_end_clean();
+        $contents = ob_get_contents();
         ob_end_flush();
         debug ("Mailer debug: ".$contents);
 
