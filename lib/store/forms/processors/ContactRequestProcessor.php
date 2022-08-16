@@ -19,6 +19,12 @@ class ContactRequestProcessor extends FormProcessor
     protected function processImpl(InputForm $form)
     {
         parent::processImpl($form);
+        $name = $form->getInput("fullname")->getValue();
+        $query = $form->getInput("query")->getValue();
+
+        $this->mailer->setClient($name);
+        $this->mailer->setQueryText($query);
+        $this->mailer->prepareMessage();
         $this->mailer->send();
     }
 
