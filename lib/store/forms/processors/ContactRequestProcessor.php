@@ -25,7 +25,14 @@ class ContactRequestProcessor extends FormProcessor
         $this->mailer->setClient($name);
         $this->mailer->setQueryText($query);
         $this->mailer->prepareMessage();
-        $this->mailer->send();
+        $success = $this->mailer->send();
+        debug ("Mail accepted for delivery: ".$success);
+        ob_start();
+        var_dump($this->mailer);
+        $contents = ob_end_clean();
+        ob_end_flush();
+        debug ("Mailer debug: ".$contents);
+
     }
 
 }
