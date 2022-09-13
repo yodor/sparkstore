@@ -78,8 +78,8 @@ class ProductDetailsPageBase extends ProductListPage
 
         $this->section = $this->sellable->getData($piID,"section");
 
-
-        $this->loadCategoryPath($this->sellable->getData($piID,"catID"));
+        $catID = $this->sellable->getData($piID,"catID");
+        $this->loadCategoryPath($catID);
 
         $description = "";
         if ($this->sellable->getCaption()) {
@@ -91,14 +91,30 @@ class ProductDetailsPageBase extends ProductListPage
         $description = strip_tags($description);
 
         $keywords = $this->sellable->getKeywords();
+        //no keywords added for this sellable. try category keywords if any
         if (strlen(trim($keywords)) == 0) {
-            $keywords = $this->sellable->getData($piID, "category_name");
+
+            //use product_name by default as keywords
+            $keywords = $this->sellable->getData($piID, "product_name");
+
+            if ($this->product_categories->haveColumn("category_keywords")) {
+                $result = $this->product_categories->getParentNodes($catID, array("category_name",
+                                                                                  "category_keywords"));
+                foreach ($result as $item => $values) {
+                    if (isset($values["category_keywords"])) {
+                        $category_keywords = trim($values["category_keywords"]);
+                        if (strlen($category_keywords) > 0) {
+                            $keywords = $category_keywords;
+                        }
+                    }
+                }
+            }
         }
 
+        //cleanup
         $keywords = str_replace("Етикети: ", "", $keywords);
         $keywords = str_replace("Етикет: ", "", $keywords);
-
-        $keywords = strtolower($keywords);
+        $keywords = mb_strtolower($keywords);
 
         $this->addMeta("description", prepareMeta($description));
         if($keywords) {
