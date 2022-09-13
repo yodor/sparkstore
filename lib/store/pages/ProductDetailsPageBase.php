@@ -82,13 +82,18 @@ class ProductDetailsPageBase extends ProductListPage
         $this->loadCategoryPath($catID);
 
         $description = "";
-        if ($this->sellable->getCaption()) {
-            $description = $this->sellable->getCaption();
-        }
-        else if ($this->sellable->getDescription()) {
+
+        if ($this->sellable->getDescription()) {
             $description = $this->sellable->getDescription();
         }
-        $description = strip_tags($description);
+        else if ($this->sellable->getCaption()) {
+            $description = $this->sellable->getCaption();
+        }
+
+        $description = mb_strtolower(trim(strip_tags($description)));
+        if ($description) {
+            $this->addMeta("description", prepareMeta($description));
+        }
 
         $keywords = $this->sellable->getKeywords();
         //no keywords added for this sellable. try category keywords if any
@@ -116,10 +121,10 @@ class ProductDetailsPageBase extends ProductListPage
         $keywords = str_replace("Етикет: ", "", $keywords);
         $keywords = mb_strtolower($keywords);
 
-        $this->addMeta("description", prepareMeta($description));
         if($keywords) {
             $this->addMeta("keywords", prepareMeta($keywords));
         }
+
         $this->addOGTag("title", $this->sellable->getTitle());
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
