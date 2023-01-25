@@ -16,6 +16,9 @@ class StoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "facebook_url", "Facebook URL", 0);
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "facebook_page_id", "Facebook Page ID", 0);
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "instagram_url", "Instagram URL", 0);
         $this->addInput($field);
 
