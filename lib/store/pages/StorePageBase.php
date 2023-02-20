@@ -142,7 +142,7 @@ class StorePageBase extends SparkPage
         $pc = new ProductCategoriesBean();
         $qry = $pc->query("category_name");
         $num = $qry->exec();
-        $kewords = array();
+        $keywords = array();
         while ($result = $qry->next()) {
             $keywords[] = mb_strtolower($result["category_name"]);
         }
