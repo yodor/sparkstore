@@ -9,7 +9,7 @@ class SectionsBean extends OrderedDataBean
  `section_title` varchar(32) NOT NULL,
  `position` int(11) NOT NULL,
  PRIMARY KEY (`secID`),
- UNIQUE KEY `gender_title` (`section_title`)
+ UNIQUE KEY `section_title` (`section_title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
     public function __construct()
