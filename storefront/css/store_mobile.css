@@ -157,11 +157,25 @@
     }
 
     .section.menu .content .customer_pane {
-        padding-right:0px;
+
+        margin:0;
+        padding:0;
+        margin-right:10px;
+    }
+    .section.menu .content .customer_pane .button {
+        margin:0;
+        padding:0;
+        margin-left:5px;
+    }
+    .section.menu .content .search_pane FORM .InputComponent .InputField {
+        margin-right:5px;
     }
     .section.menu .content .search_pane {
-        width:190px;
-
+        /*width:190px;*/
+        max-width:190px;
+    }
+    .section.menu .content .search_pane FORM {
+        white-space:nowrap;
     }
     .section.menu .content .menuwrap {
         text-align:right;
@@ -175,9 +189,9 @@
 }
 @media screen and (max-width:359px) {
     .section.menu .content .customer_pane {
-        display:block;
+        /*display:block;*/
     }
     .section.menu .content .search_pane {
-        display:block;
+        /*display:block;*/
     }
 }
