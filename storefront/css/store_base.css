@@ -132,7 +132,7 @@ A.Caption:active {
 
     vertical-align: top;
 
-    background-image:url(../images/logo_header.svg);
+    background-image:url("../../logo.php");
     background-repeat:no-repeat;
     background-position:center center;
     /*background-size: 70%;*/

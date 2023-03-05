@@ -177,3 +177,22 @@
 .config.list FORM[name='StoreConfigForm'] TEXTAREA {
     min-height:100px;
 }
+
+.AdminPage.logo.list .logo_header {
+    padding-top:1em;
+    padding-bottom:1em;
+}
+.AdminPage.logo.list .logo_header LABEL {
+    padding-bottom:0.5em;
+    margin-bottom:1em;
+    display:inline-block;
+    /*border-bottom:1px solid gray;*/
+}
+.AdminPage.logo.list .logo_header IMG {
+    display:block;
+    max-height:90px;
+}
+.AdminPage.logo.list .logo_header .ColorButton {
+    margin-top:1em;
+    display:inline-block;
+}
