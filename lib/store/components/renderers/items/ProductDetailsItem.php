@@ -24,6 +24,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected $queryProductEnabled = true;
 
+    protected $tbiEnabled = false;
+
     public function __construct(SellableItem $item)
     {
         parent::__construct();
@@ -46,6 +48,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     }
 
+    public function setTBIEnabled(bool $mode)
+    {
+        $this->tbiEnabled = true;
+    }
     public function setQueryProductEnabled(bool $mode)
     {
         $this->queryProductEnabled = $mode;
@@ -325,6 +331,14 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 echo "<span class='icon'></span>";
                 echo "<label>" . tr("Запитване") . "</label>";
                 echo "</a>";
+            }
+
+            if ($this->tbiEnabled && $stock_amount>0) {
+                $tbi_product_id = $this->sellable->getProductID();
+                $tbi_product_name = $this->sellable->getTitle();
+                $tbi_product_qty = 1;
+                $tbi_product_price = $priceInfo->getSellPrice();
+                @include("tbi_product.php");
             }
 
         echo "</div>";
