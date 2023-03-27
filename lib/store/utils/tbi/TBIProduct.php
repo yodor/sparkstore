@@ -8,7 +8,7 @@
     $prod_categories = null; //тази променлива е масив от категориите в които влиза Вашия продукт (незадължителна)
     $manufacturer_id = null; //тази променлива е идентификатор номерът на производителя на Вашия продукт (незадължителна)
     ///////////////////////////////////////////////////////////////////////////////////
-    $unicid = TBIData::STORE_UID;
+    $unicid = TBIData::$store_uid;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

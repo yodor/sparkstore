@@ -49,6 +49,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         if (defined(TBI_UID)) {
             $this->tbiEnabled = true;
+
+            TBIData::$store_uid = TBI_UID;
         }
     }
 

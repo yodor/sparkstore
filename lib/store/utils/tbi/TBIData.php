@@ -6,7 +6,7 @@ class TBIData
     public static $name;
     public static $quantity;
     public static $price;
-    const STORE_UID = TBI_UID;
+    public static $store_uid;
 }
 
 ?>
