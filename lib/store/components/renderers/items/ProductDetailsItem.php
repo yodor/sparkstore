@@ -333,14 +333,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 echo "</a>";
             }
 
-            if ($this->tbiEnabled && $stock_amount>0) {
-                $tbi_product_id = $this->sellable->getProductID();
-                $tbi_product_name = $this->sellable->getTitle();
-                $tbi_product_qty = 1;
-                $tbi_product_price = $priceInfo->getSellPrice();
-                include_once("tbi/tbi_product.php");
-            }
-
         echo "</div>";
     }
 
