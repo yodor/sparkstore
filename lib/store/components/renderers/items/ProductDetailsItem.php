@@ -47,9 +47,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $renderer->getButtons()->setContents("<progress></progress>");
         $responder = new QueryProductResponder();
 
-        if (defined(TBI_UID)) {
+        if (defined("TBI_UID")) {
             $this->tbiEnabled = true;
-
             TBIData::$store_uid = TBI_UID;
         }
     }
