@@ -7,6 +7,7 @@ include_once("store/beans/ProductPhotosBean.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/forms/QueryProductForm.php");
 include_once("store/responders/json/QueryProductResponder.php");
+include_once("store/utils/tbi/TBIData.php");
 
 class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
@@ -46,6 +47,9 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $renderer->getButtons()->setContents("<progress></progress>");
         $responder = new QueryProductResponder();
 
+        if (defined(TBI_UID)) {
+            $this->tbiEnabled = true;
+        }
     }
 
     public function setTBIEnabled(bool $mode)
@@ -333,9 +337,27 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 echo "</a>";
             }
 
+
         echo "</div>";
     }
 
+    protected function renderGroupTBIModule()
+    {
+        $piID = $this->sellable->getActiveInventoryID();
+        $priceInfo = $this->sellable->getPriceInfo($piID);
+        $stock_amount = (int)$priceInfo->getStockAmount();
+        echo "<div class='group tbi'>";
+        if ($stock_amount>0) {
+            echo "<div class='tbi_module'>";
+            TBIData::$name = $this->sellable->getTitle();
+            TBIData::$quantity = 1;
+            TBIData::$id = $this->sellable->getProductID();
+            TBIData::$price = $priceInfo->getSellPrice();
+            include_once("store/utils/tbi/TBIProduct.php");
+            echo "</div>";
+        }
+        echo "</div>";
+    }
     protected function renderGroupQueryProductForm()
     {
 
@@ -402,6 +424,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             $this->renderGroupCartLink();
 
             echo "<div class='clear'></div>";
+
+            if ($this->tbiEnabled) {
+                $this->renderGroupTBIModule();
+            }
 
             $this->renderGroupQueryProductForm();
 

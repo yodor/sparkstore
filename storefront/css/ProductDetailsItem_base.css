@@ -426,3 +426,12 @@
 .side_pane FORM[working='1'] button {
     display:none;
 }
+
+
+.side_pane .group.tbi {
+    text-align: right;
+}
+.tbi_module {
+    text-align:center;
+    display:inline-block;
+}
