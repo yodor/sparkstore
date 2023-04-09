@@ -418,7 +418,7 @@ class StorePageBase extends SparkPage
 
         $this->constructTitle();
 ?>
-        <script type="text/javascript">
+        <script defer type="text/javascript">
 
             //to check when element get's position sticky
             var observer = new IntersectionObserver(function(entries) {
@@ -481,14 +481,14 @@ class StorePageBase extends SparkPage
         <div id="fb-customer-chat" class="fb-customerchat">
         </div>
 
-        <script>
+        <script defer>
             var chatbox = document.getElementById('fb-customer-chat');
             chatbox.setAttribute("page_id", "<?php echo $page_id;?>");
             chatbox.setAttribute("attribution", "biz_inbox");
         </script>
 
         <!-- Your SDK code -->
-        <script>
+        <script defer>
             window.fbAsyncInit = function() {
                 FB.init({
                     xfbml            : true,
