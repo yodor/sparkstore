@@ -244,7 +244,7 @@ class StorePageBase extends SparkPage
 
     public function renderLDJSON(array $data)
     {
-        echo "<script type='application/ld+json'>";
+        echo "<script async type='application/ld+json'>";
         echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         echo "</script>";
     }
@@ -418,7 +418,7 @@ class StorePageBase extends SparkPage
 
         $this->constructTitle();
 ?>
-        <script defer type="text/javascript">
+        <script async type="text/javascript">
 
             //to check when element get's position sticky
             var observer = new IntersectionObserver(function(entries) {
@@ -481,14 +481,14 @@ class StorePageBase extends SparkPage
         <div id="fb-customer-chat" class="fb-customerchat">
         </div>
 
-        <script defer>
+        <script async>
             var chatbox = document.getElementById('fb-customer-chat');
             chatbox.setAttribute("page_id", "<?php echo $page_id;?>");
             chatbox.setAttribute("attribution", "biz_inbox");
         </script>
 
         <!-- Your SDK code -->
-        <script defer>
+        <script async>
             window.fbAsyncInit = function() {
                 FB.init({
                     xfbml            : true,
