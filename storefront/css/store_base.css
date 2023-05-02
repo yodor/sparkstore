@@ -855,3 +855,9 @@ A:hover, A:visited {
 .TreeView .NodeChilds .NodeOuter {
     padding-top:0.8em;
 }
+.shown {
+
+}
+.hidden {
+    display:none;
+}

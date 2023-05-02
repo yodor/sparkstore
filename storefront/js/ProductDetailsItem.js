@@ -215,8 +215,15 @@ function renderColorButtons(selected_pclrID)
 
         //single unnamed color - sellable without color series
         if (!color_name) {
-            $(".group.colors").css("display", "none");
+            $(".group.colors").removeClass("shown");
+            $(".group.colors").addClass("hidden");
+            // $(".group.colors").css("display", "none");
         }
+        else {
+            $(".group.colors").removeClass("hidden");
+            $(".group.colors").addClass("shown");
+        }
+
 
         color_button.attr("pclrID", pclrID);
         color_button.attr("color_name", color_name);
@@ -280,7 +287,13 @@ function renderSizeChooser(pclrID) {
         if (Object.keys(size_values).length==1 && !value) {
             //sellable without sizing
             changeSizing(size_button);
-            $(".group.sizing").css("display", "none");
+            $(".group.sizing").removeClass("shown");
+            $(".group.sizing").addClass("hidden");
+            // $(".group.sizing").css("display", "none");
+        }
+        else {
+            $(".group.sizing").removeClass("hidden");
+            $(".group.sizing").addClass("shown");
         }
     });
 

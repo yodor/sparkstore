@@ -190,7 +190,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function renderGroupColors()
     {
-        echo "<div class='group colors'>";
+        echo "<div class='group colors hidden'>";
 
         echo "<div class='item current_color'>";
         echo "<label>" . tr("Избор на цвят") . "</label>";
@@ -208,7 +208,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function renderGroupSizing()
     {
-        echo "<div class='group sizing' >";
+        echo "<div class='group sizing hidden' >";
 
         echo "<div class='item current_size'>";
         echo "<label>" . tr("Избор на размер") . "</label>";
