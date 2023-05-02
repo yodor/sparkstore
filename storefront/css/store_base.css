@@ -859,5 +859,5 @@ A:hover, A:visited {
 
 }
 .hidden {
-    display:none;
+    display:none !important;
 }
