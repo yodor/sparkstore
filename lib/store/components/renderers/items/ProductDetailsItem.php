@@ -176,7 +176,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "<div class='group description'>";
 
             echo "<div class='item product_name'>";
-                echo "<span itemprop='name' class='value'>". $this->sellable->getTitle() . "</span>";
+                echo "<h1 itemprop='name' class='value'>". $this->sellable->getTitle() . "</h1>";
             echo "</div>";
 
             if ($this->sellable->getCaption()) {

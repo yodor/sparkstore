@@ -132,6 +132,15 @@
 
 }
 
+.side_pane .group.description .product_name .value {
+
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+
+}
+
 .side_pane .group.pricing {
     display: inline-block;
 }
