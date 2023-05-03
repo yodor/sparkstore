@@ -128,6 +128,8 @@ class ProductListPageBase extends StorePage
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
 
+        $this->canonical_enabled = true;
+
     }
 
     public function getItemView() : ItemView
