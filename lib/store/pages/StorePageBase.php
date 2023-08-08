@@ -258,14 +258,7 @@ class StorePageBase extends SparkPage
     {
         parent::startRender();
 
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $page_id = $cfg->get("facebook_page_id", "");
-        if ($page_id) {
-            echo "\n<!-- Facebook Chat Plugin start -->\n";
-            $this->renderFBChatPlugin($page_id);
-            echo "\n<!-- Facebook Chat Plugin end -->\n";
-        }
+        $this->facebookChatPlugin();
 
         echo "\n<!-- startRender StorePage-->\n";
 
@@ -282,6 +275,17 @@ class StorePageBase extends SparkPage
 
     }
 
+    protected function facebookChatPlugin()
+    {
+        $cfg = new ConfigBean();
+        $cfg->setSection("store_config");
+        $page_id = $cfg->get("facebook_page_id", "");
+        if ($page_id) {
+            echo "\n<!-- Facebook Chat Plugin start -->\n";
+            $this->renderFBChatPlugin($page_id);
+            echo "\n<!-- Facebook Chat Plugin end -->\n";
+        }
+    }
     protected function renderMenu()
     {
         echo "<div class='menuwrap'>";
