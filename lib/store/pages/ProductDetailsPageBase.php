@@ -90,11 +90,7 @@ class ProductDetailsPageBase extends ProductListPage
             $description = $this->sellable->getCaption();
         }
 
-        $description = str_replace("<BR>", "\r\n", $description);
-        $description = str_replace("<P>", "\r\n", $description);
-        $description = str_replace("</P>", "\r\n", $description);
-
-        $description = mb_strtolower(trim(strip_tags($description)));
+        $description = mb_strtolower(trim(replace_tags($description)));
         if ($description) {
             //$this->addMeta("description", prepareMeta($description));
             $this->description = $description;
