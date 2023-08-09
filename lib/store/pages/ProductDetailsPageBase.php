@@ -93,7 +93,8 @@ class ProductDetailsPageBase extends ProductListPage
         $description = str_replace("<BR>", "\r\n", $description);
         $description = mb_strtolower(trim(strip_tags($description)));
         if ($description) {
-            $this->addMeta("description", prepareMeta($description));
+            //$this->addMeta("description", prepareMeta($description));
+            $this->description = $description;
         }
 
         $keywords = $this->sellable->getKeywords();
@@ -123,7 +124,8 @@ class ProductDetailsPageBase extends ProductListPage
         $keywords = mb_strtolower($keywords);
 
         if($keywords) {
-            $this->addMeta("keywords", prepareMeta($keywords));
+            //$this->addMeta("keywords", prepareMeta($keywords));
+            $this->keywords = $keywords;
         }
 
         $this->addOGTag("title", $this->sellable->getTitle());
