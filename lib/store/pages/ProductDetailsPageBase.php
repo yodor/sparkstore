@@ -91,6 +91,9 @@ class ProductDetailsPageBase extends ProductListPage
         }
 
         $description = str_replace("<BR>", "\r\n", $description);
+        $description = str_replace("<P>", "\r\n", $description);
+        $description = str_replace("</P>", "\r\n", $description);
+
         $description = mb_strtolower(trim(strip_tags($description)));
         if ($description) {
             //$this->addMeta("description", prepareMeta($description));
