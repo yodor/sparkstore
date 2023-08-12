@@ -96,22 +96,24 @@ class ProductDetailsPageBase extends ProductListPage
             $this->description = $description;
         }
 
-        $keywords = $this->sellable->getKeywords();
+        $keywords = trim($this->sellable->getKeywords());
         //no keywords added for this sellable. try category keywords if any
-        if (strlen(trim($keywords)) == 0) {
+        if (strlen($keywords) == 0) {
 
-            //use product_name by default as keywords
             $keywords = $this->sellable->getData($piID, "product_name");
 
-            if ($this->product_categories->haveColumn("category_keywords")) {
-                $result = $this->product_categories->getParentNodes($catID, array("category_name",
-                                                                                  "category_keywords"));
-                foreach ($result as $item => $values) {
-                    if (isset($values["category_keywords"])) {
-                        $category_keywords = trim($values["category_keywords"]);
-                        if (strlen($category_keywords) > 0) {
-                            $keywords = $category_keywords;
-                        }
+            $result = array();
+            $keyword_field = "category_keywords";
+            if (!$this->product_categories->haveColumn("category_keywords")) {
+                $keyword_field = "category_name";
+            }
+            $result = $this->product_categories->getParentNodes($catID, array($keyword_field));
+
+            foreach ($result as $item => $values) {
+                if (isset($values[$keyword_field])) {
+                    $category_keywords = trim($values[$keyword_field]);
+                    if (strlen($category_keywords) > 0) {
+                        $keywords .= " " . $category_keywords;
                     }
                 }
             }
@@ -120,7 +122,7 @@ class ProductDetailsPageBase extends ProductListPage
         //cleanup
         $keywords = str_replace("Етикети: ", "", $keywords);
         $keywords = str_replace("Етикет: ", "", $keywords);
-        $keywords = mb_strtolower($keywords);
+        $keywords = mb_strtolower(trim(replace_tags($keywords)));
 
         if($keywords) {
             //$this->addMeta("keywords", prepareMeta($keywords));
