@@ -76,7 +76,7 @@ class ProductDetailsPageBase extends ProductListPage
 
         $piID = $this->sellable->getActiveInventoryID();
 
-        $this->section = $this->sellable->getData($piID,"section");
+        $this->section = (string)$this->sellable->getData($piID,"section");
 
         $catID = $this->sellable->getData($piID,"catID");
         $this->loadCategoryPath($catID);
