@@ -22,7 +22,10 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor
         $this->setMethod(FormRenderer::METHOD_GET);
         $this->getSubmitLine()->setEnabled(false);
     }
-
+    public function resetForm()
+    {
+        $this->form = new ProductListFilterInputForm();
+    }
     public function processInput()
     {
 

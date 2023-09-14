@@ -22,6 +22,9 @@ class BrandInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимка", 0);
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта", 0);
+        $this->addInput($field);
+
     }
 
 }

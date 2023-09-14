@@ -1,5 +1,5 @@
 <?php
-include_once("class/pages/ProductListPage.php");
+include_once("store/pages/ProductPageBase.php");
 
 include_once("store/components/ProductsTape.php");
 
@@ -7,15 +7,14 @@ include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
 
 
-class ProductDetailsPageBase extends ProductListPage
+
+
+class ProductDetailsPageBase extends ProductPageBase
 {
 
     protected $sellable = NULL;
 
-    /**
-     * @var SellableDataParser
-     */
-    protected $dataParser = NULL;
+    protected $tape = NULL;
 
     public function __construct()
     {
@@ -28,44 +27,15 @@ class ProductDetailsPageBase extends ProductListPage
         if (isset($_GET["prodID"])) {
             $prodID = (int)$_GET["prodID"];
         }
-        $piID = -1;
 
-
-        if (isset($_GET["piID"])) {
-            $piID = (int)$_GET["piID"];
-        }
 
         try {
 
-            $this->setSellableProducts(new SellableProducts());
+            $this->bean = new SellableProducts();
 
-            $qry = $this->bean->queryFull();
-            $qry->setKey("piID");
-
-            $qry->select->where()->add("prodID", $prodID);
-
-            $qry->select->group_by = "piID";
+            $this->sellable = SellableItem::Load($prodID);
 
 
-            $num = $qry->exec();
-
-            if ($num < 1) throw new Exception("Product does not exist or is not accessible now");
-
-            $this->sellable = new SellableItem($prodID, $this->dataParser);
-
-            while ($item = $qry->nextResult()) {
-
-                if ((int)$piID == (int)$item->get("piID")) {
-
-                    $this->sellable->setInventoryID($piID);
-                }
-
-                $this->sellable->addInventoryData($item);
-
-
-            }
-
-            $this->sellable->finalize();
         }
         catch (Exception $e) {
 
@@ -74,11 +44,11 @@ class ProductDetailsPageBase extends ProductListPage
             exit;
         }
 
-        $piID = $this->sellable->getActiveInventoryID();
 
-        $this->section = (string)$this->sellable->getData($piID,"section");
 
-        $catID = $this->sellable->getData($piID,"catID");
+        $this->section = "";
+
+        $catID = $this->sellable->getCategoryID();
         $this->loadCategoryPath($catID);
 
         $description = "";
@@ -86,34 +56,28 @@ class ProductDetailsPageBase extends ProductListPage
         if ($this->sellable->getDescription()) {
             $description = $this->sellable->getDescription();
         }
-        else if ($this->sellable->getCaption()) {
-            $description = $this->sellable->getCaption();
-        }
 
-        $description = mb_strtolower(trim(replace_tags($description)));
+        $description = mb_strtolower(trim(strip_tags($description)));
         if ($description) {
-            //$this->addMeta("description", prepareMeta($description));
-            $this->description = $description;
+            $this->addMeta("description", prepareMeta($description));
         }
 
-        $keywords = trim($this->sellable->getKeywords());
+        $keywords = $this->sellable->getKeywords();
         //no keywords added for this sellable. try category keywords if any
-        if (strlen($keywords) == 0) {
+        if (strlen(trim($keywords)) == 0) {
 
-            $keywords = $this->sellable->getData($piID, "product_name");
+            //use product_name by default as keywords
+            $keywords = $this->sellable->getTitle();
 
-            $result = array();
-            $keyword_field = "category_keywords";
-            if (!$this->product_categories->haveColumn("category_keywords")) {
-                $keyword_field = "category_name";
-            }
-            $result = $this->product_categories->getParentNodes($catID, array($keyword_field));
-
-            foreach ($result as $item => $values) {
-                if (isset($values[$keyword_field])) {
-                    $category_keywords = trim($values[$keyword_field]);
-                    if (strlen($category_keywords) > 0) {
-                        $keywords .= " " . $category_keywords;
+            if ($this->product_categories->haveColumn("category_keywords")) {
+                $result = $this->product_categories->getParentNodes($catID, array("category_name",
+                                                                                  "category_keywords"));
+                foreach ($result as $item => $values) {
+                    if (isset($values["category_keywords"])) {
+                        $category_keywords = trim($values["category_keywords"]);
+                        if (strlen($category_keywords) > 0) {
+                            $keywords = $category_keywords;
+                        }
                     }
                 }
             }
@@ -122,11 +86,10 @@ class ProductDetailsPageBase extends ProductListPage
         //cleanup
         $keywords = str_replace("Етикети: ", "", $keywords);
         $keywords = str_replace("Етикет: ", "", $keywords);
-        $keywords = mb_strtolower(trim(replace_tags($keywords)));
+        $keywords = mb_strtolower($keywords);
 
         if($keywords) {
-            //$this->addMeta("keywords", prepareMeta($keywords));
-            $this->keywords = $keywords;
+            $this->addMeta("keywords", prepareMeta($keywords));
         }
 
         $this->addOGTag("title", $this->sellable->getTitle());
@@ -141,6 +104,9 @@ class ProductDetailsPageBase extends ProductListPage
 
         $this->updateViewCounter();
 
+        $this->tape = new ProductsTape();
+
+
     }
 
     public function getSellable(): SellableItem
@@ -150,37 +116,29 @@ class ProductDetailsPageBase extends ProductListPage
 
     protected function updateViewCounter()
     {
-        $sql = new SQLUpdate();
-        $sql->from = "product_inventory pi";
-        $sql->set("pi.view_counter", "pi.view_counter+1");
-        $sql->where()->add("pi.prodID", $this->sellable->getProductID());
-        $sql->where()->add("pi.piID", $this->sellable->getActiveInventoryID());
-
-        $db = DBConnections::Get();
-        try {
-            $db->transaction();
-            $db->query($sql->getSQL());
-            $db->commit();
-        }
-        catch (Exception $e) {
-            $db->rollback();
-            debug("Unable to increment view count: ".$db->getError());
-        }
+//        $sql = new SQLUpdate();
+//        $sql->from = "product_inventory pi";
+//        $sql->set("pi.view_counter", "pi.view_counter+1");
+//        $sql->where()->add("pi.prodID", $this->sellable->getProductID());
+//        $sql->where()->add("pi.piID", $this->sellable->getActiveInventoryID());
+//
+//        $db = DBConnections::Get();
+//        try {
+//            $db->transaction();
+//            $db->query($sql->getSQL());
+//            $db->commit();
+//        }
+//        catch (Exception $e) {
+//            $db->rollback();
+//            debug("Unable to increment view count: ".$db->getError());
+//        }
     }
 
-    protected function constructTitle()
+    protected function constructTitleArray(): array
     {
-        $title = array();
-        $title[] = tr($this->products_title);
-
-        $category_path = $this->getCategoryPath();
-
-        foreach ($category_path as $idx => $catinfo) {
-            $title[] = $catinfo["category_name"];
-        }
-
+        $title = parent::constructTitleArray();
         $title[] = $this->sellable->getTitle();
-        $this->setTitle(constructSiteTitle($title));
+        return $title;
     }
 
     protected function selectActiveMenu()
@@ -198,43 +156,52 @@ class ProductDetailsPageBase extends ProductListPage
         $main_menu->constructSelectedPath();
     }
 
-    public function renderSameCategoryProducts()
+    public function renderSameCategoryProducts(int $limit = 4)
     {
-        $catID = (int)$this->sellable->getData($this->sellable->getActiveInventoryID(), "catID");
+        $catID = (int)$this->sellable->getCategoryID();
 
         $title = tr("Още продукти от тази категория");
 
-        $qry = $this->bean->queryFull();
-        $qry->select->where()->add("catID", $catID);
+        $select = clone $this->bean->select();
+        $select->fields()->setPrefix("sellable_products");
+        $select = $this->product_categories->selectChildNodesWith($select, "sellable_products", $catID, array());
+
+//        echo $select->getSQL();
+        $qry = new SQLQuery($select, "prodID");
+
+//        $qry = $this->bean->queryFull();
+//        $qry->select->where()->add("catID", $catID);
+        $qry->select->where()->add("stock_amount" , "0", " > ");
         $qry->select->order_by = " rand() ";
         $qry->select->group_by = " prodID ";
-        $qry->select->limit = "4";
+        $qry->select->limit = "$limit";
 
-        $tape = new ProductsTape($title);
-        $tape->setIterator($qry);
-        $action = $tape->getTitleAction();
+        $this->tape->setTitle($title);
+        $this->tape->setIterator($qry);
+        $action = $this->tape->getTitleAction();
         $action->getURLBuilder()->buildFrom(LOCAL."/products/list.php");
         $action->getURLBuilder()->add(new URLParameter("catID", $catID));
 
-        $tape->render();
+        $this->tape->render();
     }
 
-    public function renderOtherProducts()
+    public function renderOtherProducts(int $limit = 4)
     {
         $title = tr("Други продукти");
 
         $qry = $this->bean->queryFull();
         $qry->select->order_by = " rand() ";
         $qry->select->group_by = " prodID ";
-        $qry->select->limit = "4";
+        $qry->select->where()->add("stock_amount" , "0", " > ");
+        $qry->select->limit = "$limit";
 
-
-        $tape = new ProductsTape($title);
-        $tape->setIterator($qry);
-        $action = $tape->getTitleAction();
+        $this->tape->setTitle($title);
+        $this->tape->setIterator($qry);
+        $action = $this->tape->getTitleAction();
         $action->getURLBuilder()->buildFrom(LOCAL."/products/list.php");
-        $tape->render();
+        $this->tape->render();
     }
+
 
 
 }

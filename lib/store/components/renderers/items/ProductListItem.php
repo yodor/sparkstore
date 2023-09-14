@@ -7,7 +7,7 @@ include_once("storage/StorageItem.php");
 include_once("utils/URLBuilder.php");
 include_once("utils/DataParameter.php");
 
-include_once("store/beans/ProductColorPhotosBean.php");
+//include_once("store/beans/ProductColorPhotosBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 
 class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
@@ -115,7 +115,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     {
         parent::setData($item);
         $this->setAttribute("prodID", $this->data["prodID"]);
-        $this->setAttribute("piID", $this->data["piID"]);
+        //$this->setAttribute("piID", $this->data["piID"]);
 
         if (isset($this->data["color_ids"]) && $this->data["color_ids"]) {
 
@@ -196,12 +196,12 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='category' content='".attributeValue($this->data["category_name"])."'>";
         $description_content = $this->data["product_name"];
 
-        if (isset($this->data["product_description"])) {
-            $description_content = $this->data["product_description"];
-        }
-        else if (isset($this->data["long_description"])) {
-            $description_content = $this->data["long_description"];
-        }
+//        if (isset($this->data["product_description"])) {
+//            $description_content = $this->data["product_description"];
+//        }
+//        else if (isset($this->data["long_description"])) {
+//            $description_content = $this->data["long_description"];
+//        }
 
         echo "<meta itemprop='description' content='".attributeValue($description_content)."'>";
 
@@ -225,7 +225,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
             else if ($this->isPromo()) {
                 echo "<div class='discount_label'>Промо</div>";
             }
-
+            if ($this->data["stock_amount"]<1) {
+                echo "<div class='discount_label'>Изчерпан</div>";
+                echo "<div class='blend'></div>";
+            }
         echo "</a>";
     }
 
@@ -241,7 +244,17 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
             echo "<div itemprop='name' class='product_name'>" . $this->data["product_name"] . "</div>";
 
-            //echo "<div class='stock_amount'><label>".tr("Наличност").": </label>".$this->item["stock_amount"]."</div>";
+            $brand_name = $this->data["brand_name"];
+
+                echo "<div class='brand_name'>";
+                if ($brand_name) {
+                    echo "<label>".tr("Марка") . ": $brand_name</label>";
+                }
+                else {
+                    echo "<BR>";
+                }
+                echo "</div>";
+
 
             $this->renderPrice();
 
@@ -328,10 +341,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     public static function AttributesMeta(array $attributes, array $supported)
     {
 
-        foreach ($attributes as $idx => $item) {
-            if ($item["name"] && $item["value"]) {
-                $attributeName = mb_strtolower($item["name"]);
-                $attributeValue = mb_strtolower($item["value"]);
+        foreach ($attributes as $name => $value) {
+            if ($name && $value) {
+                $attributeName = mb_strtolower($name);
+                $attributeValue = mb_strtolower($value);
                 foreach ($supported as $itemProp=>$matches) {
                     if (in_array($attributeName, $matches)) {
                         echo "<meta itemprop='$itemProp' content='".attributeValue($attributeValue)."'>";

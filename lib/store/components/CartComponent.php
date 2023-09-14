@@ -2,9 +2,8 @@
 include_once("components/Component.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/beans/ProductPhotosBean.php");
-include_once("store/beans/ProductColorPhotosBean.php");
 include_once("store/beans/ProductsBean.php");
-include_once("store/beans/ProductInventoryBean.php");
+include_once("store/utils/SellableItem.php");
 
 class CartComponent extends Component implements IHeadContents
 {
@@ -23,17 +22,6 @@ class CartComponent extends Component implements IHeadContents
      */
     protected $products;
 
-    /**
-     * Product inventories
-     * @var ProductInventoryBean
-     */
-    protected $inventory;
-
-    /**
-     * color series
-     * @var ProductColorPhotosBean
-     */
-    protected $color_photos;
 
     //
     /**
@@ -57,8 +45,7 @@ class CartComponent extends Component implements IHeadContents
     {
         parent::__construct();
 
-        $this->inventory = new ProductInventoryBean();
-        $this->color_photos = new ProductColorPhotosBean();
+
         $this->products = new ProductsBean();
         $this->product_photos = new ProductPhotosBean();
         $this->image_popup = new ImagePopup();
@@ -119,22 +106,20 @@ class CartComponent extends Component implements IHeadContents
         return $this->delivery_price;
     }
 
-    protected function renderCartItem(int $position, CartItem $cartItem)
+    protected function renderCartItem(int $position, CartEntry $cartEntry)
     {
 
 
-        $piID = $cartItem->getID();
+        $item = $cartEntry->getItem();
 
-        $item = $this->inventory->getByID($piID);
+        $itemHash = $item->hash();
 
-        $prodID = $item["prodID"];
-
-        $product = $this->products->getByID($prodID);
+        $prodID = $item->getProductID();
 
         //product inventory ID
         echo "<td field='position'>";
         if ($this->modify_enabled) {
-            echo "<a class='item_remove' href='cart.php?remove&piID=$piID'>&#8855;</a>";
+            echo "<a class='item_remove' href='cart.php?remove&item=$itemHash'>&#8855;</a>";
         }
         else {
             echo ($position+1);
@@ -144,30 +129,12 @@ class CartComponent extends Component implements IHeadContents
         //only one photo here
         echo "<td field='product_photo'>";
 
-        $product_url = LOCAL . "/products/details.php?prodID=$prodID&piID=$piID";
+        $product_url = LOCAL . "/products/details.php?prodID=$prodID";
         $this->image_popup->setAttribute("href",  fullURL($product_url));
 
-        $pclrID = (int)$item["pclrID"];
+        $sitem = $item->getMainPhoto();
 
-        $pclrpID = -1;
-
-        $photo_found = FALSE;
-        if ($pclrID > 0) {
-            $pclrpID = $this->color_photos->getFirstPhotoID($pclrID);
-
-            if ($pclrpID > 0) {
-                $this->image_popup->setID($pclrpID);
-                $this->image_popup->setBeanClass(get_class($this->color_photos));
-                $photo_found = TRUE;
-            }
-        }
-        if (!$photo_found) {
-            $ppID = $this->product_photos->getFirstPhotoID($prodID);
-            if ($ppID > 0) {
-                $this->image_popup->setID($ppID);
-                $this->image_popup->setBeanClass(get_class($this->product_photos));
-            }
-        }
+        $this->image_popup->setStorageItem($sitem);
 
         $this->image_popup->render();
 
@@ -176,15 +143,19 @@ class CartComponent extends Component implements IHeadContents
         echo "<td field='product_model'>";
         //         trbean($prodID, "product_name", $product, $this->products);
 
-        echo $product["product_name"] . "<BR>";
-        if ($item["color"]) {
-            echo tr("Цвят") . ": " . $item["color"] . "<BR>";
-        }
-        if ($item["size_value"]) {
-            echo tr("Размер") . ": " . $item["size_value"] . "<BR>";
+        echo $item->getTitle() . "<BR>";
+
+        $variants = $item->getVariantNames();
+        foreach ($variants as $idx=>$variantName) {
+            $variantItem = $item->getVariant($variantName);
+
+            if ($variantItem instanceof VariantItem) {
+                echo $variantName.": ".$variantItem->getSelected()."<BR>";
+            }
         }
 
-        echo tr("Код") . ": " . $piID . "-" . $prodID;
+
+        //echo tr("Код") . ": " . $item->get . "-" . $prodID;
 
         echo "</td>";
 
@@ -192,11 +163,11 @@ class CartComponent extends Component implements IHeadContents
         echo "<label>" . tr("Количество") . ": </label>";
         //             echo "<div class='qty'>";
         if ($this->modify_enabled) {
-            echo "<a class='qty_adjust minus' href='cart.php?decrement&piID=$piID'>&#8854;</a>";
+            echo "<a class='qty_adjust minus' href='cart.php?decrement&item=$itemHash'>&#8854;</a>";
         }
-        echo "<span class='cart_qty'>" . $cartItem->getQuantity() . "</span>";
+        echo "<span class='cart_qty'>" . $cartEntry->getQuantity() . "</span>";
         if ($this->modify_enabled) {
-            echo "<a class='qty_adjust plus' href='cart.php?increment&piID=$piID'>&#8853;</a>";
+            echo "<a class='qty_adjust plus' href='cart.php?increment&item=$itemHash'>&#8853;</a>";
         }
         //             echo "</div>";
         echo "</td>";
@@ -208,7 +179,7 @@ class CartComponent extends Component implements IHeadContents
         //                 echo sprintf("%0.2f ".$price["symbol"] , $price["price_value"]);
 
 
-        echo "<span>" . formatPrice($cartItem->getPrice()) . "</span>";
+        echo "<span>" . formatPrice($cartEntry->getPrice()) . "</span>";
 
         echo "</td>";
 
@@ -217,7 +188,7 @@ class CartComponent extends Component implements IHeadContents
         //                 $line_total = ($qty * (float)$price["price_value"]);
         //                 echo sprintf("%0.2f ".$price["symbol"], $line_total );
 
-        echo "<span>" . formatPrice($cartItem->getLineTotal()) . "</span>";
+        echo "<span>" . formatPrice($cartEntry->getLineTotal()) . "</span>";
 
         echo "</td>";
 
@@ -279,36 +250,26 @@ class CartComponent extends Component implements IHeadContents
 
             $itemsAll = $cart->items();
 
-            foreach ($itemsAll as $piID => $cartItem) {
+            foreach ($itemsAll as $itemHash => $cartEntry) {
 
-                if (!$cartItem instanceof CartItem) continue;
+                if (!($cartEntry instanceof CartEntry)) continue;
 
-                $item = "";
-                ob_start();
-                try {
+                echo "<tr label='item'>";
 
-                    echo "<tr label='item'>";
+                $this->renderCartItem($items_listed, $cartEntry);
 
-                    $this->renderCartItem($items_listed, $cartItem);
+                $total += $cartEntry->getLineTotal();
 
-                    $total += $cartItem->getLineTotal();
+                $num_items_total += ($cartEntry->getQuantity());
 
-                    $num_items_total += ($cartItem->getQuantity());
+                echo "</tr>";
 
-                    echo "</tr>";
-
-                    $items_listed++;
-                    $item = ob_get_contents();
+                $items_listed++;
 
 
-                }
-                catch (Exception $e) {
-                    Cart::Instance()->remove($piID);
-                    Cart::Instance()->store();
-                }
-                ob_end_clean();
-                echo $item;
             }
+
+
 
         }
 

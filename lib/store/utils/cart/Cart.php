@@ -1,12 +1,15 @@
 <?php
 include_once("beans/ConfigBean.php");
-include_once("store/utils/cart/CartItem.php");
+include_once("store/utils/cart/CartEntry.php");
 include_once("store/utils/cart/ZeroDiscount.php");
 include_once("store/utils/cart/Delivery.php");
 include_once("store/utils/cart/ICartListener.php");
 
 class Cart
 {
+    /**
+     * @var array of CartEntry
+     */
     protected $items = array();
 
     protected $delivery = NULL;
@@ -29,7 +32,7 @@ class Cart
 
     const SESSION_KEY = "spark_cart";
 
-    const VERSION = "1.0";
+    const VERSION = "2.0";
 
     const NOTE_MAX_LENGTH = 255;
 
@@ -46,7 +49,7 @@ class Cart
             @$cart = unserialize(Session::Get(Cart::SessionKey()));
 
             if ($cart instanceof Cart) {
-                debug("de-serialize success - calling delivery option initalization");
+                debug("de-serialize success - calling delivery option initialization");
                 $cart->getDelivery()->initialize();
                 $cart->store();
             }
@@ -104,9 +107,9 @@ class Cart
     /**
      * @param Closure $closure
      * @param string $oprName
-     * @param ?CartItem $item
+     * @param ?CartEntry $item
      */
-    protected function emit(Closure $closure, string $oprName, ?CartItem $item)
+    protected function emit(Closure $closure, string $oprName, ?CartEntry $item)
     {
         if (is_array($this->cartListeners) && count($this->cartListeners)>0) {
             foreach ($this->cartListeners as $idx => $listener) {
@@ -123,25 +126,29 @@ class Cart
     }
 
     /**
-     * @param CartItem $item
+     * @param CartEntry $item
      * @throws Exception
      */
-    public function addItem(CartItem $item)
+    public function addItem(CartEntry $item)
     {
-        $itemID = $item->getID();
-        if ($this->contains($itemID)) {
+        $itemHash = $item->getItem()->hash();
+        debug("addItem with hash: $itemHash");
 
-            $closure = function() use ($itemID, $item) {
-                $exist_item = $this->get($itemID);
+        if ($this->contains($itemHash)) {
+
+            debug("Already existing item incrementing count");
+            $closure = function() use ($itemHash, $item) {
+                $exist_item = $this->get($itemHash);
                 $exist_item->increment($item->getQuantity());
             };
             $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
 
         }
         else {
+            debug("Non existing item setting new value");
 
-            $closure = function() use ($itemID, $item) {
-                $this->items[$itemID] = $item;
+            $closure = function() use ($itemHash, $item) {
+                $this->items[$itemHash] = $item;
             };
             $this->emit($closure, ICartListener::ITEM_ADD, $item);
 
@@ -152,10 +159,10 @@ class Cart
      * @param int $piID
      * @throws Exception
      */
-    public function increment(int $piID)
+    public function increment(string $itemHash)
     {
-        if ($this->contains($piID)) {
-            $item = $this->get($piID);
+        if ($this->contains($itemHash)) {
+            $item = $this->get($itemHash);
             $closure = function() use ($item) {
                 $item->increment();
             };
@@ -166,14 +173,14 @@ class Cart
     }
 
     /**
-     * @param int $piID
+     * @param string CartEntry hash
      * @throws Exception
      */
-    public function decrement(int $piID)
+    public function decrement(string $itemHash)
     {
-        if ($this->contains($piID)) {
+        if ($this->contains($itemHash)) {
 
-            $item = $this->get($piID);
+            $item = $this->get($itemHash);
 
             $closure = function() use ($item) {
                 $item->decrement();
@@ -188,38 +195,38 @@ class Cart
     }
 
     /**
-     * @param int $itemID
-     * @return CartItem
+     * @param string CartEntry hash
+     * @return CartEntry
      * @throws Exception
      */
-    public function get(int $itemID): CartItem
+    public function get(string $itemHash): CartEntry
     {
-        if (isset($this->items[$itemID])) {
-            return $this->items[$itemID];
+        if (isset($this->items[$itemHash])) {
+            return $this->items[$itemHash];
         }
-        throw new Exception("'$itemID' not found");
+        throw new Exception("'$itemHash' not found");
     }
 
     /**
      * @param int $itemID
      * @return bool
      */
-    public function contains(int $itemID) : bool
+    public function contains(string $itemHash) : bool
     {
-        return isset($this->items[$itemID]);
+        return isset($this->items[$itemHash]);
     }
 
     /**
      * @param int $itemID
      */
-    public function remove(int $itemID)
+    public function remove(string $itemHash)
     {
-        if (isset($this->items[$itemID])) {
+        if (isset($this->items[$itemHash])) {
 
-            $item = $this->items[$itemID];
+            $item = $this->items[$itemHash];
 
-            $closure = function() use ($item, $itemID) {
-                unset($this->items[$itemID]);
+            $closure = function() use ($item, $itemHash) {
+                unset($this->items[$itemHash]);
             };
 
             $this->emit($closure, ICartListener::ITEM_REMOVE, $item);
@@ -227,12 +234,12 @@ class Cart
     }
 
     /**
-     * @param CartItem $item
+     * @param CartEntry $item
      */
-    public function removeItem(CartItem $item)
+    public function removeItem(CartEntry $item)
     {
-        $itemID = $item->getID();
-        $this->remove($itemID);
+        $itemHash = $item->getItem()->hash();
+        $this->remove($itemHash);
     }
 
     /**
@@ -249,8 +256,8 @@ class Cart
     public function itemsCount(): int
     {
         $num_items = 0;
-        foreach ($this->items as $itemID => $item) {
-            if (!($item instanceof CartItem)) continue;
+        foreach ($this->items as $itemHash => $item) {
+            if (!($item instanceof CartEntry)) continue;
             $num_items += $item->getQuantity();
         }
         return $num_items;
@@ -274,8 +281,8 @@ class Cart
     public function getItemsTotal(): float
     {
         $items_total = 0.0;
-        foreach ($this->items as $itemID => $item) {
-            if (!($item instanceof CartItem)) continue;
+        foreach ($this->items as $itemHash => $item) {
+            if (!($item instanceof CartEntry)) continue;
             $items_total += $item->getLineTotal();
         }
         return $items_total;

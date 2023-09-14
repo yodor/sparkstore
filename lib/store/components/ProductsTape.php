@@ -42,16 +42,16 @@ class ProductsTape extends Component
 
     }
 
-    public function setIterator(SQLQuery $query)
+    public function setIterator(SQLQuery $query): void
     {
         $this->query = $query;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $text): void
     {
-        $this->title = $title;
-        $this->action->setAttribute("title", $title);
-        $this->action->setContents($title);
+        $this->title = $text;
+        $this->action->setAttribute("title", $text);
+        $this->action->setContents($text);
     }
 
     public function getTitleAction() : Action

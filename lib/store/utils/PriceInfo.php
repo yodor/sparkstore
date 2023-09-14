@@ -5,14 +5,13 @@ class PriceInfo implements JsonSerializable {
 
     protected $sell_price = 0.0;
     protected $old_price = 0.0;
-    protected $stock_amount = 0;
+
     protected $discount_percent = 0;
 
-    public function __construct(float $sell_price, float $old_price, int $stock_amount, int $discount_percent)
+    public function __construct(float $sell_price, float $old_price, int $discount_percent)
     {
         $this->sell_price = $sell_price;
         $this->old_price = $old_price;
-        $this->stock_amount = $stock_amount;
         $this->discount_percent = $discount_percent;
     }
 
@@ -26,10 +25,6 @@ class PriceInfo implements JsonSerializable {
         return $this->old_price;
     }
 
-    public function getStockAmount() : int
-    {
-        return $this->stock_amount;
-    }
 
     public function getDiscountPercent() : int
     {

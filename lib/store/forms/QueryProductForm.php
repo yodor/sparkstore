@@ -17,15 +17,8 @@ class QueryProductForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "query", "Запитване", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "itemID", "ItemID", 1);
-        $this->addInput($field);
-
     }
 
-    public function setItemID(int $itemID)
-    {
-        $this->getInput("itemID")->setValue( $itemID );
-    }
 
 }
 ?>

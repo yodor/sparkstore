@@ -72,19 +72,19 @@ class QueryProductResponder extends JSONResponder
     {
 
         $sellable = new SellableProducts();
-        $query = $sellable->query("product_name", "prodID", "piID");
+        $query = $sellable->query("product_name", "prodID");
 
-        $query->select->where()->add("piID", $this->itemID);
+        $query->select->where()->add("prodID", $this->itemID);
         $num = $query->exec();
         if ($num<1) throw new Exception("Incorrect itemID");
 
         if ($result = $query->nextResult()) {
 
             $prodID = $result->get("prodID");
-            $piID = $result->get("piID");
+
 
             $this->mailer->setClient($this->email, $this->name);
-            $this->mailer->setProduct($result->get("product_name"), fullURL(LOCAL."/products/details.php?prodID=$prodID&piID=$piID"));
+            $this->mailer->setProduct($result->get("product_name"), fullURL(LOCAL."/products/details.php?prodID=$prodID"));
             $this->mailer->setQueryText($this->query);
             $this->mailer->prepareMessage();
             $this->mailer->send();

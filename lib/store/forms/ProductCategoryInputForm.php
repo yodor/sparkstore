@@ -1,9 +1,6 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("store/beans/ProductCategoriesBean.php");
-include_once("store/beans/AttributesBean.php");
-include_once("store/beans/ClassAttributesBean.php");
-include_once("input/ArrayDataInput.php");
 include_once("store/beans/ProductCategoryPhotosBean.php");
 
 class ProductCategoryInputForm extends InputForm
@@ -37,7 +34,7 @@ class ProductCategoryInputForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимка", 0);
         $field->getProcessor()->setTransactBean(new ProductCategoryPhotosBean());
-        $field->getProcessor()->setTransactBeanItemLimit(4);
+        $field->getProcessor()->setTransactBeanItemLimit(1);
 
         $this->addInput($field);
 

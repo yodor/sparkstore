@@ -354,6 +354,9 @@ A.Caption:active {
 .section.menu .content .search_pane FORM .SubmitLine .Buttons [action='clear'] {
     display:none;
 }
+.section.menu .content .search_pane FORM .SubmitLine .Buttons [action='show_search'] {
+    display:none;
+}
 .section.menu .content .search_pane FORM .SubmitLine .Buttons [action='search'] {
 
     width:28px;

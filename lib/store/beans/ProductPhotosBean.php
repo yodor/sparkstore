@@ -21,7 +21,7 @@ class ProductPhotosBean extends OrderedDataBean
     }
 
     //return ppID
-    public function getFirstPhotoID($prodID)
+    public function getFirstPhotoID(int $prodID)
     {
 
         $ppID = -1;

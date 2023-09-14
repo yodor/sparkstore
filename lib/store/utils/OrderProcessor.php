@@ -9,8 +9,7 @@ include_once("store/beans/ClientAddressesBean.php");
 include_once("store/forms/DeliveryAddressForm.php");
 include_once("store/forms/ClientAddressInputForm.php");
 include_once("store/beans/ProductsBean.php");
-include_once("store/beans/ProductInventoryBean.php");
-include_once("store/beans/ProductColorPhotosBean.php");
+
 include_once("beans/ConfigBean.php");
 
 class OrderProcessor
@@ -76,13 +75,10 @@ class OrderProcessor
 
             $db->transaction();
 
-            $inventory = new ProductInventoryBean();
-
             $orders = new OrdersBean();
             $eab = new CourierAddressesBean();
 
             $items = $cart->items();
-
 
             $order = array();
 
@@ -124,9 +120,9 @@ class OrderProcessor
 
             $order_total = (float)0;
 
-            foreach ($items as $piID => $cartItem) {
-                if (!$cartItem instanceof CartItem) continue;
-                $order_total = $order_total + $cartItem->getLineTotal();
+            foreach ($items as $itemHash => $cartEntry) {
+                if (!$cartEntry instanceof CartEntry) continue;
+                $order_total = $order_total + $cartEntry->getLineTotal();
             }
 
             $discount_amount = $cart->getDiscount()->amount();
@@ -142,85 +138,56 @@ class OrderProcessor
             debug("Created orderID: {$this->orderID} - for clientID: $userID - Filling order items ...");
 
             $order_items = new OrderItemsBean();
-            $products = new ProductsBean();
-
-            $photos = new ProductColorPhotosBean();
-            $gallery_photos = new ProductPhotosBean();
 
             $pos = 1;
-            foreach ($items as $piID => $cartItem) {
+            foreach ($items as $itemHash => $cartEntry) {
 
-                if (!$cartItem instanceof CartItem) continue;
+                if (!$cartEntry instanceof CartEntry) continue;
 
-                $item = $inventory->getByID($piID);
-                $prodID = (int)$item["prodID"];
 
-                $product = $products->getByID($prodID, "prodID", "brand_name", "product_name");
+                $prodID = $cartEntry->getItem()->getProductID();
 
-                $product_details = "Продукт||{$product["product_name"]}//Цвят||{$item["color"]}//Размер||{$item["size_value"]}//Марка||{$product["brand_name"]}//Код|| {$piID}-{$prodID}";
+                $item = $cartEntry->getItem();
+                $description =  tr("Product").": ".$item->getTitle() . "//";
+                $description.=  tr("Code").": ".$item->getProductID() . "//";
 
-                //try inventory image raw data else product photos
-                $item_photo = NULL;
-
-                $pclrID = (int)$item["pclrID"];
-                $pclrpID = -1;
-                if ($pclrID > 0) {
-                    $pclrpID = $photos->getFirstPhotoID($pclrID);
+                $variants = $item->getVariantNames();
+                foreach ($variants as $idx=>$variantName) {
+                    $variantItem = $item->getVariant($variantName);
+                    if ($variantItem instanceof VariantItem) {
+                        $description.=tr($variantName).": ".$variantItem->getSelected()."//";
+                    }
                 }
 
+                $item_photo = NULL;
                 try {
                     debug("Doing copy of product photos to order ");
 
-                    //try product gallery photos
-                    if ($pclrpID < 1) {
-                        $ppID = $gallery_photos->getFirstPhotoID($prodID);
-                        //no photo here too
-                        if ($ppID < 1) {
-                            debug("No product source photo to store into order items. ProdID=$prodID | InvID=$piID ");
-                        }
-                        else {
-                            //copy
-                            $photo_row = $gallery_photos->getByID($ppID);
-                            $item_photo = $photo_row["photo"];
-                        }
+                    $sitem = $cartEntry->getItem()->getMainPhoto();
+                    if ($sitem instanceof StorageItem) {
+                        $item_photo = @file_get_contents(fullURL($sitem->hrefThumb(256)));
+                    }
 
-                    }
-                    else {
-                        $photo_row = $photos->getByID($pclrpID);
-                        $item_photo = $photo_row["photo"];
-                    }
                 }
                 catch (Exception $e) {
-                    debug("Unable to copy source product photos. ProdID=$prodID | InvID=$piID | Exception: " . $e->getMessage());
+                    debug("Unable to copy source product photos. ProdID=$prodID | Exception: " . $e->getMessage());
                 }
 
-
-
                 $order_item = array();
-                $order_item["piID"] = $piID;
-                $order_item["qty"] = $cartItem->getQuantity();
-                $order_item["price"] = $cartItem->getPrice();
+
+                $order_item["qty"] = $cartEntry->getQuantity();
+                $order_item["price"] = $cartEntry->getPrice();
                 $order_item["position"] = $pos;
                 $order_item["orderID"] = $this->orderID;
-                $order_item["product"] = $product_details;
+                $order_item["product"] = $description;
                 $order_item["prodID"] = $prodID;
                 $order_item["photo"] = DBConnections::Get()->escape($item_photo);
 
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
 
-                $inventory_update = array();
+                //TODO:
 
-                if ($this->manage_stock_amount) {
-                    $inventory_update["stock_amount"] = ($item["stock_amount"] - $cartItem->getQuantity());
-                }
-                if ($this->manage_order_counter) {
-                    $inventory_update["order_counter"] = ($item["order_counter"] + 1);
-                }
-
-                if (count($inventory_update)>0) {
-                    if (!$inventory->update($piID, $inventory_update, $db)) throw new Exception("Unable to update inventory statistics: " . $db->getError());
-                }
 
                 $pos++;
             }

@@ -1,162 +1,150 @@
 <?php
+include_once("objects/SparkObject.php");
+include_once("components/renderers/IPhotoRenderer.php");
+
 include_once("store/utils/SellableDataParser.php");
 
-class SellableItem implements JsonSerializable, IPhotoRenderer {
-
-
-    protected $dataParser = null;
-
+class SellableItem extends SparkObject implements JsonSerializable, IPhotoRenderer
+{
 
     protected $prodID = -1;
-
-    /**
-     * @var int landing/active sellable piID
-     */
-    protected $piID = -1;
-
+    protected $catID = -1;
 
     protected $title = "";
     protected $caption = "";
+    protected $brand_name = "";
+    protected $model = "";
+
     protected $description = "";
     protected $keywords = "";
 
-    protected $main_photo = null;
+    protected $main_photo = NULL;
 
     protected $width = -1;
     protected $height = -1;
 
-    //access by piID
-    protected $rawData = array();
+    //attr.name=>value
     protected $attributes = array();
-    protected $prices = array();
-    protected $sizes = array();
-    protected $colors = array();
 
-    //access by pclrID
-    protected $color_codes = array();
-    protected $color_names = array();
-    protected $color_chips = array();
-    protected $galleries = array();
+    //array of VariantItems
+    protected $variants = array();
 
-    //protected $data = array();
+    protected $priceInfo = null;
 
+    protected $gallery = array();
 
-    public function __construct(int $prodID, SellableDataParser $dataParser=null)
+    protected $stock_amount = 0;
+
+    protected $data = array();
+
+    protected static $defaultDataParser=null;
+
+    public static function SetDefaultDataParser(SellableDataParser $parser): void
     {
+        SellableItem::$defaultDataParser = $parser;
+    }
 
-        $this->prodID = $prodID;
-        $this->dataParser = $dataParser;
-
-        if (is_null($dataParser)) {
-            $this->dataParser = new SellableDataParser();
+    public static function GetDefaultDataParser() : SellableDataParser
+    {
+        if (is_null(SellableItem::$defaultDataParser)){
+            SellableItem::$defaultDataParser = new SellableDataParser();
         }
-
-
+        return SellableItem::$defaultDataParser;
     }
 
-    public function getData(int $piID, string $key)
+    public static function Load(int $prodID) : SellableItem
     {
-        $result = $this->rawData[$piID];
+        $bean = new SellableProducts();
 
-        return $result->get($key);
+        $qry = $bean->queryFull();
+        $qry->setKey("prodID");
+
+        $qry->select->where()->add("prodID", $prodID);
+        $qry->select->group_by = "prodID";
+
+        $num = $qry->exec();
+        if ($num < 1) throw new Exception("Product does not exist or is not accessible right now");
+
+        $sellable = new SellableItem();
+        SellableItem::GetDefaultDataParser()->parse($sellable, $qry->nextResult());
+        return $sellable;
     }
 
-    public function setRawResult(int $piID, RawResult $result)
+    public function __construct()
     {
-        $this->rawData[$piID] = $result;
+        parent::__construct();
     }
 
-    public function finalize()
+    public function setData(string $key, string $value): void
     {
-        $this->dataParser->processMainPhoto($this);
+        $this->data[$key] = $value;
     }
 
-    public function setSizeValue(int $piID, string $size_value)
+    public function getData(string $key) : string
     {
-        $this->sizes[$piID] = $size_value;
+        return $this->data[$key];
     }
 
-    public function getSizeValue(int $piID) : string
+    public function setBrandName(string $brand_name): void
     {
-        return $this->sizes[$piID];
+        $this->brand_name = $brand_name;
     }
-
-    protected function pidsByColorID(int $pclrID) : array
+    public function getBrandName() : string
     {
-        $matching_piIDs = array();
-
-        foreach ($this->colors as $piID=>$colorID) {
-            if ($colorID == $pclrID) {
-                $matching_piIDs[$piID] = 1;
-                break;
-            }
-        }
-
-        return array_keys($matching_piIDs);
+        return $this->brand_name;
     }
 
-    public function getSizeValuesByColorID(int $pclrID) : array
+    public function setModel(string $model): void
+    {
+        $this->model = $model;
+    }
+
+    public function getModel() : string
+    {
+        return $this->model;
+    }
+
+    public function setCategoryID(int $catID): void
+    {
+        $this->catID = $catID;
+    }
+
+    public function getCategoryID(): int
+    {
+        return $this->catID;
+    }
+    public function getPriceInfo() : PriceInfo
     {
 
-        $pids = $this->pidsByColorID($pclrID);
-
-        $size_values = array();
-
-        foreach ($pids as $idx=>$piID) {
-            $size_values[$piID] = $this->getSizeValue($piID);
-        }
-
-        return $size_values;
+        return $this->priceInfo;
     }
 
-    public function getPriceInfosByColorID(int $pclrID) : array
+    public function setPriceInfo(PriceInfo $info): void
     {
-        $pids = $this->pidsByColorID($pclrID);
-
-        $price_infos = array();
-        foreach ($pids as $idx=>$piID) {
-            $price_infos[$piID] = $this->getPriceInfo($piID);
-        }
-        return $price_infos;
+        $this->priceInfo = $info;
     }
 
-
-
-    public function setPriceInfo(int $piID, PriceInfo $info)
+    public function setStockAmount(int $amount): void
     {
-        $this->prices[$piID] = $info;
-    }
-    public function getPriceInfo(int $piID) : PriceInfo
-    {
-        return $this->prices[$piID];
+        $this->stock_amount = $amount;
     }
 
-    public function isPromotion(int $piID) : bool
+    public function getStockAmount() : int
+    {
+        return $this->stock_amount;
+    }
+
+    public function isPromotion() : bool
     {
         $result = false;
 
-        $priceInfo = $this->prices[$piID];
+        $priceInfo = $this->priceInfo;
         if (!$priceInfo instanceof PriceInfo) return $result;
         if ($priceInfo->getOldPrice()!=$priceInfo->getSellPrice() && $priceInfo->getOldPrice()>0) {
             $result = true;
         }
 
         return $result;
-    }
-
-    public function setColorID(int $piID, int $pclrID)
-    {
-        $this->colors[$piID] = $pclrID;
-    }
-
-    public function getColorID(int $piID) : int
-    {
-        return $this->colors[$piID];
-    }
-
-    public function setDataParser(SellableDataParser $parser)
-    {
-        $this->dataParser = $parser;
     }
 
     /**
@@ -171,12 +159,9 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
         $this->main_photo = $sitem;
     }
 
-    /**
-     * @param int $piID Set the active/landing product inventory ID
-     */
-    public function setInventoryID(int $piID)
+    public function setProductID(int $prodID): void
     {
-        $this->piID = $piID;
+        $this->prodID = $prodID;
     }
 
     public function getProductID(): int
@@ -184,58 +169,21 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
         return $this->prodID;
     }
 
-    /**
-     * @return int Get the active/landing product inventory ID
-     */
-    public function getActiveInventoryID() : int
-    {
-        return $this->piID;
-    }
-
-    public function addInventoryData(RawResult $result)
-    {
-
-        $this->dataParser->parse($this, $result);
-
-    }
-
-//    public function setData(int $piID, array $result)
-//    {
-//        $this->data[$piID] = $result;
-//    }
-//
-//    public function getData(string $key) : ?string
-//    {
-//        if (isset($this->data[$this->getActiveInventoryID()][$key])) {
-//            return $this->data[$this->getActiveInventoryID()][$key];
-//        }
-//        return null;
-//    }
-
     public function getKeywords() : string
     {
         return  $this->keywords;
     }
-    public function setKeywords(string $keywords)
+    public function setKeywords(string $keywords): void
     {
         $this->keywords = $keywords;
     }
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
     public function getTitle() : string
     {
         return $this->title;
-    }
-
-    public function getCaption() : string
-    {
-        return $this->caption;
-    }
-    public function setCaption(string $caption)
-    {
-        $this->caption = $caption;
     }
 
     public function getDescription() : string
@@ -247,99 +195,55 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
         $this->description = $description;
     }
 
-    public function setAttributes(int $piID, array $attributes)
+    public function setAttribute(string $name, string $value)
     {
-        $this->attributes[$piID] = $attributes;
+        $this->attributes[$name] = $value;
     }
 
-    public function getAttributes(int $piID) : array
-    {
-        if (isset($this->attributes[$piID])) {
-            return $this->attributes[$piID];
-        }
-        else {
-            return array();
-        }
-    }
-
-    public function getAttributesAll() : array
+    public function getAttributes() : array
     {
         return $this->attributes;
     }
 
-    public function setColorName(int $pclrID, string $name)
+    public function galleryItems() : array
     {
-        $this->color_names[$pclrID] = $name;
-    }
-    public function getColorName(int $pclrID) : ?string
-    {
-        if (isset($this->color_names[$pclrID])) {
-            return $this->color_names[$pclrID];
-        }
-        return null;
+        return $this->gallery;
     }
 
-    public function setColorCode(int $pclrID, string $code)
+    public function addGalleryItem(StorageItem $sitem): void
     {
-        $this->color_codes[$pclrID] = $code;
+        $this->gallery[] = $sitem;
     }
 
-    public function getColorCode(int $pclrID) : ?string
+    public function haveGalleryItems() : bool
     {
-        if (isset($this->color_codes[$pclrID])) {
-            return $this->color_codes[$pclrID];
-        }
-        return null;
+        return (count($this->gallery)>0);
     }
 
-    public function galleries() : array
+    public function setVariant(VariantItem $vitem): void
     {
-        return array_keys($this->galleries);
+        $this->variants[$vitem->getName()] = $vitem;
     }
 
-    public function haveGalleryItems(int $pclrID) : bool
+    public function haveVariant(string $name) : bool
     {
-
-        return isset($this->galleries[$pclrID]);
+        return array_key_exists($name, $this->variants);
     }
 
-    public function galleryItems(int $pclrID) : array
+    public function getVariant(string $name) : VariantItem
     {
-        return $this->galleries[$pclrID];
+        if (!$this->haveVariant($name)) throw new Exception("Variant name '$name' not found");
+        return $this->variants[$name];
     }
 
-    public function addGalleryItem(int $pclrID, StorageItem $sitem)
+    public function getVariantNames() : array
     {
-        $this->galleries[$pclrID][] = $sitem;
+        return array_keys($this->variants);
     }
 
-
-    //
-    //
-    public function setColorChip(int $pclrID, StorageItem $sitem=null)
+    public function variantsCount() : int
     {
-        $this->color_chips[$pclrID] = $sitem;
-    }
-
-    public function getColorChips() : array
-    {
-        return $this->color_chips;
-    }
-
-    public function getColorChip(int $pclrID) : ?StorageItem
-    {
-        return $this->color_chips[$pclrID];
-    }
-
-
-    //    public function setPrice(int $pclrID, string $size_value, int $piID, PriceInfo $pinfo) {
-    //        $this->prices[$pclrID][$size_value][$piID] = $pinfo;
-    //    }
-
-
-    public function jsonSerialize() : array
-    {
-        return get_object_vars($this);
+        return count(array_keys($this->variants));
     }
 
     /**
@@ -347,7 +251,7 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
      * @param int $width
      * @param int $height
      */
-    public function setPhotoSize(int $width, int $height)
+    public function setPhotoSize(int $width, int $height): void
     {
         $this->width = $width;
         $this->height = $height;
@@ -370,5 +274,13 @@ class SellableItem implements JsonSerializable, IPhotoRenderer {
     {
         return $this->height;
     }
+
+    public function jsonSerialize() : array
+    {
+        return get_object_vars($this);
+    }
+
+
+
 }
 ?>

@@ -22,6 +22,9 @@ include_once("utils/CurrencyConverter.php");
 include_once("store/beans/ProductCategoriesBean.php");
 
 include_once("store/utils/cart/Cart.php");
+include_once("beans/DynamicPagesBean.php");
+include_once("store/responders/json/VoucherFormResponder.php");
+
 
 class SectionContainer extends Container {
 
@@ -91,17 +94,20 @@ class StorePageBase extends SparkPage
     protected $_main = null;
     protected $_footer = null;
     protected $_cookies = null;
+    protected $_page_footer = null;
+
+    public bool $vouchers_enabled = false;
 
     public function __construct()
     {
 
         $this->auth = new UserAuthenticator();
         $this->loginURL = LOCAL . "/account/login.php";
-
+//
         parent::__construct();
-
+//
         $this->authorize();
-
+//
         if ($this->context) {
 
             $this->client_name = $this->context->getData()->get(SessionData::FULLNAME);
@@ -119,12 +125,25 @@ class StorePageBase extends SparkPage
         $this->menu_bar->toggle_first = TRUE;
 
         $ksc = new KeywordSearch();
+
         //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is posted there
         $ksc->getForm()->getInput("keyword")->getRenderer()->setInputAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getRenderer()->setAttribute("method", "get");
         $ksc->getForm()->getRenderer()->setAttribute("action", LOCAL . "/products/list.php");
 
+//        $input = DataInputFactory::Create(DataInputFactory::HIDDEN, KeywordSearch::SUBMIT_KEY, "",0);
+//        $input->setValue(KeywordSearch::ACTION_SEARCH);
+//        $input->setEditable(false);
+//        $ksc->getForm()->addInput($input);
+//
+//        $ksc->getButtons()->clear();
         $ksc->getButton("search")->setContents("");
+
+        $show_search = new ColorButton();
+        $show_search->setAttribute("action", "show_search");
+        $show_search->setAttribute("onClick", "showSearch()");
+        $ksc->getButtons()->append($show_search);
+
 
         $this->keyword_search = $ksc;
 
@@ -137,6 +156,7 @@ class StorePageBase extends SparkPage
 
 
         $this->addJS(STORE_LOCAL."/js/StoreCookies.js");
+
 
 
         $pc = new ProductCategoriesBean();
@@ -171,6 +191,11 @@ class StorePageBase extends SparkPage
         $this->_footer = new SectionContainer();
         $this->_footer->addClassName("footer");
 
+        $this->_page_footer = new SectionContainer();
+        $this->_page_footer->addClassName("pageFooter");
+
+
+
         $header_callback = function(ClosureComponent $parent) {
             $this->renderHeader();
         };
@@ -191,6 +216,15 @@ class StorePageBase extends SparkPage
         };
         $this->_footer->content()->append(new ClosureComponent($footer_callback, false));
 
+        $pageFooter_callback = function(ClosureComponent $parent) {
+            $this->renderPageFooter();
+        };
+        $this->_page_footer->content()->append(new ClosureComponent($pageFooter_callback, false));
+
+
+        if ($this->vouchers_enabled) {
+            $voucher_handler = new VoucherFormResponder();
+        }
 
     }
 
@@ -244,7 +278,7 @@ class StorePageBase extends SparkPage
 
     public function renderLDJSON(array $data)
     {
-        echo "<script async type='application/ld+json'>";
+        echo "<script type='application/ld+json'>";
         echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         echo "</script>";
     }
@@ -258,7 +292,14 @@ class StorePageBase extends SparkPage
     {
         parent::startRender();
 
-        $this->facebookChatPlugin();
+        $cfg = new ConfigBean();
+        $cfg->setSection("store_config");
+        $page_id = $cfg->get("facebook_page_id", "");
+        if ($page_id) {
+            echo "\n<!-- Facebook Chat Plugin start -->\n";
+            $this->renderFBChatPlugin($page_id);
+            echo "\n<!-- Facebook Chat Plugin end -->\n";
+        }
 
         echo "\n<!-- startRender StorePage-->\n";
 
@@ -275,17 +316,6 @@ class StorePageBase extends SparkPage
 
     }
 
-    protected function facebookChatPlugin()
-    {
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $page_id = $cfg->get("facebook_page_id", "");
-        if ($page_id) {
-            echo "\n<!-- Facebook Chat Plugin start -->\n";
-            $this->renderFBChatPlugin($page_id);
-            echo "\n<!-- Facebook Chat Plugin end -->\n";
-        }
-    }
     protected function renderMenu()
     {
         echo "<div class='menuwrap'>";
@@ -339,15 +369,73 @@ class StorePageBase extends SparkPage
         $logo_href = LOCAL . "/home.php";
         echo "<a class='logo' href='{$logo_href}' title='logo'></a>";
 
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
+//        $cfg = new ConfigBean();
+//        $cfg->setSection("store_config");
 
-        echo "<div class='marquee'>";
-            echo "<marquee>" . $cfg->get("marquee_text") . "</marquee>";
-        echo "</div>";
+//        echo "<div class='marquee'>";
+//            echo "<marquee>" . $cfg->get("marquee_text") . "</marquee>";
+//        echo "</div>";
 
     }
 
+    protected function renderPageFooter()
+    {
+        echo "<div class='columns'>";
+
+        $cfg = new ConfigBean();
+        $cfg->setSection("store_config");
+        $phone = $cfg->get("phone_text", "");
+        $phone = str_replace("\\r\\n", "<BR>", $phone);
+        $email = $cfg->get("email_text", "");
+        $email = str_replace("\\r\\n", "<BR>", $email);
+        $locataion = $cfg->get("address_text", "");
+        $locataion = str_replace("\\r\\n", "<BR>", $locataion);
+        $working_hours = $cfg->get("working_hours_text", "");
+        $working_hours = str_replace("\\r\\n", "<BR>", $working_hours);
+
+        if ($this->vouchers_enabled) {
+            echo "<div class='column voucher'>";
+            echo "<a class='ColorButton' onClick='showVoucherForm()'>";
+            echo tr("Купи ваучер");
+            echo "</a>";
+            echo "</div>";
+
+        }
+
+            echo "<div class='column page_links'>";
+        $dp = new DynamicPagesBean();
+        $query = $dp->query("item_title", "keywords", "dpID");
+        $query->select->where()->add("keywords", "'%footer_page%'", " LIKE ");
+        $query->select->where()->add("visible", 1);
+            $num = $query->exec();
+            while ($result = $query->nextResult()) {
+                $href=LOCAL."/terms_usage.php?dpID=".$result->get("dpID");
+                echo "<a class='item' href='$href'>".$result->get("item_title")."</a>";
+            }
+            echo "</div>";
+
+            echo "<div class='column address'>";
+                echo "<div class='space'>";
+                    echo "<div class='text phone'>";
+                    echo $phone;
+                    echo "</div>";
+
+                    echo "<div class='text email'>";
+                    echo $email;
+                    echo "</div>";
+
+                    echo "<div class='text location'>";
+                    echo $locataion;
+                    echo "</div>";
+
+                    echo "<div class='text working_hours'>";
+                    echo $working_hours;
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+
+        echo "</div>";
+    }
     protected function renderFooter()
     {
         $cfg = new ConfigBean();
@@ -355,7 +443,7 @@ class StorePageBase extends SparkPage
         $facebook_href = $cfg->get("facebook_url", "/");
         $instagram_href = $cfg->get("instagram_url", "/");
         $youtube_href = $cfg->get("youtube_url", "/");
-        $phone = $cfg->get("phone", "");
+        $phone = $cfg->get("phone_orders", "");
 
         echo "<div class='social'>";
             if ($facebook_href) {
@@ -367,7 +455,7 @@ class StorePageBase extends SparkPage
             if ($youtube_href) {
                 echo "<a class='slot youtube' title='youtube' href='{$youtube_href}'></a>";
             }
-            echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
+            //echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
             echo "<a class='slot contacts' title='contacts' href='".LOCAL."/contacts.php'></a>";
             if ($phone) {
                 echo "<a class='slot phone' title='phone' href='tel:$phone'></a>";
@@ -413,6 +501,8 @@ class StorePageBase extends SparkPage
         $this->_main->spaceRight()->render();
         $this->_main->finishRender();
 
+        $this->_page_footer->render();
+
         $this->_cookies->render();
         $this->_footer->render();
 
@@ -422,16 +512,19 @@ class StorePageBase extends SparkPage
 
         $this->constructTitle();
 ?>
-        <script async type="text/javascript">
+        <script type="text/javascript">
 
             //to check when element get's position sticky
             var observer = new IntersectionObserver(function(entries) {
-                // no intersection
-                if (entries[0].intersectionRatio === 0)
+
+                if (entries[0].intersectionRatio === 0) {
                     document.querySelector(".section.menu").classList.add("sticky");
-                // fully intersects
-                else if (entries[0].intersectionRatio === 1)
+
+                }
+                else if (entries[0].intersectionRatio === 1) {
                     document.querySelector(".section.menu").classList.remove("sticky");
+                }
+
             }, {
                 threshold: [0, 1]
             });
@@ -469,6 +562,46 @@ class StorePageBase extends SparkPage
 
             });
 
+            function showVoucherForm()
+            {
+                let voucher_dialog = new JSONFormDialog();
+                voucher_dialog.setResponder("VoucherFormResponder");
+                voucher_dialog.caption="Kупи Ваучер";
+
+                let dialog = new MessageDialog()
+                dialog.initialize();
+                dialog.text = "Ще получите Вашият ваучер по куриер";
+
+                dialog.buttonAction = function (action) {
+
+                    if (action == "confirm") {
+                        dialog.remove();
+                        voucher_dialog.show();
+                    }
+                    else if (action == "cancel") {
+                        dialog.remove();
+                    }
+                }
+
+                dialog.show();
+            }
+            function showSearch()
+            {
+                let form = document.querySelector(".section.menu .content .search_pane FORM");
+                let dcomp = $(".KeywordSearch .InputComponent").css("display");
+                let dfield = $(".KeywordSearch .InputComponent .InputField").css("display");
+                if (dcomp == "block" && dfield == "inline-block") {
+                    form.submit();
+                    return;
+                }
+
+                if (form.classList.contains("fixed")) {
+                    form.classList.remove("fixed");
+                }
+                else {
+                    form.classList.add("fixed");
+                }
+            }
         </script>
 <?php
         parent::finishRender();
@@ -485,14 +618,14 @@ class StorePageBase extends SparkPage
         <div id="fb-customer-chat" class="fb-customerchat">
         </div>
 
-        <script async>
+        <script>
             var chatbox = document.getElementById('fb-customer-chat');
             chatbox.setAttribute("page_id", "<?php echo $page_id;?>");
             chatbox.setAttribute("attribution", "biz_inbox");
         </script>
 
         <!-- Your SDK code -->
-        <script async>
+        <script>
             window.fbAsyncInit = function() {
                 FB.init({
                     xfbml            : true,

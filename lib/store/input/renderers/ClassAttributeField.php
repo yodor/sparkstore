@@ -1,7 +1,8 @@
 <?php
 include_once("input/renderers/DataIteratorField.php");
 include_once("components/renderers/items/DataIteratorItem.php");
-include_once("store/beans/ClassAttributesBean.php");
+include_once("store/beans/ProductClassAttributesBean.php");
+include_once("store/beans/ProductClassAttributeValuesBean.php");
 
 class ClassAttributeItem extends DataIteratorItem
 {
@@ -13,29 +14,30 @@ class ClassAttributeItem extends DataIteratorItem
 
         echo "<input data='attribute_value' type='text' value='{$this->value}' name='{$this->name}'>";
 
-        echo "<input data='foreign_key' type='hidden' name='fk_{$this->name}' value='caID:{$this->id}'>";
-
-        echo "<label data='attribute_unit'>" . $this->data["unit"] . "</label>";
+        //value foreign key
+        echo "<input data='foreign_key' type='hidden' name='fk_{$this->name}' value='pcaID:{$this->data["pcaID"]}'>";
     }
 
 }
 
 class ClassAttributeFieldResponder extends JSONResponder
 {
-    protected $catID = -1;
+    protected $classID = -1;
     protected $prodID = -1;
+    protected $field;
 
-    public function __construct()
+    public function __construct(ClassAttributeField $field)
     {
         parent::__construct("ClassAttributeField");
+        $this->field = $field;
     }
 
     public function parseParams()
     {
         parent::parseParams();
 
-        if (isset($_GET["catID"])) {
-            $this->catID = (int)$_GET["catID"];
+        if (isset($_GET["classID"])) {
+            $this->classID = (int)$_GET["classID"];
         }
         if (isset($_GET["prodID"])) {
             $this->prodID = (int)$_GET["prodID"];
@@ -44,18 +46,11 @@ class ClassAttributeFieldResponder extends JSONResponder
 
     public function _render(JSONResponse $req)
     {
-        $field = new ArrayDataInput("value", "Category Attributes", 0);
-        $field->source_label_visible = TRUE;
 
-        $bean1 = new ClassAttributeValuesBean();
-        $field->getProcessor()->setTransactBean($bean1);
+        $this->field->setClassID($this->classID);
+        $this->field->setProductID($this->prodID);
 
-        $rend = new ClassAttributeField($field);
-
-        $rend->setCategoryID($this->catID);
-        $rend->setProductID($this->prodID);
-
-        $rend->renderImpl();
+        $this->field->renderImpl();
 
     }
 }
@@ -63,19 +58,40 @@ class ClassAttributeFieldResponder extends JSONResponder
 class ClassAttributeField extends DataIteratorField
 {
 
-    protected $catID = -1;
+    protected $classID = -1;
     protected $prodID = -1;
+
+    public static function Create(string $name, string $label, bool $required) : ArrayDataInput
+    {
+        $field = new ArrayDataInput($name, $label, $required);
+
+        $field->source_label_visible = TRUE;
+        //try merge even if posted count is different
+        $field->getProcessor()->merge_with_target_loaded = TRUE;
+        //check fk_$name values posted
+        $field->getProcessor()->process_datasource_foreign_keys = TRUE;
+        //do not transact empty string during insert
+        //instead of update the value will be deleted
+        $field->getProcessor()->transact_bean_skip_empty_values = TRUE;
+
+        $bean1 = new ProductClassAttributeValuesBean();
+        $field->getProcessor()->setTransactBean($bean1);
+
+        $rend = new ClassAttributeField($field);
+        return $field;
+    }
 
     public function __construct(DataInput $input)
     {
         parent::__construct($input);
         $this->setItemRenderer(new ClassAttributeItem());
 
-        $cab = new ClassAttributesBean();
-        $this->setIterator($cab->queryFull());
-        $this->getItemRenderer()->setValueKey("caID");
-        $this->getItemRenderer()->setLabelKey("attribute_name");
+        $this->getItemRenderer()->setValueKey("pcaID");
+        $this->getItemRenderer()->setLabelKey("name");
 
+        $responder = new ClassAttributeFieldResponder($this);
+
+        $this->updateIterator();
     }
 
     public function requiredStyle(): array
@@ -85,35 +101,43 @@ class ClassAttributeField extends DataIteratorField
         return $arr;
     }
 
-    public function setCategoryID($catID)
+    public function setClassID(int $classID)
     {
-        $this->catID = $catID;
-        $this->iterator->select->fields()->set("ca.*", "ma.name AS attribute_name", "ma.unit", "ma.type");
-        $this->iterator->select->from = $this->iterator->name() . " ca, attributes ma ";
-        $this->iterator->select->where()->add("ca.catID", $catID);
-        $this->iterator->select->where()->add("ma.maID", "ca.maID");
-
+        $this->classID = $classID;
+        $this->updateIterator();
     }
 
-    public function setProductID($prodID)
+    public function updateIterator()
     {
-        $this->prodID = (int)$prodID;
-        if ($this->prodID > 0) {
-            $this->iterator->select->fields()->set("ca.*", "ma.name AS attribute_name", "ma.unit", "ma.type", "cav.value", "cav.prodID");
-            $this->iterator->select->from = $this->iterator->name() . " ca LEFT JOIN class_attribute_values cav ON ca.caID = cav.caID , attributes ma ";
-            $this->iterator->select->where()->add("ma.maID", "ca.maID");
-            $this->iterator->select->where()->add("ca.catID", $this->catID);
-            $this->iterator->select->group_by = "ca.caID";
-            $this->iterator->select->having = "(cav.prodID='{$this->prodID}' OR cav.prodID IS NULL)";
+        $sel = new SQLSelect();
+
+        $sel->fields()->set("pca.pcaID", "attr.name");
+        $sel->fields()->setExpression("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "value");
+        $sel->fields()->setExpression("(SELECT pcav.pcavID FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "pcavID");
+
+        $sel->from = "`product_class_attributes` pca JOIN `attributes` attr ON attr.attrID=pca.attrID";
+
+        $sel->order_by = " pcaID ASC ";
+
+        if ($this->classID>0) {
+            $sel->where()->add("pca.pclsID", $this->classID);
         }
+
+        $this->setIterator(new SQLQuery($sel, "pcaID"));
+    }
+
+    public function setProductID(int $prodID)
+    {
+        $this->prodID = $prodID;
+        $this->updateIterator();
     }
 
     public function renderImpl()
     {
 
-        if ($this->catID < 1) {
+        if ($this->classID < 1) {
 
-            echo tr("Select product category first");
+            echo tr("Select product class first");
             return;
         }
 
@@ -140,29 +164,27 @@ class ClassAttributeField extends DataIteratorField
         ?>
         <script type='text/javascript'>
             onPageLoad(function () {
-                console.log("Adding category handler");
+                console.log("Adding class changed handler");
 
-                $("[name='catID']").on("change", function () {
-                    console.log("Category Changed");
+                $("[name='pclsID']").on("change", function () {
+                    console.log("Product Class Changed");
 
-                    var catID = $(this).val();
+                    let classID = $(this).val();
 
-                    var req = new JSONRequest();
+                    let req = new JSONRequest();
                     req.setResponder("ClassAttributeField");
                     req.setFunction("render");
-                    req.setParameter("catID", catID);
+                    req.setParameter("classID", classID);
                     req.setParameter("prodID", <?php echo $this->prodID;?>);
 
-                    req.start(
-                        function (request_result) {
-                            var result = request_result.json_result;
-                            var html = result.contents;
-                            $(".ClassAttributeField[field='<?php echo $this->input->getName();?>']").html(html);
-                        },
-                        function (request_error) {
-                            showAlert(request_error.description);
-                        }
-                    );
+                    req.onSuccess = function(request_result) {
+                        let result = request_result.json_result;
+                        let html = result.contents;
+                        $(".ClassAttributeField[field='<?php echo $this->input->getName();?>']").html(html);
+                        dispatchEvent(new Event('load'));
+                    };
+
+                    req.start();
 
                 });
             });

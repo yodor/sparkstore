@@ -11,20 +11,20 @@ interface ICartListener {
     /**
      * Called before the actual operation take place
      * @param string $operation
-     * @param ?CartItem $item
+     * @param ?CartEntry $item
      * @param Cart $cart
      * @return mixed
      */
-    public function before(string $operation, ?CartItem $item, Cart $cart);
+    public function before(string $operation, ?CartEntry $item, Cart $cart);
 
     /**
      * Called after the actial operation take place
      * @param string $operation
-     * @param ?CartItem $item
+     * @param ?CartEntry $item
      * @param Cart $cart
      * @return mixed
      */
-    public function after(string $operation, ?CartItem $item, Cart $cart);
+    public function after(string $operation, ?CartEntry $item, Cart $cart);
 
 }
 ?>

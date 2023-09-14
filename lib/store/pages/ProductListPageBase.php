@@ -1,38 +1,21 @@
 <?php
-include_once("class/pages/StorePage.php");
+include_once("store/pages/ProductPageBase.php");
 
 include_once("components/NestedSetTreeView.php");
 include_once("components/renderers/items/TextTreeItem.php");
 include_once("components/Action.php");
 include_once("components/TableView.php");
 include_once("components/ItemView.php");
-include_once("components/BreadcrumbList.php");
+
 include_once("components/ClosureComponent.php");
 
 include_once("utils/GETVariableFilter.php");
 
 include_once("store/components/ProductListFilter.php");
-include_once("store/components/renderers/items/ProductListItem.php");
-include_once("store/beans/SellableProducts.php");
 
-class ProductListPageBase extends StorePage
+
+class ProductListPageBase extends ProductPageBase
 {
-    protected $products_title = "Продукти";
-
-    /**
-     * @var SellableProducts|null
-     */
-    protected $bean = null;
-
-    /**
-     * @var SectionsBean|null
-     */
-    public $sections = NULL;
-
-    /**
-     * @var ProductCategoriesBean
-     */
-    public $product_categories = NULL;
 
 
     /**
@@ -58,11 +41,6 @@ class ProductListPageBase extends StorePage
      */
     protected $view = NULL;
 
-    /**
-     * Currently selected section (processed as get variable)
-     * @var string
-     */
-    protected $section = "";
 
     /**
      * @var GETVariableFilter|null
@@ -74,26 +52,17 @@ class ProductListPageBase extends StorePage
      */
     protected $category_filter = NULL;
 
-    /**
-     * Array holding the current selected category branch starting from nodeID to the top
-     * @var array
-     */
-    protected $category_path = array();
-
-
-    protected $breadcrumb = null;
 
     public $treeViewUseAgregateSelect = true;
+
 
     public function __construct()
     {
         parent::__construct();
 
 
-        $this->sections = new SectionsBean();
         $this->section_filter = new GETVariableFilter("section", "section");
 
-        $this->product_categories = new ProductCategoriesBean();
         $this->category_filter = new GETVariableFilter("catID", "catID");
 
         //Initialize product categories tree
@@ -118,17 +87,12 @@ class ProductListPageBase extends StorePage
 
         $this->view = new ItemView();
         $this->view->setItemRenderer(new ProductListItem());
-        $this->view->setItemsPerPage(12);
+        $this->view->setItemsPerPage(24);
 
         $this->view->getTopPaginator()->view_modes_enabled = TRUE;
 
-        $this->breadcrumb = new BreadcrumbList();
-
-
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
-
-        $this->canonical_enabled = true;
 
     }
 
@@ -144,11 +108,11 @@ class ProductListPageBase extends StorePage
 
     protected function initSortFields()
     {
-        $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
-        $this->view->getPaginator()->addSortField($sort_price);
-
         $sort_prod = new PaginatorSortField("prodID", "Най-нови", "", "DESC");
         $this->view->getPaginator()->addSortField($sort_prod);
+
+        $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
+        $this->view->getPaginator()->addSortField($sort_price);
     }
 
     /**
@@ -162,7 +126,7 @@ class ProductListPageBase extends StorePage
         }
         $this->select = clone $this->bean->select();
 
-        $search_fields = array("product_name", "product_description", "long_description", "keywords");
+        $search_fields = array("product_name", "keywords");
         $this->keyword_search->getForm()->setFields($search_fields);
         //$this->keyword_search->getForm()->setCompareExpression("relation.inventory_attributes", array("%:{keyword}|%", "%:{keyword}"));
 
@@ -181,22 +145,16 @@ class ProductListPageBase extends StorePage
     }
 
 
-
-    public function setSellableProducts(SellableProducts $bean)
-    {
-        $this->bean = $bean;
-    }
-
-
     //process get vars
     public function processInput()
     {
 
         //filter precedence
         // 1 section
-        // 2 keyword search
-        // 3 category
-        // 4 filters
+        // 2 brand
+        // 3 keyword search
+        // 4 category
+        // 5 attribute filters
 
         $this->section = "";
 
@@ -214,13 +172,16 @@ class ProductListPageBase extends StorePage
                 $this->section = $value;
             }
 
-            $this->select->where()->add("section", "'{$value}'");
+            $this->select->where()->append("product_sections LIKE '%$value%'");
         }
 
         $this->keyword_search->processInput();
 
         if ($this->keyword_search->isProcessed()) {
-            $this->keyword_search->getForm()->prepareClauseCollection("AND")->copyTo($this->select->where());
+
+            $cc = $this->keyword_search->getForm()->prepareClauseCollection("AND");
+//            print_r($cc->getSQL());
+            $cc->copyTo($this->select->where());
         }
 
         $this->category_filter->processInput();
@@ -248,24 +209,35 @@ class ProductListPageBase extends StorePage
             //set initial products select. create attribute filters need to append the data inputs only.
             $this->filters->getForm()->setSQLSelect($this->select);
             $this->filters->getForm()->createAttributeFilters();
+            $this->filters->getForm()->createVariantFilters();
             //update here if all filter values needs to be visible
-            //$this->filters->getForm()->updateIterators();
+            $this->filters->getForm()->updateIterators(true);
 
             //assign values from the query string to the data inputs
             $this->filters->processInput();
 
             $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
+            //echo $filters_where->getSQL();
             //products list filtered
             $filters_where->copyTo($this->select->where());
 
             //tree view filtered
             $filters_where->copyTo($products_tree->where());
-            //echo $this->select->getSQL()."<HR>";
+
 
             //filter values will be limited to the selection only
             //set again - rendering will use this final select
             $this->filters->getForm()->setSQLSelect($this->select);
-            $this->filters->getForm()->updateIterators();
+            $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
+            $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
+            //create again to hide empty filters
+            $this->filters->getForm()->createAttributeFilters();
+            $this->filters->getForm()->createVariantFilters();
+            $this->filters->getForm()->updateIterators(false);
+
+            //assign values from the query string to the data inputs
+            $this->filters->processInput();
+
 
         }
 
@@ -274,7 +246,6 @@ class ProductListPageBase extends StorePage
 
         //primary key is prodID as we group by prodID(Products) not piID(ProductInventory)
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
-
 
         //construct category tree for the products that will be listed
         //keep same grouping as the products list
@@ -317,112 +288,76 @@ class ProductListPageBase extends StorePage
         }
     }
 
-    public function renderProductsView()
+    public function renderChildCategories()
     {
 
+        $sel_catID = $this->treeView->getSelectedID();
+        $catsel = clone $this->treeView->getIterator()->select;
+
+        $catsel->clearMode();
+        $catsel->fields()->reset();
+        $catsel->fields()->set("parent.catID", "parent.category_name", "parent.lft");
+        $catsel->group_by = "node.catID";
+
+        if ($sel_catID>0) {
+            $catsel->fields()->reset();
+            $catsel->fields()->set("node.catID", "node.category_name", "node.lft");
+            $catsel->where()->add("parent.catID", $sel_catID);
+            $catsel->where()->add("node.catID", $sel_catID, "<>");
+            $catsel->group_by = "node.catID";
+        }
+        $catsel->order_by = "node.lft ASC";
+
+        $catsel = $catsel->getAsDerived("topcats");
+        $catsel->fields()->set("topcats.catID", "topcats.category_name", "topcats.lft");
+        $catsel->fields()->setExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = topcats.catID)", "pcpID");
+        $catsel->group_by = "catID";
+        $catsel->order_by = "lft ASC";
+
+        //echo $catsel->getSQL();
+
+        $query = new SQLQuery($catsel, "catID");
+        $num = $query->exec();
+
+        echo "<div class='category_list'>";
+        $builder = new URLBuilder();
+        $builder->buildFrom($this->getPageURL());
+        $builder->add(new URLParameter("catID"));
+        $si = new StorageItem();
+        $si->className = "ProductCategoryPhotosBean";
+        while ($result = $query->nextResult()) {
+            $builder->get("catID")->setValue($result->get("catID"));
+            $si->id = $result->get("pcpID");
+            echo "<div class='item'>";
+            echo "<a href='{$builder->url()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
+            echo "</div>";
+        }
+        echo "</div>";
+
+        
+    }
+
+    public function renderProductsView()
+    {
         $this->view->render();
     }
 
-    protected function constructTitle()
-    {
-        if ($this->keyword_search->isProcessed()) {
-            $this->setTitle("Резултати от търсене");
-            return;
-        }
-
-        $title = array();
-
-        if ($this->section) {
-            $title[] = $this->section;
-        }
-        else {
-            $title[] = tr($this->products_title);
-        }
-
-        foreach ($this->category_path as $idx => $catinfo) {
-            $title[] = $catinfo["category_name"];
-        }
-
-        $this->setTitle(constructSiteTitle($title));
-    }
 
 
-
-    public function getCategoryPath()
-    {
-        return $this->category_path;
-    }
-
-    /**
-     * Load the current selected category branch into the category_path array. Starting from nodeID to the top
-     * @param int $nodeID
-     */
     protected function loadCategoryPath(int $nodeID)
     {
-        $category_path = $this->product_categories->getParentNodes($nodeID, array("catID", "category_name"));
+        parent::loadCategoryPath($nodeID); // TODO: Change the autogenerated stub
+        if ($this->category_path) {
 
-        if ($category_path) {
-            $this->category_path = $category_path;
-
-            $length = count($category_path);
+            $length = count($this->category_path);
             if ($length>0) {
-                $this->view->setName($category_path[$length-1]["category_name"]);
+                $this->view->setName($this->category_path[$length-1]["category_name"]);
             }
         }
-        else {
-            $this->category_path = array();
-        }
+
     }
 
-    public function renderCategoryPath()
-    {
-        $actions = $this->constructPathActions();
 
-        $this->breadcrumb->clear();
-        foreach ($actions as $idx=>$cmp) {
-            $this->breadcrumb->append($cmp);
-        }
-
-        $this->breadcrumb->render();
-    }
-
-    protected function constructPathActions() : array
-    {
-        $actions = array();
-
-        $actions[] = new Action(tr("Начало"), LOCAL . "/home.php", array());
-
-        $link = new URLBuilder();
-        $link->buildFrom(LOCAL."/products/list.php");
-
-        if ($this->section) {
-            $link->add(new URLParameter("section", $this->section));
-        }
-
-        if ($this->keyword_search->isProcessed()) {
-            $actions[] = new Action(tr("Резултати от търсене"), $this->getPageURL(), array());
-        }
-        else if ($this->section) {
-            $actions[] = new Action($this->section, $link->url(), array());
-        }
-        else {
-            $actions[] = new Action(tr($this->products_title), $link->url(), array());
-        }
-
-        $link->add(new DataParameter("catID"));
-
-        foreach ($this->category_path as $idx => $category) {
-
-            $link->setData($category);
-
-            $category_action = new Action($category["category_name"], $link->url(), array());
-            $category_action->translation_enabled = false;
-            $actions[] = $category_action;
-
-        }
-
-        return $actions;
-    }
 
     /**
      * Return the active selected section title
@@ -449,6 +384,7 @@ class ProductListPageBase extends StorePage
 
             echo "</div>"; //tree
 
+
             if ($this->filters instanceof ProductListFilter) {
                 echo "<div class='filters panel'>";
 
@@ -464,6 +400,8 @@ class ProductListPageBase extends StorePage
         echo "</div>"; //column left
 
         echo "<div class='column product_list'>";
+
+        $this->renderChildCategories();
 
         $this->renderProductsView();
 
