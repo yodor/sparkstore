@@ -17,7 +17,7 @@ class ContactRequestProcessor extends FormProcessor
         $this->mailer = new ContactRequestMailer();
     }
 
-    public function setMailerEnabled(boolean $mode)
+    public function setMailerEnabled(bool $mode)
     {
         $this->mailer_enabled = $mode;
     }
