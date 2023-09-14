@@ -1,23 +1,21 @@
 <?php
 
-class CartItem
+class CartEntry
 {
     protected $line_total = 0.0;
-    protected $price = 0.0;
     protected $qty = 0;
-    protected $id = -1;
+    protected $item = null;
 
-    public function __construct(int $id, float $sell_price, int $qty=1)
+    public function __construct(SellableItem $item, int $qty=1)
     {
-        $this->id = $id;
+        $this->item = $item;
         $this->qty = $qty;
-        $this->price = $sell_price;
         $this->calculate();
     }
 
-    public function getID(): int
+    public function getItem(): SellableItem
     {
-        return $this->id;
+        return $this->item;
     }
 
     public function getQuantity(): int
@@ -47,7 +45,7 @@ class CartItem
 
     public function getPrice(): float
     {
-        return $this->price;
+        return $this->item->getPriceInfo()->getSellPrice();
     }
 
     public function getLineTotal(): float
@@ -60,7 +58,7 @@ class CartItem
      */
     protected function calculate()
     {
-        $this->line_total = $this->qty * $this->price;
+        $this->line_total = $this->qty * $this->getPrice();
     }
 
 }

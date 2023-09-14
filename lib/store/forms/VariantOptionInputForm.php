@@ -2,7 +2,7 @@
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
 
-class StoreSizeInputForm extends InputForm
+class VariantOptionInputForm extends InputForm
 {
 
     public function __construct()
@@ -10,7 +10,7 @@ class StoreSizeInputForm extends InputForm
 
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "size_value", "Оразмеряващ код", 1);
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "option_name", "Option Name", 1);
         $this->addInput($field);
         $field->enableTranslator(TRUE);
 
