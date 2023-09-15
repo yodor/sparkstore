@@ -217,22 +217,22 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         echo "<div class='group details'>";
 
-            $brand_name = $this->sellable->getBrandName();
-            if ($brand_name) {
-                echo "<div class='item brand_name'>";
-                echo "<label>" . tr("Марка") . "</label>";
-                $href = LOCAL . "/products/list.php?brand_name=$brand_name";
-                echo "<a itemprop='brand_name' class='value' href='$href'>$brand_name</a>";
-                echo "</div>";
-            }
-
-            $model = $this->sellable->getModel();
-            if ($model) {
-                echo "<div class='item model'>";
-                echo "<label>" . tr("Модел") . "</label>";
-                echo "<span itemprop='model' class='value'>$model</span>";
-                echo "</div>";
-            }
+//            $brand_name = $this->sellable->getBrandName();
+//            if ($brand_name) {
+//                echo "<div class='item brand_name'>";
+//                echo "<label>" . tr("Марка") . "</label>";
+//                $href = LOCAL . "/products/list.php?brand_name=$brand_name";
+//                echo "<a itemprop='brand_name' class='value' href='$href'>$brand_name</a>";
+//                echo "</div>";
+//            }
+//
+//            $model = $this->sellable->getModel();
+//            if ($model) {
+//                echo "<div class='item model'>";
+//                echo "<label>" . tr("Модел") . "</label>";
+//                echo "<span itemprop='model' class='value'>$model</span>";
+//                echo "</div>";
+//            }
 
         echo "</div>"; //details
     }
@@ -247,8 +247,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         else {
             echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
         }
-        echo "<div class='group stock_amount'>";
-            echo "<div class='item'>";
+//        echo "<div class='group stock_amount'>";
+//            echo "<div class='item'>";
 
 //            if ($stock_amount>0) {
 //                echo "<label>" . tr("В наличност")."</label>";
@@ -256,12 +256,12 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 //            else {
 //                echo "<label>" . tr("Няма наличност")."</label>";
 //            }
-                echo "<label>" . tr("Наличност").": </label>";
-                echo "<span class='value'>$stock_amount</span>";
-                echo "<span class='unit'> бр.</span>";
+//                echo "<label>" . tr("Наличност").": </label>";
+//                echo "<span class='value'>$stock_amount</span>";
+//                echo "<span class='unit'> бр.</span>";
 
-            echo "</div>";
-        echo "</div>"; //details
+//            echo "</div>";
+//        echo "</div>"; //details
     }
 
     protected function renderGroupAttributes()

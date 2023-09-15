@@ -50,7 +50,7 @@ class OrdersListPage extends BeanListPage
         return $this->orderList;
     }
 
-    protected function initViewActions(ActionCollection $act)
+    protected function initViewActions(ActionCollection $act): void
     {
         $act->append(
             new Action(tr("Details"), "details.php",
@@ -60,7 +60,7 @@ class OrdersListPage extends BeanListPage
         $act->append(new RowSeparator());
     }
 
-    public function initView()
+    public function initView(): void
     {
         parent::initView();
 
