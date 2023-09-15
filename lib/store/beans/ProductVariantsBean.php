@@ -13,7 +13,7 @@ class ProductVariantsBean extends DBTableBean
   KEY `prodID` (`prodID`) USING BTREE,
   CONSTRAINT `product_variants_ibfk_1` FOREIGN KEY (`prodID`) REFERENCES `products` (`prodID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `product_variants_ibfk_2` FOREIGN KEY (`voID`) REFERENCES `variant_options` (`voID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=669 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
     public function __construct(DBDriver $dbdriver = NULL)
     {

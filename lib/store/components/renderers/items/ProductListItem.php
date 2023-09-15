@@ -7,14 +7,11 @@ include_once("storage/StorageItem.php");
 include_once("utils/URLBuilder.php");
 include_once("utils/DataParameter.php");
 
-//include_once("store/beans/ProductColorPhotosBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 
 class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
 {
 
-    //same product all inventory color data
-    protected $colorSeries = array();
 
     /**
      * To render the main inventory photo
@@ -37,14 +34,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected $width = 275;
     protected $height = 275;
 
-    protected $chipSize = 36;
 
-    protected $numColors = 0;
-
-    /**
-     * @var bool
-     */
-    protected $haveColorSeries = FALSE;
 
     public function __construct()
     {
@@ -52,15 +42,9 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->photo = new StorageItem();
 
-        $this->chip = new StorageItem();
-
-        $this->chip->className = "ProductColorPhotosBean";
-
         $this->detailsURL = new URLBuilder();
         $this->detailsURL->setScriptName(LOCAL . "/products/details.php");
         $this->detailsURL->add(new DataParameter("prodID"));
-        $this->detailsURL->add(new DataParameter("piID"));
-
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
@@ -76,11 +60,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     public function getPhoto(): StorageItem
     {
         return $this->photo;
-    }
-
-    public function getColorsCount() : int
-    {
-        return $this->numColors;
     }
 
     public function requiredStyle(): array
@@ -106,60 +85,19 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         return $this->height;
     }
 
-    public function setChipSize(int $chipSize)
-    {
-        $this->chipSize = $chipSize;
-    }
-
     public function setData(array &$item)
     {
         parent::setData($item);
         $this->setAttribute("prodID", $this->data["prodID"]);
-        //$this->setAttribute("piID", $this->data["piID"]);
-
-        if (isset($this->data["color_ids"]) && $this->data["color_ids"]) {
-
-            $this->colorSeries["id"] = explode("|", $this->data["color_ids"]);
-            $this->colorSeries["photo"] = explode("|", $this->data["color_photo_ids"]);
-            $this->colorSeries["name"] =  explode("|", $this->data["color_names"]);
-            $this->colorSeries["code"] = explode("|", $this->data["color_codes"]);
-            $this->colorSeries["inventories"] = explode("|", $this->data["inventory_ids"]);
-
-        }
-        else {
-            $this->colorSeries = array();
-        }
-
 
         if (isset($item["ppID"]) && $item["ppID"] > 0) {
 
             $this->photo->id = (int)$item["ppID"];
             $this->photo->className = "ProductPhotosBean";//ProductPhotosBean::class;
         }
-        else if (isset($item["pclrpID"]) && $item["pclrpID"] > 0) {
-
-            $this->photo->id = (int)$item["pclrpID"];
-            $this->photo->className = "ProductColorPhotosBean";//ProductColorPhotosBean::class;
-        }
-
 
         $this->detailsURL->setData($item);
 
-        $this->haveColorSeries = (count($this->colorSeries)>0);
-
-        $this->numColors = 0;
-
-        if (isset($this->colorSeries["id"])) {
-            $this->numColors = count($this->colorSeries["id"]);
-        }
-
-        $this->clearAttribute("colorSeries");
-
-        if ($this->numColors>0) {
-            $this->setAttribute("colorSeries", "");
-        }
-
-//        print_r($item);
     }
 
     protected function renderImpl()
@@ -180,7 +118,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
             $this->renderMeta();
 
             $this->renderPhoto();
-            $this->renderColorChips();
+
             $this->renderDetails();
 
         echo "</div>"; //wrap
@@ -196,17 +134,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='category' content='".attributeValue($this->data["category_name"])."'>";
         $description_content = $this->data["product_name"];
 
-//        if (isset($this->data["product_description"])) {
-//            $description_content = $this->data["product_description"];
-//        }
-//        else if (isset($this->data["long_description"])) {
-//            $description_content = $this->data["long_description"];
-//        }
-
         echo "<meta itemprop='description' content='".attributeValue($description_content)."'>";
-
-
-
     }
 
     protected function renderPhoto()
@@ -244,94 +172,54 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
             echo "<div itemprop='name' class='product_name'>" . $this->data["product_name"] . "</div>";
 
-            $brand_name = $this->data["brand_name"];
-
-                echo "<div class='brand_name'>";
-                if ($brand_name) {
-                    echo "<label>".tr("Марка") . ": $brand_name</label>";
-                }
-                else {
-                    echo "<BR>";
-                }
-                echo "</div>";
-
+            $this->renderBrand();
 
             $this->renderPrice();
 
         echo "</a>";
 
     }
+
+    protected function renderBrand()
+    {
+        $brand_name = $this->data["brand_name"];
+
+        echo "<div class='brand_name'>";
+        if ($brand_name) {
+            echo "<label>".tr("Марка") . ": $brand_name</label>";
+        }
+        else {
+            echo "<BR>";
+        }
+        echo "</div>";
+    }
+
     protected function renderPrice()
     {
-        if ($this->data["sell_price"] > 0) {
+        if ($this->data["sell_price"] < 1) return;
 
-            echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
+        echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
 
-            echo "<div class='price old'>";
-            if ($this->isPromo()) {
-                echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
-            }
-            else {
-                echo "<BR>";
-            }
-            echo "</div>";
-
-            echo "<meta itemprop='priceCurrency' content='" . DEFAULT_CURRENCY . "'>";
-            echo "<div class='price sell'>";
-            echo "<span itemprop='price'>" . sprintf("%1.2f", $this->data["sell_price"]) . "</span> ";
-            echo tr("лв.");
-            echo "</div>";
-
-            //                if ($this->data["price_min"] != $this->data["sell_price"] || $this->data["price_max"] != $this->data["sell_price"]) {
-            //                    echo "<div class='series_price'>" . sprintf("%1.2f", $this->data["price_min"]) . " " . tr("лв.") . " - " . sprintf("%1.2f", $this->data["price_max"]) . " " . tr("лв.") . "</div>";
-            //                }
-
-            echo "</div>";
-
+        echo "<div class='price old'>";
+        if ($this->isPromo()) {
+            echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
         }
+        else {
+            echo "<BR>";
+        }
+        echo "</div>";
+
+        echo "<meta itemprop='priceCurrency' content='" . DEFAULT_CURRENCY . "'>";
+        echo "<div class='price sell'>";
+        echo "<span itemprop='price'>" . sprintf("%1.2f", $this->data["sell_price"]) . "</span> ";
+        echo tr("лв.");
+        echo "</div>";
+
+        echo "</div>";
+
+
     }
 
-    protected function renderColorChips()
-    {
-
-        if ($this->haveColorSeries < 1) return;
-
-        $numColors = $this->numColors;
-
-        if ($numColors < 1) return;
-
-        echo "<div class='color_series'>";
-
-            foreach ($this->colorSeries["id"] as $idx => $id) {
-
-                $code ="#000000";
-                if (isset($this->colorSeries["code"][$idx])) {
-                    $code = $this->colorSeries["code"][$idx];
-                }
-                $name = $this->colorSeries["name"][$idx];
-
-                $photoID = -1;
-                if (isset($this->colorSeries["photo"][$idx]))$photoID = $this->colorSeries["photo"][$idx];
-                $inventoryID = -1;
-                if (isset($this->colorSeries["inventories"][$idx]))$inventoryID = $this->colorSeries["inventories"][$idx];
-
-                $data["piID"] = $inventoryID;
-                $this->detailsURL->setData($data);
-
-
-                $backgroundImage = "";
-                if ($photoID>0) {
-                    $this->chip->id = $photoID;
-                    $href = $this->chip->hrefThumb($this->chipSize);
-                    $backgroundImage = "background-image:url($href);";
-                }
-
-                echo "<a href='{$this->detailsURL->url()}' class='chip' style='background-color:$code;min-width:{$this->chipSize}px;min-height:{$this->chipSize}px;{$backgroundImage}'  piID='$inventoryID' >";
-                echo "</a>";
-            }
-
-        echo "</div>"; //color_series
-    }
 
     public function renderSeparator($idx_curr, $items_total)
     {

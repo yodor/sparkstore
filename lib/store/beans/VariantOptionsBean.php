@@ -19,7 +19,7 @@ class VariantOptionsBean extends OrderedDataBean
   CONSTRAINT `variant_options_ibfk_1` FOREIGN KEY (`parentID`) REFERENCES `variant_options` (`voID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `variant_options_ibfk_2` FOREIGN KEY (`pclsID`) REFERENCES `product_classes` (`pclsID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `variant_options_ibfk_3` FOREIGN KEY (`prodID`) REFERENCES `products` (`prodID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
 
 ";
 

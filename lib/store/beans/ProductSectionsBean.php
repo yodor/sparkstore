@@ -13,7 +13,7 @@ class ProductSectionsBean extends DBTableBean
   KEY `secID` (`secID`),
   CONSTRAINT `product_sections_ibfk_1` FOREIGN KEY (`secID`) REFERENCES `sections` (`secID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `product_sections_ibfk_2` FOREIGN KEY (`prodID`) REFERENCES `products` (`prodID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
     public function __construct()
     {

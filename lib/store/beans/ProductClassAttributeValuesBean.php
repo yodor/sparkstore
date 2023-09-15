@@ -14,7 +14,7 @@ class ProductClassAttributeValuesBean extends DBTableBean
   KEY `pcaID` (`pcaID`),
   CONSTRAINT `product_class_attribute_values_ibfk_1` FOREIGN KEY (`pcaID`) REFERENCES `product_class_attributes` (`pcaID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `product_class_attribute_values_ibfk_2` FOREIGN KEY (`prodID`) REFERENCES `products` (`prodID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
     public function __construct()
     {
