@@ -67,7 +67,7 @@ class ClassAttributeField extends DataIteratorField
 
         $field->source_label_visible = TRUE;
         //try merge even if posted count is different
-        $field->getProcessor()->merge_with_target_loaded = TRUE;
+        $field->getProcessor()->merge_with_target_loaded = FALSE;
         //check fk_$name values posted
         $field->getProcessor()->process_datasource_foreign_keys = TRUE;
         //do not transact empty string during insert
