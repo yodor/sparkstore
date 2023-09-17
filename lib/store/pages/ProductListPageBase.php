@@ -122,7 +122,7 @@ class ProductListPageBase extends ProductPageBase
     {
         //main products select - no grouping here as filters are not applied yet
         if (is_null($this->bean)) {
-            throw new Exception("SellableProducts not set");
+            throw new Exception("List bean is not set");
         }
         $this->select = clone $this->bean->select();
 
@@ -202,7 +202,7 @@ class ProductListPageBase extends ProductPageBase
         $this->select->fields()->unset("catID");
         $this->select->fields()->unset("category_name");
 
-        $this->select = $this->product_categories->selectChildNodesWith($this->select, "sellable_products", $nodeID, array("catID", "category_name"));
+        $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
 
         if ($this->filters instanceof ProductListFilter) {
 

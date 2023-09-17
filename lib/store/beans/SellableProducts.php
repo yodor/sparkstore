@@ -1,34 +1,48 @@
 <?php
-include_once("class/utils/ProductsSQL.php");
+include_once("store/utils/ProductsSQL.php");
 include_once("beans/DBViewBean.php");
 
 class SellableProducts extends DBViewBean
 {
-    protected $products = null;
+    protected static ?SQLSelect $Products = null;
 
     //specify grouping as it is used in aggregate select with the categories
-    protected static $default_grouping = " prodID ";
+    protected static string $Grouping = " prodID ";
 
-    public function __construct()
+    static public function SetProductsSelect(SQLSelect $select) : void
     {
-        $this->products  = new ProductsSQL();
-        //echo $this->products->getSQL();
+        SellableProducts::$Products = $select;
+    }
 
-        $this->createString = "CREATE VIEW IF NOT EXISTS sellable_products AS ({$this->products->getSQL()})";
-        parent::__construct("sellable_products");
+    static public function ProductsSelect() : SQLSelect
+    {
+        return SellableProducts::$Products;
+    }
 
+    public function __construct(string $table_name="sellable_products")
+    {
+        if (is_null(SellableProducts::$Products)) {
+            SellableProducts::$Products = new ProductsSQL();
+            echo "setting productsSQL";
+        }
+
+        $this->createString = "CREATE VIEW IF NOT EXISTS $table_name AS (".SellableProducts::$Products->getSQL().")";
+
+        parent::__construct($table_name);
+
+        $this->select->fields()->reset();
         $this->select->fields()->set(...$this->columnNames());
         $this->prkey = "prodID";
     }
 
     static public function DefaultGrouping()
     {
-        return self::$default_grouping;
+        return SellableProducts::$Grouping;
     }
 
     static public function SetDefaultGrouping(string $grouping)
     {
-        self::$default_grouping = $grouping;
+        SellableProducts::$Grouping = $grouping;
     }
 
     static public function ParseAttributes(?string $attributes)

@@ -3,7 +3,6 @@ include_once("sql/SQLSelect.php");
 
 class ProductsSQL extends SQLSelect
 {
-    //create view class_attributes as (SELECT pca.pcaID, pc.pclsID, pc.class_name, a.attrID, a.name FROM product_class_attributes pca JOIN product_classes pc ON pc.pclsID = pca.pclsID JOIN attributes a ON a.attrID=pca.attrID)
     public function __construct()
     {
         parent::__construct();
@@ -66,11 +65,10 @@ ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() 
 
 
 ";
-        //LEFT JOIN product_class_attribute_values pcav ON pcav.prodID=p.prodID
-        //LEFT JOIN product_class_attributes pca ON pca.pcaID=pcav.pcaID
-        //LEFT JOIN attributes a ON a.attrID = pca.attrID
+
         $this->where()->add("p.visible", 1);
     }
+
     public function createView(string $view_name="sellable_products")
     {
 
@@ -78,11 +76,6 @@ ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() 
         $db = DBConnections::Get();
         $res = $db->query($sql);
         $db->free($res);
-
-        //SELECT p.*, group_concat(concat(vo.option_name,':', vo.option_value) SEPARATOR '|') as variants FROM `sellable_products` p
-        // LEFT JOIN product_variants pv ON pv.prodID=p.prodID
-        // LEFT JOIN variant_options vo ON vo.voID=pv.voID
-        // GROUP BY p.prodID ORDER BY `variants` DESC
 
     }
 }

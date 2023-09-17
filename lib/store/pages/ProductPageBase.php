@@ -49,7 +49,7 @@ class ProductPageBase extends StorePage
 
     }
 
-    public function setSellableProducts(SellableProducts $bean)
+    public function setSellableProducts(DBTableBean $bean)
     {
         $this->bean = $bean;
     }

@@ -182,16 +182,16 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderBrand()
     {
-        $brand_name = $this->data["brand_name"];
-
-        echo "<div class='brand_name'>";
-        if ($brand_name) {
-            echo "<label>".tr("Марка") . ": $brand_name</label>";
-        }
-        else {
-            echo "<BR>";
-        }
-        echo "</div>";
+//        $brand_name = $this->data["brand_name"];
+//
+//        echo "<div class='brand_name'>";
+//        if ($brand_name) {
+//            echo "<label>".tr("Марка") . ": $brand_name</label>";
+//        }
+//        else {
+//            echo "<BR>";
+//        }
+//        echo "</div>";
     }
 
     protected function renderPrice()
