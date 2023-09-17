@@ -134,17 +134,6 @@ class ProductsList extends BeanListPage
 
         $this->setBean(new ProductsBean());
 
-        include_once("store/beans/ProductSectionsBean.php");
-        new ProductSectionsBean();
-        include_once("store/beans/ProductClassesBean.php");
-        new ProductClassesBean();
-        include_once("store/beans/ProductClassAttributesBean.php");
-        new ProductClassAttributesBean();
-        include_once("store/beans/ProductClassAttributeValuesBean.php");
-        new ProductClassAttributeValuesBean();
-        include_once("store/beans/ProductVariantsBean.php");
-        new ProductVariantsBean();
-
         $this->fields = array(
             "cover_photo"=>"Cover Photo",
             "category_name"=>"Category",
@@ -210,6 +199,11 @@ class ProductsList extends BeanListPage
         $qry->select->group_by = "  p.prodID ";
 
         $this->setIterator($qry);
+    }
+
+    public function getFilterForm() : ProductFilterInputForm
+    {
+        return $this->filtersForm;
     }
 
     public function processInput()
