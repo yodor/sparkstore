@@ -381,7 +381,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             $phone = $config->get("phone_orders", "");
             if ($phone) {
                 echo "<a class='button order_phone' href='tel:$phone'>";
-                //echo "<label>".tr("Телефон за поръчки")."</label>";
+                echo "<label>".tr("Телефон за поръчки")."</label>";
                     echo "<span class='icon'></span>";
                     echo "<label>$phone</label>";
                 echo "</a>";
