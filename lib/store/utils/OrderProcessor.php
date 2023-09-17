@@ -18,12 +18,12 @@ class OrderProcessor
     protected $orderID = -1;
 
     /**
-     * @var bool flag to enable lowering the stock amount of the purchased inventory
+     * @var bool flag to enable lowering the stock amount of the purchased product
      */
     protected $manage_stock_amount = false;
 
     /**
-     * @var bool flag to enable increasing the order counter of the purchased inventory
+     * @var bool flag to enable increasing the order counter of the purchased product
      */
     protected $manage_order_counter = true;
 
@@ -139,6 +139,8 @@ class OrderProcessor
 
             $order_items = new OrderItemsBean();
 
+            $amounts = array();
+
             $pos = 1;
             foreach ($items as $itemHash => $cartEntry) {
 
@@ -186,8 +188,10 @@ class OrderProcessor
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
 
-                //TODO:
-
+                if (!isset($amounts[$prodID])) {
+                    $amounts[$prodID] = $cartEntry->getQuantity();
+                }
+                $amounts[$prodID] = (int)$amounts[$prodID] + $cartEntry->getQuantity();
 
                 $pos++;
             }
@@ -197,6 +201,13 @@ class OrderProcessor
 
             $cart->clear();
             $cart->store();
+
+            if ($this->manage_order_counter || $this->manage_stock_amount) {
+                foreach ($amounts as $prodID => $amount) {
+                    @$this->updateCounterStock($prodID, $amount);
+                }
+            }
+
 
             debug("OrderProcessor::createOrder() completed for orderID='{$this->orderID}' ... ");
         }
@@ -208,6 +219,30 @@ class OrderProcessor
 
         }
         return $this->orderID;
+    }
+
+    protected function updateCounterStock(int $prodID, int $amount=1)
+    {
+        $sql = new SQLUpdate();
+        $sql->from = "products p";
+        if ($this->manage_order_counter) {
+            $sql->set("p.order_counter", "p.order_counter+$amount");
+        }
+        if ($this->manage_stock_amount) {
+            $sql->set("p.stock_amount", "p.stock_amount-$amount");
+        }
+        $sql->where()->add("p.prodID", $prodID);
+
+        $db = DBConnections::Get();
+        try {
+            $db->transaction();
+            $db->query($sql->getSQL());
+            $db->commit();
+        }
+        catch (Exception $e) {
+            $db->rollback();
+            debug("Unable to increment order_counter or stock_amount count: ".$db->getError());
+        }
     }
 
 }

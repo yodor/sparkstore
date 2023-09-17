@@ -170,8 +170,17 @@ class ProductsList extends BeanListPage
 
 
 
-        $qry->select->fields()->set("p.prodID", "p.product_name", "pcls.class_name", "p.brand_name", "pc.category_name", "p.visible",
-            "p.price", "p.promo_price", "p.stock_amount", "p.importID");
+        $qry->select->fields()->set(
+                "p.prodID",
+                        "p.product_name",
+                        "pcls.class_name",
+                        "p.brand_name",
+                        "pc.category_name",
+                        "p.visible",
+                        "p.price",
+                        "p.promo_price",
+                        "p.stock_amount",
+                        "p.importID");
 
         $qry->select->fields()->setExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
         $qry->select->fields()->setExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
@@ -216,22 +225,32 @@ class ProductsList extends BeanListPage
         $proc->process($form);
 
         if ($proc->getStatus() === IFormProcessor::STATUS_OK) {
-            $filter_brand = $form->getInput("filter_brand")->getValue();
-            $filter_section = $form->getInput("filter_section")->getValue();
-            $filter_catID = $form->getInput("filter_catID")->getValue();
-            $filter_class = $form->getInput("filter_class")->getValue();
+            if ($form->haveInput("filter_brand")) {
+                $filter_brand = $form->getInput("filter_brand")->getValue();
+                if ($filter_brand) {
+                    $this->query->select->where()->add("p.brand_name", "'".$filter_brand."'");
+                }
+            }
 
-            if ($filter_catID>0) {
-                $this->query->select->where()->add("p.catID", $filter_catID);
+            if ($form->haveInput("filter_section")) {
+                $filter_section = $form->getInput("filter_section")->getValue();
+                if ($filter_section) {
+                    $this->query->select->having = " sections LIKE '%{$filter_section}%' ";
+                }
             }
-            if ($filter_brand) {
-                $this->query->select->where()->add("p.brand_name", "'".$filter_brand."'");
+
+            if ($form->haveInput("filter_catID")) {
+                $filter_catID = $form->getInput("filter_catID")->getValue();
+                if ($filter_catID>0) {
+                    $this->query->select->where()->add("p.catID", $filter_catID);
+                }
             }
-            if ($filter_section) {
-                $this->query->select->having = " sections LIKE '%{$filter_section}%' ";
-            }
-            if ($filter_class) {
-                $this->query->select->where()->add("pcls.class_name", "'".$filter_class."'");
+
+            if ($form->haveInput("filter_class")) {
+                $filter_class = $form->getInput("filter_class")->getValue();
+                if ($filter_class) {
+                    $this->query->select->where()->add("pcls.class_name", "'" . $filter_class . "'");
+                }
             }
         }
 
@@ -246,20 +265,11 @@ class ProductsList extends BeanListPage
         $ticr1->setLimit(1);
         $view->getColumn("cover_photo")->setCellRenderer($ticr1);
 
-//$ticr2 = new ImageCellRenderer(-1, 64);
-//$ticr2->setBean(new ProductColorPhotosBean());
-//$ticr2->setLimit(0);
-//$view->getColumn("color_photos")->setCellRenderer($ticr2);
-
         $view->getColumn("visible")->setCellRenderer(new BooleanCellRenderer("Yes", "No"));
 
 
         $act = $this->viewItemActions();
         $act->append(new RowSeparator());
-//$act->append(new Action("Inventory", "inventory/list.php", array(new DataParameter("prodID", $bean->key()))));
-//$act->append(new RowSeparator());
-//$act->append(new Action("Color Scheme", "color_gallery/list.php", array(new DataParameter("prodID", $bean->key()))));
-//$act->append(new RowSeparator());
 
         $act->append(new Action("Photo Gallery", "gallery/list.php", array(new DataParameter("prodID", $this->bean->key()))));
         $act->append(new RowSeparator());

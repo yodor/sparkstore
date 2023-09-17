@@ -108,6 +108,13 @@ class CheckoutPageBase extends StorePage
     {
         $this->navigation->render();
     }
+
+    public static function OrderProcessor() : OrderProcessor
+    {
+        include_once("store/utils/OrderProcessor.php");
+        return new OrderProcessor();
+    }
+
 }
 
 ?>

@@ -116,22 +116,21 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected function updateViewCounter()
     {
-//        $sql = new SQLUpdate();
-//        $sql->from = "product_inventory pi";
-//        $sql->set("pi.view_counter", "pi.view_counter+1");
-//        $sql->where()->add("pi.prodID", $this->sellable->getProductID());
-//        $sql->where()->add("pi.piID", $this->sellable->getActiveInventoryID());
-//
-//        $db = DBConnections::Get();
-//        try {
-//            $db->transaction();
-//            $db->query($sql->getSQL());
-//            $db->commit();
-//        }
-//        catch (Exception $e) {
-//            $db->rollback();
-//            debug("Unable to increment view count: ".$db->getError());
-//        }
+        $sql = new SQLUpdate();
+        $sql->from = "products p";
+        $sql->set("p.view_counter", "p.view_counter+1");
+        $sql->where()->add("p.prodID", $this->sellable->getProductID());
+
+        $db = DBConnections::Get();
+        try {
+            $db->transaction();
+            $db->query($sql->getSQL());
+            $db->commit();
+        }
+        catch (Exception $e) {
+            $db->rollback();
+            debug("Unable to increment view count: ".$db->getError());
+        }
     }
 
     protected function constructTitleArray(): array
