@@ -76,7 +76,7 @@ class ProductInputForm extends InputForm
 
 
         //
-        $field = new DataInput("secID", "Section", 0);
+        $field = new ArrayDataInput("secID", "Section", 0);
         $proc = new InputProcessor($field);
         $proc->transact_bean_skip_empty_values = true;
         $renderer = new CheckField($field);
