@@ -23,7 +23,6 @@ class SellableProducts extends DBViewBean
     {
         if (is_null(SellableProducts::$Products)) {
             SellableProducts::$Products = new ProductsSQL();
-            echo "setting productsSQL";
         }
 
         $this->createString = "CREATE VIEW IF NOT EXISTS $table_name AS (".SellableProducts::$Products->getSQL().")";
