@@ -13,6 +13,9 @@ class StoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "phone_orders", "Phone Orders", 0);
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "marquee_text", "Header Marquee Text", 0);
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "tbi_uid", "TBI Store UID", 0);
         $this->addInput($field);
 
