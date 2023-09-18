@@ -369,12 +369,12 @@ class StorePageBase extends SparkPage
         $logo_href = LOCAL . "/home.php";
         echo "<a class='logo' href='{$logo_href}' title='logo'></a>";
 
-//        $cfg = new ConfigBean();
-//        $cfg->setSection("store_config");
+        $cfg = new ConfigBean();
+        $cfg->setSection("store_config");
 
-//        echo "<div class='marquee'>";
-//            echo "<marquee>" . $cfg->get("marquee_text") . "</marquee>";
-//        echo "</div>";
+        echo "<div class='marquee'>";
+            echo "<marquee>" . $cfg->get("marquee_text") . "</marquee>";
+        echo "</div>";
 
     }
 
