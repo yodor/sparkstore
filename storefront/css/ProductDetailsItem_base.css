@@ -21,7 +21,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    background-color: red;
+    background-color: var(--theme-accent);
     color: white;
     border-radius: 25px;
     padding: 10px;
