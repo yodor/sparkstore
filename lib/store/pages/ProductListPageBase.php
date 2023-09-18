@@ -267,6 +267,21 @@ class ProductListPageBase extends ProductPageBase
             $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
         }
 
+        $this->prepareKeywords();
+    }
+
+    protected function prepareKeywords()
+    {
+
+        if ($this->category_filter->getValue()<1) return "";
+
+        $catID = $this->category_filter->getValue();
+
+        $keywords = $this->getCategoryKeywords($catID);
+
+        if($keywords) {
+            $this->addMeta("keywords", prepareMeta($keywords));
+        }
     }
 
     public function isProcessed(): bool

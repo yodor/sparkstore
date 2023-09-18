@@ -62,35 +62,7 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->addMeta("description", prepareMeta($description));
         }
 
-        $keywords = $this->sellable->getKeywords();
-        //no keywords added for this sellable. try category keywords if any
-        if (strlen(trim($keywords)) == 0) {
-
-            //use product_name by default as keywords
-            $keywords = $this->sellable->getTitle();
-
-            if ($this->product_categories->haveColumn("category_keywords")) {
-                $result = $this->product_categories->getParentNodes($catID, array("category_name",
-                                                                                  "category_keywords"));
-                foreach ($result as $item => $values) {
-                    if (isset($values["category_keywords"])) {
-                        $category_keywords = trim($values["category_keywords"]);
-                        if (strlen($category_keywords) > 0) {
-                            $keywords = $category_keywords;
-                        }
-                    }
-                }
-            }
-        }
-
-        //cleanup
-        $keywords = str_replace("Етикети: ", "", $keywords);
-        $keywords = str_replace("Етикет: ", "", $keywords);
-        $keywords = mb_strtolower($keywords);
-
-        if($keywords) {
-            $this->addMeta("keywords", prepareMeta($keywords));
-        }
+        $this->prepareKeywords();
 
         $this->addOGTag("title", $this->sellable->getTitle());
         $main_photo = $this->sellable->getMainPhoto();
@@ -107,6 +79,33 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->tape = new ProductsTape();
 
 
+    }
+
+    protected function prepareKeywords()
+    {
+        $catID = $this->sellable->getCategoryID();
+
+        $keywords = $this->sellable->getKeywords();
+        //no keywords added for this sellable. try category keywords if any
+        if (strlen(trim($keywords)) == 0) {
+
+            //use product_name by default as keywords
+            $keywords = $this->sellable->getTitle();
+
+            $category_keywords = $this->getCategoryKeywords($catID);
+            if (mb_strlen($category_keywords)>0) {
+                $keywords = $category_keywords;
+            }
+        }
+
+        //cleanup
+        $keywords = str_replace("Етикети: ", "", $keywords);
+        $keywords = str_replace("Етикет: ", "", $keywords);
+        $keywords = mb_strtolower($keywords);
+
+        if($keywords) {
+            $this->addMeta("keywords", prepareMeta($keywords));
+        }
     }
 
     public function getSellable(): SellableItem

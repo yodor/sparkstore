@@ -131,7 +131,9 @@
 .images .image_gallery .list .item[active='1'] {
     outline:1px solid var(--theme-accent);
 }
-
+.images .image_gallery .list .item IMG {
+    display:block;
+}
 
 .side_pane {
     display: inline-block;
@@ -188,6 +190,13 @@
     text-transform: uppercase;
     font-weight: bold;
 
+}
+
+.side_pane .group.caption .product_name .value {
+    font-size: 1.3em;
+
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .side_pane .group.pricing {

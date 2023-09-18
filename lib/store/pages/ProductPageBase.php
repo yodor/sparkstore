@@ -49,6 +49,33 @@ class ProductPageBase extends StorePage
 
     }
 
+    protected function prepareKeywords()
+    {
+
+    }
+
+    protected function getCategoryKeywords(int $catID) : string
+    {
+
+
+        if (!$this->product_categories->haveColumn("category_keywords")) return "";
+
+        $result = $this->product_categories->getParentNodes($catID, array("category_name",
+            "category_keywords"));
+
+        $keywords = array();
+        foreach ($result as $item => $values) {
+            if (!isset($values["category_keywords"]))continue;
+
+            $category_keywords = trim($values["category_keywords"]);
+            if (mb_strlen($category_keywords) < 1) continue;
+
+            $keywords[] = $category_keywords;
+        }
+
+        return implode(", ",$keywords);
+    }
+
     public function setSellableProducts(DBTableBean $bean)
     {
         $this->bean = $bean;
