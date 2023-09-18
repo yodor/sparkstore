@@ -764,6 +764,10 @@ A:hover, A:visited {
     font-weight:bold;
 }
 
+.StorePage.contacts .section.main .content .panel.contact_form {
+    text-align:left;
+}
+
 .StorePage.contacts .section.main .content FORM .InputField.TextArea TEXTAREA {
     width:800px;
     height:200px;
@@ -812,27 +816,7 @@ A:hover, A:visited {
     padding:20px;
 }
 
-.StorePage.terms_usage .columns {
-    display:block;
-}
-.StorePage.terms_usage .columns .column {
-    display:block;
-    text-align:left;
-}
-.StorePage.terms_usage .columns .column.page_data {
-    text-align:left;
-}
-.StorePage.terms_usage .columns .column .terms_menu {
-    display:block;
-}
-.StorePage.terms_usage .columns .column .terms_menu .item {
-    display:block;
-    white-space:nowrap;
-    padding-bottom:10px;
-    border-bottom:1px solid #eaeaea;
-    padding-top:10px;
-    text-decoration:none;
-}
+
 
 .PaginatorBottomComponent .cell {
     display:block;
@@ -863,4 +847,55 @@ A:hover, A:visited {
 }
 .hidden {
     display:none !important;
+}
+
+/*footer_page dynamic pages*/
+.StorePage.terms_usage {
+
+}
+.StorePage.terms_usage .columns .column.page_data {
+    text-align:left;
+}
+.StorePage.terms_usage .columns .column .terms_menu {
+    display:block;
+}
+.StorePage.terms_usage .columns .column .terms_menu .item {
+    display:block;
+    white-space:nowrap;
+    padding-bottom:10px;
+    border-bottom:1px solid #eaeaea;
+    padding-top:10px;
+    text-decoration:none;
+}
+
+.StorePage.terms_usage .menu_links {
+    display:block;
+    text-align:center;
+    padding:1em;
+}
+.StorePage.terms_usage .menu_links .item {
+    display:inline-block;
+    padding:0.5em;
+}
+.StorePage.terms_usage .page_data .page_photo {
+    display:block;
+}
+.StorePage.terms_usage .page_data .page_photo IMG {
+    display:block;
+    max-width:1200px;
+    width:100%;
+
+}
+.StorePage.terms_usage .page_data .summary {
+    display:block;
+    max-width:1200px;
+    white-space: break-spaces;
+    padding:0.5em;
+
+}
+.StorePage.terms_usage .page_data .summary A {
+    word-break: break-word;
+}
+.StorePage.terms_usage .page_data .summary IMG {
+    max-width:100%;
 }
