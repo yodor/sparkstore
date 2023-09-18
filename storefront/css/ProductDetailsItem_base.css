@@ -6,10 +6,13 @@
 .images .image_preview {
     vertical-align: top;
     display: inline-block;
-    max-width: 640px;
+
     box-sizing: border-box;
     text-align:center;
     width:640px;
+    max-width: 640px;
+    height:640px;
+    max-height: 640px;
     overflow:hidden;
     position:relative;
 }
