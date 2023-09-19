@@ -79,12 +79,12 @@ class OrderConfirmationMailer extends Mailer
 
             $message .= "<td>{$item["position"]}</td>";
 
-            $message .= "<td>";
-            foreach ($details as $index => $value) {
-                $data = explode("||", $value);
-                $message .= $data[0] . ": " . $data[1] . "<BR>";
-            }
-            $message .= "</td>";
+//            $message .= "<td>";
+//            foreach ($details as $index => $value) {
+//                $data = explode("||", $value);
+//                $message .= $data[0] . ": " . $data[1] . "<BR>";
+//            }
+//            $message .= "</td>";
 
             $message .= "<td>" . $item["qty"] . "</td>";
             $message .= "<td>" . sprintf("%0.2f лв.", $item["price"]) . "</td>";
