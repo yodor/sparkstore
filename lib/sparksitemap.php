@@ -38,7 +38,6 @@ $select->fields()->setExpression("(SELECT group_concat(sp.ppID ORDER BY sp.prodI
 $select->from = " product_categories pc ";
 
 $query = new SQLQuery($select);
-echo $query->select->getSQL();
 $num = $query->exec();
 while ($result = $query->nextResult())
 {
