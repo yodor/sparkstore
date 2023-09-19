@@ -49,7 +49,11 @@ while ($result = $query->nextResult())
     }
 }
 
-
+if (isset($items_add) && is_array($items_add)) {
+    foreach ($items_add as $idx=>$item) {
+        renderItem(fullURL($item));
+    }
+}
 
 echo "</urlset>";
 
