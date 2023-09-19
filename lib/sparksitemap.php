@@ -1,10 +1,6 @@
 <?php
 include_once("session.php");
 include_once("store/beans/SellableProducts.php");
-include_once("store/beans/ProductCategoriesBean.php");
-
-
-
 
 $bean = new SellableProducts();
 $qry = $bean->query();
@@ -27,8 +23,10 @@ while ($result = $qry->nextResult()) {
     $prodID = $result->get("prodID");
 
     $update_date = new DateTime($result->get("update_date"));
-
-    renderItem(fullURL(LOCAL."/products/details.php?prodID=$prodID"), $update_date->format('Y-m-d'), $result->get("photos"));
+    $photos = (string)$result->get("photos");
+    if (strlen($photos)>0) {
+        renderItem(fullURL(LOCAL . "/products/details.php?prodID=$prodID"), $update_date->format('Y-m-d'), $photos);
+    }
 }
 
 //each category
