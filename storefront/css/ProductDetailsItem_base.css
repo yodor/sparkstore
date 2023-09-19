@@ -342,10 +342,12 @@
     display:block;
     min-width:210px;
     margin-bottom:1em;
+
+    height:2em;
 }
 .side_pane .button .icon {
-    width:32px;
-    height:32px;
+    width:2em;
+    height:100%;
     background-repeat:no-repeat;
     display:inline-block;
     background-position: center center;
@@ -378,8 +380,8 @@
 
 .side_pane .button LABEL {
     vertical-align: top;
-    margin-top:0.3em;
-    margin-left:0.6em;
+    margin-top:0.35em;
+    margin-left:0.35em;
     display:inline-block;
     cursor:pointer;
 }

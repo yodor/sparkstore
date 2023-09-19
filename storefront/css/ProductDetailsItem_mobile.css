@@ -15,6 +15,7 @@
     }
     .images .image_preview {
         width:auto;
+        height:auto;
     }
     .images .image_gallery .list {
         max-width:inherit;
