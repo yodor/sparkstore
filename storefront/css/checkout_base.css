@@ -140,30 +140,30 @@
     text-align:center;
 }
 
-.CheckoutPage.delivery_courier FORM[name='EkontOffice'] {
+.CheckoutPage.delivery_courier FORM {
 
 /*     display:block; */
 
 }
 
-.CheckoutPage.delivery_courier FORM[name='EkontOffice'] .InputComponent[field='office'] {
+.CheckoutPage.delivery_courier FORM[name='CourierOffice'] .InputComponent[field='office'] {
 
-    display:none;
+
 
 }
 
-.CheckoutPage.delivery_courier FORM[name='EkontOffice'] .InputComponent[field='office'] .InputField {
+.CheckoutPage.delivery_courier FORM[name='CourierOffice'] .InputComponent[field='office'] .InputField {
     display: block;
 }
 
-.CheckoutPage.delivery_courier FORM[name='EkontOffice'] .InputComponent[field='office'] .InputLabel {
-    display: none;
+.CheckoutPage.delivery_courier FORM[name='CourierOffice'] .InputComponent[field='office'] .InputLabel {
+
 }
 
-.CheckoutPage.delivery_courier FORM[name='EkontOffice'] .InputComponent[field='office'] TEXTAREA[name='office'] {
+.CheckoutPage.delivery_courier FORM[name='CourierOffice'] .InputComponent[field='office'] TEXTAREA[name='office'] {
     width: 100%;
     overflow: hidden;
-    min-height: 60px;
+    min-height: 120px;
 }
 
 /*delivery to address*/
