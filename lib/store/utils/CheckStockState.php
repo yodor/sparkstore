@@ -66,7 +66,7 @@ class CheckStockState
                 $this->notify();
             }
             catch (Exception $e) {
-                debug("Error notifiying subscribers: ".$e->getMessage());
+                debug("Error notifying subscribers: ".$e->getMessage());
             }
 
             try {

@@ -51,7 +51,7 @@ class ProductInputForm extends InputForm
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
-        $field->setValidator(new NumericValidator(true,false));
+        $field->setValidator(new NumericValidator(false,false));
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "promo_price", "Промо цена", 1);
@@ -61,6 +61,7 @@ class ProductInputForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "stock_amount", "Стокова наличност", 1);
         //default stock amount
+        $field->setValidator(new NumericValidator(true,false));
         $field->setValue(1);
         $this->addInput($field);
 
