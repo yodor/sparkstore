@@ -80,6 +80,8 @@ class ProductInputForm extends InputForm
         $field = new ArrayDataInput("secID", "Section", 0);
         $proc = new InputProcessor($field);
         $proc->transact_bean_skip_empty_values = true;
+        $proc->merge_with_target_loaded = false;
+
         $renderer = new CheckField($field);
         //$renderer = new SelectMultipleField($field);
 
@@ -116,6 +118,8 @@ class ProductInputForm extends InputForm
 
         $field1->setValidator(new EmptyValueValidator());
         $proc = new InputProcessor($field1);
+        $proc->transact_bean_skip_empty_values = true;
+        $proc->merge_with_target_loaded = false;
 
         $renderer = new TextField($field1);
         new ArrayField($renderer);
