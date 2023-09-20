@@ -7,5 +7,5 @@ $parent = $info["dirname"];
 
 include_once($parent."/session.php");
 
-
+include_once("store/templates/admin/TemplateFactory.php");
 ?>
