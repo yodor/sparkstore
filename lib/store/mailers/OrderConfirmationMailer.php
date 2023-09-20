@@ -79,12 +79,12 @@ class OrderConfirmationMailer extends Mailer
 
             $message .= "<td>{$item["position"]}</td>";
 
-//            $message .= "<td>";
-//            foreach ($details as $index => $value) {
-//                $data = explode("||", $value);
-//                $message .= $data[0] . ": " . $data[1] . "<BR>";
-//            }
-//            $message .= "</td>";
+            $message .= "<td>";
+            foreach ($details as $index => $value) {
+
+                $message .= $value . "<BR>";
+            }
+            $message .= "</td>";
 
             $message .= "<td>" . $item["qty"] . "</td>";
             $message .= "<td>" . sprintf("%0.2f лв.", $item["price"]) . "</td>";
@@ -101,7 +101,7 @@ class OrderConfirmationMailer extends Mailer
 
         $message .= "Продкти общо: " . sprintf("%0.2f лв.", ($order["total"] - $order["delivery_price"])) . "\r\n";
         $message .= "Цена доставка: " . sprintf("%0.2f лв.", $order["delivery_price"]) . "\r\n";
-        $message .= "Поръчка oбщо: " . sprintf("%0.2f лв.", $order["total"]) . "\r\n";
+        $message .= "Поръчка общо: " . sprintf("%0.2f лв.", $order["total"]) . "\r\n";
 
 
         $message .= "\r\n";

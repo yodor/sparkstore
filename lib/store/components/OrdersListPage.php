@@ -60,7 +60,7 @@ class OrdersListPage extends BeanListPage
         $act->append(new RowSeparator());
     }
 
-    public function initView(): void
+    public function initView(): TableView
     {
         parent::initView();
 
@@ -70,6 +70,7 @@ class OrdersListPage extends BeanListPage
 
         $this->view->setDefaultOrder(" order_date DESC ");
 
+        return $this->view;
     }
 
 }

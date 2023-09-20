@@ -165,11 +165,16 @@ class OrderProcessor
                 try {
                     debug("Doing copy of product photos to order ");
 
+                    ob_start();
                     $sitem = $cartEntry->getItem()->getMainPhoto();
                     if ($sitem instanceof StorageItem) {
-                        $item_photo = @file_get_contents(fullURL($sitem->hrefThumb(256)));
+                        $href_src = fullURL($sitem->hrefThumb(256));
+                        if ($stream = fopen($href_src, "r")) {
+                            $item_photo = stream_get_contents($stream);
+                            fclose($stream);
+                        }
                     }
-
+                    ob_end_clean();
                 }
                 catch (Exception $e) {
                     debug("Unable to copy source product photos. ProdID=$prodID | Exception: " . $e->getMessage());
