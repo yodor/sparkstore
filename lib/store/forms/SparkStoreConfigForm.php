@@ -2,7 +2,7 @@
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
 
-class StoreConfigForm extends InputForm
+class SparkStoreConfigForm extends InputForm
 {
 
     public function __construct()
