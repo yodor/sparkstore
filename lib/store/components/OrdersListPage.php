@@ -60,7 +60,7 @@ class OrdersListPage extends BeanListPage
         $act->append(new RowSeparator());
     }
 
-    public function initView(): TableView
+    public function initView()
     {
         parent::initView();
 
