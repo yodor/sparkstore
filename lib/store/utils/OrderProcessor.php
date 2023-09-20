@@ -161,20 +161,20 @@ class OrderProcessor
                     }
                 }
 
-                $item_photo = NULL;
+                $item_photo = "";
                 try {
                     debug("Doing copy of product photos to order ");
 
-                    ob_start();
+
                     $sitem = $cartEntry->getItem()->getMainPhoto();
                     if ($sitem instanceof StorageItem) {
-                        $href_src = fullURL($sitem->hrefThumb(256));
-                        if ($stream = fopen($href_src, "r")) {
-                            $item_photo = stream_get_contents($stream);
-                            fclose($stream);
+                        $photo_class = new $sitem->className();
+                        if ($photo_class instanceof DBTableBean) {
+                            $result = $photo_class->getByID($sitem->id, "photo");
+                            $item_photo = (string)$result["photo"];
                         }
                     }
-                    ob_end_clean();
+
                 }
                 catch (Exception $e) {
                     debug("Unable to copy source product photos. ProdID=$prodID | Exception: " . $e->getMessage());

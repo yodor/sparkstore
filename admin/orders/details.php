@@ -167,7 +167,7 @@ echo "</div>";//panel
                     $prodID = $item["prodID"];
 
                     echo "<a class='item photo' href='" . LOCAL . "/products/details.php?prodID=$prodID'>";
-                    $href = StorageItem::Image($item["itemID"], get_class($items), 100, 100);
+                    $href = StorageItem::Image($item["itemID"], get_class($items), 128, -1);
                     echo "<img src='$href'>";
                     echo "</a>";
 

@@ -54,6 +54,16 @@ class OrderConfirmationMailer extends Mailer
         $message .= "Куриер: " . $courier->getTitle() . "\r\n";
         $message .= "Начин на доставка: " . $option->getTitle() . "\r\n";
 
+        $message .= "Адрес за доставка: " . "\r\n";
+        if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
+            echo $order["delivery_address"];
+        }
+        else if ($option->getID() == DeliveryOption::USER_ADDRESS) {
+            $address_form = new InputForm();
+            $address_form->unserializeXML($order["delivery_address"]);
+            $address_form->renderPlain();
+        }
+
         $message .= "\r\n";
 
         $message .= "Поръчани продукти:\r\n\r\n";

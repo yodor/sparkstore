@@ -194,6 +194,7 @@ if ($option->getID() == DeliveryOption::USER_ADDRESS) {
 else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
     $form = new CourierOfficeInputForm();
     $bean = new CourierAddressesBean();
+    $form->getInput("office")->setLabel("Офис на куриер");
     $row = $bean->getResult("userID", $page->getUserID());
     if (!$row) {
         header("Location: delivery_courier.php");
