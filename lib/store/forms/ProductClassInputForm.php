@@ -20,6 +20,7 @@ class ProductClassInputForm extends InputForm
 
         $field1 = new ArrayDataInput("attrID", "Attributes", 0);
 
+
         //try merge even if posted count is different
         $field1->getProcessor()->merge_with_target_loaded = true;
 
@@ -45,7 +46,13 @@ class ProductClassInputForm extends InputForm
         $this->addInput($field1);
 
 
-
+        $closure = function() {
+            echo "<span style='color:red;'>";
+            echo "Ако промените атрибутите ще се ИЗТРИЯТ от всички продукти от този клас";
+            echo "</span>";
+        };
+        $field1->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
+        $field1->getRenderer()->getAddonContainer()->append(new ClosureComponent($closure, true));
     }
 
 }
