@@ -407,6 +407,7 @@
 }
 .side_pane .group.cart_link .nostock LABEL {
     margin:0;
+    font-size:80%;
 }
 .side_pane .group.cart_link .nostock LABEL:after {
     display:none;
