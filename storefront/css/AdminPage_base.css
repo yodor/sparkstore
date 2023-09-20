@@ -33,39 +33,8 @@
 }
 
 
-/*.admin_layout .page_area .page_caption .page_actions .Action[action='Multi-Add'] {*/
-/*    background-image: url("../sparkfront/images/page_actions/green_plus.png");*/
-/*}*/
-
-.multi_add .FormRenderer[layout="VBox"] .InputComponent {
-    display:inline-block;
 
 
-}
-.multi_add .InputField.SelectField SELECT {
-    min-height:350px;
-    min-width:150px;
-}
-.multi_add .note {
-    padding-top:10px;
-    padding-bottom:10px;
-}
-
-.inventory.list .FormRenderer[name='InventoryFilterInputForm'] {
-    display:block;
-}
-.inventory.list .FormRenderer[name='InventoryFilterInputForm'] .InputComponent {
-    display:inline-block;
-    margin-right:10px;
-}
-.inventory.list .ColorButton[action='deleteAll'] {
-    float:right;
-    margin-top:-40px;
-    clear:both;
-}
-.inventory.list .TableView {
-    display:block;
-}
 
 .products.list .TableView .viewport .ImageCellRenderer {
     /*max-width:200px;*/
@@ -128,7 +97,13 @@
 .orders.details .viewport .line .item.pos {
     text-align: center;
 }
-
+.orders.details .viewport .line .item.photo {
+    text-align: center;
+}
+.orders.details .viewport .line .item.photo IMG {
+    min-width:100px;
+    min-height:100px;
+}
 .orders.details .viewport .line .item.qty {
     text-align: center;
 }
@@ -141,15 +116,7 @@
     text-align: right;
 }
 
-/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='price'] {*/
-/*    display:none;*/
-/*}*/
-/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='buy_price'] {*/
-/*    display:none;*/
-/*}*/
-/*.inventory.add FORM[name='ProductInventoryInputForm'] .InputComponent[field='promo_price'] {*/
-/*    display:none;*/
-/*}*/
+
 .DataIteratorField {
     box-sizing:border-box;
     padding:20px;
