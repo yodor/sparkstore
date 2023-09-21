@@ -7,6 +7,7 @@
     --theme-accent-dark: #ff6600;
     --theme-filter-colorize-white: invert(1%) sepia(3%) saturate(594%) hue-rotate(235deg) brightness(122%) contrast(100%);
     --theme-filter-checkout-icon: invert(49%) sepia(51%) saturate(5288%) hue-rotate(2deg) brightness(104%) contrast(103%);
+    --theme-filter-colorize-gray: invert(0%) sepia(0%) saturate(3463%) hue-rotate(13deg) brightness(112%) contrast(44%);
     /*red*/
     /*filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);*/
 }
@@ -375,6 +376,7 @@ A.Caption:active {
     background-size:80%;
     background-repeat:no-repeat;
     background-color:transparent;
+    filter: var(--theme-filter-colorize-gray);
 }
 
 .section.menu .content .search_pane .InputComponent[field='keyword'] LABEL {
@@ -898,4 +900,90 @@ A:hover, A:visited {
 }
 .StorePage.terms_usage .page_data .summary IMG {
     max-width:100%;
+}
+
+.section.pageFooter {
+
+
+
+}
+
+
+.section.pageFooter .content {
+    background-color:#4d4d4d;
+    color:white;
+}
+.pageFooter .columns {
+    display:table;
+    width:100%;
+    min-height:200px;
+    margin-bottom:48px;
+}
+.pageFooter .columns .column {
+    display:table-cell;
+    width:33%;
+    min-width:33%;
+    text-align:center;
+    vertical-align: middle;
+    font-size:1.2em;
+    line-height:180%;
+}
+
+.pageFooter .columns .column.address  {
+
+
+}
+.pageFooter .columns .column.address  .space {
+    font-size:0.9em;
+    line-height:150%;
+    padding-top:2em;
+    padding-bottom:1em;
+    text-align:left;
+    display:inline-block;
+}
+
+.pageFooter .columns .column.address .text {
+    display:block;
+    text-align:left;
+    min-height:2em;
+    vertical-align: top;
+    margin-bottom:1.5em;
+}
+
+.pageFooter .columns .column.address .text .icon {
+    display:inline-block;
+    width:2em;
+    height:2em;
+    background-size:85%;
+    filter: var(--theme-filter-checkout-icon);
+    background-repeat:no-repeat;
+    vertical-align: top;
+    background-position: center center;
+
+}
+.pageFooter .columns .column.address .text .value {
+    display:inline-block;
+    padding-left:0.5em;
+}
+
+.pageFooter .columns .column.address .text.phone .icon {
+    background-image: url("../images/footer_phone.svg");
+}
+.pageFooter .columns .column.address .text.email .icon {
+    background-image:url("../images/footer_mail.svg");
+}
+.pageFooter .columns .column.address .text.location .icon {
+    background-image:url("../images/footer_location.svg");
+}
+.pageFooter .columns .column.address .text.working_hours .icon {
+    background-image:url("../images/footer_clock.svg");
+}
+
+.pageFooter .columns .column.page_links .item {
+    display:block;
+    color:white;
+    text-decoration:none;
+}
+.pageFooter .columns .column.page_links .item:hover {
+    text-decoration:underline;
 }

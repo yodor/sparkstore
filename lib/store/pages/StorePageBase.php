@@ -388,8 +388,8 @@ class StorePageBase extends SparkPage
         $phone = str_replace("\\r\\n", "<BR>", $phone);
         $email = $cfg->get("email_text", "");
         $email = str_replace("\\r\\n", "<BR>", $email);
-        $locataion = $cfg->get("address_text", "");
-        $locataion = str_replace("\\r\\n", "<BR>", $locataion);
+        $location = $cfg->get("address_text", "");
+        $location = str_replace("\\r\\n", "<BR>", $location);
         $working_hours = $cfg->get("working_hours_text", "");
         $working_hours = str_replace("\\r\\n", "<BR>", $working_hours);
 
@@ -417,19 +417,23 @@ class StorePageBase extends SparkPage
             echo "<div class='column address'>";
                 echo "<div class='space'>";
                     echo "<div class='text phone'>";
-                    echo $phone;
+                        echo "<div class='icon'></div>";
+                        echo "<div class='value'>$phone</div>";
                     echo "</div>";
 
                     echo "<div class='text email'>";
-                    echo $email;
+                        echo "<div class='icon'></div>";
+                        echo "<div class='value'>$email</div>";
                     echo "</div>";
 
                     echo "<div class='text location'>";
-                    echo $locataion;
+                        echo "<div class='icon'></div>";
+                        echo "<div class='value'>$location</div>";
                     echo "</div>";
 
                     echo "<div class='text working_hours'>";
-                    echo $working_hours;
+                        echo "<div class='icon'></div>";
+                        echo "<div class='value'>$working_hours</div>";
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
