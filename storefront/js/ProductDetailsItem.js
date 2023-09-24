@@ -7,8 +7,23 @@ function formatPrice(n)
 let curr_pos=0;
 
 onPageLoad(function() {
+    //return assigned SparkObject in data
     let image_popup = $(".image_preview .ImagePopup").data("ImagePopup");
     image_popup.addObserver(popupEvent);
+
+    let image = $(".image_preview .ImagePopup");
+    image.on("SwipeAction", function(e) {
+
+        if (e.message == "right") {
+            next();
+        }
+        else if (e.message == "left") {
+            prev();
+        }
+
+    });
+
+    const listener = new SwipeListener(image);
 });
 
 function popupEvent(spark_event) {

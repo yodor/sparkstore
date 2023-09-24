@@ -78,6 +78,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $arr = parent::requiredScript();
         $arr[] = STORE_LOCAL . "/js/SellableItem.js";
         $arr[] = STORE_LOCAL . "/js/ProductDetailsItem.js";
+        $arr[] = SPARK_LOCAL . "/js/SwipeListener.js";
         return $arr;
     }
 
