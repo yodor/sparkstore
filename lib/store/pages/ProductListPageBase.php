@@ -273,7 +273,7 @@ class ProductListPageBase extends ProductPageBase
     protected function prepareKeywords()
     {
 
-        if ($this->category_filter->getValue()<1) return "";
+        if (!$this->category_filter->getValue()) return "";
 
         $catID = $this->category_filter->getValue();
 
