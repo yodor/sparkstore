@@ -103,9 +103,9 @@ class ProductDetailsPageBase extends ProductPageBase
         $keywords = str_replace("Етикет: ", "", $keywords);
         $keywords = mb_strtolower($keywords);
 
-        if($keywords) {
-            $this->addMeta("keywords", prepareMeta($keywords));
-        }
+
+        $this->keywords = $keywords;
+
     }
 
     public function getSellable(): SellableItem

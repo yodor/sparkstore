@@ -273,15 +273,14 @@ class ProductListPageBase extends ProductPageBase
     protected function prepareKeywords()
     {
 
-        if (!$this->category_filter->getValue()) return "";
+        if (intval($this->category_filter->getValue())<1) {
+            return;
+        }
 
         $catID = $this->category_filter->getValue();
 
-        $keywords = $this->getCategoryKeywords($catID);
+        $this->keywords = $this->getCategoryKeywords($catID);
 
-        if($keywords) {
-            $this->addMeta("keywords", prepareMeta($keywords));
-        }
     }
 
     public function isProcessed(): bool

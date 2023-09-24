@@ -158,17 +158,6 @@ class StorePageBase extends SparkPage
         $this->addJS(STORE_LOCAL."/js/StoreCookies.js");
 
 
-
-        $pc = new ProductCategoriesBean();
-        $qry = $pc->query("category_name");
-        $num = $qry->exec();
-        $keywords = array();
-        while ($result = $qry->next()) {
-            $keywords[] = mb_strtolower($result["category_name"]);
-        }
-
-        $this->keywords = implode(", ", $keywords);
-
         $this->addOGTag("title", "%title%");
         $this->addOGTag("description", "%meta_description%");
         $this->addOGTag("url", fullURL($this->getPageURL()));
