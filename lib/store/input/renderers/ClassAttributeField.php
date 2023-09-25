@@ -12,7 +12,7 @@ class ClassAttributeItem extends DataIteratorItem
 
         echo "<label data='attribute_name'>" . $this->label . "</label>";
 
-        echo "<input data='attribute_value' type='text' value='{$this->value}' name='{$this->name}'>";
+        echo "<input data='attribute_value' type='text' value='{$this->value}' name='{$this->name}' placeholder='".tr("input value ...")."'>";
 
         //value foreign key
         echo "<input data='foreign_key' type='hidden' name='fk_{$this->name}' value='pcaID:{$this->data["pcaID"]}'>";
