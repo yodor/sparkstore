@@ -135,9 +135,26 @@ FORM[name='ProductListFilterInputForm'] {
     text-align: center !important;
 }
 
+FORM[name='ProductListFilterInputForm'] .InputGroupRenderer {
+    border:0;
+    padding:0;
+    margin:0;
+    margin-bottom:0.5em;
+    display:block;
+}
+FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
+    /*display:none;*/
+    border:0;
+    padding:0;
+    margin:0;
+    text-align:left;
+    font-weight:bold;
+}
+
 .filters  {
     display: block;
 }
+
 
 .filters .InputComponent {
     margin-top: 10px;
