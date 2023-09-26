@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: CorelDRAW 2021 (64-Bit) -->
+
+<svg
+   xml:space="preserve"
+   width="128px"
+   height="128px"
+   version="1.1"
+   style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+   viewBox="0 0 128 128"
+   id="svg12"
+   sodipodi:docname="filter_icon.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   id="namedview14"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="5.7734375"
+   inkscape:cx="63.913396"
+   inkscape:cy="63.913396"
+   inkscape:window-width="1920"
+   inkscape:window-height="995"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_x0020_1" />
+ <defs
+   id="defs4">
+  <style
+   type="text/css"
+   id="style2">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:black}
+   ]]>
+  </style>
+ </defs>
+ <g
+   id="Layer_x0020_1"
+   inkscape:label="Layer 1"
+   style="fill:none">
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  <rect
+   class="fil0"
+   width="128"
+   height="128"
+   id="rect7"
+   style="fill:none" />
+  <path
+   class="fil1"
+   d="M76.99 68.37c0,0.22 0.02,0.48 0.02,0.7 0.09,7.91 0.21,15.87 0.01,23.77 -0.04,1.72 -0.48,3.1 -1.91,4.15l-0.12 0.09 -13.41 6.66c-3.04,1.51 -8.02,4.83 -10.16,0.09 -0.55,-1.22 -0.44,-2.61 -0.44,-3.92l0.01 -30.65c0,-0.26 0.02,-0.67 -0.01,-0.95 -0.11,-0.16 -0.27,-0.32 -0.39,-0.46l-15.43 -18.72c-4.52,-5.71 -9.36,-11.13 -13.86,-16.82 -0.99,-1.26 -1.47,-1.7 -1.47,-3.48 0,-2.19 1.86,-4.23 4.07,-4.23l80.2 0c0.99,0 2.21,0.62 2.9,1.31 0.55,0.54 0.95,1.19 1.12,1.94l0.05 0.2 0 1.35 -0.04 0.18c-0.25,1.2 -0.98,2.23 -1.75,3.14l-5.38 6.52c-5.29,6.54 -10.89,12.86 -16.08,19.51l-7.93 9.62zm-43.58 -35.14l24.43 29.66c1.72,2.04 1.95,2.77 1.95,5.54l-0.01 26.5 8.44 -4.22c0,-7.04 0,-14.08 0,-21.12 0,-2.31 -0.32,-3.94 1.27,-5.87l25.01 -30.33c0.05,-0.05 0.09,-0.11 0.13,-0.16l-61.22 0z"
+   id="path9"
+   style="fill:#ffffff" />
+ </g>
+</svg>
