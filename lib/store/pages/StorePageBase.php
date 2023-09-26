@@ -395,6 +395,7 @@ class StorePageBase extends SparkPage
         $dp = new DynamicPagesBean();
         $query = $dp->query("item_title", "keywords", "dpID");
         $query->select->where()->add("keywords", "'%footer_page%'", " LIKE ");
+        $query->select->where()->add("keywords", "'%terms%'", " LIKE ", " OR ");
         $query->select->where()->add("visible", 1);
             $num = $query->exec();
             while ($result = $query->nextResult()) {
@@ -448,7 +449,8 @@ class StorePageBase extends SparkPage
             if ($youtube_href) {
                 echo "<a class='slot youtube' title='youtube' href='{$youtube_href}'></a>";
             }
-            //echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
+            echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
+
             echo "<a class='slot contacts' title='contacts' href='".LOCAL."/contacts.php'></a>";
             if ($phone) {
                 echo "<a class='slot phone' title='phone' href='tel:$phone'></a>";
