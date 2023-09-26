@@ -89,8 +89,8 @@
 
     }
     .group.cart_link .button {
-        display:inline-block; !important;
-        max-width:80%;
-        width:80%;
+        display:inline-block !important;
+        max-width:80% !important;
+        width:80% !important;
     }
 }
