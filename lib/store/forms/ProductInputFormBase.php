@@ -17,7 +17,7 @@ include_once("store/beans/ProductPhotosBean.php");
 include_once("store/input/renderers/ClassAttributeField.php");
 include_once("input/validators/NumericValidator.php");
 
-class ProductInputForm extends InputForm
+class ProductInputFormBase extends InputForm
 {
 
     public function __construct()
@@ -51,7 +51,7 @@ class ProductInputForm extends InputForm
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
-        $field->setValidator(new NumericValidator(true,false));
+        $field->setValidator(new NumericValidator(false,false));
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "promo_price", "Промо цена", 1);
@@ -61,6 +61,7 @@ class ProductInputForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "stock_amount", "Стокова наличност", 1);
         //default stock amount
+        $field->setValidator(new NumericValidator(true,false));
         $field->setValue(1);
         $this->addInput($field);
 
@@ -76,9 +77,11 @@ class ProductInputForm extends InputForm
 
 
         //
-        $field = new DataInput("secID", "Section", 0);
+        $field = new ArrayDataInput("secID", "Section", 0);
         $proc = new InputProcessor($field);
         $proc->transact_bean_skip_empty_values = true;
+        $proc->merge_with_target_loaded = false;
+
         $renderer = new CheckField($field);
         //$renderer = new SelectMultipleField($field);
 
@@ -115,6 +118,8 @@ class ProductInputForm extends InputForm
 
         $field1->setValidator(new EmptyValueValidator());
         $proc = new InputProcessor($field1);
+        $proc->transact_bean_skip_empty_values = true;
+        $proc->merge_with_target_loaded = false;
 
         $renderer = new TextField($field1);
         new ArrayField($renderer);
@@ -130,6 +135,19 @@ class ProductInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "keywords", "Ключови думи", 0);
         $this->addInput($field);
 
+    }
+
+    public function validate()
+    {
+        parent::validate();
+
+        $price = $this->getInput("price")->getValue();
+        $promo_price = $this->getInput("promo_price")->getValue();
+        $price = floatval($price);
+        $promo_price = floatVal($promo_price);
+        if ($promo_price>=$price) {
+            throw new Exception("'Promo price' must be smaller than 'Sell price'");
+        }
     }
 
     public function loadBeanData($editID, DBTableBean $bean)
