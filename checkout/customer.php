@@ -18,12 +18,17 @@ class FastOrderProcessor extends FormProcessor {
         if ($cart->itemsCount()<1) throw new Exception(tr("Your shopping cart is empty"));
 
         if ($form instanceof ClientAddressInputForm) {
-            $mailer = new FastOrderAdminMailer($form);
-            $mailer->send();
-            $cart->clear();
-            $cart->store();
-            header("Location: complete.php");
-            exit;
+            if ($form->isFastOrder()) {
+                $mailer = new FastOrderAdminMailer($form);
+                $mailer->send();
+                $cart->clear();
+                $cart->store();
+                header("Location: complete.php");
+                exit;
+            }
+            else {
+                throw new Exception("Incorrect InputForm class - fast_order flag not set");
+            }
         }
 
         throw new Exception("Incorrect InputForm class - expecting 'ClientAddressInputForm'");

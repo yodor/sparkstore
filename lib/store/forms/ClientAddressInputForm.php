@@ -3,9 +3,13 @@ include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
 include_once("input/validators/SimplePhoneValidator.php");
 
+
 class ClientAddressInputForm extends InputForm
 {
 
+    /**
+     * @var bool If set allow ordering of items inside cart without registration
+     */
     protected $fast_order = false;
 
     public function __construct(bool $fast_order=false)
@@ -42,6 +46,10 @@ class ClientAddressInputForm extends InputForm
 
     }
 
+    public function isFastOrder() : bool
+    {
+        return $this->fast_order;
+    }
 //    public function renderPlain()
 //    {
 //        echo "<div class='ClientAddressList'>";
