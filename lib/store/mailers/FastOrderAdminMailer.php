@@ -33,8 +33,10 @@ class FastOrderAdminMailer extends Mailer
         $message .= "\r\n";
         $message .= "Телефон: ".$form->getInput("phone")->getValue();
         $message .= "\r\n";
-        $message .= "Адрес: ".$form->getInput("address")->getValue();
-        $message .= "\r\n";
+        if ($form->haveInput("address")) {
+            $message .= "Адрес: " . $form->getInput("address")->getValue();
+            $message .= "\r\n";
+        }
 
         $message .= "Поръчани продукти:\r\n\r\n";
 
