@@ -8,80 +8,6 @@ include_once("store/beans/ProductSectionsBean.php");
 include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 
-class DownloadCSVResponder extends RequestResponder
-{
-
-    const ACTION = "download_csv";
-
-    public function __construct()
-    {
-        parent::__construct(self::ACTION);
-    }
-
-    public function createAction($title = "Download CSV", $href_add = "", $check_code = NULL, $parameters_array = array())
-    {
-        $action = new Action("download_csv", "?cmd=download_csv");
-        $action->setTooltipText("Download CSV");
-        return $action;
-    }
-
-    protected function processImpl()
-    {
-        header( "Content-Type: text/csv" );
-        header( "Content-Disposition: attachment;filename=catalog.csv");
-        $fp = fopen("php://output", "w");
-
-        $keys = array("id", "content_id", "title", "description", "availability", "condition", "link", "image_link", "brand", "product_type", "price");
-
-        fputcsv($fp, $keys);
-
-        $bean = new SellableProducts();
-
-        $query = $bean->query("prodID");
-        $query->select->group_by = " prodID ";
-        $query->select->order_by = " update_date DESC ";
-
-        $query->exec();
-
-
-        $cats = new ProductCategoriesBean();
-
-
-        while ($result = $query->nextResult()) {
-
-            $prodID = $result->get("prodID");
-
-            $item = SellableItem::Load($prodID);
-
-            $export_row = array();
-            $export_row["id"] = $prodID;
-            $export_row["content_id"] = $prodID;
-            $export_row["title"] = $item->getTitle();
-            $export_row["description"] = $item->getDescription();
-            $export_row["availability"] = "in stock";
-            $export_row["condition"] = "new";
-
-            $link = LOCAL."/products/details.php?prodID=$prodID";
-            $export_row["link"] = fullURL($link);
-
-            $image_link = $item->getMainPhoto()->hrefImage(640,-1);
-            $export_row["image_link"] = fullURL($image_link);
-            $export_row["brand"] = $item->getBrandName();
-            $export_row["product_type"] = $cats->getValue($item->getCategoryID(), "category_name");
-
-            $export_row["price"] = $item->getPriceInfo()->getSellPrice();
-
-            fputcsv($fp, $export_row);
-
-        }
-
-    }
-
-    protected function parseParams()
-    {
-        // TODO: Implement parseParams() method.
-    }
-}
 
 class ProductFilterInputForm extends InputForm {
     public function __construct()
@@ -204,8 +130,9 @@ class ProductsList extends BeanListPage
         parent::__construct();
         $this->getPage()->setPageMenu(TemplateFactory::MenuForPage("ProductsList"));
 
-        $responder_dcsv = new DownloadCSVResponder();
-        $this->getPage()->getActions()->append($responder_dcsv->createAction());
+        $action = new Action("download_csv", "fbexport.php");
+        $action->setTooltipText("Download CSV");
+        $this->getPage()->getActions()->append($action);
 
         $responder = new SectionChooserFormResponder();
         $chooser_script = new PageScript();
