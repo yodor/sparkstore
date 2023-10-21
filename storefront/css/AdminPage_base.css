@@ -163,3 +163,7 @@
     margin-top:1em;
     display:inline-block;
 }
+
+.admin_layout .page_area .page_caption .page_actions .Action[action='download_csv'] {
+    background-image: url("../images/page_actions/csv_download.svg");
+}
