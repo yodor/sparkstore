@@ -116,8 +116,9 @@ class SellableDataParser
                 $main_photo = $sitem;
             }
         }
-
-        $item->setMainPhoto($main_photo);
+        if ($main_photo != null) {
+            $item->setMainPhoto($main_photo);
+        }
 
     }
 
