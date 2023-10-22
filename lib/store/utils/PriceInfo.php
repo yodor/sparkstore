@@ -30,6 +30,17 @@ class PriceInfo implements JsonSerializable {
     {
         return $this->discount_percent;
     }
+    public function getDiscountAmount() : float
+    {
+        $result = 0;
+        if ($this->sell_price != $this->old_price) {
+            $result_amount = $this->old_price - $this->sell_price;
+            if ($result_amount>0) {
+                $result = $result_amount;
+            }
+        }
+        return $result;
+    }
 
     public function jsonSerialize() : array
     {
