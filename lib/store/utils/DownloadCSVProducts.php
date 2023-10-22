@@ -40,7 +40,7 @@ class DownloadCSVProducts extends RequestResponder
         }
 
         $action = new Action(self::COMMAND, "?cmd=" . self::COMMAND . "&type=" . $type);
-        $action->setTooltipText("Download CSV");
+        $action->setTooltipText("Download CSV - ".$type);
         return $action;
     }
 
