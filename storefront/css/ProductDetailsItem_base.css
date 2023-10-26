@@ -71,7 +71,7 @@
 
 .images .image_preview .arrow {
     width:50px;
-    background-color:rgba(0,0,0,0.8);
+    background-color:rgba(0,0,0,0.2);
     vertical-align:middle;
     height:50px;
     display:inline-block;
@@ -333,8 +333,8 @@
     padding: 0.5em;
 
     text-decoration: none;
-    color: white;
-    background-color:black;
+    color: black;
+    /*background-color:black;*/
     font-size:150%;
     text-transform:uppercase;
     text-align:left;
@@ -344,6 +344,9 @@
     margin-bottom:1em;
 
     height:2em;
+
+    border: 3px solid black;
+    border-radius: 2em;
 }
 .side_pane .button .icon {
     width:2em;
@@ -356,51 +359,58 @@
 
 
 }
-.side_pane .group .button LABEL {
 
-
+.side_pane .button LABEL {
+    vertical-align: top;
+    margin-top:0.35em;
+    margin-left:0.5em;
+    display:inline-block;
+    cursor:pointer;
 }
+
 .side_pane .group .button LABEL:after {
     display:none;
 }
 
+.side_pane .button.cart_add.fast {
+    border-color: var(--theme-accent);
+}
+.side_pane .button.cart_add.fast .icon {
 
+}
 
+.side_pane .button.cart_add {
 
+}
 .side_pane .button.cart_add .icon {
     background-image:url("../images/cart.svg");
 }
 
+.side_pane .button.order_phone {
+
+}
 .side_pane .button.order_phone .icon {
     background-image:url("../images/phone_icon.svg");
+}
+
+.side_pane .button.query_product {
+
 }
 .side_pane .button.query_product .icon {
     background-image:url("../images/question_icon.svg");
 }
 
-.side_pane .button LABEL {
-    vertical-align: top;
-    margin-top:0.35em;
-    margin-left:0.35em;
-    display:inline-block;
-    cursor:pointer;
-}
 
-
-
-.side_pane .button.order_phone {
-    background-color:#999999;
-
-}
-
-.side_pane .button.query_product {
-    background-color: var(--theme-accent);
-}
 
 .side_pane .group.cart_link .nostock {
     display:inline-block;
     max-width:150px;
     text-align:center;
+    background-image:url("../images/notify_icon.svg");
+    background-repeat: no-repeat;
+    background-position: 0.5em center;
+    background-size:15%;
+    border-color: var(--theme-accent);
 }
 .side_pane .group.cart_link .nostock .icon {
     display:none;
@@ -408,6 +418,7 @@
 .side_pane .group.cart_link .nostock LABEL {
     margin:0;
     font-size:80%;
+    margin-left:1.7em;
 }
 .side_pane .group.cart_link .nostock LABEL:after {
     display:none;

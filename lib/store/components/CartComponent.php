@@ -174,7 +174,7 @@ class CartComponent extends Component implements IHeadContents
 
 
         echo "<td field='price'>";
-        echo "<label>" . tr("Цена") . ": </label>";
+        echo "<label>" . tr("Цена") . ":&nbsp;</label>";
         //                 $price = $currency_rates->getPrice($item["sell_price"]);
         //                 echo sprintf("%0.2f ".$price["symbol"] , $price["price_value"]);
 
@@ -184,7 +184,7 @@ class CartComponent extends Component implements IHeadContents
         echo "</td>";
 
         echo "<td field='line-total'>";
-        echo "<label>" . tr("Общо") . ": </label>";
+        echo "<label>" . tr("Общо") . ":&nbsp;</label>";
         //                 $line_total = ($qty * (float)$price["price_value"]);
         //                 echo sprintf("%0.2f ".$price["symbol"], $line_total );
 

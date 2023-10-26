@@ -90,7 +90,11 @@
     }
     .group.cart_link .button {
         display:inline-block !important;
-        max-width:80% !important;
-        width:80% !important;
+        max-width:70% !important;
+        width:70% !important;
+    }
+
+    .side_pane .group.tbi {
+        text-align: center;
     }
 }

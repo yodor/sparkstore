@@ -410,19 +410,42 @@ class ProductListPageBase extends ProductPageBase
 
             echo "<div class='categories panel'>";
 
-                echo "<div class='Caption' ><div class='toggle' onclick='togglePanel(this)'><div></div></div>" . tr("Категории") . "</div>";
+                echo "<div class='Caption' >";
+
+                    echo "<div class='toggle' onclick='togglePanel(this)'>";
+                        echo "<label>";
+                        echo tr("Категории");
+                        echo "</label>";
+                    echo "</div>";
+
+                    echo "<span>";
+                    echo tr("Категории");
+                    echo "</span>";
+
+                echo "</div>";
+
 
                 echo "<div class='viewport'>";
                 $this->renderCategoriesTree();
                 echo "</div>";
 
-            echo "</div>"; //tree
+            echo "</div>"; //categories panel
 
 
             if ($this->filters instanceof ProductListFilter) {
                 echo "<div class='filters panel'>";
 
-                echo "<div class='Caption' ><div class='toggle' onclick='togglePanel(this)'><div></div></div>" . tr("Филтри") . "</div>";
+                echo "<div class='Caption' >";
+                    echo "<div class='toggle' onclick='togglePanel(this)'>";
+                        echo "<label>";
+                        echo tr("Филтри");
+                        echo "</label>";
+                    echo "</div>";
+
+                    echo "<span>";
+                    echo tr("Филтри");
+                    echo "</span>";
+                echo "</div>";
 
                 echo "<div class='viewport'>";
                 $this->renderProductFilters();

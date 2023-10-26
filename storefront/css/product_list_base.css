@@ -43,8 +43,8 @@
 }
 
 .section.main .content .column.left .panel .Caption .toggle {
-    width:2em;
-    height:25px;
+    width:2.2em;
+    height:2.2em;
     display:none;
     /*border:1px solid red;*/
 
@@ -234,7 +234,7 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
 .ItemView .PaginatorTopComponent {
     background: none;
     background-color: transparent !important;
-    border-spacing:0;
+    border-spacing:1em;
     color:black;
 }
 

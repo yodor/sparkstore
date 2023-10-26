@@ -57,11 +57,12 @@
 
 .navigation .icon {
     display:inline-block;
-    width:64px;
-    height:64px;
+    width:4em;
+    height:4em;
     filter: var(--theme-filter-checkout-icon);
     background-repeat:no-repeat;
     background-position:center center;
+    background-size:contain;
 }
 
 .navigation .empty .icon {

@@ -39,7 +39,7 @@ class DownloadCSVProducts extends RequestResponder
             $type = self::TYPE_GOOGLE;
         }
 
-        $action = new Action(self::COMMAND, "?cmd=" . self::COMMAND . "&type=" . $type);
+        $action = new Action(self::COMMAND."_".$type, "?cmd=" . self::COMMAND . "&type=" . $type);
         $action->setTooltipText("Download CSV - ".$type);
         return $action;
     }

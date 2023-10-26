@@ -365,7 +365,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 echo "</a>";
             }
             else {
-                echo "<a class='button cart_add' href='javascript:showOrderProductForm()'>";
+                echo "<a class='button cart_add fast' href='javascript:showOrderProductForm()'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Бърза поръчка") . "</label>";
                 echo "</a>";

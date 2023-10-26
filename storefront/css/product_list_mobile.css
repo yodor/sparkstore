@@ -13,10 +13,33 @@
     .section.main .content .column.left .panel .viewport {
         display:none;
     }
+    .section.main .content .column.left .panel .Caption {
+        color:inherit;
+    }
     .section.main .content .column.left .panel .Caption .toggle {
         display:inline-block;
     }
+    .section.main .content .column.left .panel .Caption .toggle LABEL {
+        margin-left:3em;
+        padding-top:0.5em;
+        display:inline-block;
+
+    }
+    .section.main .content .column.left .panel .Caption span {
+        display:none;
+    }
+
+    .section.main .content .column.left .panel {
+        margin-bottom:0px;
+    }
+    .section.main .content .column.left .panel {
+        border-top:1px solid var(--theme-accent);
+    }
+    .section.main .content .column.left .panel:last-of-type {
+        border-bottom:1px solid var(--theme-accent);
+    }
+    .section.main .content .column.left .panel .Caption {
+        padding-top:0.5em;
+        padding-bottom:0.5em;
+    }
 }
-
-
-

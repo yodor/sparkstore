@@ -1,19 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Creator: CorelDRAW 2021 (64-Bit) -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="49px" height="59px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 20.12 24.26"
- xmlns:xlink="http://www.w3.org/1999/xlink"
- xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
- <defs>
-  <style type="text/css">
+
+<svg
+   xml:space="preserve"
+   width="49px"
+   height="59px"
+   version="1.1"
+   style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+   viewBox="0 0 20.12 24.26"
+   id="svg10"
+   sodipodi:docname="footer_location.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   id="namedview12"
+   pagecolor="#505050"
+   bordercolor="#eeeeee"
+   borderopacity="1"
+   inkscape:showpageshadow="0"
+   inkscape:pageopacity="0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#505050"
+   showgrid="false"
+   inkscape:zoom="13.491525"
+   inkscape:cx="22.421482"
+   inkscape:cy="29.5"
+   inkscape:window-width="1920"
+   inkscape:window-height="996"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_x0020_1" />
+ <defs
+   id="defs4">
+  <style
+   type="text/css"
+   id="style2">
    <![CDATA[
     .fil0 {fill:white}
    ]]>
   </style>
  </defs>
- <g id="Layer_x0020_1">
-  <metadata id="CorelCorpID_0Corel-Layer"/>
-  <path class="fil0" d="M10.06 0c5.55,0 10.06,4.51 10.06,10.06 0,2.99 -2.77,6.69 -4.66,8.93 -1.03,1.22 -2.12,2.4 -3.26,3.52 -0.54,0.53 -1.09,1.07 -1.66,1.57 -0.13,0.12 -0.3,0.18 -0.48,0.18 -0.18,0 -0.36,-0.06 -0.49,-0.18 -0.56,-0.51 -1.12,-1.04 -1.65,-1.57 -1.14,-1.13 -2.23,-2.3 -3.27,-3.52 -1.89,-2.24 -4.65,-5.94 -4.65,-8.93 0,-5.55 4.51,-10.06 10.06,-10.06zm0 22.54c2.79,-2.62 8.59,-8.68 8.59,-12.48 0,-4.74 -3.85,-8.59 -8.59,-8.59 -4.74,0 -8.59,3.85 -8.59,8.59 0,3.8 5.8,9.86 8.59,12.48zm0 -17.88c2.97,0 5.39,2.43 5.39,5.4 0,2.97 -2.42,5.4 -5.39,5.4 -2.97,0 -5.4,-2.43 -5.4,-5.4 0,-2.98 2.43,-5.4 5.4,-5.4zm0 9.33c2.17,0 3.93,-1.76 3.93,-3.93 0,-2.17 -1.76,-3.93 -3.93,-3.93 -2.17,0 -3.93,1.76 -3.93,3.93 0,2.17 1.76,3.93 3.93,3.93z"/>
+ <g
+   id="Layer_x0020_1"
+   inkscape:label="Layer 1">
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  <path
+   class="fil0"
+   d="M10.06 0c5.55,0 10.06,4.51 10.06,10.06 0,2.99 -2.77,6.69 -4.66,8.93 -1.03,1.22 -2.12,2.4 -3.26,3.52 -0.54,0.53 -1.09,1.07 -1.66,1.57 -0.13,0.12 -0.3,0.18 -0.48,0.18 -0.18,0 -0.36,-0.06 -0.49,-0.18 -0.56,-0.51 -1.12,-1.04 -1.65,-1.57 -1.14,-1.13 -2.23,-2.3 -3.27,-3.52 -1.89,-2.24 -4.65,-5.94 -4.65,-8.93 0,-5.55 4.51,-10.06 10.06,-10.06zm0 22.54c2.79,-2.62 8.59,-8.68 8.59,-12.48 0,-4.74 -3.85,-8.59 -8.59,-8.59 -4.74,0 -8.59,3.85 -8.59,8.59 0,3.8 5.8,9.86 8.59,12.48zm0 -17.88c2.97,0 5.39,2.43 5.39,5.4 0,2.97 -2.42,5.4 -5.39,5.4 -2.97,0 -5.4,-2.43 -5.4,-5.4 0,-2.98 2.43,-5.4 5.4,-5.4zm0 9.33c2.17,0 3.93,-1.76 3.93,-3.93 0,-2.17 -1.76,-3.93 -3.93,-3.93 -2.17,0 -3.93,1.76 -3.93,3.93 0,2.17 1.76,3.93 3.93,3.93z"
+   id="path7"
+   style="fill:#000000" />
  </g>
 </svg>
