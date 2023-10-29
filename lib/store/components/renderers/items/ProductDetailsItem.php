@@ -52,12 +52,11 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->side_pane->setWrapperEnabled(true);
         $this->side_pane->setComponentClass("side_pane");
 
-        $this->buttons[self::BUTTON_QUERY_PRODUCT] = new QueryProductFormResponder($this->sellable);
-        $this->buttons[self::BUTTON_NOTIFY_INSTOCK] = new NotifyInstockFormResponder($this->sellable);
-        $this->buttons[self::BUTTON_FAST_ORDER] = new OrderProductFormResponder($this->sellable);
-        $this->buttons[self::BUTTON_PHONE_ORDER] = true;
-        $this->buttons[self::BUTTON_CART_ORDER] = true;
-        //$this->buttons[self::BUTTON_TBI_ORDER] = false;
+        $this->setButtonEnabled(self::BUTTON_QUERY_PRODUCT, true);
+        $this->setButtonEnabled(self::BUTTON_NOTIFY_INSTOCK, true);
+        $this->setButtonEnabled(self::BUTTON_FAST_ORDER, true);
+        $this->setButtonEnabled(self::BUTTON_PHONE_ORDER, true);
+        $this->setButtonEnabled(self::BUTTON_CART_ORDER, true);
 
 
         $tbi_uid = "";
@@ -69,7 +68,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $tbi_uid = $config->get("tbi_uid", $tbi_uid);
 
         if ($tbi_uid) {
-            $this->buttons[self::BUTTON_TBI_ORDER] = true;
+            $this->setButtonEnabled(self::BUTTON_TBI_ORDER, true);
             TBIData::$store_uid = $tbi_uid;
         }
     }
