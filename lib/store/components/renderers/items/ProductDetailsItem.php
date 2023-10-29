@@ -57,7 +57,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->buttons[self::BUTTON_FAST_ORDER] = new OrderProductFormResponder($this->sellable);
         $this->buttons[self::BUTTON_PHONE_ORDER] = true;
         $this->buttons[self::BUTTON_CART_ORDER] = true;
-        $this->buttons[self::BUTTON_TBI_ORDER] = false;
+        //$this->buttons[self::BUTTON_TBI_ORDER] = false;
 
 
         $tbi_uid = "";
@@ -443,20 +443,22 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected function renderGroupTBIModule()
     {
-        $stock_amount = $this->sellable->getStockAmount();
-        $priceInfo = $this->sellable->getPriceInfo();
+        if ($this->isButtonEnabled(self::BUTTON_TBI_ORDER)) {
+            $stock_amount = $this->sellable->getStockAmount();
+            $priceInfo = $this->sellable->getPriceInfo();
 
-        echo "<div class='group tbi'>";
-        if ($stock_amount>0) {
-            echo "<div class='tbi_module'>";
-            TBIData::$name = $this->sellable->getTitle();
-            TBIData::$quantity = 1;
-            TBIData::$id = $this->sellable->getProductID();
-            TBIData::$price = $priceInfo->getSellPrice();
-            include_once("store/utils/tbi/TBIProduct.php");
+            echo "<div class='group tbi'>";
+            if ($stock_amount > 0) {
+                echo "<div class='tbi_module'>";
+                TBIData::$name = $this->sellable->getTitle();
+                TBIData::$quantity = 1;
+                TBIData::$id = $this->sellable->getProductID();
+                TBIData::$price = $priceInfo->getSellPrice();
+                include_once("store/utils/tbi/TBIProduct.php");
+                echo "</div>";
+            }
             echo "</div>";
         }
-        echo "</div>";
     }
 
     protected function sidePaneStart()
@@ -486,9 +488,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
             echo "<div class='clear'></div>";
 
-            if ($this->isButtonEnabled(self::BUTTON_TBI_ORDER)) {
-                $this->renderGroupTBIModule();
-            }
+            $this->renderGroupTBIModule();
 
         $this->sidePaneFinish();
     }
