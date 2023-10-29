@@ -10,8 +10,17 @@ include_once("store/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
 include_once("store/utils/tbi/TBIData.php");
 
+
 class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
+
+    const BUTTON_QUERY_PRODUCT = "Query Product";
+    const BUTTON_NOTIFY_INSTOCK = "Notify Instock";
+    const BUTTON_PHONE_ORDER = "Phone Order";
+    const BUTTON_FAST_ORDER = "Fast Order";
+    const BUTTON_CART_ORDER = "Cart Order";
+    const BUTTON_TBI_ORDER = "TBI Order";
+
     protected $categories = array();
     protected $url = "";
 
@@ -26,9 +35,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected $side_pane = null;
 
-    protected $queryProductEnabled = true;
-
-    protected $tbiEnabled = false;
+    protected $buttons = array();
 
     public function __construct(SellableItem $item)
     {
@@ -45,11 +52,13 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->side_pane->setWrapperEnabled(true);
         $this->side_pane->setComponentClass("side_pane");
 
-        $handler_query = new QueryProductFormResponder($this->sellable);
+        $this->buttons[self::BUTTON_QUERY_PRODUCT] = new QueryProductFormResponder($this->sellable);
+        $this->buttons[self::BUTTON_NOTIFY_INSTOCK] = new NotifyInstockFormResponder($this->sellable);
+        $this->buttons[self::BUTTON_FAST_ORDER] = new OrderProductFormResponder($this->sellable);
+        $this->buttons[self::BUTTON_PHONE_ORDER] = true;
+        $this->buttons[self::BUTTON_CART_ORDER] = true;
+        $this->buttons[self::BUTTON_TBI_ORDER] = false;
 
-        $handler_order = new OrderProductFormResponder($this->sellable);
-
-        $handler_notify = new NotifyInstockFormResponder($this->sellable);
 
         $tbi_uid = "";
         if (defined("TBI_UID")) {
@@ -60,11 +69,38 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $tbi_uid = $config->get("tbi_uid", $tbi_uid);
 
         if ($tbi_uid) {
-            $this->tbiEnabled = true;
+            $this->buttons[self::BUTTON_TBI_ORDER] = true;
             TBIData::$store_uid = $tbi_uid;
         }
     }
 
+    public function setButtonEnabled(string $button_name, bool $mode)
+    {
+        if ($mode) {
+            $this->buttons[$button_name] = true;
+            switch ($button_name) {
+                case self::BUTTON_QUERY_PRODUCT:
+                    $this->buttons[$button_name] = new QueryProductFormResponder($this->sellable);
+                    break;
+                case self::BUTTON_NOTIFY_INSTOCK:
+                    $this->buttons[$button_name] = new NotifyInstockFormResponder($this->sellable);
+                    break;
+                case self::BUTTON_FAST_ORDER:
+                    $this->buttons[$button_name] = new OrderProductFormResponder($this->sellable);
+                    break;
+            }
+        }
+        else {
+            if (isset($this->buttons[$button_name])) {
+                unset($this->buttons[$button_name]);
+            }
+        }
+    }
+
+    public function isButtonEnabled(string $button_name)
+    {
+        return isset($this->buttons[$button_name]);
+    }
 
     public function requiredStyle(): array
     {
@@ -359,21 +395,27 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "<div class='group cart_link' $instock>";
 
             if ($stock_amount<1) {
-                echo "<a class='button nostock' href='javascript:showNotifyInstockForm()'>";
+                if ($this->isButtonEnabled(self::BUTTON_NOTIFY_INSTOCK)) {
+                    echo "<a class='button nostock' href='javascript:showNotifyInstockForm()'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Уведоми ме при наличност") . "</label>";
-                echo "</a>";
+                    echo "</a>";
+                }
             }
             else {
-                echo "<a class='button cart_add fast' href='javascript:showOrderProductForm()'>";
+
+                if ($this->isButtonEnabled(self::BUTTON_FAST_ORDER)) {
+                    echo "<a class='button cart_add fast' href='javascript:showOrderProductForm()'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Бърза поръчка") . "</label>";
-                echo "</a>";
-
-                echo "<a class='button cart_add' href='javascript:addToCart()'>";
+                    echo "</a>";
+                }
+                if ($this->isButtonEnabled(self::BUTTON_CART_ORDER)) {
+                    echo "<a class='button cart_add' href='javascript:addToCart()'>";
                     echo "<span class='icon'></span>";
                     echo "<label>" . tr("Поръчай") . "</label>";
-                echo "</a>";
+                    echo "</a>";
+                }
             }
 
 
@@ -381,14 +423,15 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             $config->setSection("store_config");
             $phone = $config->get("phone_orders", "");
             if ($phone) {
-                echo "<a class='button order_phone' href='tel:$phone'>";
-//                echo "<label>".tr("Телефон за поръчки")."</label>";
+                if ($this->isButtonEnabled(self::BUTTON_PHONE_ORDER)) {
+                    echo "<a class='button order_phone' href='tel:$phone'>";
                     echo "<span class='icon'></span>";
                     echo "<label>$phone</label>";
-                echo "</a>";
+                    echo "</a>";
+                }
             }
 
-            if ($this->queryProductEnabled) {
+            if ($this->isButtonEnabled(self::BUTTON_QUERY_PRODUCT)) {
                 echo "<a class='button query_product' href='javascript:showProductQueryForm()'>";
                 echo "<span class='icon'></span>";
                 echo "<label>" . tr("Запитване") . "</label>";
@@ -443,7 +486,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
             echo "<div class='clear'></div>";
 
-            if ($this->tbiEnabled) {
+            if ($this->isButtonEnabled(self::BUTTON_TBI_ORDER)) {
                 $this->renderGroupTBIModule();
             }
 
