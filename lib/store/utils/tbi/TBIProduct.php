@@ -19,6 +19,8 @@
     $paramstbi = json_decode(curl_exec($ch), true);
     curl_close($ch);
 
+    //check result
+    if (is_array($paramstbi) && isset($paramstbi["unicid"])) {
 
 
     $minprice_tbi = $paramstbi['tbi_minstojnost'];
@@ -953,4 +955,5 @@
         <?php } ?>
 <?php }
     /* Край на PHP кода за Кредитен Калкулатор TBI Bank */
+    }//check json
 ?>
