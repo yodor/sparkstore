@@ -1,4 +1,57 @@
 <?php
+
+class TBIProduct
+{
+
+    public function __construct()
+    {
+
+    }
+
+    public function initTBI()
+    {
+
+
+        $ch = null;
+        try {
+            if (!TBIData::$store_uid || strlen(TBIData::$store_uid)<1) throw new Exception("Empty 'unicid' code");
+
+            $unicid = strtolower(TBIData::$store_uid);
+
+            $url = "https://tbibank.support/function/getparameters.php?cid=" . $unicid;
+
+            $ch = curl_init();
+
+            if (!$ch) throw new Exception("cURL initialization failed");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $paramstbi = json_decode(curl_exec($ch), true);
+            curl_close($ch);
+
+            if (is_null($paramstbi)) throw new Exception("paramstbi JSON Decode failed.");
+
+            //check result
+            if (!is_array($paramstbi)) throw new Exception("paramstbi not array");
+
+            if (!isset($paramstbi["unicid"])) throw new Exception("paramstbi not array");
+
+            $tbi_unicid = strtolower($paramstbi["unicid"]);
+
+            if (strcmp($tbi_unicid, $unicid) !== 0) {
+                throw new Exception("UNICID code missmatch");
+            }
+
+            $this->render($paramstbi);
+        }
+        catch (Exception $e) {
+            debug("Error initializing TBI calculator code: ".$e->getMessage());
+        }
+    }
+
+protected function render($paramstbi) {
     /* Начало на PHP кода за Кредитен Калкулатор TBI Bank */
     $tbi_mod_version = '3.1.0';
     $product_id = TBIData::$id; //задайте променливата на PHP, която определя продуктовия id
@@ -9,19 +62,6 @@
     $manufacturer_id = null; //тази променлива е идентификатор номерът на производителя на Вашия продукт (незадължителна)
     ///////////////////////////////////////////////////////////////////////////////////
     $unicid = TBIData::$store_uid;
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_URL, 'https://tbibank.support/function/getparameters.php?cid='.$unicid);
-    $paramstbi = json_decode(curl_exec($ch), true);
-    curl_close($ch);
-
-    //check result
-    if (is_array($paramstbi) && isset($paramstbi["unicid"])) {
-
 
     $minprice_tbi = $paramstbi['tbi_minstojnost'];
     $maxprice_tbi = $paramstbi['tbi_maxstojnost'];
@@ -955,5 +995,8 @@
         <?php } ?>
 <?php }
     /* Край на PHP кода за Кредитен Калкулатор TBI Bank */
-    }//check json
+} //renderTBIButton
+
+} //class TBIProduct
+
 ?>
