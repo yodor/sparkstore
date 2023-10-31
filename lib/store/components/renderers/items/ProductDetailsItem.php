@@ -8,8 +8,8 @@ include_once("store/utils/SellableItem.php");
 include_once("store/responders/json/QueryProductFormResponder.php");
 include_once("store/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
-include_once("store/utils/tbi/TBIData.php");
 
+include_once("store/utils/tbi/TBIProduct.php");
 
 class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
@@ -36,6 +36,9 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected $side_pane = null;
 
     protected $buttons = array();
+
+    //TBI store UID if defined
+    protected $tbiproduct = null;
 
     public function __construct(SellableItem $item)
     {
@@ -69,7 +72,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         if ($tbi_uid) {
             $this->setButtonEnabled(self::BUTTON_TBI_ORDER, true);
-            TBIData::$store_uid = $tbi_uid;
+            $this->tbiproduct = new TBIProduct($tbi_uid);
         }
     }
 
@@ -449,11 +452,24 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             echo "<div class='group tbi'>";
             if ($stock_amount > 0) {
                 echo "<div class='tbi_module'>";
-                TBIData::$name = $this->sellable->getTitle();
-                TBIData::$quantity = 1;
-                TBIData::$id = $this->sellable->getProductID();
-                TBIData::$price = $priceInfo->getSellPrice();
-                include_once("store/utils/tbi/TBIProduct.php");
+
+                if ($this->tbiproduct instanceof TBIProduct) {
+
+                    $productInfo = new TBIData();
+                    $productInfo->name = $this->sellable->getTitle();
+                    $productInfo->quantity = 1;
+                    $productInfo->id = $this->sellable->getProductID();
+                    $productInfo->price = $priceInfo->getSellPrice();
+
+                    try {
+                        $tbiStoreData = $this->tbiproduct->getStoreData();
+                        $this->tbiproduct->renderButton($tbiStoreData, $productInfo);
+                    }
+                    catch (Exception $e) {
+                        debug("Error using TBI Module: ".$e->getMessage());
+                    }
+                }
+
                 echo "</div>";
             }
             echo "</div>";

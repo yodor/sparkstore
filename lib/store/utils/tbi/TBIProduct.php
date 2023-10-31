@@ -1,22 +1,33 @@
 <?php
 
+class TBIData
+{
+    public $id;
+    public $name;
+    public $quantity;
+    public $price;
+
+}
+
 class TBIProduct
 {
 
-    public function __construct()
-    {
+    protected $store_uid;
 
+    public function __construct(string $store_uid)
+    {
+        $this->store_uid = $store_uid;
     }
 
-    public function initTBI()
+
+    public function getStoreData() : array
     {
 
-
         $ch = null;
-        try {
-            if (!TBIData::$store_uid || strlen(TBIData::$store_uid)<1) throw new Exception("Empty 'unicid' code");
 
-            $unicid = strtolower(TBIData::$store_uid);
+            if (!$this->store_uid || strlen($this->store_uid)<1) throw new Exception("Empty 'store_uid' code");
+
+            $unicid = strtolower($this->store_uid);
 
             $url = "https://tbibank.support/function/getparameters.php?cid=" . $unicid;
 
@@ -44,24 +55,39 @@ class TBIProduct
                 throw new Exception("UNICID code missmatch");
             }
 
-            $this->render($paramstbi);
-        }
-        catch (Exception $e) {
-            debug("Error initializing TBI calculator code: ".$e->getMessage());
-        }
+            return $paramstbi;
+
     }
 
-protected function render($paramstbi) {
+
+
+    protected function isProductInCategories($categories_id=array(), $prod_categories_id=array()) {
+        if ($categories_id[0] != ""){
+            if ($prod_categories_id[0] != 0){
+                foreach ($prod_categories_id as $prod_category_id){
+                    if (in_array($prod_category_id,$categories_id)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+public function renderButton(array $storeData, TBIData $productInfo) {
     /* Начало на PHP кода за Кредитен Калкулатор TBI Bank */
     $tbi_mod_version = '3.1.0';
-    $product_id = TBIData::$id; //задайте променливата на PHP, която определя продуктовия id
-    $product_price = TBIData::$price; //задайте променливата на PHP, която определя продуктовата цена
-    $product_quantity = TBIData::$quantity; //задайте променливата на PHP, която определя продуктовата бройка
-    $product_name = TBIData::$name; //задайте променливата на PHP, която определя продуктовото име
+    $product_id = $productInfo->id; //задайте променливата на PHP, която определя продуктовия id
+    $product_price = $productInfo->price; //задайте променливата на PHP, която определя продуктовата цена
+    $product_quantity = $productInfo->quantity; //задайте променливата на PHP, която определя продуктовата бройка
+    $product_name = $productInfo->name; //задайте променливата на PHP, която определя продуктовото име
     $prod_categories = null; //тази променлива е масив от категориите в които влиза Вашия продукт (незадължителна)
     $manufacturer_id = null; //тази променлива е идентификатор номерът на производителя на Вашия продукт (незадължителна)
     ///////////////////////////////////////////////////////////////////////////////////
-    $unicid = TBIData::$store_uid;
+    $unicid = $this->store_uid;
+
+    $paramstbi = $storeData;
 
     $minprice_tbi = $paramstbi['tbi_minstojnost'];
     $maxprice_tbi = $paramstbi['tbi_maxstojnost'];
@@ -262,7 +288,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_4m'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_4m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is4m = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_4m_manufacturers']);
@@ -286,7 +312,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_4m_pv'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_4m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is4m_pv = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_4m_manufacturers']);
@@ -310,7 +336,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_5m'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_5m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is5m = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_5m_manufacturers']);
@@ -334,7 +360,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_5m_pv'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_5m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is5m_pv = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_5m_manufacturers']);
@@ -358,7 +384,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_6m'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_6m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is6m = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_6m_manufacturers']);
@@ -382,7 +408,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_6m_pv'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_6m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is6m_pv = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_6m_manufacturers']);
@@ -406,7 +432,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_9m'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_9m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is9m = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_9m_manufacturers']);
@@ -430,7 +456,7 @@ protected function render($paramstbi) {
     if ($paramstbi['tbi_9m_pv'] == "Yes"){
         if (is_numeric($product_id)){
             $categories = explode('_', $paramstbi['tbi_9m_categories']);
-            if (isProductInCategories($categories, $prod_categories)){
+            if ($this->isProductInCategories($categories, $prod_categories)){
                 $is9m_pv = 'Yes';
             }else{
                 $manufacturers = explode('_', $paramstbi['tbi_9m_manufacturers']);
@@ -482,7 +508,7 @@ protected function render($paramstbi) {
 
 	if ($paramstbi['tbi_taksa_categories'] != ""){
         $cats = explode('_', $paramstbi['tbi_taksa_categories']);
-        if (isProductInCategories($cats, $prod_categories)){
+        if ($this->isProductInCategories($cats, $prod_categories)){
             $isTaksa = 'Yes';
         }else{
             $isTaksa = 'No';
