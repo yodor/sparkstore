@@ -144,7 +144,8 @@ class ProductListPageBase extends ProductPageBase
 
         //default products select all products from all categories
         $products_list = clone $this->select;
-        $products_list->group_by = SellableProducts::DefaultGrouping();
+        //$products_list->group_by = SellableProducts::DefaultGrouping();
+
         //echo $products_list->getSQL();
         $this->view->setIterator(new SQLQuery($products_list, "prodID"));
 
@@ -253,7 +254,7 @@ class ProductListPageBase extends ProductPageBase
         }
 
         //setup grouping for the list item view
-        $this->select->group_by = SellableProducts::DefaultGrouping();
+//        $this->select->group_by = SellableProducts::DefaultGrouping();
 
         //primary key is prodID as we group by prodID(Products) not piID(ProductInventory)
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
