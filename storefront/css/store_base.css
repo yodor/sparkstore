@@ -992,6 +992,19 @@ A:hover, A:visited {
 .JSONFormDialog[handler='UniCreditProductFormResponder'] {
     /*border:1px dashed red;*/
 }
+.JSONFormDialog[handler='UniCreditProductFormResponder'] .notice .item SPAN {
+    font-weight:bold;
+}
+.JSONFormDialog[handler='UniCreditProductFormResponder'] .unilogo {
+    text-align:center;
+    display:block;
+}
 .JSONFormDialog[handler='UniCreditProductFormResponder'] FORM {
     width:100%;
+}
+.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM [field='installmentCount']{
+    display:none;
+}
+.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM [field='monthlyPayment']{
+    display:none;
 }

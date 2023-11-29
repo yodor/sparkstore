@@ -37,7 +37,8 @@ class UniCreditPaymentButton extends CreditPaymentButton
             {
                 uniDialog.setResponder("UniCreditProductFormResponder");
                 uniDialog.caption="Kупи на кредит";
-                uniDialog.processSubmitResult = processUNIResult;
+                uniDialog.processSubmitResult = processSubmit;
+                uniDialog.processRenderResult = processRender;
                 uniDialog.show();
                 $(uniDialog.visibleSelector() + " .Buttons button[action='confirm']").html("Продължи");
             }
@@ -48,16 +49,19 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 //console.log("Submitting form");
                 req.setFunction("calculateMonthly");
 
-                let form = $(uniDialog.visibleSelector()+" FORM").get(0);
-                let formData = new FormData(form);
-                let installmentCount = formData.get("installmentCount");
+                let installmentCount = $(uniDialog.visibleSelector()+" SELECT[name='installmentCount']").find(":selected").val();
+                //let form = $(uniDialog.visibleSelector()+" FORM").get(0);
+                // let formData = new FormData(form);
+                // let installmentCount = formData.get("installmentCount");
+
                 req.setParameter("installmentCount", installmentCount);
                 req.onSuccess = function(request_result) {
                     let result = request_result.json_result;
                     if (result.contents) {
                         $(uniDialog.visibleSelector() + " .notice").replaceWith(result.contents);
+                        let form = $(uniDialog.visibleSelector()+" FORM").get(0);
                         form.elements["monthlyPayment"].value = result.monthlyPayment;
-
+                        form.elements["installmentCount"].value = result.installmentCount;
                     }
                     else {
                         showAlert(result.message);
@@ -67,7 +71,18 @@ class UniCreditPaymentButton extends CreditPaymentButton
 
                 req.start();
             }
-            function processUNIResult(request_result, form_name) {
+
+            function processRender(request_result) {
+                let result = request_result.json_result;
+                uniDialog.loadContent(result.contents);
+
+                let form = $(uniDialog.visibleSelector()+" FORM").get(0);
+                form.elements["monthlyPayment"].value = result.monthlyPayment;
+                form.elements["installmentCount"].value = result.installmentCount;
+
+
+            }
+            function processSubmit(request_result, form_name) {
                 let result = request_result.json_result;
 
                 if (result.redirect) {
@@ -90,7 +105,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
 
                 }
                 else if (result.contents) {
-                    uniDialog.loadContent(result.contents)
+                    uniDialog.loadContent(result.contents);
                     showAlert(result.message);
                 }
                 else {
