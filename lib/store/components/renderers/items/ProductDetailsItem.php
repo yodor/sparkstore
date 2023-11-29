@@ -9,7 +9,8 @@ include_once("store/responders/json/QueryProductFormResponder.php");
 include_once("store/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
 
-include_once("store/utils/tbi/TBIProduct.php");
+include_once("store/utils/tbi/TBICreditPaymentButton.php");
+include_once("store/utils/unicr/UniCreditPaymentButton.php");
 
 class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
 {
@@ -19,7 +20,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     const BUTTON_PHONE_ORDER = "Phone Order";
     const BUTTON_FAST_ORDER = "Fast Order";
     const BUTTON_CART_ORDER = "Cart Order";
-    const BUTTON_TBI_ORDER = "TBI Order";
 
     protected $categories = array();
     protected $url = "";
@@ -38,7 +38,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected $buttons = array();
 
     //TBI store UID if defined
-    protected $tbiproduct = null;
+    protected $crpayments = array();
 
     public function __construct(SellableItem $item)
     {
@@ -61,19 +61,9 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->setButtonEnabled(self::BUTTON_PHONE_ORDER, true);
         $this->setButtonEnabled(self::BUTTON_CART_ORDER, true);
 
+        $this->crpayments[] = new UniCreditPaymentButton($this->sellable);
+        $this->crpayments[] = new TBICreditPaymentButton($this->sellable);
 
-        $tbi_uid = "";
-        if (defined("TBI_UID")) {
-            $tbi_uid = TBI_UID;
-        }
-        $config = ConfigBean::Factory();
-        $config->setSection("store_config");
-        $tbi_uid = $config->get("tbi_uid", $tbi_uid);
-
-        if ($tbi_uid) {
-            $this->setButtonEnabled(self::BUTTON_TBI_ORDER, true);
-            $this->tbiproduct = new TBIProduct($tbi_uid);
-        }
     }
 
     public function setButtonEnabled(string $button_name, bool $mode)
@@ -443,39 +433,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>";
     }
 
-    protected function renderGroupTBIModule()
-    {
-        if ($this->isButtonEnabled(self::BUTTON_TBI_ORDER)) {
-            $stock_amount = $this->sellable->getStockAmount();
-            $priceInfo = $this->sellable->getPriceInfo();
-
-            echo "<div class='group tbi'>";
-            if ($stock_amount > 0) {
-                echo "<div class='tbi_module'>";
-
-                if ($this->tbiproduct instanceof TBIProduct) {
-
-                    $productInfo = new TBIData();
-                    $productInfo->name = $this->sellable->getTitle();
-                    $productInfo->quantity = 1;
-                    $productInfo->id = $this->sellable->getProductID();
-                    $productInfo->price = $priceInfo->getSellPrice();
-
-                    try {
-                        $tbiStoreData = $this->tbiproduct->getStoreData();
-                        $this->tbiproduct->renderButton($tbiStoreData, $productInfo);
-                    }
-                    catch (Exception $e) {
-                        debug("Error using TBI Module: ".$e->getMessage());
-                    }
-                }
-
-                echo "</div>";
-            }
-            echo "</div>";
-        }
-    }
-
     protected function sidePaneStart()
     {
         $this->side_pane->startRender();
@@ -503,7 +460,36 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
             echo "<div class='clear'></div>";
 
-            $this->renderGroupTBIModule();
+            echo "<div class='group credit_payment'>";
+            //payment modules
+            foreach ($this->crpayments as $idx=>$object) {
+                $class = get_class($object);
+                if ($object instanceof CreditPaymentButton) {
+
+                    if ($object->isEnabled()) {
+                        ob_start();
+                        try {
+                            $object->checkStockPrice();
+                            $object->renderButton();
+                            $button = ob_get_contents();
+                            ob_end_clean();
+                            echo "<div class='module $class'>";
+                            echo $button;
+                            echo "</div>";
+                        }
+                        catch (Exception $e) {
+                            ob_end_clean();
+                            debug("Error rendering credit payment button '$class': ".$e->getMessage());
+                        }
+                    }
+                }
+                echo "<div class='clear'></div>";
+
+            }
+
+            echo "</div>";
+
+            echo "<div class='clear'></div>";
 
         $this->sidePaneFinish();
     }

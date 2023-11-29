@@ -15,14 +15,13 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone_orders", "Phone (For receiving orders)", 0);
         $this->addInput($field, $grp_general);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_uid", "TBI Store UID", 0);
-        $this->addInput($field, $grp_general);
-
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "marquee_text", "Header Marquee Text", 0);
         $this->addInput($field, $grp_general);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "facebook_page_id", "Facebook Page ID (Enable Facebook chat Plugin)", 0);
         $this->addInput($field, $grp_general);
+
+
 
         $grp_footer = new InputGroup("footerButtons", "Site Footer - Round Buttons");
         $this->addGroup($grp_footer);
@@ -55,6 +54,27 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "working_hours_text", "Working hours Text", 0);
         $this->addInput($field, $grp_pagefooter);
 
+
+        $grp_tbi = new InputGroup("tbiModule", "TBI Module settings");
+        $this->addGroup($grp_tbi);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_uid", "TBI Store UID", 0);
+        $this->addInput($field, $grp_tbi);
+
+        $grp_uncr = new InputGroup("uncrModule", "UniCredit Module settings");
+        $this->addGroup($grp_uncr);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "uncr_otp_user", "OTP User", 0);
+        $this->addInput($field, $grp_uncr);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "uncr_otp_pass", "OTP Pass", 0);
+        $this->addInput($field, $grp_uncr);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "uncr_kop", "КОП", 0);
+        $this->addInput($field, $grp_uncr);
+
+        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "uncr_test", "Enable testing environemnt", 0);
+        $this->addInput($field, $grp_uncr);
 
     }
 
