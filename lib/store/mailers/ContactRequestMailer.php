@@ -22,7 +22,7 @@ class ContactRequestMailer extends Mailer
         parent::__construct();
 
         $this->subject = "Получена нова заявка за контакти на : ".SITE_DOMAIN;
-        $this->to = ORDER_ADMIN_EMAIL;
+        $this->to = ORDER_EMAIL;
     }
 
     public function prepareMessage()

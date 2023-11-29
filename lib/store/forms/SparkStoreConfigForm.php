@@ -12,6 +12,10 @@ class SparkStoreConfigForm extends InputForm
 
         $grp_general = new InputGroup("general", "General");
         $this->addGroup($grp_general);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "email_orders", "Email (For receiving orders)", 0);
+        $this->addInput($field, $grp_general);
+
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone_orders", "Phone (For receiving orders)", 0);
         $this->addInput($field, $grp_general);
 
@@ -21,7 +25,7 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "facebook_page_id", "Facebook Page ID (Enable Facebook chat Plugin)", 0);
         $this->addInput($field, $grp_general);
 
-
+//
 
         $grp_footer = new InputGroup("footerButtons", "Site Footer - Round Buttons");
         $this->addGroup($grp_footer);

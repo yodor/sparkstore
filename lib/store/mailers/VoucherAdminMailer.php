@@ -14,7 +14,7 @@ class VoucherAdminMailer extends Mailer
 
         debug ("Preparing message ...");
 
-        $this->to = ORDER_ADMIN_EMAIL;
+        $this->to = ORDER_EMAIL;
         $this->subject = "Поръчка на ваучер на ".SITE_DOMAIN;
 
         $message = "Здравейте, \r\n\r\n";

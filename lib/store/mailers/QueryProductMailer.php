@@ -33,7 +33,7 @@ class QueryProductMailer extends Mailer
 
         parent::__construct();
 
-        $this->to = ORDER_ADMIN_EMAIL;
+        $this->to = ORDER_EMAIL;
 
         $this->subject = "Запитване за продукт на: ".SITE_DOMAIN;
 

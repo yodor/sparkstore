@@ -26,7 +26,7 @@ class OrderConfirmationAdminMailer extends Mailer
 
         debug ("Preparing message ...");
 
-        $this->to = ORDER_ADMIN_EMAIL;
+        $this->to = ORDER_EMAIL;
         $this->subject = "Нова поръчка на ".SITE_DOMAIN;
 
         $message = "Здравейте, \r\n\r\n";
