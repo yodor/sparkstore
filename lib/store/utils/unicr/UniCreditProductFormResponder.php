@@ -20,11 +20,8 @@ class UniCreditOperation {
     public function __construct(UniCreditServiceStub $stub, string $name)
     {
         $this->data = array();
-        $this->result;
-
         $this->endpoint = $stub->getServiceURL().$name;
         $this->stub = $stub;
-
     }
     public function setData(string $key, mixed $value) : void
     {
@@ -93,24 +90,6 @@ class OprGetCoeff extends UniCreditOperation
 }
 class OprSucfOnlineSessionStart extends UniCreditOperation
 {
-    //        "user" => $otpUser,                 // задължителен
-    //        "pass" => $otpPass,                 // задължителен
-    //        "orderNo" => "1",                   // задължителен
-    //        "clientFirstName" => "Панайот",
-    //        "clientSurName" => "",
-    //        "clientLastName" => "Иванов",
-    //        "clientFullName" => "",
-    //        "clientEGN" => "",
-    //        "clientPhone" => "",
-    //        "clientEmail" => "p.ivanov@isy-dc.com",
-    //        "clientDeliveryAddress" => "бул. св. Наум 62",
-    //        "onlineProductCode" => "POS ATV 42",        // задължителен
-    //        "totalPrice" => $totalPrice,           // задължителен
-    //        "initialPayment" => $initialPayment,
-    //        "installmentCount" => $installmentCount,           // задължителен
-    //        "monthlyPayment" => $monthlyPayment,         // задължителен
-    //        "returnURL" => "https://maxmotors.bg/products/details.php?prodID=472",
-    //        "items" => $itemsArray
     public function __construct(UniCreditServiceStub $stub)
     {
         parent::__construct($stub, '/api/otp/sucfOnlineSessionStart');
@@ -141,7 +120,7 @@ class OprSucfOnlineSessionStart extends UniCreditOperation
         );
         $this->setData("items", $items);
     }
-    public function setMonthlyPayment(string $payment, string $installmentCount = "12")
+    public function setMonthlyPayment(string $payment, int $installmentCount)
     {
         $this->setData("monthlyPayment", $payment);
         $this->setData("installmentCount", $installmentCount);
@@ -364,13 +343,13 @@ class UniCreditProductFormResponder extends JSONFormResponder
     {
         $result = 12;
 
-        if ($installmentCount >= 1 && $installmentCount <= 36) {
+        if ($installmentCount >= 3 && $installmentCount <= 36) {
             $result = $installmentCount;
         }
         return $result;
-
     }
-    protected function calculateMonthlyPayment(int $installmentCount)
+
+    protected function calculateMonthlyPayment(int $installmentCount, JSONResponse $resp)
     {
         $installmentCount = $this->validateInstallmentCount($installmentCount);
 
@@ -392,15 +371,26 @@ class UniCreditProductFormResponder extends JSONFormResponder
             $interestPercent = (float)$result->coeffList[0]->interestPercent;
             $productPrice = $this->sellable->getPriceInfo()->getSellPrice();
             $monthlyPayment = $productPrice * $coeff;
-            $this->form->getInput("monthlyPayment")->setValue($monthlyPayment);
-            //$gpr = (float)(((1+($interestPercent/12))^12)-1)*100;
+            //$this->form->getInput("monthlyPayment")->setValue($monthlyPayment);
+            //gpr(((1+$interestPercent/12)^12)-1)*100
+
+            $gpr = 1+($interestPercent/100.00)/12;
+            $gpr = pow($gpr, 12);
+            $gpr-=1;
+            $gpr*=100;
+
+            $resp->monthlyPayment = sprintf("%0.2f",$monthlyPayment);
+            $resp->installmentCount = $installmentCount;
+            $resp->productPrice = sprintf("%0.2f",$productPrice);
+            $resp->glp = sprintf("%0.2f",$interestPercent);
+            $resp->gpr = sprintf("%0.2f",$gpr);
 
             echo "Ориентировъчна месечна вноска на изплащане за срок от $installmentCount месеца: ";
             echo "<BR><BR>";
             echo "<div class='item product_price'><label>Цена на продукта: </label>".formatPrice($productPrice)."</div>";
             echo "<div class='item monthly_payment'><label>Погасителна вноска: </label>".formatPrice($monthlyPayment)."</div>";
-            echo "<div class='item interest_percent'><label>ГЛП: </label>".$interestPercent."%"."</div>";
-            //echo "ГПР: ".$gpr."%"."<BR>";
+            echo "<div class='item interest_percent'><label>ГЛП: </label>".sprintf("%0.2f",$interestPercent)."%"."</div>";
+            echo "<div class='item interest_percent'><label>ГПР: </label>".sprintf("%0.2f",$gpr)."%"."</div>";
             echo "<BR>";
             echo "<label>Срокът на изплащане се заявава в следваща стъпка!</label>";
             echo "<BR><BR>";
@@ -412,7 +402,8 @@ class UniCreditProductFormResponder extends JSONFormResponder
     public function _calculateMonthly(JSONResponse $resp)
     {
         if (isset($_GET["installmentCount"])) {
-            $this->calculateMonthlyPayment((int)$_GET["installmentCount"]);
+            $this->calculateMonthlyPayment((int)$_GET["installmentCount"], $resp);
+
         }
         else {
             $resp->message = "No installmentCount received";
@@ -424,14 +415,14 @@ class UniCreditProductFormResponder extends JSONFormResponder
     public function _render(JSONResponse $resp)
     {
 
-        $this->calculateMonthlyPayment(12);
+        $this->calculateMonthlyPayment(12, $resp);
         $this->form->getRenderer()->render();
 
     }
 
     protected function onProcessError(JSONResponse $resp)
     {
-        $this->calculateMonthlyPayment((int)$this->form->getInput("installmentCount")->getValue());
+        $this->calculateMonthlyPayment((int)$this->form->getInput("installmentCount")->getValue(), $resp);
         $this->form->getRenderer()->render();
         $resp->message = $this->proc->getMessage();
     }
@@ -460,6 +451,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         $monthlyPayment = $this->form->getInput("monthlyPayment")->getValue();
         $installmentCount = $this->validateInstallmentCount((int)$this->form->getInput("installmentCount")->getValue());
         $opr->setMonthlyPayment($monthlyPayment, $installmentCount);
+        debug("MontlyPayment: $monthlyPayment | installmentCount: $installmentCount");
 
         $opr->setProductData($this->sellable);
 

@@ -56,6 +56,8 @@ class UniCreditPaymentButton extends CreditPaymentButton
                     let result = request_result.json_result;
                     if (result.contents) {
                         $(uniDialog.visibleSelector() + " .notice").replaceWith(result.contents);
+                        form.elements["monthlyPayment"].value = result.monthlyPayment;
+
                     }
                     else {
                         showAlert(result.message);

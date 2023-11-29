@@ -988,3 +988,10 @@ A:hover, A:visited {
 .pageFooter .columns .column.page_links .item:hover {
     text-decoration:underline;
 }
+
+.JSONFormDialog[handler='UniCreditProductFormResponder'] {
+    /*border:1px dashed red;*/
+}
+.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM {
+    width:100%;
+}
