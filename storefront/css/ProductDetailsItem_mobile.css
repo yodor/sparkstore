@@ -94,7 +94,17 @@
         width:70% !important;
     }
 
-    .side_pane .group.tbi {
-        text-align: center;
+    .side_pane .group.credit_payment {
+        display:block;
+        text-align:center;
+        float:none;
+
+    }
+
+    .group.credit_payment .module {
+        display:inline-block !important;
+        max-width:67% !important;
+        width:67% !important;
+        text-align:center !important;
     }
 }
