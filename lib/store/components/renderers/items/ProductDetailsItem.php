@@ -21,6 +21,9 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     const BUTTON_FAST_ORDER = "Fast Order";
     const BUTTON_CART_ORDER = "Cart Order";
 
+    const BUTTON_PAYMENT_TBI = "TBI";
+    const BUTTON_PAYMENT_UNICREDIT = "UNICREDIT";
+
     protected $categories = array();
     protected $url = "";
 
@@ -61,8 +64,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->setButtonEnabled(self::BUTTON_PHONE_ORDER, true);
         $this->setButtonEnabled(self::BUTTON_CART_ORDER, true);
 
-        $this->crpayments[] = new UniCreditPaymentButton($this->sellable);
-        $this->crpayments[] = new TBICreditPaymentButton($this->sellable);
+        $this->crpayments[self::BUTTON_PAYMENT_UNICREDIT] = new UniCreditPaymentButton($this->sellable);
+        $this->crpayments[self::BUTTON_PAYMENT_TBI] = new TBICreditPaymentButton($this->sellable);
 
     }
 
@@ -92,6 +95,32 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     public function isButtonEnabled(string $button_name)
     {
         return isset($this->buttons[$button_name]);
+    }
+
+    public function setPaymentEnabled(string $payment_name, bool $mode)
+    {
+        if ($mode) {
+
+            switch ($payment_name) {
+                case self::BUTTON_PAYMENT_TBI:
+                    $this->crpayments[$payment_name] = new TBICreditPaymentButton($this->sellable);
+                    break;
+                case self::BUTTON_PAYMENT_UNICREDIT:
+                    $this->crpayments[$payment_name] = new UniCreditPaymentButton($this->sellable);
+                    break;
+
+            }
+        }
+        else {
+            if (isset($this->crpayments[$payment_name])) {
+                unset($this->crpayments[$payment_name]);
+            }
+        }
+    }
+
+    public function isPaymentEnabled(string $button_name)
+    {
+        return isset($this->crpayments[$button_name]);
     }
 
     public function requiredStyle(): array
