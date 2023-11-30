@@ -132,6 +132,8 @@ class UniCreditServiceStub {
 
     protected string $serviceURL;
 
+    protected $test_mode = true;
+
     public function __construct(bool $test_mode = true)
     {
         if ($test_mode) {
@@ -140,6 +142,7 @@ class UniCreditServiceStub {
         else {
             $this->serviceURL = self::ENV_PROD;
         }
+        $this->test_mode = $test_mode;
     }
 
     public function getServiceURL() : string
@@ -164,14 +167,16 @@ class UniCreditServiceStub {
         // NOTE: Опцията не е нужна ако са зададени конфигурации curl.cainfo и openssl.cafile в php.ini
         //curl_setopt($request, CURLOPT_CAINFO, $caFile);
 
-        // името на файл, съдържащ само личен SSL ключ в текстови формат (PEM)
-        //curl_setopt($request, CURLOPT_SSLKEY, $keyFile);
+        if (!$this->test_mode) {
+            // името на файл, съдържащ само личен SSL ключ в текстови формат (PEM)
+            curl_setopt($request, CURLOPT_SSLKEY, UNICREDIT_KEY_FILE);
 
-        // Парола, която се използва за отключване на файла
-        //curl_setopt($request, CURLOPT_SSLKEYPASSWD, "");
+            // Парола, която се използва за отключване на файла
+            //curl_setopt($request, CURLOPT_SSLKEYPASSWD, "");
 
-        // името на файл, съдържащ само клиентския сартификат в текстови формат (PEM)
-        //curl_setopt($request, CURLOPT_SSLCERT, $certFile);
+            // името на файл, съдържащ само клиентския сартификат в текстови формат (PEM)
+            curl_setopt($request, CURLOPT_SSLCERT, UNICREDIT_CERT_FILE);
+        }
 
         // Парола, която се използва за отключване на файла
         //curl_setopt($request, CURLOPT_SSLCERTPASSWD, "");
@@ -192,7 +197,7 @@ class UniCreditServiceStub {
 
         // NOTE: Added in cURL 7.19.1. Available since PHP 5.3.2. Requires CURLOPT_VERBOSE to be on to have an effect.
         //curl_setopt($request, CURLOPT_FAILONERROR, true);          // извежда допълнителна информация ако върнатия статус код е по-голям или равен на 400
-        //curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);      // верификация на сървърен сертификат, само за тестови постановки
+        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);      // верификация на сървърен сертификат, само за тестови постановки
         //curl_setopt($request, CURLOPT_HEADER, true);               // извежда информация за изпратените header-и
         //curl_setopt($request, CURLOPT_VERBOSE, true);              // извежда допълнителна информация за заявката
         //curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);          // верификация на локален сертификат, само за тестови постановки
@@ -303,6 +308,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         $this->otpPass = $config->get("uncr_otp_pass");
         $this->kop = $config->get("uncr_kop");
 
+
         if (strlen($this->otpUser)<1 || strlen($this->otpPass)<1 || strlen($this->kop)<1) {
             throw new Exception("Not enabled in config");
         }
@@ -317,6 +323,18 @@ class UniCreditProductFormResponder extends JSONFormResponder
         }
 
         $test_mode = $config->get("uncr_test", 0);
+
+        if (!defined("UNICREDIT_CERT_FILE")) {
+            if (!$test_mode) {
+                throw new Exception("Certificate not installed");
+            }
+        }
+        if (!defined("UNICREDIT_KEY_FILE")) {
+            if (!$test_mode) {
+                throw new Exception("Key not installed");
+            }
+        }
+
 
         $this->serviceStub = new UniCreditServiceStub($test_mode);
 
