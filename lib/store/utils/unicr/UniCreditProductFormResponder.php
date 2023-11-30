@@ -130,17 +130,24 @@ class UniCreditServiceStub {
     const ENV_TEST = 'https://onlinetest.ucfin.bg/suos';
     const ENV_PROD = 'https://online.ucfin.bg/suos';
 
+    const APP_TEST = 'https://onlinetest.ucfin.bg/sucf-online/Request/Create';
+
+    const APP_PROD = 'https://online.ucfin.bg/sucf-online/Request/Create';
+
     protected string $serviceURL;
+    protected string $appURL;
 
     protected $test_mode = true;
 
-    public function __construct(bool $test_mode = true)
+    public function __construct(bool $test_mode)
     {
         if ($test_mode) {
             $this->serviceURL = self::ENV_TEST;
+            $this->appURL = self::APP_TEST;
         }
         else {
             $this->serviceURL = self::ENV_PROD;
+            $this->appURL = self::APP_PROD;
         }
         $this->test_mode = $test_mode;
     }
@@ -148,6 +155,11 @@ class UniCreditServiceStub {
     public function getServiceURL() : string
     {
         return $this->serviceURL;
+    }
+
+    public function getAppURL() : string
+    {
+        return $this->appURL;
     }
 
     //return object decoded from JSON data returned
@@ -335,7 +347,6 @@ class UniCreditProductFormResponder extends JSONFormResponder
             }
         }
 
-
         $this->serviceStub = new UniCreditServiceStub($test_mode);
 
 
@@ -498,7 +509,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
             $resp->message = "Error: ".$opr->getError();
         }
         else {
-            $resp->redirect = "https://onlinetest.ucfin.bg/sucf-online/Request/Create";
+            $resp->redirect = $this->serviceStub->getAppURL();
             $resp->suosId = $opr->getResult()->sucfOnlineSessionID;
         }
 
