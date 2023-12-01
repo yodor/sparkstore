@@ -113,7 +113,7 @@ class OprSucfOnlineSessionStart extends UniCreditOperation
             0 => array(
                 "name" => $item->getName(),
                 "code" => $item->getProductID(),
-                "type" => $item->getCategoryID(),
+                "type" => implode(", ", $item->getCategoryPath()),
                 "count" => 1,
                 "singlePrice" => $item->getPriceInfo()->getSellPrice(),
             ),

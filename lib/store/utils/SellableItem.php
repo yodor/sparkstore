@@ -10,6 +10,9 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     protected $prodID = -1;
     protected $catID = -1;
 
+    protected string $category_name = "";
+    protected array $category_path = array();
+
     protected $title = "";
     protected $caption = "";
     protected $brand_name = "";
@@ -92,6 +95,24 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     public function getBrandName() : string
     {
         return $this->brand_name;
+    }
+
+    public function setCategoryName(string $category_name): void
+    {
+        $this->category_name = $category_name;
+    }
+    public function getCategoryName() : string
+    {
+        return $this->category_name;
+    }
+
+    public function setCategoryPath(array $path_array) : void
+    {
+        $this->category_path = $path_array;
+    }
+    public function getCategoryPath(): array
+    {
+        return $this->category_path;
     }
 
     public function setModel(string $model): void

@@ -4,6 +4,7 @@ include_once("store/utils/VariantItem.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/utils/SellableDataParser.php");
 
+include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductVariantsBean.php");
 include_once("store/beans/SellableProducts.php");
@@ -12,12 +13,14 @@ class SellableDataParser
 {
     protected $product_photos = null;
     protected $product_variants = null;
+    protected $product_categories = null;
 
     public function __construct()
     {
         //$this->product_color_photos = new ProductColorPhotosBean();
         $this->product_photos = new ProductPhotosBean();
         $this->product_variants = new ProductVariantsBean();
+        $this->product_categories = new ProductCategoriesBean();
     }
 
     /**
@@ -31,7 +34,19 @@ class SellableDataParser
 
         $item->setProductID($result->get("prodID"));
 
-        $item->setCategoryID($result->get("catID"));
+        $catID = $result->get("catID");
+        $item->setCategoryID($catID);
+
+        $category_result = $this->product_categories->getByID($catID, "category_name");
+        $item->setCategoryName($category_result["category_name"]);
+
+        $parent_categories = $this->product_categories->getParentNodes($catID, array("category_name"));
+        $categories = array();
+        foreach ($parent_categories as $idx=>$category_result) {
+            $categories[] = $category_result["category_name"];
+        }
+
+        $item->setCategoryPath($categories);
 
         if ($result->isSet("product_name")) {
             $item->setTitle($result->get("product_name"));
