@@ -351,7 +351,8 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
 
         $installments = array(
-            3=>"3 Месеца", 6=>"6 Месеца", 9=>"9 Месеца", 12=>"12 Месеца"
+            3=>"3 Месеца", 6=>"6 Месеца", 9=>"9 Месеца", 12=>"12 Месеца",
+            18=>"18 Месеца", 24=>"24 Месеца", 30=>"30 Месеца", 36=>"36 Месеца",
         );
 
         $itr = new ArrayDataIterator($installments);
