@@ -11,4 +11,7 @@ new MenuItem("Атрибути", "attributes/list.php", "class:store attributes"
 new MenuItem("Опции", "options/list.php", "class:store options"),
 new MenuItem("Продукти", "products/list.php", "class:store products"),
 
+new MenuItem("Промоции", "promos/list.php", "class:store products"),
+
 );
+?>
