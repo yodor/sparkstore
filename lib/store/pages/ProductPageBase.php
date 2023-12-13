@@ -121,7 +121,7 @@ class ProductPageBase extends StorePage
         }
 
         if ($this->keyword_search->isProcessed()) {
-            $atitle = "Резултати от търсене: ".$this->keyword_search->getForm()->getInput("keyword")->getValue();
+            $atitle = "Резултати от търсене: ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $actions[] = new Action($atitle, $this->getPageURL(), array());
         }
         else if ($this->section) {
@@ -166,7 +166,7 @@ class ProductPageBase extends StorePage
     protected function constructTitle()
     {
         if ($this->keyword_search->isProcessed()) {
-            $this->setTitle("Резултати от търсене: ".$this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $this->setTitle("Резултати от търсене: ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue()));
             return;
         }
 
