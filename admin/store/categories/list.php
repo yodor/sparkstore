@@ -22,7 +22,13 @@ if ($item instanceof TextTreeItem) {
 
     $item->setPhotoSize(32, 32);
     $item->setIcon($si);
+
+    //banners for each category
+    $item->getActions()->append(new Action("Banners Gallery", "banners/list.php", array(new DataParameter("catID", $cmp->getBean()->key()))));
+
 }
+
+
 
 $cmp->render();
 
