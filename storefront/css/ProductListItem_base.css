@@ -95,10 +95,11 @@
 
 .ProductListItem .wrap:hover {
     z-index:1;
-    -webkit-box-shadow: 0px 0px 24px 1px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 24px 1px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 24px 1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
 }
+
 .ProductListItem[colorSeries] .wrap:hover .color_series {
     display:block;
 }
@@ -111,4 +112,9 @@
 .ProductListItem:hover .wrap IMG {
     /*-webkit-transform: scale(1.1);*/
     /*transform: scale(1.1);*/
+}
+
+.ProductListItem:hover {
+    overflow:visible;
+
 }
