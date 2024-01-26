@@ -434,7 +434,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 if ($this->isButtonEnabled(self::BUTTON_CART_ORDER)) {
                     echo "<a class='button cart_add' href='javascript:addToCart()'>";
                     echo "<span class='icon'></span>";
-                    echo "<label>" . tr("Поръчай") . "</label>";
+                    echo "<label>" . tr("Купи") . "</label>";
                     echo "</a>";
                 }
             }

@@ -376,7 +376,7 @@
     border-color: var(--theme-accent);
 }
 .side_pane .button.cart_add.fast .icon {
-
+    background-image:url("../images/operator.svg");
 }
 
 .side_pane .button.cart_add {
