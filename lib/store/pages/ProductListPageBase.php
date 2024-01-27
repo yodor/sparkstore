@@ -182,9 +182,9 @@ class ProductListPageBase extends ProductPageBase
             $num = $qry->exec();
             if ($num > 0) {
                 $this->section = $value;
+                $this->select->where()->append("product_sections LIKE '%$value%'");
             }
 
-            $this->select->where()->append("product_sections LIKE '%$value%'");
         }
 
         $this->keyword_search->processInput();
