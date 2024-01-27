@@ -150,6 +150,8 @@ class ProductListPageBase extends ProductPageBase
         $this->view->setIterator(new SQLQuery($products_list, "prodID"));
 
         $this->initSortFields();
+
+        $this->section = "";
     }
 
 
@@ -168,7 +170,7 @@ class ProductListPageBase extends ProductPageBase
         // 4 category
         // 5 attribute filters
 
-        $this->section = "";
+
 
 
         $this->section_filter->processInput();
