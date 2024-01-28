@@ -116,19 +116,17 @@ class ProductPageBase extends StorePage
         $link = new URLBuilder();
         $link->buildFrom(LOCAL."/products/list.php");
 
-        if ($this->section) {
-            $link->add(new URLParameter("section", $this->section));
-        }
-
         if ($this->keyword_search->isProcessed()) {
             $atitle = "Резултати от търсене: ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $actions[] = new Action($atitle, $this->getPageURL(), array());
         }
-        else if ($this->section) {
-            $actions[] = new Action($this->section, $link->url(), array());
-        }
         else {
             $actions[] = new Action(tr($this->products_title), $link->url(), array());
+        }
+
+        if ($this->section) {
+            $link->add(new URLParameter("section", $this->section));
+            $actions[] = new Action($this->section, $link->url(), array());
         }
 
         $link->add(new DataParameter("catID"));
