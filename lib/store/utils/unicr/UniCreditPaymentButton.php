@@ -33,6 +33,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
 ?>
         <script>
             let uniDialog = new JSONFormDialog();
+
             function showUniCreditForm()
             {
                 uniDialog.setResponder("UniCreditProductFormResponder");
@@ -42,6 +43,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 uniDialog.show();
                 $(uniDialog.visibleSelector() + " .Buttons button[action='confirm']").html("Продължи");
             }
+
             function calculateMonthly()
             {
                 let req = new JSONRequest();
@@ -54,14 +56,16 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 // let formData = new FormData(form);
                 // let installmentCount = formData.get("installmentCount");
 
+                let initialPayment = $(uniDialog.visibleSelector()+" INPUT[name='initialPayment']").val();
+
                 req.setParameter("installmentCount", installmentCount);
+                req.setParameter("initialPayment", initialPayment);
+
                 req.onSuccess = function(request_result) {
                     let result = request_result.json_result;
                     if (result.contents) {
                         $(uniDialog.visibleSelector() + " .notice").replaceWith(result.contents);
-                        let form = $(uniDialog.visibleSelector()+" FORM").get(0);
-                        form.elements["monthlyPayment"].value = result.monthlyPayment;
-                        form.elements["installmentCount"].value = result.installmentCount;
+                        loadResultValues(result);
                     }
                     else {
                         showAlert(result.message);
@@ -72,16 +76,22 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 req.start();
             }
 
+            function loadResultValues(result)
+            {
+                let form = $(uniDialog.visibleSelector()+" FORM").get(0);
+                form.elements["monthlyPayment"].value = result.monthlyPayment;
+                form.elements["installmentCount"].value = result.installmentCount;
+                form.elements["initialPayment"].value = result.initialPayment;
+            }
+
             function processRender(request_result) {
                 let result = request_result.json_result;
                 uniDialog.loadContent(result.contents);
 
-                let form = $(uniDialog.visibleSelector()+" FORM").get(0);
-                form.elements["monthlyPayment"].value = result.monthlyPayment;
-                form.elements["installmentCount"].value = result.installmentCount;
-
+                loadResultValues(result);
 
             }
+
             function processSubmit(request_result, form_name) {
                 let result = request_result.json_result;
 

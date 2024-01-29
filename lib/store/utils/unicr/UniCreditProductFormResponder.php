@@ -120,10 +120,11 @@ class OprSucfOnlineSessionStart extends UniCreditOperation
         );
         $this->setData("items", $items);
     }
-    public function setMonthlyPayment(string $payment, int $installmentCount)
+    public function setMonthlyPayment(string $payment, int $installmentCount, int $initialPayment)
     {
         $this->setData("monthlyPayment", $payment);
         $this->setData("installmentCount", $installmentCount);
+        $this->setData("initialPayment", $initialPayment);
     }
 }
 class UniCreditServiceStub {
@@ -285,6 +286,9 @@ class UniCreditProductForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "installmentCount", "InstallmentCount", 0);
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "initialPayment", "InitialPayment", 0);
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "monthlyPayment", "MonthlyPayment", 0);
         $this->addInput($field);
     }
@@ -308,6 +312,8 @@ class UniCreditProductFormResponder extends JSONFormResponder
     protected $serviceStub;
 
     protected $fldInstallment;
+
+    protected $fldInitial;
 
     public function __construct(SellableItem $sellable)
     {
@@ -360,11 +366,13 @@ class UniCreditProductFormResponder extends JSONFormResponder
         $field->getRenderer()->setIterator($itr);
         $field->getRenderer()->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);
         $field->getRenderer()->getItemRenderer()->setLabelKey(ArrayDataIterator::KEY_VALUE);
-        $field->getRenderer()->setAttribute("onChange", "calculateMonthly()");
+        //$field->getRenderer()->setAttribute("onChange", "calculateMonthly()");
         $field->setValue(12);
-        //$this->addInput($field);
-
         $this->fldInstallment = $field;
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "initialPayment", "Първоначална вноска", 1);
+        $field->setValidator(new NumericValidator(true));
+        $this->fldInitial = $field;
     }
 
     protected function createForm(): InputForm
@@ -381,11 +389,22 @@ class UniCreditProductFormResponder extends JSONFormResponder
         return $result;
     }
 
-    protected function calculateMonthlyPayment(int $installmentCount, JSONResponse $resp)
+    protected function validateInitialPayment(int $initialPayment) : int
+    {
+        $result = $initialPayment;
+        $productPrice = $this->sellable->getPriceInfo()->getSellPrice();
+        if ($initialPayment < 0) $result = 0;
+        if ($initialPayment >= $productPrice) $result = 0;
+        return $result;
+    }
+
+    protected function calculateMonthlyPayment(int $installmentCount, int $initialPayment, JSONResponse $resp)
     {
         $installmentCount = $this->validateInstallmentCount($installmentCount);
-
         $this->fldInstallment->setValue($installmentCount);
+
+        $initialPayment = $this->validateInitialPayment($initialPayment);
+        $this->fldInitial->setValue($initialPayment);
 
         $opr = new OprGetCoeff($this->serviceStub);
         $opr->setCredentials($this->otpUser, $this->otpPass);
@@ -404,7 +423,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
             $coeff = (float)$result->coeffList[0]->coeff;
             $interestPercent = (float)$result->coeffList[0]->interestPercent;
             $productPrice = $this->sellable->getPriceInfo()->getSellPrice();
-            $monthlyPayment = $productPrice * $coeff;
+            $monthlyPayment = ($productPrice - $initialPayment) * $coeff;
             //$this->form->getInput("monthlyPayment")->setValue($monthlyPayment);
             //gpr(((1+$interestPercent/12)^12)-1)*100
 
@@ -415,15 +434,24 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
             $resp->monthlyPayment = sprintf("%0.2f",$monthlyPayment);
             $resp->installmentCount = $installmentCount;
+            $resp->initialPayment = $initialPayment;
+
             $resp->productPrice = sprintf("%0.2f",$productPrice);
             $resp->glp = sprintf("%0.2f",$interestPercent);
             $resp->gpr = sprintf("%0.2f",$gpr);
 
             //echo "<label>Ориентировъчна месечна вноска на изплащане за срок от $installmentCount месеца:</label>";
-            echo "<label>Ориентировъчна месечна вноска на изплащане за срок от:</label>";
+            echo "<label>Погасителен период:</label>";
             echo "<BR>";
             $this->fldInstallment->getRenderer()->render();
             echo "<BR><BR>";
+            echo "<label>Първоначална вноска:</label>";
+            echo "<BR>";
+            $this->fldInitial->getRenderer()->render();
+            echo "<BR><BR>";
+            echo "<button class='ColorButton' onClick='calculateMonthly()'>".tr("Преизчисли")."</button>";
+            echo "<BR><BR>";
+
             echo "<div class='item monthly_payment'><label>Погасителна вноска: </label><span>".formatPrice($monthlyPayment)."</span></div>";
 
             echo "<div class='item product_price'><label>Цена на продукта: </label><span>".formatPrice($productPrice)."</span></div>";
@@ -439,9 +467,8 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
     public function _calculateMonthly(JSONResponse $resp)
     {
-        if (isset($_GET["installmentCount"])) {
-            $this->calculateMonthlyPayment((int)$_GET["installmentCount"], $resp);
-
+        if (isset($_GET["installmentCount"]) && isset($_GET["initialPayment"])) {
+            $this->calculateMonthlyPayment((int)$_GET["installmentCount"], (int)$_GET["initialPayment"], $resp);
         }
         else {
             $resp->message = "No installmentCount received";
@@ -455,9 +482,10 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
         echo "<div class='unilogo'><img src='".STORE_LOCAL."/images/unicredit-logo.png'></div>";
 
-        $installmentCount = $this->fldInstallment->getValue();
+        $installmentCount = (int)$this->fldInstallment->getValue();
+        $initialPayment = (int)$this->fldInitial->getValue();
 
-        $this->calculateMonthlyPayment($installmentCount, $resp);
+        $this->calculateMonthlyPayment($installmentCount, $initialPayment, $resp);
 
         $this->form->getRenderer()->render();
 
@@ -466,6 +494,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
     protected function onProcessError(JSONResponse $resp)
     {
         $this->fldInstallment->setValue($this->form->getInput("installmentCount")->getValue());
+        $this->fldInitial->setValue($this->form->getInput("initialPayment")->getValue());
         $this->_render($resp);
         $resp->message = $this->proc->getMessage();
     }
@@ -488,6 +517,9 @@ class UniCreditProductFormResponder extends JSONFormResponder
             return;
         }
 
+        $initialPayment = $this->validateInitialPayment($this->form->getInput("initialPayment")->getValue());
+
+
         $opr = new OprSucfOnlineSessionStart($this->serviceStub);
         $opr->setCredentials($this->otpUser, $this->otpPass);
 
@@ -498,7 +530,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
         $opr->setKOP($this->kop);
 
-        $opr->setMonthlyPayment($monthlyPayment, $installmentCount);
+        $opr->setMonthlyPayment($monthlyPayment, $installmentCount, $initialPayment);
         debug("UNI=> monthlyPayment: $monthlyPayment | installmentCount: $installmentCount");
 
         $opr->setProductData($this->sellable);
