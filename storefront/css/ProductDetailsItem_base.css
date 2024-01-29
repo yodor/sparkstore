@@ -599,8 +599,10 @@
     margin-bottom:20px;
 
 }
-
-/*.side_pane .group.credit_payment {*/
+.tabs .item.description IMG {
+    max-width:100%;
+}
+    /*.side_pane .group.credit_payment {*/
 /*    text-align: right;*/
 /*}*/
 
