@@ -26,6 +26,8 @@ if (strlen(trim($order_email))<1) {
 }
 $globals->set("ORDER_EMAIL", $order_email);
 
+$globals->set("TRANSLITERATOR_ID", "Bulgarian-Latin/BGN");
+
 $globals->export();
 
 ?>
