@@ -134,7 +134,8 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected function constructTitleArray(): array
     {
-        $title = parent::constructTitleArray();
+        //$title = parent::constructTitleArray();
+        $title = array();
         $title[] = $this->sellable->getTitle();
         return $title;
     }

@@ -148,15 +148,14 @@ class ProductPageBase extends StorePage
     {
         $title = array();
 
-        if ($this->section) {
+        if (is_array($this->category_path) && count($this->category_path)>0) {
+            //$catinfo = end($this->category_path);
+            foreach ($this->category_path as $idx => $catinfo) {
+                $title[] = $catinfo["category_name"];
+            }
+        }
+        else if ($this->section) {
             $title[] = $this->section;
-        }
-        else {
-            $title[] = tr($this->products_title);
-        }
-
-        foreach ($this->category_path as $idx => $catinfo) {
-            $title[] = $catinfo["category_name"];
         }
 
         return $title;
@@ -169,8 +168,12 @@ class ProductPageBase extends StorePage
         }
 
         $title = $this->constructTitleArray();
-
-        $this->setTitle(constructSiteTitle($title));
+        if (count($title)>0) {
+            $this->setTitle(constructSiteTitle($title));
+        }
+        else {
+            parent::constructTitle();
+        }
     }
 }
 
