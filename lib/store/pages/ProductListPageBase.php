@@ -455,7 +455,22 @@ class ProductListPageBase extends ProductPageBase
                 echo "</div>";
 
                 echo "</div>";//filters
+
+                $active_filters = $this->filters->getActiveFilters();
+                if (count($active_filters)>0) {
+                    echo "<div class='active_filters panel'>";
+
+                    $viewCaption = "";
+                    foreach ($active_filters as $flabel=>$fvalue) {
+                        $viewCaption.= $flabel.": ".$fvalue."; ";
+                    }
+                    echo "<div class='Caption'>".$viewCaption."</div>";
+
+                    echo "</div>";
+                }
             }
+
+
 
         echo "</div>"; //column left
 
