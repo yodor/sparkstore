@@ -241,7 +241,7 @@ class ProductListFilterInputForm extends InputForm {
     {
         parent::__construct();
         $input = new BrandFilter();
-        $input->getRenderer()->setInputAttribute("size", "10");
+        $input->getRenderer()->setInputAttribute("size", "1");
         $this->addInput($input);
 //        $this->addInput(new ColorFilter());
 //        $this->addInput(new SizeFilter());
