@@ -462,7 +462,7 @@ class ProductListPageBase extends ProductPageBase
 
                     $viewCaption = "";
                     foreach ($active_filters as $flabel=>$fvalue) {
-                        $viewCaption.= $flabel.": ".$fvalue."; ";
+                        $viewCaption.= tr($flabel).": ".$fvalue."; ";
                     }
                     echo "<div class='Caption'>".$viewCaption."</div>";
 
