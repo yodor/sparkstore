@@ -38,11 +38,28 @@ class RegisterClientFormProcessor extends FormProcessor
             }
 
             $urow = array();
-            $urow["fullname"] = $form->getInput("fullname")->getValue();
-            $urow["email"] = strtolower(trim($form->getInput("email")->getValue()));
+
+            try {
+                $fullname = trim($form->getInput("fullname")->getValue());
+                if (mb_strlen($fullname) > 64) throw new Exception("1");
+                $check = mb_split("\s", $fullname);
+                if (count($check) > 3) throw new Exception("2");
+                if (count($check) == 0 && strlen($fullname) > 32) throw new Exception("3");
+                $urow["fullname"] = $fullname;
+            }
+            catch (Exception $e) {
+                throw new Exception(tr("Невалидно име"));
+            }
+
+            $email = strtolower(trim($form->getInput("email")->getValue()));
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))  throw new Exception(tr("Невалиден email адрес"));
+            $urow["email"] = $email;
+
             $urow["phone"] = $form->getInput("phone")->getValue();
 
-            $urow["password"] = $form->getInput("pass")->getValue();
+            $pass = $form->getInput("pass")->getValue();
+            if (strlen($pass)!=32) throw new Exception(tr("Неуспешно регистриране на парола"));
+            $urow["password"] = $pass;
 
 
             //automatic registration without activation email

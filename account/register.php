@@ -25,6 +25,7 @@ $proc = new RegisterClientFormProcessor();
 $proc->process($form);
 
 if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
+    sleep(3);
     Session::SetAlert($proc->getMessage());
 }
 else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
