@@ -24,6 +24,12 @@ $h_repos = new ChangePositionResponder($bean);
 
 $gv = new GalleryView($bean);
 
+$url = SparkPage::Instance()->getURL();
+$url->setScriptName("add.php");
+$action_add = new Action(SparkAdminPage::ACTION_ADD, $url->url());
+$action_add->setTooltipText("Add new element to this collection");
+$page->getActions()->append($action_add);
+
 $gv->getItemActions()->addURLParameter($rc->getURLParameter());
 
 Session::Set("products.gallery", $page->getPageURL());

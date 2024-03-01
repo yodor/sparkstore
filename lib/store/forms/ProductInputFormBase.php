@@ -71,7 +71,7 @@ class ProductInputFormBase extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимки", 0);
         $pphotos = new ProductPhotosBean();
         $field->getProcessor()->setTransactBean($pphotos);
-        $field->getProcessor()->setTransactBeanItemLimit(10);
+        $field->getProcessor()->setTransactBeanItemLimit(20);
 
         $this->addInput($field);
 
