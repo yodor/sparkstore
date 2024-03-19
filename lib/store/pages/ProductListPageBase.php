@@ -295,7 +295,7 @@ class ProductListPageBase extends ProductPageBase
             return;
         }
 
-        $catID = $this->category_filter->getValue();
+        $catID = intval($this->category_filter->getValue());
 
         $this->keywords = $this->getCategoryKeywords($catID);
 
