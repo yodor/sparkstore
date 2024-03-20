@@ -50,6 +50,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->setAttribute("itemscope","");
         $this->setAttribute("itemtype", "http://schema.org/Product");
 
+        $this->setAttribute("productID", $item->getProductID());
+
         $this->sellable = $item;
 
         $this->setPhotoSize(640,640);

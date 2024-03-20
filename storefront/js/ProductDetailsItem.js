@@ -151,8 +151,7 @@ function addToCart() {
     // }
 
     let current_url = new URL(window.location.href);
-    let prodID = current_url.searchParams.get("prodID");
-    //console.log(current_url.searchParams.get("prodID"));
+    let prodID = $(".ProductDetailsItem").first().attr("productID");
 
     let url = new URL(LOCAL+"/checkout/cart.php", location.href);
     url.searchParams.set("add","");
