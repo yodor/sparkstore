@@ -244,8 +244,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
                 echo "<div class='item' itemClass='ProductPhotosBean' itemID='$ppID' pos='$pos' onClick='javascript:galleryItemClicked(this)' relation='ProductGallery' $active>";
                 if ($si instanceof StorageItem) {
                     $src = $si->hrefThumb(64);
+                    echo "<img src='$src' alt='$product_name' title='$product_name'>";
                 }
-                echo "<img src='$src'>";
                 echo "</div>";
 
                 $active="";
