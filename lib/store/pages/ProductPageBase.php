@@ -61,10 +61,13 @@ class ProductPageBase extends StorePage
         if (count($this->category_path)>0) {
             $keywords_all = array();
             foreach ($this->category_path as $idx=>$element) {
-                $category_keywords = sanitizeKeywords($element["category_keywords"]);
-                if (mb_strlen($category_keywords) > 0) {
-                    $keywords_all[] = $category_keywords;
+                if (isset($element["category_keywords"])) {
+                    $category_keywords = sanitizeKeywords($element["category_keywords"]);
+                    if (mb_strlen($category_keywords) > 0) {
+                        $keywords_all[] = $category_keywords;
+                    }
                 }
+
             }
             $keywords = implode(", ", $keywords_all);
         }
