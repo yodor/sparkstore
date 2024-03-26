@@ -85,7 +85,7 @@ class ProductPageBase extends StorePage
 
         $result = $this->product_categories->getByID($catID, "category_seotitle");
 
-        return $result["category_seotitle"];
+        return (string)$result["category_seotitle"];
     }
 
     public function setSellableProducts(DBTableBean $bean)
