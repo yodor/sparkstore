@@ -291,14 +291,31 @@ class ProductListPageBase extends ProductPageBase
     protected function prepareKeywords()
     {
 
-        if (intval($this->category_filter->getValue())<1) {
-            return;
+        $catID = intval($this->category_filter->getValue());
+        if ($catID<1) return;
+
+        $keywords = $this->getCategoryKeywords($catID);
+        if (mb_strlen($keywords)>0) {
+            $this->keywords = $keywords;
         }
 
+    }
+
+    /**
+     * Use category_seotitle if set as page title
+     * @return void
+     */
+    protected function constructTitle()
+    {
+        parent::constructTitle();
+
         $catID = intval($this->category_filter->getValue());
+        if ($catID<1) return;
 
-        $this->keywords = $this->getCategoryKeywords($catID);
-
+        $title = $this->getCategorySEOTitle($catID);
+        if (mb_strlen($title)>0) {
+            $this->setTitle($title);
+        }
     }
 
     public function isProcessed(): bool

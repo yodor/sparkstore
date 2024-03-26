@@ -68,12 +68,24 @@ class ProductPageBase extends StorePage
             if (!isset($values["category_keywords"]))continue;
 
             $category_keywords = trim($values["category_keywords"]);
+
+            $category_keywords = preg_replace("/\\r\\n/", ", ", $category_keywords);
+
             if (mb_strlen($category_keywords) < 1) continue;
 
             $keywords[] = $category_keywords;
         }
 
         return implode(", ",$keywords);
+    }
+
+    protected function getCategorySEOTitle(int $catID) : string
+    {
+        if (!$this->product_categories->haveColumn("category_seotitle")) return "";
+
+        $result = $this->product_categories->getByID($catID, "category_seotitle");
+
+        return $result["category_seotitle"];
     }
 
     public function setSellableProducts(DBTableBean $bean)

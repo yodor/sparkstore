@@ -28,7 +28,12 @@ class ProductCategoryInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = new DataInput("category_keywords", "Ключови думи", 0);
+
+        $field = new DataInput("category_seotitle", "SEO Заглавие", 0);
+        new TextField($field);
+        $this->addInput($field);
+
+        $field = new DataInput("category_keywords", "SEO Ключови думи", 0);
         new TextArea($field);
         $this->addInput($field);
 

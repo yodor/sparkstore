@@ -59,7 +59,9 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $description = mb_strtolower(trim(strip_tags($description)));
         if ($description) {
-            $this->addMeta("description", prepareMeta($description));
+            $description = prepareMeta($description);
+            $this->addMeta("description", $description);
+            $this->addOGTag("description", $description);
         }
 
         $this->prepareKeywords();
@@ -87,7 +89,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $keywords = $this->sellable->getKeywords();
         //no keywords added for this sellable. try category keywords if any
-        if (strlen(trim($keywords)) == 0) {
+        if (mb_strlen(trim($keywords)) == 0) {
 
             //use product_name by default as keywords
             $keywords = $this->sellable->getTitle();
@@ -103,8 +105,9 @@ class ProductDetailsPageBase extends ProductPageBase
         $keywords = str_replace("Етикет: ", "", $keywords);
         $keywords = mb_strtolower($keywords);
 
-
-        $this->keywords = $keywords;
+        if (mb_strlen($keywords)>0) {
+            $this->keywords = $keywords;
+        }
 
     }
 
