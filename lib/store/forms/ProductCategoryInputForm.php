@@ -29,7 +29,7 @@ class ProductCategoryInputForm extends InputForm
         $this->addInput($field);
 
 
-        $field = new DataInput("category_seotitle", "SEO Заглавие", 0);
+        $field = new DataInput("category_seotitle", "SEO Заглавие (опция)", 0);
         new TextField($field);
         $this->addInput($field);
 
