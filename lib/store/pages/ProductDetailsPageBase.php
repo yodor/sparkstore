@@ -83,32 +83,39 @@ class ProductDetailsPageBase extends ProductPageBase
 
     }
 
-    protected function prepareKeywords()
+    /**
+     * Use the product name as page title tag
+     * @return void
+     */
+    protected function constructTitle() : void
+    {
+        $this->setTitle($this->sellable->getTitle());
+    }
+
+    /**
+     * @return string
+     */
+    protected function prepareKeywords() : string
     {
         $catID = $this->sellable->getCategoryID();
 
-        $keywords = $this->sellable->getKeywords();
-        //no keywords added for this sellable. try category keywords if any
-        if (mb_strlen(trim($keywords)) == 0) {
-
-            //use product_name by default as keywords
-            $keywords = $this->sellable->getTitle();
-
-            $category_keywords = $this->getCategoryKeywords($catID);
-            if (mb_strlen($category_keywords)>0) {
-                $keywords = $category_keywords;
-            }
-        }
-
-        //cleanup
-        $keywords = str_replace("Етикети: ", "", $keywords);
-        $keywords = str_replace("Етикет: ", "", $keywords);
-        $keywords = mb_strtolower($keywords);
-
+        //use keywords of the sellable if set
+        $keywords = sanitizeKeywords($this->sellable->getKeywords());
         if (mb_strlen($keywords)>0) {
             $this->keywords = $keywords;
+            return $keywords;
         }
 
+        //no keywords added for this sellable. try category keywords if any
+        $this->loadCategoryPath($catID);
+        $keywords = parent::prepareKeywords();
+        //no category keywords were set, use the sellable title as keywords
+        if (mb_strlen($keywords)<1) {
+            $keywords = $this->sellable->getTitle();
+        }
+
+        $this->keywords = $keywords;
+        return $keywords;
     }
 
     public function getSellable(): SellableItem
@@ -133,14 +140,6 @@ class ProductDetailsPageBase extends ProductPageBase
             $db->rollback();
             debug("Unable to increment view count: ".$db->getError());
         }
-    }
-
-    protected function constructTitleArray(): array
-    {
-        //$title = parent::constructTitleArray();
-        $title = array();
-        $title[] = $this->sellable->getTitle();
-        return $title;
     }
 
     protected function selectActiveMenu()

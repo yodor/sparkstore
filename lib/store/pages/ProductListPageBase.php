@@ -284,44 +284,9 @@ class ProductListPageBase extends ProductPageBase
         $this->prepareKeywords();
     }
 
-    /**
-     * Set the page meta-keywords as the selected category and its parent categories keywords
-     * @return void
-     */
-    protected function prepareKeywords()
-    {
-
-        $catID = intval($this->category_filter->getValue());
-        if ($catID<1) return;
-
-        $keywords = $this->getCategoryKeywords($catID);
-        if (mb_strlen($keywords)>0) {
-            $this->keywords = $keywords;
-        }
-
-    }
-
-    /**
-     * Use category_seotitle if set as page title
-     * @return void
-     */
-    protected function constructTitle()
-    {
-        parent::constructTitle();
-
-        $catID = intval($this->category_filter->getValue());
-        if ($catID<1) return;
-
-        $title = $this->getCategorySEOTitle($catID);
-        if (mb_strlen($title)>0) {
-            $this->setTitle($title);
-        }
-    }
-
     public function isProcessed(): bool
     {
         return $this->keyword_search->isProcessed();
-
     }
 
     public function renderCategoriesTree()
@@ -398,15 +363,12 @@ class ProductListPageBase extends ProductPageBase
 
 
 
-    protected function loadCategoryPath(int $nodeID)
+    protected function loadCategoryPath(int $nodeID) : void
     {
         parent::loadCategoryPath($nodeID);
-        if ($this->category_path) {
-
+        if (is_array($this->category_path) && count($this->category_path)>0) {
             $length = count($this->category_path);
-            if ($length>0) {
-                $this->view->setName($this->category_path[$length-1]["category_name"]);
-            }
+            $this->view->setName($this->category_path[$length-1]["category_name"]);
         }
 
     }

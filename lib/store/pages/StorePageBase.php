@@ -481,9 +481,15 @@ class StorePageBase extends SparkPage
 
     }
 
-    protected function constructTitle()
+    /**
+     * Construct the title tag.
+     * Default implementation use the value set as preferred_title property
+     * if preferred_title is empty construct title using the selected menu items (getSelectedPath)
+     * @return void
+     */
+    protected function constructTitle() : void
     {
-        if (strlen($this->getTitle()) > 0) return;
+        if (mb_strlen($this->getTitle()) > 0) return;
 
         $main_menu = $this->menu_bar->getMainMenu();
 

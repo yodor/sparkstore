@@ -49,43 +49,31 @@ class ProductPageBase extends StorePage
 
     }
 
-    protected function prepareKeywords()
+    /**
+     * Construct the page keywords meta tag contents
+     * Use the summary of current category and its parents keywords
+     * @return string Return the keywords set by this method
+     */
+    protected function prepareKeywords() : string
     {
+        $keywords = "";
 
-    }
-
-    protected function getCategoryKeywords(int $catID) : string
-    {
-
-
-        if (!$this->product_categories->haveColumn("category_keywords")) return "";
-
-        $result = $this->product_categories->getParentNodes($catID, array("category_name",
-            "category_keywords"));
-
-        $keywords = array();
-        foreach ($result as $item => $values) {
-            if (!isset($values["category_keywords"]))continue;
-
-            $category_keywords = trim($values["category_keywords"]);
-
-            $category_keywords = preg_replace("/\\r\\n/", ", ", $category_keywords);
-
-            if (mb_strlen($category_keywords) < 1) continue;
-
-            $keywords[] = $category_keywords;
+        if (count($this->category_path)>0) {
+            $keywords_all = array();
+            foreach ($this->category_path as $idx=>$element) {
+                $category_keywords = sanitizeKeywords($element["category_keywords"]);
+                if (mb_strlen($category_keywords) > 0) {
+                    $keywords_all[] = $category_keywords;
+                }
+            }
+            $keywords = implode(", ", $keywords_all);
         }
 
-        return implode(", ",$keywords);
-    }
+        if (mb_strlen($keywords)>0) {
+            $this->keywords = $keywords;
+        }
 
-    protected function getCategorySEOTitle(int $catID) : string
-    {
-        if (!$this->product_categories->haveColumn("category_seotitle")) return "";
-
-        $result = $this->product_categories->getByID($catID, "category_seotitle");
-
-        return (string)$result["category_seotitle"];
+        return $keywords;
     }
 
     public function setSellableProducts(DBTableBean $bean)
@@ -102,9 +90,16 @@ class ProductPageBase extends StorePage
      * Load the current selected category branch into the category_path array. Starting from nodeID to the top
      * @param int $nodeID
      */
-    protected function loadCategoryPath(int $nodeID)
+    protected function loadCategoryPath(int $nodeID): void
     {
-        $this->category_path = $this->product_categories->getParentNodes($nodeID, array("catID", "category_name"));
+        $columns = array("catID", "category_name");
+        if ($this->product_categories->haveColumn("category_seotitle")) {
+            $columns[] = "category_seotitle";
+        }
+        if ($this->product_categories->haveColumn("category_keywords")) {
+            $columns[] = "category_keywords";
+        }
+        $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 
     public function renderCategoryPath()
@@ -156,32 +151,43 @@ class ProductPageBase extends StorePage
         return $actions;
     }
 
-    protected function constructTitleArray() : array
+    /**
+     * Construct the page title tag. Called after finish render of the page class
+     * Preference of title tag
+     * - search results title (local searching)
+     * - category_title/category_seotitle
+     * - section name
+     * - default implementation of StorePageBase
+     * @return void
+     * @throws Exception
+     */
+    protected function constructTitle() : void
     {
-        $title = array();
+        $title = "";
+        if ($this->keyword_search->isProcessed()) {
+            $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
+            $title = "Резултати от търсене: ".mysql_real_unescape_string($search_value);
+        }
 
-        if (is_array($this->category_path) && count($this->category_path)>0) {
-            //$catinfo = end($this->category_path);
-            foreach ($this->category_path as $idx => $catinfo) {
-                $title[] = $catinfo["category_name"];
+        else if (is_array($this->category_path) && count($this->category_path)>0) {
+            //use the title or seotitle of the selected category
+//            foreach ($this->category_path as $idx => $element) {
+//                $title[] = $element["category_name"];
+//            }
+            $element = end($this->category_path);
+            if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"])>0) {
+                $title = $element["category_seotitle"];
+            }
+            else {
+                $title = $element["category_name"];
             }
         }
         else if ($this->section) {
-            $title[] = $this->section;
+            $title = $this->section;
         }
 
-        return $title;
-    }
-    protected function constructTitle()
-    {
-        if ($this->keyword_search->isProcessed()) {
-            $this->setTitle("Резултати от търсене: ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue()));
-            return;
-        }
-
-        $title = $this->constructTitleArray();
-        if (count($title)>0) {
-            $this->setTitle(constructSiteTitle($title));
+        if (mb_strlen($title)>0) {
+            $this->setTitle($title);
         }
         else {
             parent::constructTitle();
