@@ -19,6 +19,9 @@
 .ProductListItem A, .ProductListItem A:hover, .ProductListItem A:visited {
     text-decoration: none;
     color:black;
+    display:inline-block;
+    width:100%;
+    height:100%;
 }
 
 .ProductListItem .wrap {
@@ -29,10 +32,19 @@
     box-sizing:border-box;
 
     max-width:275px;
+    min-width:275px;
+
 }
 
 .ProductListItem .photo {
+    min-width:275px;
+    min-height:275px;
+}
 
+.ProductListItem .details {
+    display:inline-block;
+    min-width:275px;
+    min-height:120px;
 }
 
 .ProductListItem .photo .discount_label {
