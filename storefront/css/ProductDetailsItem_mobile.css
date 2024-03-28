@@ -103,8 +103,15 @@
 
     .group.credit_payment .module {
         display:inline-block !important;
-        max-width:67% !important;
-        width:67% !important;
+        max-width:75% !important;
+        width:75% !important;
         text-align:center !important;
+    }
+
+    .group.credit_payment .module.TBICreditPaymentButton  .button table {
+        width:100%;
+    }
+    .group.credit_payment .module.TBICreditPaymentButton .button table .tbi_button_div_old {
+        width:100% !important;
     }
 }
