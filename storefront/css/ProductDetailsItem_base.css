@@ -1,7 +1,8 @@
 .ProductDetailsItem {
     display:block;
     width:100%;
-
+    max-width:100%;
+    min-width:100%;
     padding:0;
     margin:0;
 }
@@ -141,8 +142,8 @@
     margin-right: 0.7em;
     margin-bottom: 1.5em;
     border: 1px solid #cccccc;
-    min-width:64px;
-    min-height:64px;
+    min-width:55px;
+    min-height:55px;
 }
 .images .image_gallery .list.single {
     display:none !important;
