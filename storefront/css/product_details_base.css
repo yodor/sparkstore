@@ -4,6 +4,9 @@
     padding-bottom:2em;
     font-size:80%;
 }
+.section.main .content .BreadcrumbList {
+    display:none;
+}
 
 .column.details {
     display: block;
