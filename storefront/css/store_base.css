@@ -250,7 +250,7 @@ A.Caption:active {
 }
 
 .section.cookies {
-    position: fixed;
+    position: sticky;
     z-index: 11;
 
 
@@ -258,7 +258,6 @@ A.Caption:active {
 
     background-color:rgba(1.0,0.0,0.0,0.8);
 
-    display:none;
 }
 
 .section.cookies[accepted="1"] {
@@ -266,7 +265,7 @@ A.Caption:active {
 }
 
 .section.cookies[accepted="0"] {
-    display:table;
+    display:inherit;
 }
 
 .section.cookies .content {
