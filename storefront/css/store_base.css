@@ -265,7 +265,7 @@ A.Caption:active {
 }
 
 .section.cookies[accepted="0"] {
-    display:inherit;
+
 }
 
 .section.cookies .content {
