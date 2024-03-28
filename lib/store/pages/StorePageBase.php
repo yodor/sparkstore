@@ -28,7 +28,6 @@ include_once("store/responders/json/VoucherFormResponder.php");
 
 class SectionContainer extends Container {
 
-    protected $full = null;
     protected $space_left = null;
     protected $space_right = null;
     protected $content = null;
@@ -38,26 +37,21 @@ class SectionContainer extends Container {
         parent::__construct();
         $this->setComponentClass("section");
 
-        $this->full = new Container();
-        $this->full->setComponentClass("full");
-        $this->append($this->full);
+//        $this->full = new Container();
+//        $this->full->setComponentClass("full");
+//        $this->append($this->full);
 
         $this->space_left = new Container();
         $this->space_left->setComponentClass("space left");
-        $this->full->append($this->space_left);
+        $this->append($this->space_left);
 
         $this->content = new Container();
         $this->content->setComponentClass("content");
-        $this->full->append($this->content);
+        $this->append($this->content);
 
         $this->space_right = new Container();
         $this->space_right->setComponentClass("space right");
-        $this->full->append($this->space_right);
-    }
-
-    public function full() : Container
-    {
-        return $this->full;
+        $this->append($this->space_right);
     }
 
     public function spaceLeft() : Container

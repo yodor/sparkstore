@@ -15,6 +15,7 @@
 body {
     /*   background-color:#ababab; */
     font-size:16px;
+
 }
 
 .Caption {
@@ -44,14 +45,19 @@ body {
     text-transform: uppercase;
 }
 .section {
-    display:table;
-    width:100%;
+    display:grid;
+    /*width:100%;*/
     border-spacing:0;
     box-sizing:border-box;
     border-collapse:collapse;
     padding:0;
     border:0;
     margin:0;
+
+    /*grid-column-start: 1;*/
+    /*grid-column-end: 3;*/
+
+    grid-template-columns: auto 1200px auto;
 }
 
 .section .ProductsTape {
@@ -91,19 +97,29 @@ A.Caption:active {
     text-decoration:none;
 }
 
-.section .full {
-    display:table-row;
-}
+
 
 .section .space {
-    display:table-cell;
-
+    /*display:table-cell;*/
+    grid-column-start:1;
+    display:inherit;
+}
+.section .space.left {
+    grid-column-start:1;
+    grid-column-end:1;
+}
+.section .space.right {
+    grid-column-start:3;
+    grid-column-end:3;
 }
 
 .content {
-    display:table-cell;
+    grid-column-start:2;
+    grid-column-end:2;
+
+
     max-width:1200px;
-    width:1200px;
+    /*width:1200px;*/
     white-space:normal;
     box-sizing:border-box;
     border-spacing:0;
@@ -116,8 +132,7 @@ A.Caption:active {
     padding-bottom:50px;
 }
 .section.header {
-    max-height:90px;
-    height:90px;
+
 }
 .section.header .content {
     background-color:black;
@@ -147,7 +162,7 @@ A.Caption:active {
     display: table-cell;
 
     background-color:transparent;
-    color:gray;
+    color:grey;
     vertical-align: top;
     padding-top:15px;
 
@@ -159,7 +174,7 @@ A.Caption:active {
 /* footer */
 /**/
 .section.footer {
-    position: fixed;
+    position: sticky;
     z-index:10;
     height:36px;
     max-height:36px;
@@ -500,7 +515,7 @@ A.Caption:active {
 
 .StorePage.home .main .content .banner {
     display: block;
-    margin-bottom: 40px;
+    margin-bottom: 2em;
     /*height:378px;*/
 
     position:relative;

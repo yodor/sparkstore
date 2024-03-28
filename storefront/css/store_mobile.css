@@ -55,6 +55,10 @@
         min-width:100%;
         width:100%;
     }
+
+    .section {
+        grid-template-columns: auto 100% auto;
+    }
 }
 
 @media screen and (max-width: 1160px) {
@@ -71,6 +75,10 @@
 
 }
 @media screen and (max-width: 900px) {
+    .section.header {
+        max-height:inherit;
+        height:inherit;
+    }
     .section.header .content .logo {
         display:block;
         background-origin:content-box;
@@ -84,7 +92,6 @@
     }
     .section.header .content .marquee {
         display:block;
-
     }
 }
 @media screen and (max-width: 786px) {
