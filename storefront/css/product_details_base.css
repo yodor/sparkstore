@@ -3,10 +3,6 @@
     box-sizing: border-box;
     padding-bottom:2em;
     font-size:80%;
-    text-align:center;
-}
-.section.main .content .BreadcrumbList {
-    /*display:none;*/
 }
 
 .column.details {
