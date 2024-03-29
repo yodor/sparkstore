@@ -374,7 +374,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected function renderGroupPricing()
     {
 
-
         $priceInfo = $this->sellable->getPriceInfo();
         $stock_amount = $this->sellable->getStockAmount();
 
@@ -387,6 +386,13 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "<div class='group pricing' $instock>";
 
         echo "<div class='item price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
+
+        if ($stock_amount>0) {
+            echo "<link itemprop='availability' href='https://schema.org/InStock'>";
+        }
+        else {
+            echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
+        }
 
         $enabled= ($this->sellable->isPromotion()) ? "" : "disabled";
 
