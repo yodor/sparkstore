@@ -302,12 +302,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     {
         $stock_amount = $this->sellable->getStockAmount();
 
-        if ($stock_amount>0) {
-            echo "<link itemprop='availability' href='https://schema.org/InStock'>";
-        }
-        else {
-            echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
-        }
 //        echo "<div class='group stock_amount'>";
 //            echo "<div class='item'>";
 
