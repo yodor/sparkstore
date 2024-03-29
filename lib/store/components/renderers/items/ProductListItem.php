@@ -200,6 +200,13 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
 
+        if ($this->data["stock_amount"]>0) {
+            echo "<link itemprop='availability' href='https://schema.org/InStock'>";
+        }
+        else {
+            echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
+        }
+
         echo "<div class='price old'>";
         if ($this->isPromo()) {
             echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
