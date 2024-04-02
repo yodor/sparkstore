@@ -258,6 +258,7 @@ A.Caption:active {
 
     background-color:rgba(1.0,0.0,0.0,0.8);
 
+    display:none;
 }
 
 .section.cookies[accepted="1"] {
@@ -265,7 +266,7 @@ A.Caption:active {
 }
 
 .section.cookies[accepted="0"] {
-
+    display:grid;
 }
 
 .section.cookies .content {
