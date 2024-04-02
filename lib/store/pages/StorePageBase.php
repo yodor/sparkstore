@@ -160,6 +160,8 @@ class StorePageBase extends SparkPage
 
         $this->_header = new SectionContainer();
         $this->_header->addClassName("header");
+        $this->_header->setAttribute("itemscope", "");
+        $this->_header->setAttribute("itemtype", "http://schema.org/WPHeader");
 
         $this->_menu = new SectionContainer();
         $this->_menu->addClassName("menu");
