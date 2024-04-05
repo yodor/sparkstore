@@ -714,10 +714,9 @@ class TBICreditPaymentButton extends CreditPaymentButton
                     line-height: 20px !important;
                 }
             </style>
-            <link rel="preconnect" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-            <link rel="preconnect"
-                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-            <link rel="preconnect" href="https://tbibank.support/calculators/assets/css/<?php echo $tbi_theme; ?>">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="https://tbibank.support/calculators/assets/css/<?php echo $tbi_theme; ?>">
             <div id="tbi_box" class="modal">
                 <div class="modal-content">
                     <div id="tbi_body" class="modal-body">
