@@ -42,4 +42,10 @@
         padding-top:0.5em;
         padding-bottom:0.5em;
     }
+
+    .ItemView .viewport {
+
+        flex-flow:column wrap;
+
+    }
 }

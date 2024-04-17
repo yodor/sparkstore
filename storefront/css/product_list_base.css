@@ -229,6 +229,9 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     /*margin-left: -5px;*/
     /*margin-right: -5px;*/
     text-align:center;
+    display:flex;
+    flex-flow:row wrap;
+    align-items:center;
 }
 
 .ItemView .PaginatorTopComponent {
