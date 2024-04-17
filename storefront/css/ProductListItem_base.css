@@ -27,24 +27,26 @@
 .ProductListItem .wrap {
     position:relative;
     background-color:white;
-    display:block;
+    display:grid;
 
     box-sizing:border-box;
 
     max-width:275px;
     min-width:275px;
 
+    grid-template-rows: 275px 120px;
 }
 
 .ProductListItem .photo {
     min-width:275px;
-    min-height:275px;
+    height:auto;
+    /*min-height:275px;*/
 }
 
 .ProductListItem .details {
-    display:inline-block;
-    min-width:275px;
-    min-height:120px;
+    /*display:block;*/
+    /*min-width:275px;*/
+    /*min-height:120px;*/
 }
 
 .ProductListItem .photo .discount_label {
