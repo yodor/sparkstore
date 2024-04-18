@@ -216,6 +216,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             $image_popup->setAttribute("list-relation", "ProductGallery");
             $image_popup->setID($si->id);
             $image_popup->setLazyLoadEnabled(false);
+            $image_popup->getImage()->setAttribute("fetchpriority","high");
             $image_popup->render();
 
             if ($max_pos>1) {
