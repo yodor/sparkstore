@@ -80,6 +80,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->tape = new ProductsTape();
 
+        $this->canonical_enabled = true;
 
     }
 
