@@ -255,6 +255,9 @@ class ProductListPageBase extends ProductPageBase
             //assign values from the query string to the data inputs
             $this->filters->processInput();
 
+            foreach ($this->filters->getForm()->getInputNames() as $idx=>$input_name) {
+                $this->canonical_disabled_params[] = $input_name;
+            }
 
         }
 
