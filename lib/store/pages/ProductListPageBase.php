@@ -94,6 +94,9 @@ class ProductListPageBase extends ProductPageBase
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
 
+        $this->canonical_enabled = true;
+        $this->canonical_disabled_params = array(Paginator::KEY_ORDER_BY, Paginator::KEY_ORDER_DIR);
+
     }
 
     public function getItemView() : ItemView
