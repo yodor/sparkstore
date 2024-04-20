@@ -95,7 +95,8 @@ class ProductListPageBase extends ProductPageBase
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
 
         $this->canonical_enabled = true;
-        $this->canonical_disabled_params = array("filter", "view", Paginator::KEY_ORDER_BY, Paginator::KEY_ORDER_DIR);
+
+        $this->canonical_params = array($this->category_filter->getName(), Paginator::KEY_PAGE);
 
     }
 
@@ -254,11 +255,6 @@ class ProductListPageBase extends ProductPageBase
 
             //assign values from the query string to the data inputs
             $this->filters->processInput();
-
-            foreach ($this->filters->getForm()->getInputNames() as $idx=>$input_name) {
-                $this->canonical_disabled_params[] = $input_name;
-            }
-
         }
 
         //setup grouping for the list item view

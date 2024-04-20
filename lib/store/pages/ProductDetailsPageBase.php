@@ -81,6 +81,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->tape = new ProductsTape();
 
         $this->canonical_enabled = true;
+        $this->canonical_params = array("prodID");
 
     }
 
