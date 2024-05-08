@@ -79,6 +79,36 @@ class ProductPageBase extends StorePage
         return $keywords;
     }
 
+    /**
+     * Sets the value of 'description' page property, used to overload the description meta-tag.
+     * Uses the first available 'category_seodescription' of the selected category or the category name
+     * @return string
+     */
+    protected function prepareDescription() : string
+    {
+        $description = "";
+        if (count($this->category_path)>0) {
+            $category_path = array_reverse($this->category_path, true);
+
+            foreach ($category_path as $idx=>$element) {
+                if (isset($element["category_seodescription"]) && mb_strlen($element["category_seodescription"])>0) {
+                    $description = $element["category_seodescription"];
+                }
+                else if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"])>0) {
+                    $description = $element["category_seotitle"];
+                }
+                else {
+                    $description = $element["category_name"];
+                }
+                if (mb_strlen($description)>0) break;
+            }
+        }
+        if (mb_strlen($description)>0) {
+            $this->description = $description;
+        }
+        return $description;
+    }
+
     public function setSellableProducts(DBTableBean $bean)
     {
         $this->bean = $bean;
@@ -98,6 +128,9 @@ class ProductPageBase extends StorePage
         $columns = array("catID", "category_name");
         if ($this->product_categories->haveColumn("category_seotitle")) {
             $columns[] = "category_seotitle";
+        }
+        if ($this->product_categories->haveColumn("category_seodescription")) {
+            $columns[] = "category_seodescription";
         }
         if ($this->product_categories->haveColumn("category_keywords")) {
             $columns[] = "category_keywords";

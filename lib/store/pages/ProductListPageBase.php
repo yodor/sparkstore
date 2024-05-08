@@ -161,6 +161,7 @@ class ProductListPageBase extends ProductPageBase
 
     /**
      * Process the page input
+     * Calls prepare Keywords and prepare Description to set the values of meta-keywords and meta-description
      * @return void
      * @throws Exception
      */
@@ -284,6 +285,7 @@ class ProductListPageBase extends ProductPageBase
         }
 
         $this->prepareKeywords();
+        $this->prepareDescription();
     }
 
     public function isProcessed(): bool

@@ -51,20 +51,8 @@ class ProductDetailsPageBase extends ProductPageBase
         $catID = $this->sellable->getCategoryID();
         $this->loadCategoryPath($catID);
 
-        $description = "";
-
-        if ($this->sellable->getDescription()) {
-            $description = $this->sellable->getDescription();
-        }
-
-        $description = mb_strtolower(trim(strip_tags($description)));
-        if ($description) {
-            $description = prepareMeta($description);
-            $this->addMeta("description", $description);
-            $this->addOGTag("description", $description);
-        }
-
         $this->prepareKeywords();
+        $this->prepareDescription();
 
         $this->addOGTag("title", $this->sellable->getTitle());
         $main_photo = $this->sellable->getMainPhoto();
@@ -118,6 +106,26 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->keywords = $keywords;
         return $keywords;
+    }
+
+    protected function prepareDescription(): string
+    {
+        $description = "";
+
+        if ($this->sellable->getDescription()) {
+            $description = $this->sellable->getDescription();
+        }
+        else {
+            $description = $this->sellable->getTitle();
+        }
+
+        $description = mb_strtolower(trim(strip_tags($description)));
+        if ($description) {
+            $description = prepareMeta($description);
+            $this->description = $description;
+        }
+
+        return $description;
     }
 
     public function getSellable(): SellableItem
