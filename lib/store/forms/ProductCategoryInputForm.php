@@ -33,8 +33,9 @@ class ProductCategoryInputForm extends InputForm
         new TextField($field);
         $this->addInput($field);
 
-        $field = new DataInput("category_seodescription", "SEO Описание (опция 140-160 символа)", 0);
-        new TextArea($field);
+        $field = new DataInput("category_seodescription", "SEO Описание (опция - 160 символа)", 0);
+        $rend = new TextArea($field);
+        $rend->setInputAttribute("maxLength", 160);
         $this->addInput($field);
 
         $field = new DataInput("category_keywords", "SEO Ключови думи", 0);
