@@ -94,12 +94,6 @@ class ProductPageBase extends StorePage
                 if (isset($element["category_seodescription"]) && mb_strlen($element["category_seodescription"])>0) {
                     $description = $element["category_seodescription"];
                 }
-                else if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"])>0) {
-                    $description = $element["category_seotitle"];
-                }
-                else {
-                    $description = $element["category_name"];
-                }
                 if (mb_strlen($description)>0) break;
             }
         }

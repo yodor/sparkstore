@@ -44,10 +44,10 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setLabelKey("brand_name");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "product_name", "Заглавие", 1);
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "product_name", "Заглавие / SEO заглавие", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание", 0);
+        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание (първите 150 символа се ползват за SEO описание)", 0);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
