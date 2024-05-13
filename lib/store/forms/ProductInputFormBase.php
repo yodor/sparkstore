@@ -52,6 +52,7 @@ class ProductInputFormBase extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
         $field->setValidator(new NumericValidator(false,false));
+        $field->setValue(0.0);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "promo_price", "Промо цена", 1);
@@ -145,7 +146,7 @@ class ProductInputFormBase extends InputForm
         $promo_price = $this->getInput("promo_price")->getValue();
         $price = floatval($price);
         $promo_price = floatVal($promo_price);
-        if ($promo_price>=$price) {
+        if ($promo_price>=$price && $promo_price>0) {
             throw new Exception("'Promo price' must be smaller than 'Sell price'");
         }
     }
