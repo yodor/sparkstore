@@ -186,7 +186,7 @@ class OrderProcessor
                 $order_item["price"] = $cartEntry->getPrice();
                 $order_item["position"] = $pos;
                 $order_item["orderID"] = $this->orderID;
-                $order_item["product"] = $description;
+                $order_item["product"] = DBConnections::Get()->escape($description);
                 $order_item["prodID"] = $prodID;
                 $order_item["photo"] = DBConnections::Get()->escape($item_photo);
 
