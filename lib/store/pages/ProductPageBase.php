@@ -81,7 +81,8 @@ class ProductPageBase extends StorePage
 
     /**
      * Sets the value of 'description' page property, used to overload the description meta-tag.
-     * Uses the first available 'category_seodescription' of the selected category or the category name
+     * Uses the first available 'category_seodescription' of the selected category.
+     * If category_seodescription is empty does not override the default page meta-tag
      * @return string
      */
     protected function prepareDescription() : string
