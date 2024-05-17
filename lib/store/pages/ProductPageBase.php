@@ -149,22 +149,30 @@ class ProductPageBase extends StorePage
     {
         $actions = array();
 
-        $actions[] = new Action(tr("Начало"), LOCAL . "/home.php", array());
+        $home_action = new Action(tr("Начало"), LOCAL . "/home.php", array());
+        $home_action->translation_enabled = false;
+        $actions[] = $home_action;
 
         $link = new URLBuilder();
         $link->buildFrom(LOCAL."/products/list.php");
 
         if ($this->keyword_search->isProcessed()) {
-            $atitle = "Резултати от търсене: ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
-            $actions[] = new Action($atitle, $this->getPageURL(), array());
+            $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $search_action = new Action($search_title, $this->getPageURL(), array());
+            $search_action->translation_enabled = false;
+            $actions[] = $search_action;
         }
         else {
-            $actions[] = new Action(tr($this->products_title), $link->url(), array());
+            $product_action = new Action(tr($this->products_title), $link->url(), array());
+            $product_action->translation_enabled = false;
+            $actions[] = $product_action;
         }
 
         if ($this->section) {
             $link->add(new URLParameter("section", $this->section));
-            $actions[] = new Action($this->section, $link->url(), array());
+            $section_action = new Action(tr($this->section), $link->url(), array());
+            $section_action->translation_enabled = false;
+            $actions[] = $section_action;
         }
 
         $link->add(new DataParameter("catID"));
@@ -197,7 +205,7 @@ class ProductPageBase extends StorePage
         $title = "";
         if ($this->keyword_search->isProcessed()) {
             $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
-            $title = "Резултати от търсене: ".mysql_real_unescape_string($search_value);
+            $title = tr("Резултати от търсене").": ".mysql_real_unescape_string($search_value);
         }
 
         else if (is_array($this->category_path) && count($this->category_path)>0) {
