@@ -5,11 +5,17 @@ class ContactRequestMailer extends Mailer
 {
 
     protected $client_name = "";
+    protected $client_email = "";
     protected $query_text = "";
 
-    public function setClient(string $client_name)
+    public function setClient(string $client_name) : void
     {
         $this->client_name = $client_name;
+    }
+
+    public function setEmail(string $client_email) : void
+    {
+        $this->client_email = $client_email;
     }
 
     public function setQueryText(string $message)
@@ -30,6 +36,8 @@ class ContactRequestMailer extends Mailer
         debug ("Preparing contact request message contents ...");
 
         $message  = "От: ".$this->client_name;
+        $message .= "\r\n";
+        $message .= "Email: ".$this->client_email;
         $message .= "\r\n";
         $message .= "Запитване: ";
         $message .= "\r\n\r\n";
