@@ -1,7 +1,7 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
-
+include_once("input/validators/SimpleTextValidator.php");
 class ContactRequestForm extends InputForm
 {
 
@@ -19,6 +19,7 @@ class ContactRequestForm extends InputForm
 //        $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "query", "Запитване", 1);
+        $field->getProcessor()->accepted_tags = "";
         $this->addInput($field);
 
     }
