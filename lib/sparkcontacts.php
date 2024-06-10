@@ -16,14 +16,6 @@ $page->setTitle(tr("Контакти"));
 $cfg = new ConfigBean();
 $cfg->setSection("store_config");
 
-$page->startRender();
-
-
-echo "<h1 class='Caption'>" . tr($page->getTitle()) . "</h1>";
-
-echo "<div class='columns'>";
-
-
 $cabean = new ContactAddressesBean();
 $qry = $cabean->queryFull();
 $qry->select->order_by = " position ASC ";
@@ -33,58 +25,68 @@ $maps_src = "";
 if ($num_addresses<1) {
     $maps_src = $cfg->get("maps_url");
 }
-echo "<div class='column map'>";
 
-echo "<a name='map'></a>";
-echo "<div class='panel map'>";
-echo "<iframe id=google_map src='$maps_src'  frameborder='0' allowfullscreen='' aria-hidden='false' tabindex='0'></iframe>";
-echo "</div>";
+$page->startRender();
 
-echo "</div>"; //column
+echo "<h1 class='Caption'>" . tr($page->getTitle()) . "</h1>";
 
-echo "<div class='column addresses'>";
-
-$cabean = new ContactAddressesBean();
-$qry = $cabean->queryFull();
-$qry->select->order_by = " position ASC ";
-$num_addresses = $qry->exec();
-while ($carow = $qry->next()) {
-
-    echo "<div class='details' pos='{$carow["position"]}' onClick='updateMap(this);' map-url='{$carow["map_url"]}'>";
-
-    echo "<div class='item city' >";
-    echo $carow["city"];
-    echo "</div>";
-
-    echo "<div class='item address'>";
-    echo $carow["address"];
-    echo "</div>";
-
-    echo "<div class='item email'>";
-    $email = strip_tags($carow["email"]);
-    if (strlen($email) > 0) {
-        echo "Email: <a href='mailto:$email'>$email</a>";
-    }
-    echo "</div>";
-
-    echo "<div class='item phone'>";
-    $phone = strip_tags($carow["phone"]);
-    if (strlen($phone) > 0) {
-        echo "Телефон: <a href='tel:$phone'>$phone</a>";
-    }
-    echo "</div>";
-
-    echo "</div>";//details
-
-}
-
-echo "</div>"; //column
-
-echo "</div>";//columns
-
+@include_once("contacts_prolog.php");
 
 echo "<a class='ColorButton ContactsButton' onClick='showContactsForm()'>Изпрати запитване</a>";
 
+if ($maps_src || $num_addresses>0) {
+
+    echo "<div class='columns'>";
+
+    echo "<div class='column map'>";
+
+    echo "<a name='map'></a>";
+    echo "<div class='panel map'>";
+    echo "<iframe id=google_map src='$maps_src'  frameborder='0' allowfullscreen='' aria-hidden='false' tabindex='0'></iframe>";
+    echo "</div>";
+
+    echo "</div>"; //column
+
+    echo "<div class='column addresses'>";
+
+
+    while ($carow = $qry->next()) {
+
+        echo "<div class='details' pos='{$carow["position"]}' onClick='updateMap(this);' map-url='{$carow["map_url"]}'>";
+
+        echo "<div class='item city' >";
+        echo $carow["city"];
+        echo "</div>";
+
+        echo "<div class='item address'>";
+        echo $carow["address"];
+        echo "</div>";
+
+        echo "<div class='item email'>";
+        $email = strip_tags($carow["email"]);
+        if (strlen($email) > 0) {
+            echo "Email: <a href='mailto:$email'>$email</a>";
+        }
+        echo "</div>";
+
+        echo "<div class='item phone'>";
+        $phone = strip_tags($carow["phone"]);
+        if (strlen($phone) > 0) {
+            echo "Телефон: <a href='tel:$phone'>$phone</a>";
+        }
+        echo "</div>";
+
+        echo "</div>";//details
+
+    }
+
+    echo "</div>"; //column
+
+    echo "</div>";//columns
+
+}
+
+@include_once("contacts_epilog.php");
 
 ?>
 
