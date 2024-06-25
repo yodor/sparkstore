@@ -39,6 +39,8 @@ class NewsPageBase extends StorePage
         echo "<div class='column main'>";
 
         $arr = $this->pac->getSelection();
+        $title = null;
+
         if (count($arr)>0) {
             $qry = $this->pac->getBean()->query(...$this->pac->getSelectionColumns());
             $qry->select->where()->add($this->news->key(), "(" . implode(",", $arr) . ")", " IN ");
@@ -47,6 +49,9 @@ class NewsPageBase extends StorePage
             while ($item = $qry->next()) {
                 echo "<div class='item'>";
                 echo "<div class='title'>" . $item["item_title"] . "</div>";
+                if (is_null($title)) {
+                    $title = $item["item_title"];
+                }
                 echo "<div class='date'>" . date($this->pac->getItemRenderer()->getDateFormat(), strtotime($item["item_date"])) . "</div>";
 
                 echo "<div class='image'>";
@@ -61,6 +66,12 @@ class NewsPageBase extends StorePage
 
         echo "</div>"; //column_main
 
+        if (!is_null($title)) {
+            SparkPage::Instance()->setTitle($title);
+        }
+        else {
+            SparkPage::Instance()->setTitle(tr("News"));
+        }
     }
 
     public function startRender()
