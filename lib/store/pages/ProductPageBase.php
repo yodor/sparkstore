@@ -99,6 +99,7 @@ class ProductPageBase extends StorePage
             }
         }
         if (mb_strlen($description)>0) {
+            $description = prepareMeta($description);
             $this->description = $description;
         }
         return $description;
