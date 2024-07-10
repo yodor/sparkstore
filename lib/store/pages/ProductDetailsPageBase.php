@@ -119,7 +119,7 @@ class ProductDetailsPageBase extends ProductPageBase
             $description = $this->sellable->getTitle();
         }
 
-        $description = mb_strtolower(trim(strip_tags($description)));
+        $description = trim(mb_strtolower($description));
         if ($description) {
             $description = prepareMeta($description);
             $this->description = $description;
