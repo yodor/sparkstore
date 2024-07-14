@@ -222,9 +222,16 @@ class StorePageBase extends SparkPage
     {
         parent::headStart();
 
+
+
         $cfg = new ConfigBean();
         $cfg->setSection("store_config");
         $phone = $cfg->get("phone", "");
+
+        $page_id = $cfg->get("tawkto_id", "");
+        if ($page_id) {
+            $this->renderChatPlugin($page_id);
+        }
 
         $org_data = array("@context"     => "http://schema.org",
                           "@type"        => "Organization",
@@ -241,6 +248,7 @@ class StorePageBase extends SparkPage
 
 
         $this->renderSearchLD();
+
 
     }
 
@@ -592,13 +600,6 @@ class StorePageBase extends SparkPage
             }
         </script>
 <?php
-
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $page_id = $cfg->get("tawkto_id", "");
-        if ($page_id) {
-            $this->renderChatPlugin($page_id);
-        }
         parent::finishRender();
 
     }
