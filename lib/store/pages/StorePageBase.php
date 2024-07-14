@@ -277,15 +277,6 @@ class StorePageBase extends SparkPage
     {
         parent::startRender();
 
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $page_id = $cfg->get("facebook_page_id", "");
-        if ($page_id) {
-            echo "\n<!-- Facebook Chat Plugin start -->\n";
-            $this->renderFBChatPlugin($page_id);
-            echo "\n<!-- Facebook Chat Plugin end -->\n";
-        }
-
         echo "\n<!-- startRender StorePage-->\n";
 
         $this->selectActiveMenu();
@@ -601,43 +592,34 @@ class StorePageBase extends SparkPage
             }
         </script>
 <?php
+
+        $cfg = new ConfigBean();
+        $cfg->setSection("store_config");
+        $page_id = $cfg->get("tawkto_id", "");
+        if ($page_id) {
+            $this->renderChatPlugin($page_id);
+        }
         parent::finishRender();
 
     }
 
-    public function renderFBChatPlugin(string $page_id)
+    public function renderChatPlugin(string $page_id)
     {
-        ?>
-        <!-- Messenger Chat Plugin Code -->
-        <div id="fb-root"></div>
-
-        <!-- Your Chat Plugin code -->
-        <div id="fb-customer-chat" class="fb-customerchat" page_id="<?php echo $page_id;?>" attribution="biz_inbox">
-        </div>
-
-        <!-- Your SDK code -->
-        <script>
-
-
-            var _x = function(d, s, id) {
-                window.fbAsyncInit = function() {
-                    FB.init({
-                        xfbml            : true,
-                        version          : 'v15.0'
-                    });
-                };
-
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            };
-
-            setTimeout(function() { _x(document, 'script', 'facebook-jssdk') }, 5000);
-
+?>
+        <!--Start of Tawk.to Script-->
+        <script type="text/javascript">
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/<?php echo $page_id;?>';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            })();
         </script>
-        <?php
+        <!--End of Tawk.to Script-->
+<?php
     }
 }
 

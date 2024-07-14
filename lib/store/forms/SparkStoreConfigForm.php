@@ -22,7 +22,7 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "marquee_text", "Header Marquee Text", 0);
         $this->addInput($field, $grp_general);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "facebook_page_id", "Facebook Page ID (Enable Facebook chat Plugin)", 0);
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "tawkto_id", "Tawk.to Chat Plugin ID", 0);
         $this->addInput($field, $grp_general);
 
 //
