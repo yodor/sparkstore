@@ -60,15 +60,33 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->side_pane->setWrapperEnabled(true);
         $this->side_pane->setComponentClass("side_pane");
 
+
+        $this->initializeCartButtons();
+        $this->initializePaymentButtons();
+
+    }
+
+    /**
+     * Initialize and enable cart buttons needed
+     * @return void
+     */
+    protected function initializeCartButtons() : void
+    {
         $this->setButtonEnabled(self::BUTTON_QUERY_PRODUCT, true);
         $this->setButtonEnabled(self::BUTTON_NOTIFY_INSTOCK, true);
         $this->setButtonEnabled(self::BUTTON_FAST_ORDER, true);
         $this->setButtonEnabled(self::BUTTON_PHONE_ORDER, true);
         $this->setButtonEnabled(self::BUTTON_CART_ORDER, true);
+    }
 
+    /**
+     * Initialize and enable additional payment/credit buttons
+     * @return void
+     */
+    protected function initializePaymentButtons() : void
+    {
         $this->crpayments[self::BUTTON_PAYMENT_UNICREDIT] = new UniCreditPaymentButton($this->sellable);
         $this->crpayments[self::BUTTON_PAYMENT_TBI] = new TBICreditPaymentButton($this->sellable);
-
     }
 
     public function setButtonEnabled(string $button_name, bool $mode)
