@@ -15,9 +15,6 @@ class ContactRequestForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 1);
         $this->addInput($field);
 
-//        $field = DataInputFactory::Create(DataInputFactory::CAPTCHA_TEXT, "spamprot", "Spam Protection", 1);
-//        $this->addInput($field);
-
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "query", "Запитване (до 255 символа)", 1);
         $field->getProcessor()->accepted_tags = "";
         $this->addInput($field);
