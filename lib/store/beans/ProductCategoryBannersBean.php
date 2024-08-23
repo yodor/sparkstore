@@ -9,7 +9,7 @@ class ProductCategoryBannersBean extends OrderedDataBean
  `caption` text NOT NULL,
  `link` text NOT NULL,
  `position` int(11) NOT NULL,
- `date_upload` timestamp NOT NULL DEFAULT current_timestamp(),
+ `date_upload` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `catID` int(11) unsigned NOT NULL,
  PRIMARY KEY (`pcbbID`),
  KEY `catID` (`catID`),
