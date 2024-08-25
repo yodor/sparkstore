@@ -74,7 +74,7 @@ class Cart
         if (self::$session_key) {
             return self::$session_key;
         }
-        self::$session_key = md5(Cart::SESSION_KEY . "-" . Cart::VERSION . "-" . SITE_TITLE);
+        self::$session_key = sparkHash(Cart::SESSION_KEY . "-" . Cart::VERSION . "-" . SITE_TITLE);
         return self::$session_key;
     }
 
