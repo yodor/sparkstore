@@ -158,9 +158,9 @@ class ClassAttributeField extends DataIteratorField
         parent::renderItems();
     }
 
-    public function finishRender()
+    public function render()
     {
-        parent::finishRender();
+        parent::render();
         ?>
         <script type='text/javascript'>
             onPageLoad(function () {
