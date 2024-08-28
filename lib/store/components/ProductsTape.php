@@ -42,6 +42,14 @@ class ProductsTape extends Component
 
     }
 
+    public function getCacheName() : string
+    {
+        if (!($this->query instanceof SQLQuery)) return "";
+
+        return parent::getCacheName()."-".$this->query->select->getSQL();
+
+    }
+
     public function setIterator(SQLQuery $query): void
     {
         $this->query = $query;
