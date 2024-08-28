@@ -9,7 +9,7 @@ include_once("components/ItemView.php");
 
 include_once("components/ClosureComponent.php");
 
-include_once("utils/GETVariableFilter.php");
+include_once("utils/GetProcessorCollection.php");
 
 include_once("store/components/ProductListFilter.php");
 
@@ -33,7 +33,7 @@ class ProductListPageBase extends ProductPageBase
      * Filters form component
      * @var ProductListFilter|null
      */
-    protected $filters = NULL;
+    protected ?ProductListFilter $filters;
 
     /**
      * Products list component
@@ -41,17 +41,9 @@ class ProductListPageBase extends ProductPageBase
      */
     protected $view = NULL;
 
+    protected GetProcessorCollection $property_filter;
 
-    /**
-     * @var GETVariableFilter|null
-     */
-    protected $section_filter = NULL;
-
-    /**
-     * @var GETVariableFilter|null
-     */
-    protected $category_filter = NULL;
-
+    protected GETProcessor $category_filter;
 
     public $treeViewUseAgregateSelect = true;
 
@@ -60,10 +52,30 @@ class ProductListPageBase extends ProductPageBase
     {
         parent::__construct();
 
+        $this->property_filter = new GetProcessorCollection();
 
-        $this->section_filter = new GETVariableFilter("section", "section");
+        $section_filter = new GETProcessor("section", "section");
+        $closure = function(GETProcessor $filter) {
+            $clause = new SQLClause();
+            $value = $filter->getValue();
+            $clause->setExpression("product_sections LIKE '%$value%'", "", "");
+            $filter->getClauseCollection()->addClause($clause);
 
-        $this->category_filter = new GETVariableFilter("catID", "catID");
+        };
+        $section_filter->setClosure($closure);
+        $this->property_filter->append($section_filter);
+
+//        $clause = new SQLClause();
+//        $clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");
+//
+//        $filter = new GETProcessor("Промо", "promo");
+//        $filter->setClosure(null);
+//        $filter->getClauseCollection()->addClause($clause);
+//
+//        $this->property_filter->append($filter);
+
+        $this->category_filter = new GETProcessor("catID", "catID");
+
 
         //Initialize product categories tree
         $treeView = new NestedSetTreeView();
@@ -162,6 +174,10 @@ class ProductListPageBase extends ProductPageBase
         $this->section = "";
     }
 
+    public function GetProcessorCollection() : GetProcessorCollection
+    {
+        return $this->property_filter;
+    }
 
     /**
      * Process the page input
@@ -173,43 +189,28 @@ class ProductListPageBase extends ProductPageBase
     {
 
         //filter precedence
-        // 1 section
-        // 2 brand
+        // 0 property filters
         // 3 keyword search
-        // 4 category
         // 5 attribute filters
 
-
-
-
-        $this->section_filter->processInput();
-
-        if ($this->section_filter->isProcessed()) {
-
-            $value = $this->section_filter->getValue();
-
-            $qry = $this->sections->queryField("section_title", $value, 1);
-            //section exists
-            $num = $qry->exec();
-            if ($num > 0) {
-                $this->section = $value;
-                $this->select->where()->append("product_sections LIKE '%$value%'");
-            }
-
+        foreach ($this->property_filter->getAll() as $filter) {
+            if (!($filter instanceof GETProcessor)) continue;
+            $filter->setSQLSelect($this->select);
+            $filter->processInput();
         }
+
+        $this->category_filter->processInput();
+
+        if ($this->category_filter->isProcessed()) {
+            $this->treeView->setSelectedID($this->category_filter->getValue());
+        }
+
 
         $this->keyword_search->processInput();
 
         if ($this->keyword_search->isProcessed()) {
-
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("AND");
-//            print_r($cc->getSQL());
             $cc->copyTo($this->select->where());
-        }
-
-        $this->category_filter->processInput();
-        if ($this->category_filter->isProcessed()) {
-            $this->treeView->setSelectedID((int)$this->category_filter->getValue());
         }
 
 

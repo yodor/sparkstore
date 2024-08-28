@@ -5,7 +5,7 @@ include_once("templates/admin/BeanListPage.php");
 include_once("store/beans/VariantOptionsBean.php");
 include_once("store/beans/ProductsBean.php");
 include_once("store/beans/ProductClassesBean.php");
-include_once("utils/GETVariableFilter.php");
+include_once("utils/GETProcessor.php");
 include_once("components/ClosureComponent.php");
 
 $menu = array(
@@ -23,10 +23,10 @@ $bean = new VariantOptionsBean();
 $bean->select()->where()->add("parentID" , " NULL ", " IS ");
 $pclsID = -1;
 
-$product_filter = new GETVariableFilter("Продукт", "prodID");
+$product_filter = new GETProcessor("Продукт", "prodID");
 $product_filter->setSQLSelect($bean->select());
 
-$class_filter = new GETVariableFilter("Продуктов клас", "pclsID");
+$class_filter = new GETProcessor("Продуктов клас", "pclsID");
 $class_filter->setSQLSelect($bean->select());
 
 
