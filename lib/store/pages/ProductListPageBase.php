@@ -67,6 +67,8 @@ class ProductListPageBase extends ProductPageBase
 
         //Initialize product categories tree
         $treeView = new NestedSetTreeView();
+        $treeView->setCacheable(true);
+
         $treeView->setName("products_tree");
 
         //item renderer for the tree view
@@ -86,6 +88,8 @@ class ProductListPageBase extends ProductPageBase
 
 
         $this->view = new ItemView();
+        $this->view->setCacheable(true);
+        
         $this->view->setItemRenderer(new ProductListItem());
         $this->view->setItemsPerPage(24);
 

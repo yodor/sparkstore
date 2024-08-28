@@ -63,6 +63,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         $this->initializeCartButtons();
         $this->initializePaymentButtons();
+        $this->setCacheable(true);
 
     }
 
