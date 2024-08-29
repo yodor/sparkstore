@@ -199,6 +199,11 @@ class ProductListPageBase extends ProductPageBase
             $filter->processInput();
         }
 
+        $section_filter = $this->property_filter->get("section");
+        if ($section_filter->isProcessed()) {
+            $this->section = $section_filter->getValue();
+        }
+
         $this->category_filter->processInput();
 
         if ($this->category_filter->isProcessed()) {
