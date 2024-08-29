@@ -67,6 +67,11 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     }
 
+    public function getCacheName(): string
+    {
+        return parent::getCacheName()."-".$this->sellable->getProductID();
+    }
+
     /**
      * Initialize and enable cart buttons needed
      * @return void
