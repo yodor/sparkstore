@@ -1,3 +1,27 @@
 @media screen and (max-width: 1000px) {
-    
+
+
+}
+
+@media (max-width: 480px) {
+    .ProductListItem {
+        margin-bottom:1.5em;
+        margin-left:2px;
+        margin-right:2px;
+        width:90%;
+        min-width:inherit;
+    }
+    .ProductListItem .wrap {
+        max-width:100%;
+        min-width:auto;
+        width:100%;
+        grid-template-rows: min-content min-content;
+        grid-template-columns: 1fr;
+    }
+
+    .ProductListItem img {
+        flex-shrink: 0;
+        min-width: 100%;
+        min-height: 100%
+    }
 }
