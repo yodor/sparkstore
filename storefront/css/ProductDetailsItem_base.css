@@ -23,8 +23,8 @@
     max-height: 640px;
     overflow:hidden;
     position:relative;
-    min-height:350px;
-    min-width:350px;
+    /*min-height:350px;*/
+    /*min-width:350px;*/
 }
 
 .images .image_preview .discount_label {
