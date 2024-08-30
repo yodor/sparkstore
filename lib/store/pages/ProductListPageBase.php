@@ -193,10 +193,14 @@ class ProductListPageBase extends ProductPageBase
         // 3 keyword search
         // 5 attribute filters
 
-        foreach ($this->property_filter->getAll() as $filter) {
-            if (!($filter instanceof GETProcessor)) continue;
-            $filter->setSQLSelect($this->select);
-            $filter->processInput();
+        $iterator = $this->property_filter->iterator();
+        while ($iterator->valid()) {
+            $filter = $iterator->current();
+            if ($filter instanceof GETProcessor) {
+                $filter->setSQLSelect($this->select);
+                $filter->processInput();
+            }
+            $iterator->next();
         }
 
         $section_filter = $this->property_filter->get("section");
