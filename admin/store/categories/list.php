@@ -20,7 +20,7 @@ if ($item instanceof TextTreeItem) {
     $si->className = "ProductCategoryPhotosBean";
     $si->setName("pcpID");
 
-    $item->setPhotoSize(32, 32);
+    $item->setPhotoSize(-1, 32);
     $item->setIcon($si);
 
     //banners for each category
