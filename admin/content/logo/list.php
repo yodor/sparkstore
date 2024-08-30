@@ -33,7 +33,7 @@ if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
     $is = $form->getInput("logo")->getValue()[0];
     if ($is instanceof ImageStorageObject) {
         $current->open('w');
-        $current->write($is->getData());
+        $current->write($is->data());
         $current->close();
         $image_input->clear();
     }

@@ -7,10 +7,10 @@ class OrderItemsCellRenderer extends TableCellRenderer
 
     protected $orderID = -1;
 
-    public function setData(array& $row)
+    public function setData(array $data) : void
     {
-        parent::setData($row);
-        $this->orderID = $row["orderID"];
+        parent::setData($data);
+        $this->orderID = $data["orderID"];
 
     }
 

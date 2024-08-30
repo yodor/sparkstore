@@ -85,18 +85,18 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         return $this->height;
     }
 
-    public function setData(array &$item)
+    public function setData(array $data) : void
     {
-        parent::setData($item);
+        parent::setData($data);
         $this->setAttribute("prodID", $this->data["prodID"]);
 
-        if (isset($item["ppID"]) && $item["ppID"] > 0) {
+        if (isset($data["ppID"]) && $data["ppID"] > 0) {
 
-            $this->photo->id = (int)$item["ppID"];
+            $this->photo->id = (int)$data["ppID"];
             $this->photo->className = "ProductPhotosBean";//ProductPhotosBean::class;
         }
 
-        $this->detailsURL->setData($item);
+        $this->detailsURL->setData($data);
 
     }
 

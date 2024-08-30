@@ -34,12 +34,12 @@ class OrderClientCellRenderer extends TableCellRenderer
         echo "</div>";
     }
 
-    public function setData(array &$row)
+    public function setData(array $data) : void
     {
 
-        parent::setData($row);
+        parent::setData($data);
 
-        $this->userID = (int)$row["userID"];
+        $this->userID = (int)$data["userID"];
 
     }
 
