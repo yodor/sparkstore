@@ -60,7 +60,6 @@ class ProductListPageBase extends ProductPageBase
             $value = $filter->getValue();
             $clause->setExpression("product_sections LIKE '%$value%'", "", "");
             $filter->getClauseCollection()->addClause($clause);
-
         };
         $section_filter->setClosure($closure);
         $this->property_filter->append($section_filter);
@@ -83,13 +82,11 @@ class ProductListPageBase extends ProductPageBase
 
         $treeView->setName("products_tree");
 
-        //item renderer for the tree view
+        //item renderer for the tree view url will be set in cleanupCategoryURL
         $ir = new TextTreeItem();
         $ir->setLabelKey("category_name");
         $ir->getTextAction()->addDataAttribute("title", "category_name");
-        $ir->getTextAction()->getURLBuilder()->add(new DataParameter("catID"));
-        $ir->getTextAction()->getURLBuilder()->setClearPageParams(false);
-        $ir->getTextAction()->getURLBuilder()->setClearParams(...array("page"));
+
         $treeView->setItemRenderer($ir);
 
         $this->treeView = $treeView;
@@ -300,8 +297,76 @@ class ProductListPageBase extends ProductPageBase
 
         $this->prepareKeywords();
         $this->prepareDescription();
+
+        $this->processTreeViewURL();
     }
 
+    /**
+     * Set clean URL for tree view items
+     * Only transfer parameters that affect the query of the treeview
+     * @return void
+     */
+    protected function processTreeViewURL() : void
+    {
+
+        $supported_params = array();
+        $supported_params[] = $this->category_filter->getName();
+
+        //append property filter names
+        $iterator = $this->property_filter->iterator();
+        while ($iterator->valid()) {
+            $filter = $iterator->current();
+            if ($filter instanceof GETProcessor) {
+                $supported_params[] = $filter->getName();
+            }
+            $iterator->next();
+        }
+
+        //append dynamic filter names
+        if ($this->filters) {
+            foreach ($this->filters->getForm()->getInputNames() as $idx => $name) {
+                $supported_params[] = $name;
+            }
+        }
+
+        //keyword search
+        if ($this->keyword_search) {
+            foreach ($this->keyword_search->getForm()->getInputNames() as $idx => $name) {
+                $supported_params[] = $name;
+            }
+            $supported_params[] = KeywordSearch::SUBMIT_KEY;
+        }
+
+        //do not set paginator names
+//        $view_params = $this->view->getPaginator()->getParameterNames();
+//        foreach ($view_params as $idx=>$name) {
+//            if (str_contains($name, Paginator::KEY_PAGE))continue;
+//            $supported_params[] = $name;
+//        }
+
+
+        $item = $this->treeView->getItemRenderer();
+        if ($item instanceof TextTreeItem) {
+
+            $itemURL = $item->getTextAction()->getURLBuilder();
+
+            $pageURL = SparkPage::Instance()->getURL();
+
+            //static url parameter names from the current page
+            $page_params = $pageURL->getParameterNames();
+            //cleanup non supported names
+            foreach ($page_params as $idx=>$name) {
+                if (!in_array($name, $supported_params)) {
+                    $pageURL->remove($name);
+                }
+            }
+            //
+            $itemURL->buildFrom($pageURL->url());
+            $itemURL->add(new DataParameter("catID"));
+        }
+
+
+    }
     public function isProcessed(): bool
     {
         return $this->keyword_search->isProcessed();
