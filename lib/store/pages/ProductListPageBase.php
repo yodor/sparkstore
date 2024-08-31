@@ -102,7 +102,8 @@ class ProductListPageBase extends ProductPageBase
         $this->view->setItemRenderer(new ProductListItem());
         $this->view->setItemsPerPage(24);
 
-        $this->view->getTopPaginator()->view_modes_enabled = TRUE;
+        //disable list/grid
+        $this->view->getTopPaginator()->view_modes_enabled = FALSE;
 
         $this->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->addJS(STORE_LOCAL . "/js/product_list.js");
