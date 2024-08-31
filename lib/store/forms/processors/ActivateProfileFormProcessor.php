@@ -8,8 +8,6 @@ include_once("store/mailers/RegisterCustomerActivationMailer.php");
 class ActivateProfileFormProcessor extends FormProcessor
 {
 
-    protected $editID = -1;
-
     public function setEditID(int $editID)
     {
         throw new Exception("Unsupported function");
@@ -19,7 +17,7 @@ class ActivateProfileFormProcessor extends FormProcessor
      * @param InputForm $form
      * @throws Exception
      */
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
         if ($this->status != IFormProcessor::STATUS_OK) return;

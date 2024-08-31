@@ -10,20 +10,9 @@ include_once("store/beans/CourierAddressesBean.php");
 
 class OfficeFormProcessor extends FormProcessor
 {
-    protected $bean = NULL;
-    protected $editID = -1;
 
-    public function setBean(DBTableBean $bean)
-    {
-        $this->bean = $bean;
-    }
 
-    public function setEditID(int $editID)
-    {
-        $this->editID = (int)$editID;
-    }
-
-    public function processImpl(InputForm $form)
+    public function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
 

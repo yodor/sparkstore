@@ -5,7 +5,7 @@ include_once("components/renderers/cells/ImageCellRenderer.php");
 class ProductPhotoCellRenderer extends ImageCellRenderer
 {
 
-    protected function constructItems(array &$row)
+    protected function constructItems(array $row)
     {
         $this->items = array();
 

@@ -120,7 +120,7 @@ class ProductVariantsProcessor extends FormProcessor
         $this->prodID = $prodID;
     }
 
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
         $this->storeFormData($form);

@@ -11,7 +11,7 @@ include_once("auth/Authenticator.php");
 
 class ForgotPasswordProcessor extends FormProcessor
 {
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
 

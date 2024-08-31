@@ -5,8 +5,7 @@ include_once("db/BeanTransactor.php");
 
 class ClientAddressFormProcessor extends FormProcessor
 {
-    protected $bean = NULL;
-    protected $editID = -1;
+
     protected $userID = -1;
 
     public function setUserID(int $userID)
@@ -14,7 +13,7 @@ class ClientAddressFormProcessor extends FormProcessor
         $this->userID = $userID;
     }
 
-    public function processImpl(InputForm $form)
+    public function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);

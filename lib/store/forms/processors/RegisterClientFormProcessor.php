@@ -8,18 +8,11 @@ include_once("store/mailers/RegisterCustomerActivationMailer.php");
 class RegisterClientFormProcessor extends FormProcessor
 {
 
-    protected $editID = -1;
-
-    public function setEditID(int $editID)
-    {
-        $this->editID = (int)$editID;
-    }
-
     /**
      * @param InputForm $form
      * @throws Exception
      */
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
         if ($this->status != IFormProcessor::STATUS_OK) return;

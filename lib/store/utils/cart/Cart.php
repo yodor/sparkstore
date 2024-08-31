@@ -292,7 +292,7 @@ class Cart
      * @param string $name
      * @param string $value
      */
-    public function setData(string $name, string $value)
+    public function setData(string $name, string $value) : void
     {
         $this->data[$name] = $value;
     }

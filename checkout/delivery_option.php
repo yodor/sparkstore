@@ -7,7 +7,7 @@ include_once("store/beans/ClientAddressesBean.php");
 class DeliveryAddressProcessor extends FormProcessor
 {
 
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);

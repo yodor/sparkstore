@@ -28,7 +28,7 @@ class RequireInvoiceInputForm extends InputForm
 class RequireInvoiceFormProcessor extends FormProcessor
 {
 
-    public function processImpl(InputForm $form)
+    public function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);
@@ -67,7 +67,7 @@ class OrderNoteInputForm extends InputForm
 
 class OrderNoteFormProcessor extends FormProcessor
 {
-    public function processImpl(InputForm $form)
+    public function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
 

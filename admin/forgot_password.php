@@ -15,7 +15,7 @@ include_once("components/TextComponent.php");
 
 class ForgotPasswordProcessor extends FormProcessor
 {
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
         parent::processImpl($form);
 

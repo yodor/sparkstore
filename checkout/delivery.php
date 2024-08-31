@@ -6,7 +6,7 @@ include_once("store/forms/DeliveryCourierForm.php");
 class DeliveryCourierProcessor extends FormProcessor
 {
 
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);

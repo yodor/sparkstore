@@ -169,17 +169,17 @@ class ProductInputFormBase extends InputForm
 
     }
 
-    public function loadPostData(array $arr)
+    public function loadPostData(array $data) : void
     {
 
         $renderer = $this->getInput("value")->getRenderer();
         if ($renderer instanceof ClassAttributeField) {
-            $renderer->setClassID((int)$arr["pclsID"]);
+            $renderer->setClassID((int)$data["pclsID"]);
 //            if (isset($arr["prodID"])) {
 //                $renderer->setProductID((int)$arr["prodID"]);
 //            }
         }
-        parent::loadPostData($arr);
+        parent::loadPostData($data);
 
     }
 }

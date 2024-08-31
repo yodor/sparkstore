@@ -16,7 +16,7 @@ class OrderStatusProcessor extends FormProcessor
     public $orderID = -1;
     public $confirm_ticket = "";
 
-    protected function processImpl(InputForm $form)
+    protected function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);

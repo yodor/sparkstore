@@ -5,26 +5,16 @@ include_once("db/BeanTransactor.php");
 
 class InvoiceDetailsFormProcessor extends FormProcessor
 {
-    protected $bean = NULL;
-    protected $editID = -1;
-    protected $userID = -1;
 
-    public function setEditID(int $editID)
+    protected int $userID = -1;
+
+    public function setUserID(int $userID) : void
     {
-        $this->editID = $editID;
+        $this->userID = $userID;
     }
 
-    public function setUserID(int $userID)
-    {
-        $this->userID = (int)$userID;
-    }
 
-    public function setBean(DBTableBean $bean)
-    {
-        $this->bean = $bean;
-    }
-
-    public function processImpl(InputForm $form)
+    public function processImpl(InputForm $form) : void
     {
 
         parent::processImpl($form);
