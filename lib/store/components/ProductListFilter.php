@@ -9,7 +9,6 @@ include_once("store/forms/ProductListFilterInputForm.php");
 
 class ProductListFilter extends FormRenderer implements IRequestProcessor
 {
-    protected $form;
 
     public function __construct()
     {

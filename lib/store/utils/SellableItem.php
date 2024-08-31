@@ -7,38 +7,38 @@ include_once("store/utils/SellableDataParser.php");
 class SellableItem extends SparkObject implements JsonSerializable, IPhotoRenderer
 {
 
-    protected $prodID = -1;
-    protected $catID = -1;
+    protected int $prodID = -1;
+    protected int $catID = -1;
 
     protected string $category_name = "";
     protected array $category_path = array();
 
-    protected $title = "";
-    protected $caption = "";
-    protected $brand_name = "";
-    protected $model = "";
+    protected string $title = "";
+    protected string $caption = "";
+    protected string $brand_name = "";
+    protected string $model = "";
 
-    protected $description = "";
-    protected $keywords = "";
+    protected string $description = "";
+    protected string $keywords = "";
 
     protected $main_photo = NULL;
 
-    protected $width = -1;
-    protected $height = -1;
+    protected int $width = -1;
+    protected int $height = -1;
 
     //attr.name=>value
-    protected $attributes = array();
+    protected array $attributes = array();
 
     //array of VariantItems
-    protected $variants = array();
+    protected array $variants = array();
 
     protected $priceInfo = null;
 
-    protected $gallery = array();
+    protected array $gallery = array();
 
-    protected $stock_amount = 0;
+    protected int $stock_amount = 0;
 
-    protected $data = array();
+    protected array $data = array();
 
     protected static $defaultDataParser=null;
 

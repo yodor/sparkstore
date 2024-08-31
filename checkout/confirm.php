@@ -33,7 +33,7 @@ class RequireInvoiceFormProcessor extends FormProcessor
 
         parent::processImpl($form);
 
-        if ($this->getStatus() != FormProcessor::STATUS_OK) return;
+        if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
 
         $page = SparkPage::Instance();
 
@@ -71,7 +71,7 @@ class OrderNoteFormProcessor extends FormProcessor
     {
         parent::processImpl($form);
 
-        if ($this->getStatus() != FormProcessor::STATUS_OK) return;
+        if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
 
         $cart = Cart::Instance();
         $cart->setNote($form->getInput("note")->getValue());
