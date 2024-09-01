@@ -16,7 +16,7 @@ class OfficeFormProcessor extends FormProcessor
     {
         parent::processImpl($form);
 
-        if ($this->getStatus() != FormProcessor::STATUS_OK) return;
+        if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
 
         $page = StorePage::Instance();
 

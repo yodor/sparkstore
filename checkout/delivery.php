@@ -44,18 +44,18 @@ $proc->process($form);
 $courier = $cart->getDelivery()->getSelectedCourier();
 
 
-if ($proc->getStatus() == FormProcessor::STATUS_NOT_PROCESSED) {
+if ($proc->getStatus() == IFormProcessor::STATUS_NOT_PROCESSED) {
 
     if (!is_null($courier)) {
 
         $form->getInput("delivery_courier")->setValue($courier->getID());
     }
 }
-else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
+else if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
     Session::set("alert", $proc->getMessage());
 
 }
-else if ($proc->getStatus() == FormProcessor::STATUS_OK) {
+else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 
     if (!is_null($courier)) {
 

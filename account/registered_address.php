@@ -29,12 +29,12 @@ $form->setProcessor($proc);
 
 $proc->process($form);
 
-if ($proc->getStatus() == FormProcessor::STATUS_OK) {
+if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
     Session::SetAlert(tr("Вашият адрес беше успешно променен"));
     header("Location: registered_address.php");
     exit;
 }
-else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
+else if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
     Session::SetAlert($proc->getMessage());
 }
 

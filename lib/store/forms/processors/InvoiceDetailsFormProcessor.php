@@ -19,7 +19,7 @@ class InvoiceDetailsFormProcessor extends FormProcessor
 
         parent::processImpl($form);
 
-        if ($this->getStatus() != FormProcessor::STATUS_OK) return;
+        if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
 
         if ($this->userID < 1) throw new Exception("Тази функция изисква регистрация");
 

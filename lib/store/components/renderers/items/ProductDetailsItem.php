@@ -525,19 +525,22 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
                     if ($object->isEnabled()) {
                         ob_start();
+                        $button = "";
                         try {
                             $object->checkStockPrice();
                             $object->renderButton();
                             $button = ob_get_contents();
-                            ob_end_clean();
-                            echo "<div class='module $class'>";
-                            echo $button;
-                            echo "</div>";
                         }
                         catch (Exception $e) {
+                            $button = "";
                             ob_end_clean();
                             debug("Error rendering credit payment button '$class': ".$e->getMessage());
                         }
+
+                        echo "<div class='module $class'>";
+                        echo $button;
+                        echo "</div>";
+                        ob_end_clean();
                     }
                 }
                 echo "<div class='clear'></div>";

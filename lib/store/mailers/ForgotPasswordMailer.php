@@ -18,7 +18,7 @@ class ForgotPasswordMailer extends Mailer
 
         $message = "Здравейте, <br><br>\r\n\r\n";
 
-        $message .= "Изпращаме Ви това съобщение във връзка с Вашата заявка за подновяване на паролата на " . SITE_DOMAIN . "";
+        $message .= "Изпращаме Ви това съобщение във връзка с Вашата заявка за подновяване на паролата на " . SITE_DOMAIN;
 
         $message .= "\r\n\r\n<br><br>";
 
@@ -42,7 +42,7 @@ class ForgotPasswordMailer extends Mailer
 
         $message .= "Hello, <br><br>\r\n\r\n";
 
-        $message .= "This message is sent in relation to your forgot password request at " . SITE_DOMAIN . "";
+        $message .= "This message is sent in relation to your forgot password request at " . SITE_DOMAIN;
 
         $message .= "\r\n\r\n<br><br>";
 
