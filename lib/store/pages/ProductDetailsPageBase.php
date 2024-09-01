@@ -187,11 +187,11 @@ class ProductDetailsPageBase extends ProductPageBase
         $qry->select->group_by = " prodID ";
         $qry->select->limit = "$limit";
 
-        $this->tape->setTitle($title);
+        $this->tape->setCaption($title);
         $this->tape->setIterator($qry);
-        $action = $this->tape->getTitleAction();
-        $action->getURLBuilder()->buildFrom(LOCAL."/products/list.php");
-        $action->getURLBuilder()->add(new URLParameter("catID", $catID));
+
+        $this->tape->getCaptionURL()->buildFrom(LOCAL . "/products/list.php");
+        $this->tape->getCaptionURL()->add(new URLParameter("catID", $catID));
 
         $this->tape->render();
     }
@@ -206,10 +206,9 @@ class ProductDetailsPageBase extends ProductPageBase
         $qry->select->where()->add("stock_amount" , "0", " > ");
         $qry->select->limit = "$limit";
 
-        $this->tape->setTitle($title);
+        $this->tape->setCaption($title);
         $this->tape->setIterator($qry);
-        $action = $this->tape->getTitleAction();
-        $action->getURLBuilder()->buildFrom(LOCAL."/products/list.php");
+        $this->tape->getCaptionURL()->buildFrom(LOCAL."/products/list.php");
         $this->tape->render();
     }
 

@@ -7,19 +7,18 @@ include_once("store/components/renderers/items/ProductListItem.php");
 class ProductsTape extends Component
 {
 
-    protected $list_item = null;
-    protected $title = "";
-    protected $action = null;
-    protected $query = null;
+    protected ?ProductListItem $list_item = null;
 
-    protected static $defaultItemRenderer = NULL;
+    protected ?SQLQuery $query = null;
 
-    public static function SetDefaultItemRenderer(DataIteratorItem $item)
+    protected static ?ProductListItem $defaultItemRenderer = NULL;
+
+    public static function SetDefaultItemRenderer(ProductListItem $item)
     {
         self::$defaultItemRenderer = $item;
     }
 
-    public static function GetDefaultItemRenderer() : DataIteratorItem
+    public static function GetDefaultItemRenderer() : ProductListItem
     {
         if (is_null(self::$defaultItemRenderer)) {
             self::$defaultItemRenderer = new ProductListItem();
@@ -27,24 +26,23 @@ class ProductsTape extends Component
         return self::$defaultItemRenderer;
     }
 
-    public function __construct(string $title = "")
+    public function __construct()
     {
         parent::__construct();
 
         $this->list_item = ProductsTape::GetDefaultItemRenderer();
 
+        $action = new Action();
+        $action->translation_enabled = false;
+        $action->setClassName("Caption");
 
-        $this->action = new Action();
-        $this->action->translation_enabled = false;
-        $this->action->addClassName("Caption");
-
-        $this->setTitle($title);
+        $this->setCaptionComponent($action);
 
     }
 
     public function getCacheName() : string
     {
-        if (!($this->query instanceof SQLQuery)) return "";
+        if (!($this->query instanceof SQLQuery)) return parent::getCacheName();
 
         return parent::getCacheName()."-".$this->query->select->getSQL();
 
@@ -55,16 +53,23 @@ class ProductsTape extends Component
         $this->query = $query;
     }
 
-    public function setTitle(string $text): void
+    public function setCaption(string $caption): void
     {
-        $this->title = $text;
-        $this->action->setAttribute("title", $text);
-        $this->action->setContents($text);
+        parent::setCaption($caption);
+        $this->caption_component->setAttribute("title", $caption);
     }
 
-    public function getTitleAction() : Action
+    /**
+     * @return URLBuilder
+     * @throws Exception
+     */
+    public function getCaptionURL() : URLBuilder
     {
-        return $this->action;
+        $action = $this->getCaptionComponent();
+        if ($action instanceof Action) {
+            return $action->getURLBuilder();
+        }
+        throw new Exception("Incorrect action component");
     }
 
     public function getListItem() : ProductListItem
@@ -72,25 +77,29 @@ class ProductsTape extends Component
         return $this->list_item;
     }
 
-    public function setListItem(ProductListItem $item)
+    public function setListItem(ProductListItem $item) : void
     {
         $this->list_item = $item;
     }
 
+    public function startRender()
+    {
+        parent::startRender();
+        if ($this->query instanceof SQLQuery) {
+            $num = $this->query->exec();
+        }
+    }
+
     protected function renderImpl()
     {
-        if ($this->query->exec()>0) {
-            if ($this->title) {
-                $this->action->render();
-            }
-            $position = 0;
-            while ($row = $this->query->next()) {
-                $position++;
-                $this->list_item->setPosition($position);
-                $this->list_item->setData($row);
-                $this->list_item->render();
-            }
-        }
+        if (!$this->query instanceof SQLQuery) return;
 
+        $position = 0;
+        while ($row = $this->query->next()) {
+            $position++;
+            $this->list_item->setPosition($position);
+            $this->list_item->setData($row);
+            $this->list_item->render();
+        }
     }
 }

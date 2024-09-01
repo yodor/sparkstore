@@ -68,6 +68,8 @@ if ($confirm_success) {
         $prodID = (int)$prod[1];
 
         try {
+            include_once("store/beans/ProductsBean.php");
+            $products = new ProductsBean();
             $prod_row = $products->getByID($prodID);
             $order_counter = (int)$prod_row["order_counter"];
             $order_counter++;
