@@ -52,7 +52,7 @@ class ProductClassInputForm extends InputForm
             echo "</span>";
         };
         $field1->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field1->getRenderer()->getAddonContainer()->append(new ClosureComponent($closure, true));
+        $field1->getRenderer()->getAddonContainer()->items()->append(new ClosureComponent($closure, true));
     }
 
 }

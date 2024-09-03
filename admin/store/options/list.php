@@ -89,7 +89,7 @@ $closure = function(ClosureComponent $cmp) use ($class_filter, $classes) {
     echo "</form>";
 };
 if (!$product_filter->isProcessed()) {
-    $cmp->append(new ClosureComponent($closure));
+    $cmp->items()->append(new ClosureComponent($closure));
 }
 
 $cmp->setBean($bean);
@@ -115,7 +115,7 @@ $closure = function(ClosureComponent $cmp) {
     echo "Тук може да добавяте опции за изграждане на продуктови варианти.<BR>";
     echo "</div>";
 };
-$cmp->insert(new ClosureComponent($closure), 0);
+$cmp->items()->insert(new ClosureComponent($closure), 0);
 $cmp->render();
 
 

@@ -59,7 +59,7 @@ class ProductListPageBase extends ProductPageBase
             $clause = new SQLClause();
             $value = $filter->getValue();
             $clause->setExpression("product_sections LIKE '%$value%'", "", "");
-            $filter->getClauseCollection()->addClause($clause);
+            $filter->getClauseCollection()->append($clause);
         };
         $section_filter->setClosure($closure);
         $this->property_filter->append($section_filter);
@@ -69,7 +69,7 @@ class ProductListPageBase extends ProductPageBase
 //
 //        $filter = new GETProcessor("Промо", "promo");
 //        $filter->setClosure(null);
-//        $filter->getClauseCollection()->addClause($clause);
+//        $filter->getClauseCollection()->append($clause);
 //
 //        $this->property_filter->append($filter);
 
@@ -105,8 +105,8 @@ class ProductListPageBase extends ProductPageBase
         //disable list/grid
         $this->view->getTopPaginator()->view_modes_enabled = FALSE;
 
-        $this->addCSS(STORE_LOCAL . "/css/product_list.css");
-        $this->addJS(STORE_LOCAL . "/js/product_list.js");
+        $this->head()->addCSS(STORE_LOCAL . "/css/product_list.css");
+        $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
         $this->canonical_enabled = true;
 

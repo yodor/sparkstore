@@ -10,7 +10,7 @@ include_once("store/beans/OrdersBean.php");
 include_once("store/forms/ClientAddressInputForm.php");
 
 $page = new AccountPage();
-$page->addCSS(STORE_LOCAL."/css/print.css");
+$page->head()->addCSS(STORE_LOCAL."/css/print.css");
 
 $courier_addresses = new CourierAddressesBean();
 $client_addresses = new ClientAddressesBean();

@@ -14,7 +14,7 @@ class NewsPageBase extends StorePage
     {
         parent::__construct();
 
-        $this->addCSS(STORE_LOCAL . "/css/news.css");
+        $this->head()->addCSS(STORE_LOCAL . "/css/news.css");
 
         $this->news = new NewsItemsBean();
 

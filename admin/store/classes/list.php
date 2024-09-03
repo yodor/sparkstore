@@ -53,7 +53,7 @@ $closure = function(ClosureComponent $cmp) {
     echo "Опциите на класа служат за изграждане на варианти на продуктите, които също се използват за филтриране на продуктите.<BR>";
     echo "</div>";
 };
-$cmp->insert(new ClosureComponent($closure), 0);
+$cmp->items()->insert(new ClosureComponent($closure), 0);
 $cmp->render();
 
 ?>

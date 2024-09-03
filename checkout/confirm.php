@@ -243,7 +243,7 @@ $action->setTitle(tr("Назад"));
 $action->setClassName("edit");
 $action->getURLBuilder()->buildFrom("cart.php");
 
-$cmp = $page->getNavigation()->getByName(CheckoutPage::NAV_CENTER);
+$cmp = $page->getNavigation()->items()->getByName(CheckoutPage::NAV_CENTER);
 if ($cmp instanceof ClosureComponent) {
     $render = function (ClosureComponent $cmp) {
         echo "<div class='note'>";

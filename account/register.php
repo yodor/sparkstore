@@ -7,8 +7,8 @@ include_once("store/forms/processors/RegisterClientFormProcessor.php");
 
 $page = new AccountPage(FALSE);
 
-$page->addJS(STORE_LOCAL."/js/RegisterForm.js");
-$page->addJS(SPARK_LOCAL."/js/md5.js");
+$page->head()->addJS(STORE_LOCAL."/js/RegisterForm.js");
+$page->head()->addJS(SPARK_LOCAL."/js/md5.js");
 
 $form = new RegisterClientInputForm();
 

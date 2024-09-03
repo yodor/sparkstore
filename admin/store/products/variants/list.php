@@ -242,7 +242,7 @@ $closure = function(ClosureComponent $cmp) use($rend) {
 
     echo "<HR>";
 };
-$cmp->append(new ClosureComponent($closure));
+$cmp->items()->append(new ClosureComponent($closure));
 
 
 $bean = new ProductVariantsBean();

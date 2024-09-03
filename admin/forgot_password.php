@@ -53,7 +53,7 @@ class ForgotPasswordProcessor extends FormProcessor
 }
 
 $page = new AdminLoginPage();
-$page->addCSS(SPARK_LOCAL . "/css/LoginForm.css");
+$page->head()->addCSS(SPARK_LOCAL . "/css/LoginForm.css");
 
 $form = new InputForm();
 $form->addInput(DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Input your registered email", 1));

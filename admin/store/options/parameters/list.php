@@ -49,7 +49,7 @@ $closure = function(ClosureComponent $cmp) {
     echo "Параметрите се използват за избор от клиента преди поръчка на продукт.<BR>";
     echo "</div>";
 };
-$cmp->insert(new ClosureComponent($closure), 0);
+$cmp->items()->insert(new ClosureComponent($closure), 0);
 $cmp->render();
 
 ?>

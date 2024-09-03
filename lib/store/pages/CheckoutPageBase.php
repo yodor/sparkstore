@@ -27,7 +27,7 @@ class CheckoutPageBase extends StorePage
 
         $this->ccmp = new CartComponent();
 
-        $this->addCSS(STORE_LOCAL . "/css/checkout.css");
+        $this->head()->addCSS(STORE_LOCAL . "/css/checkout.css");
 
         $this->navigation = new Container();
         $this->navigation->setClassName("navigation");
@@ -53,17 +53,17 @@ class CheckoutPageBase extends StorePage
         $left_space = new ClosureComponent($render);
         $left_space->setClassName("slot left");
         $left_space->setName(CheckoutPage::NAV_LEFT);
-        $this->navigation->append($left_space);
+        $this->navigation->items()->append($left_space);
 
         $center_space = new ClosureComponent($render);
         $center_space->setClassName("slot center");
         $center_space->setName(CheckoutPage::NAV_CENTER);
-        $this->navigation->append($center_space);
+        $this->navigation->items()->append($center_space);
 
         $right_space = new ClosureComponent($render);
         $right_space->setClassName("slot right");
         $right_space->setName(CheckoutPage::NAV_RIGHT);
-        $this->navigation->append($right_space);
+        $this->navigation->items()->append($right_space);
     }
 
     public function getAction(string $name) : Action

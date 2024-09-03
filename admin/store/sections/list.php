@@ -30,6 +30,6 @@ $closure = function(ClosureComponent $cmp) {
     echo "Тук добавяте секции за изграждане на списъци от продукти за извеждане в началната страница.<BR>";
     echo "</div>";
 };
-$cmp->insert(new ClosureComponent($closure), 0);
+$cmp->items()->insert(new ClosureComponent($closure), 0);
 $cmp->render();
 ?>

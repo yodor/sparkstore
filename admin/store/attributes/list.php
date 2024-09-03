@@ -19,7 +19,7 @@ $closure = function(ClosureComponent $cmp) {
     echo "Тук може да добавяте входни етикет за ползване в продуктовите класове";
     echo "</div>";
 };
-$cmp->insert(new ClosureComponent($closure), 0);
+$cmp->items()->insert(new ClosureComponent($closure), 0);
 $cmp->render();
 
 

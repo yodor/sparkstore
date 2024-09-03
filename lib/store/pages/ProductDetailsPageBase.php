@@ -20,7 +20,7 @@ class ProductDetailsPageBase extends ProductPageBase
     {
         parent::__construct();
 
-        $this->addCSS(STORE_LOCAL . "/css/product_details.css");
+        $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
 
 
         $prodID = -1;
@@ -54,14 +54,14 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->prepareKeywords();
         $this->prepareDescription();
 
-        $this->addOGTag("title", $this->sellable->getTitle());
+        $this->head()->addOGTag("title", $this->sellable->getTitle());
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
-            $this->addOGTag("image", fullURL($this->sellable->getMainPhoto()->hrefImage(600, -1)));
+            $this->head()->addOGTag("image", fullURL($this->sellable->getMainPhoto()->hrefImage(600, -1)));
 
-            $this->addOGTag("image:height", "600");
-            $this->addOGTag("image:width", "600");
-            $this->addOGTag("image:alt", $this->sellable->getTitle());
+            $this->head()->addOGTag("image:height", "600");
+            $this->head()->addOGTag("image:width", "600");
+            $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
         }
 
         $this->updateViewCounter();

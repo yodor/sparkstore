@@ -17,7 +17,7 @@ include_once("store/beans/InvoiceDetailsBean.php");
 
 $page = new AdminPage();
 
-$page->addCSS(STORE_LOCAL."/css/print.css");
+$page->head()->addCSS(STORE_LOCAL."/css/print.css");
 
 $ekont_addresses = new CourierAddressesBean();
 $client_addresses = new ClientAddressesBean();

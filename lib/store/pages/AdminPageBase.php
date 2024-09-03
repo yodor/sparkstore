@@ -18,10 +18,10 @@ class AdminPageBase extends SparkAdminPage
 
         MenuItem::$icon_path = STORE_LOCAL . "/images/admin/spark_icons/";
 
-        $this->addCSS(STORE_LOCAL . "/css/AdminPage.css");
-        $this->addJS(STORE_LOCAL . "/js/MCESetupObject.js");
+        $this->head()->addCSS(STORE_LOCAL . "/css/AdminPage.css");
+        $this->head()->addJS(STORE_LOCAL . "/js/MCESetupObject.js");
 
-        $this->addMeta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0");
+        $this->head()->addMeta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0");
 
     }
 

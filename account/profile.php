@@ -11,7 +11,7 @@ $form->removeInput("accept_terms");
 
 $form->loadBeanData($page->getUserID(), new UsersBean());
 $form->getInput("email")->setEditable(false);
-$form->getInput("email")->getRenderer()->getAddonContainer()->clear();
+$form->getInput("email")->getRenderer()->getAddonContainer()->items()->clear();
 $form->getInput("password")->setValue("");
 $form->getInput("password")->setRequired(false);
 

@@ -138,9 +138,9 @@ class ProductPageBase extends StorePage
     {
         $actions = $this->constructPathActions();
 
-        $this->breadcrumb->clear();
+        $this->breadcrumb->items()->clear();
         foreach ($actions as $idx=>$cmp) {
-            $this->breadcrumb->append($cmp);
+            $this->breadcrumb->items()->append($cmp);
         }
 
         $this->breadcrumb->render();

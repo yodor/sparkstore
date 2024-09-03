@@ -43,15 +43,15 @@ class SectionContainer extends Container {
 
         $this->space_left = new Container();
         $this->space_left->setComponentClass("space left");
-        $this->append($this->space_left);
+        $this->items()->append($this->space_left);
 
         $this->content = new Container();
         $this->content->setComponentClass("content");
-        $this->append($this->content);
+        $this->items()->append($this->content);
 
         $this->space_right = new Container();
         $this->space_right->setComponentClass("space right");
-        $this->append($this->space_right);
+        $this->items()->append($this->space_right);
     }
 
     public function spaceLeft() : Container
@@ -136,27 +136,27 @@ class StorePageBase extends SparkPage
         $show_search = new ColorButton();
         $show_search->setAttribute("action", "show_search");
         $show_search->setAttribute("onClick", "showSearch()");
-        $ksc->getButtons()->append($show_search);
+        $ksc->getButtons()->items()->append($show_search);
 
 
         $this->keyword_search = $ksc;
 
-        $this->addCSS(STORE_LOCAL . "/css/store.css");
-        //$this->addCSS("//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");
+        $this->head->addCSS(STORE_LOCAL . "/css/store.css");
+        //$this->head()->addCSS("//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");
 
-        //$this->addJS("//code.jquery.com/ui/1.11.4/jquery-ui.js");
-        //$this->addJS(SPARK_LOCAL . "/js/URI.js");
-
-
-
-        $this->addJS(STORE_LOCAL."/js/StoreCookies.js");
+        //$this->head()->addJS("//code.jquery.com/ui/1.11.4/jquery-ui.js");
+        //$this->head()->addJS(SPARK_LOCAL . "/js/URI.js");
 
 
-        $this->addOGTag("title", "%title%");
-        $this->addOGTag("description", "%meta_description%");
-        $this->addOGTag("url", fullURL($this->getPageURL()));
-        $this->addOGTag("site_name", SITE_TITLE);
-        $this->addOGTag("type", "website");
+
+        $this->head()->addJS(STORE_LOCAL."/js/StoreCookies.js");
+
+
+        $this->head()->addOGTag("title", "%title%");
+        $this->head()->addOGTag("description", "%meta_description%");
+        $this->head()->addOGTag("url", fullURL($this->getPageURL()));
+        $this->head()->addOGTag("site_name", SITE_TITLE);
+        $this->head()->addOGTag("type", "website");
 
         $this->_header = new SectionContainer();
         $this->_header->addClassName("header");
@@ -184,27 +184,27 @@ class StorePageBase extends SparkPage
         $header_callback = function(ClosureComponent $parent) {
             $this->renderHeader();
         };
-        $this->_header->content()->append(new ClosureComponent($header_callback, false));
+        $this->_header->content()->items()->append(new ClosureComponent($header_callback, false));
 
         $menu_callback = function(ClosureComponent $parent) {
             $this->renderMenu();
         };
-        $this->_menu->content()->append(new ClosureComponent($menu_callback, false));
+        $this->_menu->content()->items()->append(new ClosureComponent($menu_callback, false));
 
         $cookies_callback = function(ClosureComponent $parent) {
             $this->renderCookiesInfo();
         };
-        $this->_cookies->content()->append(new ClosureComponent($cookies_callback, false));
+        $this->_cookies->content()->items()->append(new ClosureComponent($cookies_callback, false));
 
         $footer_callback = function(ClosureComponent $parent) {
             $this->renderFooter();
         };
-        $this->_footer->content()->append(new ClosureComponent($footer_callback, false));
+        $this->_footer->content()->items()->append(new ClosureComponent($footer_callback, false));
 
         $pageFooter_callback = function(ClosureComponent $parent) {
             $this->renderPageFooter();
         };
-        $this->_page_footer->content()->append(new ClosureComponent($pageFooter_callback, false));
+        $this->_page_footer->content()->items()->append(new ClosureComponent($pageFooter_callback, false));
 
 
         if ($this->vouchers_enabled) {

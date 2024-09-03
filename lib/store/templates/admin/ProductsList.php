@@ -175,7 +175,7 @@ class ProductsList extends BeanListPage
         $frend->getSubmitLine()->setEnabled(false);
         $frend->setMethod(FormRenderer::METHOD_GET);
         $frend->setAttribute("autocomplete", "off");
-        $this->append($frend);
+        $this->items()->append($frend);
 
 
 

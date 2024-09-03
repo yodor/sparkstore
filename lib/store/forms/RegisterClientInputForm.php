@@ -17,7 +17,7 @@ class RegisterClientInputForm extends InputForm
         $label->setContents("Вашето пълно име");
 
         $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field->getRenderer()->getAddonContainer()->append($label);
+        $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         $this->addInput($field);
 
@@ -28,7 +28,7 @@ class RegisterClientInputForm extends InputForm
         $label->setContents("Ще Ви изпратим e-mail за потвърждение");
 
         $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field->getRenderer()->getAddonContainer()->append($label);
+        $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         $this->addInput($field);
 
@@ -39,7 +39,7 @@ class RegisterClientInputForm extends InputForm
         $label->setContents("За контакт при доставка");
 
         $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field->getRenderer()->getAddonContainer()->append($label);
+        $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         $this->addInput($field);
 
@@ -55,7 +55,7 @@ class RegisterClientInputForm extends InputForm
         $label->setContents("Необходими са поне 6 символа");
 
         $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field->getRenderer()->getAddonContainer()->append($label);
+        $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "pass", "Парола", 0);
         $this->addInput($field);

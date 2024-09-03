@@ -77,7 +77,7 @@ class FilterDataInput extends DataInput {
         $clause = new SQLClause();
         $name = $this->fieldName();
         $clause->setExpression($name, "'".$this->getValue()."'");
-        $where->addClause($clause);
+        $where->append($clause);
     }
 
 
@@ -152,7 +152,7 @@ class ProductAttributeFilter extends SelectFilter {
         $name = mb_ereg_replace("_", " ", $name);
 
         $clause->setExpression("(product_attributes LIKE '$name:$value%' OR  product_attributes LIKE '%$name:$value%' OR product_attributes LIKE '$name:$value%')", "", "");
-        $where->addClause($clause);
+        $where->append($clause);
     }
     public function appendHavingClause(ClauseCollection $having)
     {
@@ -161,7 +161,7 @@ class ProductAttributeFilter extends SelectFilter {
 //            $value = $this->getValue();
 //
 //            $clause->setExpression("(inventory_attributes LIKE '$name:$value%' OR  inventory_attributes LIKE '%$name:$value%' OR inventory_attributes LIKE '$name:$value%')", "", "");
-//            $having->addClause($clause);
+//            $having->append($clause);
     }
 }
 
@@ -208,7 +208,7 @@ class ProductVariantFilter extends SelectFilter {
         $name = mb_ereg_replace("_", " ", $name);
 
         $clause->setExpression("(product_variants LIKE '$name:$value%' OR  product_variants LIKE '%$name:$value%' OR product_variants LIKE '$name:$value%')", "", "");
-        $where->addClause($clause);
+        $where->append($clause);
     }
     public function appendHavingClause(ClauseCollection $having)
     {
@@ -217,7 +217,7 @@ class ProductVariantFilter extends SelectFilter {
         //            $value = $this->getValue();
         //
         //            $clause->setExpression("(inventory_attributes LIKE '$name:$value%' OR  inventory_attributes LIKE '%$name:$value%' OR inventory_attributes LIKE '$name:$value%')", "", "");
-        //            $having->addClause($clause);
+        //            $having->append($clause);
     }
 }
 
