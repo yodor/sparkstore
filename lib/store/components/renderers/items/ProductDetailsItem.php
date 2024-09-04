@@ -38,10 +38,10 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
     protected $side_pane = null;
 
-    protected $buttons = array();
+    protected array $buttons = array();
 
     //TBI store UID if defined
-    protected $crpayments = array();
+    protected array $crpayments = array();
 
     public function __construct(SellableItem $item)
     {
@@ -62,7 +62,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         $this->initializeCartButtons();
         $this->initializePaymentButtons();
-        $this->setCacheable(false);
+        $this->setCacheable(true);
 
     }
 
@@ -520,26 +520,27 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             //payment modules
             foreach ($this->crpayments as $idx=>$object) {
                 $class = get_class($object);
+
                 if ($object instanceof CreditPaymentButton) {
 
                     if ($object->isEnabled()) {
-                        ob_start();
-                        $button = "";
+
+                        $buffer = new OutputBuffer();
+                        $buffer->start();
                         try {
                             $object->checkStockPrice();
                             $object->renderButton();
-                            $button = ob_get_contents();
                         }
                         catch (Exception $e) {
-                            $button = "";
-                            ob_end_clean();
+                            $buffer->clear();
                             debug("Error rendering credit payment button '$class': ".$e->getMessage());
                         }
+                        $buffer->end();
 
                         echo "<div class='module $class'>";
-                        echo $button;
+                        echo $buffer->get();
                         echo "</div>";
-                        ob_end_clean();
+
                     }
                 }
                 echo "<div class='clear'></div>";
