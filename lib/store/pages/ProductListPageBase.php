@@ -209,7 +209,7 @@ class ProductListPageBase extends ProductPageBase
         $this->category_filter->processInput();
 
         if ($this->category_filter->isProcessed()) {
-            $this->treeView->setSelectedID($this->category_filter->getValue());
+            $this->treeView->setSelectedID(intval($this->category_filter->getValue()));
         }
 
 
