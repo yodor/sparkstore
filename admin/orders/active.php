@@ -18,7 +18,7 @@ $actions->append(
                array(new DataParameter("orderID"), new URLParameter("status", OrdersBean::STATUS_SENT)))
 );
 
-$actions->append(new RowSeparator());
+$actions->append(Action::RowSeparator());
 
 $actions->append(
     new Action(tr("Cancel Order"), "?cmd=order_status",

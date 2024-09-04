@@ -38,7 +38,7 @@ $view = $cmp->initView();
 
 $act = $cmp->viewItemActions();
 
-$act->append(new RowSeparator());
+$act->append(Action::RowSeparator());
 
 //$act->append(new Action("Parameters", "parameters.php", array(new DataParameter("voID"))));
 

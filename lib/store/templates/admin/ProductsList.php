@@ -279,18 +279,18 @@ class ProductsList extends BeanListPage
 
 
         $act = $this->viewItemActions();
-        $act->append(new RowSeparator());
+        $act->append(Action::RowSeparator());
 
         $act->append(new Action("Photo Gallery", "gallery/list.php", array(new DataParameter("prodID", $this->bean->key()))));
-        $act->append(new RowSeparator());
+        $act->append(Action::RowSeparator());
 
         $act->append(new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key()))));
 
-        $act->append(new RowSeparator());
+        $act->append(Action::RowSeparator());
         $act->append(new Action("Options", "../options/list.php", array(new DataParameter("prodID"))));
 
 
-        $act->append(new RowSeparator());
+        $act->append(Action::RowSeparator());
         $act->append(new Action("Variants", "variants/list.php", array(new DataParameter("prodID"))));
 
         return $view;

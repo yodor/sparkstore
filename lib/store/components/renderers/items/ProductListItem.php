@@ -34,11 +34,9 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected $width = 275;
     protected $height = 275;
 
-
-
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(false);
 
         $this->photo = new StorageItem();
 
@@ -50,6 +48,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->setAttribute("itemscope", "");
         $this->setAttribute("itemtype", "http://schema.org/ListItem");
 
+        //chainloading is disabled set component class
+        $this->setComponentClass("ProductListItem");
     }
 
     public function getDetailsURL(): URLBuilder

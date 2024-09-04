@@ -128,8 +128,10 @@ A.Caption:active {
     margin:0;
     border:0;
 }
+
 .section.main .content {
     padding-bottom:50px;
+    min-height:1024px;
 }
 .section.header {
 

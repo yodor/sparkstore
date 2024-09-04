@@ -56,7 +56,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 
         $this->setPhotoSize(640,640);
 
-        $this->side_pane = new Container();
+        $this->side_pane = new Container(false);
         $this->side_pane->setComponentClass("side_pane");
 
 

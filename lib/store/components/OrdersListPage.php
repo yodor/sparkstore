@@ -57,7 +57,7 @@ class OrdersListPage extends BeanListPage
                        array(new DataParameter("orderID"))
             ));
 
-        $act->append(new RowSeparator());
+        $act->append(Action::RowSeparator());
     }
 
     public function initView()

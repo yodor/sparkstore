@@ -38,7 +38,7 @@ $view = $cmp->initView();
 
 $act = $cmp->viewItemActions();
 
-$act->append(new RowSeparator());
+$act->append(Action::RowSeparator());
 
 $act->append(new Action("Options", "../options/list.php", array(new DataParameter("pclsID"))));
 

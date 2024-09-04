@@ -12,9 +12,9 @@ $cmp->setBean($bean);
 
 $cmp->initView();
 //$cmp->getView()->setDefaultOrder(" position ASC ");
-$cmp->viewItemActions()->append(new RowSeparator());
+$cmp->viewItemActions()->append(Action::RowSeparator());
 $cmp->viewItemActions()->append(new Action("Banners Gallery", "banners/list.php", array(new DataParameter("secID", $bean->key()))));
-$cmp->viewItemActions()->append(new RowSeparator());
+$cmp->viewItemActions()->append(Action::RowSeparator());
 $cmp->viewItemActions()->append(
     new Action("Products", ADMIN_LOCAL."/store/products/list.php",
         array(
