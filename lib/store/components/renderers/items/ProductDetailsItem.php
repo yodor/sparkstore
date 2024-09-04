@@ -164,7 +164,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         return $arr;
     }
 
-    public function setPhotoSize(int $width, int $height)
+    public function setPhotoSize(int $width, int $height): void
     {
         $this->width = $width;
         $this->height = $height;

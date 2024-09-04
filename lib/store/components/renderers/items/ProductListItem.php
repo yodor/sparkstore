@@ -69,7 +69,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         return $arr;
     }
 
-    public function setPhotoSize(int $width, int $height)
+    public function setPhotoSize(int $width, int $height): void
     {
         $this->width = $width;
         $this->height = $height;
