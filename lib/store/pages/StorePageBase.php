@@ -279,11 +279,12 @@ class StorePageBase extends SparkPage
 
     public function startRender()
     {
+        //first prepare the menus - can be used from the title tag
+        $this->selectActiveMenu();
+
         parent::startRender();
 
         echo "\n<!-- startRender StorePage-->\n";
-
-        $this->selectActiveMenu();
 
         $this->_header->render();
         $this->_menu->render();
@@ -502,7 +503,7 @@ class StorePageBase extends SparkPage
         echo "\n";
         echo "\n<!-- finishRender StorePage-->\n";
 
-        $this->constructTitle();
+
 ?>
         <script type="text/javascript">
 
