@@ -147,9 +147,6 @@ class StorePageBase extends SparkPage
 
         $this->head()->addJS(STORE_LOCAL."/js/StoreCookies.js");
 
-
-        $this->head()->addOGTag("title", "%title%");
-        $this->head()->addOGTag("description", "%meta_description%");
         $this->head()->addOGTag("url", fullURL($this->getPageURL()));
         $this->head()->addOGTag("site_name", SITE_TITLE);
         $this->head()->addOGTag("type", "website");
