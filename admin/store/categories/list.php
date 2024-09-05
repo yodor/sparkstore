@@ -5,6 +5,8 @@ include_once("store/beans/ProductCategoriesBean.php");
 
 $cmp = new NestedSetViewPage();
 
+$cmp->getPage()->navigation()->clear();
+
 $cmp->setBean(new ProductCategoriesBean());
 $cmp->setListFields(array("category_name"=>"Category Name"));
 

@@ -14,6 +14,9 @@ $menu = array(
 
 $cmp = new BeanListPage();
 
+$cmp->getPage()->navigation()->clear();
+
+
 $title = tr("Options List");
 
 $classes = new ProductClassesBean();

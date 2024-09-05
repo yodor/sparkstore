@@ -8,8 +8,14 @@ class TemplateFactory
     public static $LocalMenus = "class/templates/admin/menus";
     public static $StoreMenus = "store/templates/admin/menus";
 
-
-    public static function RenderPage(string $templateClass): void
+    /**
+     * Clsoure is called before $template->render()
+     * @param string $templateClass
+     * @param Closure|null $callble
+     * @return void
+     * @throws Exception
+     */
+    public static function RenderPage(string $templateClass, ?Closure $callble = null): void
     {
 
         $local_file = TemplateFactory::$LocalPages."/".$templateClass.".php";
@@ -21,10 +27,13 @@ class TemplateFactory
             include_once($store_file);
         }
         if (isset($template) && $template instanceof PageTemplate) {
+            if ($callble instanceof Closure) {
+                $callble($template);
+            }
             $template->render();
         }
         else {
-            throw new Exception("Unable to load template or template variable is not defined correctly.");
+            throw new Exception("Unable to load template or template variable is not defined correctly");
         }
     }
 

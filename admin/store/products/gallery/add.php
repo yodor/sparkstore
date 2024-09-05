@@ -6,12 +6,13 @@ include_once("store/beans/ProductPhotosBean.php");
 
 include_once("forms/PhotoForm.php");
 
-$rc = new BeanKeyCondition(new ProductsBean(), "../list.php");
-
 $menu = array();
+
+$rc = new BeanKeyCondition(new ProductsBean(), "../list.php");
 
 $page = new AdminPage();
 
+$page->setName(tr("Image").": ".tr("Product Gallery") . ": " . $rc->getData("product_name"));
 
 $photos = new ProductPhotosBean();
 $photos->select()->where()->addURLParameter($rc->getURLParameter());

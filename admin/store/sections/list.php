@@ -5,6 +5,9 @@ include_once("store/beans/SectionsBean.php");
 
 $cmp = new BeanListPage();
 
+$cmp->getPage()->navigation()->clear();
+
+
 $cmp->setListFields(array("position"=>"#", "section_title"=>"Section"));
 
 $bean = new SectionsBean();

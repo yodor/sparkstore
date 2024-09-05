@@ -11,6 +11,9 @@ include_once("components/renderers/cells/BooleanCellRenderer.php");
 
 $cmp = new BeanListPage();
 
+$cmp->getPage()->navigation()->clear();
+
+
 $bean = new StorePromosBean();
 $product_categories = new ProductCategoriesBean();
 

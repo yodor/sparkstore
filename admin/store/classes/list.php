@@ -8,6 +8,9 @@ include_once("store/beans/ProductClassAttributesBean.php");
 
 $cmp = new BeanListPage();
 
+$cmp->getPage()->navigation()->clear();
+
+
 $bean = new ProductClassesBean();
 
 $pattr = new ProductClassAttributesBean();

@@ -4,6 +4,7 @@ include_once("templates/admin/BeanListPage.php");
 include_once("store/beans/AttributesBean.php");
 
 $cmp = new BeanListPage();
+$cmp->getPage()->navigation()->clear();
 
 $cmp->setListFields(array("name"=>"Name","unit"=>"Unit", "type"=>"Type"));
 
