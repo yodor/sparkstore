@@ -1,50 +1,41 @@
 <?php
 include_once("store/pages/ProductPageBase.php");
-
 include_once("store/components/ProductsTape.php");
 
 include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
 
 
-
-
 class ProductDetailsPageBase extends ProductPageBase
 {
 
-    protected $sellable = NULL;
+    protected SellableItem $sellable;
 
-    protected $tape = NULL;
+    protected ProductsTape $tape;
 
     public function __construct()
     {
+        //should reach storepage constructor to initialize defaults
+        //is sellabledataparaser is customizable
         parent::__construct();
 
         $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
-
 
         $prodID = -1;
         if (isset($_GET["prodID"])) {
             $prodID = (int)$_GET["prodID"];
         }
 
-
         try {
-
             $this->bean = new SellableProducts();
-
+            //needs the default parser set correctly
             $this->sellable = SellableItem::Load($prodID);
-
-
         }
         catch (Exception $e) {
-
             Session::set("alert", "Този продукт е недостъпен. Грешка: " . $e->getMessage());
             header("Location: list.php");
             exit;
         }
-
-
 
         $this->section = "";
 
@@ -54,7 +45,6 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->prepareKeywords();
         $this->prepareDescription();
 
-        $this->head()->addOGTag("title", $this->sellable->getTitle());
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
             $this->head()->addOGTag("image", fullURL($this->sellable->getMainPhoto()->hrefImage(600, -1)));
@@ -68,8 +58,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->tape = new ProductsTape();
 
-        $this->canonical_enabled = true;
-        $this->canonical_params = array("prodID");
+        $this->head()->addCanonicalParameter("prodID");
 
     }
 
