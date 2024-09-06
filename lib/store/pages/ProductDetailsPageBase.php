@@ -179,7 +179,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->tape->setCaption($title);
         $this->tape->setIterator($qry);
 
-        $this->tape->getCaptionURL()->buildFrom(LOCAL . "/products/list.php");
+        $this->tape->getCaptionURL()->fromString(LOCAL . "/products/list.php");
         $this->tape->getCaptionURL()->add(new URLParameter("catID", $catID));
 
         $this->tape->render();
@@ -197,7 +197,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->tape->setCaption($title);
         $this->tape->setIterator($qry);
-        $this->tape->getCaptionURL()->buildFrom(LOCAL."/products/list.php");
+        $this->tape->getCaptionURL()->fromString(LOCAL."/products/list.php");
         $this->tape->render();
     }
 

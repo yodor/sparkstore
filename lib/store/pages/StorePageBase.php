@@ -310,18 +310,18 @@ class StorePageBase extends SparkPage
 
         $icon_contents = "<span class='icon'></span>";
         $button_account = new Action();
-        $button_account->getURLBuilder()->buildFrom(LOCAL . "/account/login.php");
+        $button_account->getURL()->fromString(LOCAL . "/account/login.php");
         $button_account->setAttribute("title", tr("Account"));
         $button_account->setClassName("button account");
         $button_account->setContents($icon_contents);
         if ($this->context) {
-            $button_account->getURLBuilder()->buildFrom(LOCAL . "/account/");
+            $button_account->getURL()->fromString(LOCAL . "/account/");
             $button_account->addClassName("logged");
         }
         $button_account->render();
 
         $button_cart = new Action();
-        $button_cart->getURLBuilder()->buildFrom(LOCAL . "/checkout/cart.php");
+        $button_cart->getURL()->fromString(LOCAL . "/checkout/cart.php");
         $button_cart->setAttribute("title", tr("Cart"));
         $button_cart->addClassName("button cart");
 

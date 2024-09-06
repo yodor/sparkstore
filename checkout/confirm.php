@@ -241,7 +241,7 @@ echo "</div>";
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
 $action->setTitle(tr("Назад"));
 $action->setClassName("edit");
-$action->getURLBuilder()->buildFrom("cart.php");
+$action->getURL()->fromString("cart.php");
 
 $cmp = $page->getNavigation()->items()->getByName(CheckoutPage::NAV_CENTER);
 if ($cmp instanceof ClosureComponent) {
@@ -256,7 +256,7 @@ if ($cmp instanceof ClosureComponent) {
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
 $action->setTitle(tr("Потвърди поръчка"));
 $action->setClassName("checkout");
-$action->getURLBuilder()->buildFrom("javascript:document.forms.OrderNoteInputForm.submit()");
+$action->getURL()->fromString("javascript:document.forms.OrderNoteInputForm.submit()");
 
 
 $page->renderNavigation();

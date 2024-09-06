@@ -21,7 +21,7 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     protected string $description = "";
     protected string $keywords = "";
 
-    protected $main_photo = NULL;
+    protected ?StorageItem $main_photo = NULL;
 
     protected int $width = -1;
     protected int $height = -1;
@@ -32,7 +32,7 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     //array of VariantItems
     protected array $variants = array();
 
-    protected $priceInfo = null;
+    protected PriceInfo $priceInfo;
 
     protected array $gallery = array();
 
@@ -76,6 +76,7 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     public function __construct()
     {
         parent::__construct();
+        $this->priceInfo = new PriceInfo(0,0,0);
     }
 
     public function setData(string $key, string $value): void
@@ -157,15 +158,12 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
 
     public function isPromotion() : bool
     {
-        $result = false;
 
-        $priceInfo = $this->priceInfo;
-        if (!$priceInfo instanceof PriceInfo) return $result;
-        if ($priceInfo->getOldPrice()!=$priceInfo->getSellPrice() && $priceInfo->getOldPrice()>0) {
-            $result = true;
+        if ($this->priceInfo->getOldPrice()!=$this->priceInfo->getSellPrice() && $this->priceInfo->getOldPrice()>0) {
+            return true;
         }
 
-        return $result;
+        return false;
     }
 
     /**

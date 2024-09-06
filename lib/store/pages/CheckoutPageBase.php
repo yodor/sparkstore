@@ -11,7 +11,7 @@ class CheckoutPageBase extends StorePage
     public $modify_enabled = FALSE;
     public $total = 0.0;
 
-    protected $ccmp = NULL;
+    protected CartComponent $ccmp;
 
     const NAV_LEFT = "left";
     const NAV_CENTER = "center";

@@ -1,12 +1,11 @@
 <?php
 
-
 class PriceInfo implements JsonSerializable {
 
-    protected $sell_price = 0.0;
-    protected $old_price = 0.0;
+    protected float $sell_price = 0.0;
+    protected float $old_price = 0.0;
 
-    protected $discount_percent = 0;
+    protected int $discount_percent = 0;
 
     public function __construct(float $sell_price, float $old_price, int $discount_percent)
     {
@@ -24,7 +23,6 @@ class PriceInfo implements JsonSerializable {
     {
         return $this->old_price;
     }
-
 
     public function getDiscountPercent() : int
     {

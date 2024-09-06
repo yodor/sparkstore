@@ -10,25 +10,23 @@ class Cart
     /**
      * @var array of CartEntry
      */
-    protected $items = array();
+    protected array $items = array();
 
-    protected $delivery = NULL;
+    protected string $note = "";
 
-    protected $note = "";
+    protected bool $require_invoice = FALSE;
 
-    protected $require_invoice = FALSE;
+    protected array $data = array();
 
-    protected $data = array();
+    protected array $cartListeners = array();
 
     protected $discountProcessor = NULL;
-
-    protected $cartListeners = NULL;
-
+    protected $delivery = NULL;
     /**
      * @var null|Cart
      */
-    protected static $instance = NULL;
-    protected static $session_key = NULL;
+    protected static ?Cart $instance = NULL;
+    protected static ?string $session_key = NULL;
 
     const SESSION_KEY = "spark_cart";
 
@@ -44,18 +42,25 @@ class Cart
         }
 
         $cart = NULL;
-        if (Session::Contains(Cart::SessionKey())) {
-            debug("Trying to de-serialize Cart object from session");
-            @$cart = unserialize(Session::Get(Cart::SessionKey()));
+        try {
+            if (Session::Contains(Cart::SessionKey())) {
+                debug("Trying to de-serialize Cart object from session");
+                $cart = @unserialize(Session::Get(Cart::SessionKey()));
 
-            if ($cart instanceof Cart) {
-                debug("de-serialize success - calling delivery option initialization");
-                $cart->getDelivery()->initialize();
-                $cart->store();
+                if ($cart instanceof Cart) {
+                    debug("de-serialize success - calling delivery option initialization");
+                    //check correctnes of keys in cart
+                    $cart->check();
+                    $cart->getDelivery()->initialize();
+                    $cart->store();
+                } else {
+                    $cart = NULL;
+                }
             }
-            else {
-                $cart = NULL;
-            }
+        }
+        catch (Exception $e) {
+            debug("de-serialize Cart error: " . $e->getMessage());
+            $cart = null;
         }
 
         if (is_null($cart)) {
@@ -64,7 +69,11 @@ class Cart
             $cart->store();
         }
 
+
+
         self::$instance = $cart;
+
+        debug("Returning cart instance");
 
         return self::$instance;
     }
@@ -94,22 +103,42 @@ class Cart
         $this->cartListeners = array();
     }
 
-    public function addCartListener(ICartListener $listener)
+    protected function check()
+    {
+        foreach ($this->items as $itemHash => $cartEntry) {
+            $currentHash = $cartEntry->getItem()->hash();
+
+            if ($itemHash != $currentHash) {
+                unset($this->items[$itemHash]);
+            }
+        }
+    }
+    /**
+     * Add cart listener
+     * @param ICartListener $listener
+     * @return void
+     */
+    public function addCartListener(ICartListener $listener) : void
     {
         $this->cartListeners[] = $listener;
     }
 
-    public function store()
+    /**
+     * Serialize cart to session
+     * @return void
+     */
+    public function store() : void
     {
         Session::Set(Cart::SessionKey(), serialize($this));
     }
 
     /**
+     * Notify all cartListeners about cart changes
      * @param Closure $closure
      * @param string $oprName
      * @param ?CartEntry $item
      */
-    protected function emit(Closure $closure, string $oprName, ?CartEntry $item)
+    protected function emit(Closure $closure, string $oprName, ?CartEntry $item) : void
     {
         if (is_array($this->cartListeners) && count($this->cartListeners)>0) {
             foreach ($this->cartListeners as $idx => $listener) {
@@ -126,23 +155,21 @@ class Cart
     }
 
     /**
+     * Add item to cart
      * @param CartEntry $item
      * @throws Exception
      */
-    public function addItem(CartEntry $item)
+    public function addItem(CartEntry $item) : void
     {
         $itemHash = $item->getItem()->hash();
-        debug("addItem with hash: $itemHash");
 
         if ($this->contains($itemHash)) {
-
             debug("Already existing item incrementing count");
             $closure = function() use ($itemHash, $item) {
                 $exist_item = $this->get($itemHash);
                 $exist_item->increment($item->getQuantity());
             };
             $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
-
         }
         else {
             debug("Non existing item setting new value");
@@ -151,32 +178,36 @@ class Cart
                 $this->items[$itemHash] = $item;
             };
             $this->emit($closure, ICartListener::ITEM_ADD, $item);
-
         }
     }
 
+
     /**
-     * @param int $piID
+     * Increase cart item amount by 1
+     * @param string $itemHash
+     * @return void
      * @throws Exception
      */
-    public function increment(string $itemHash)
+    public function increment(string $itemHash) : void
     {
+
         if ($this->contains($itemHash)) {
             $item = $this->get($itemHash);
             $closure = function() use ($item) {
                 $item->increment();
             };
             $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
-
-
         }
+
     }
 
     /**
-     * @param string CartEntry hash
+     * Decrease cart item amount by 1
+     * @param string $itemHash
+     * @return void
      * @throws Exception
      */
-    public function decrement(string $itemHash)
+    public function decrement(string $itemHash) : void
     {
         if ($this->contains($itemHash)) {
 
@@ -195,7 +226,8 @@ class Cart
     }
 
     /**
-     * @param string CartEntry hash
+     * Get item
+     * @param string $itemHash
      * @return CartEntry
      * @throws Exception
      */
@@ -208,7 +240,8 @@ class Cart
     }
 
     /**
-     * @param int $itemID
+     * Check if cart contains item
+     * @param string $itemHash
      * @return bool
      */
     public function contains(string $itemHash) : bool
@@ -217,9 +250,11 @@ class Cart
     }
 
     /**
-     * @param int $itemID
+     * Remove item from cart
+     * @param string $itemHash
+     * @return void
      */
-    public function remove(string $itemHash)
+    public function remove(string $itemHash) : void
     {
         if (isset($this->items[$itemHash])) {
 
@@ -234,15 +269,19 @@ class Cart
     }
 
     /**
+     * Remove item from cart
      * @param CartEntry $item
+     * @return void
      */
-    public function removeItem(CartEntry $item)
+    public function removeItem(CartEntry $item) : void
     {
         $itemHash = $item->getItem()->hash();
         $this->remove($itemHash);
     }
 
+
     /**
+     * Return all items currently in the cart
      * @return array
      */
     public function items(): array
@@ -251,6 +290,7 @@ class Cart
     }
 
     /**
+     * Number of all item quantities in the cart
      * @return int
      */
     public function itemsCount(): int
@@ -264,9 +304,10 @@ class Cart
     }
 
     /**
-     *
+     * Remove all items from the cart
+     * @return void
      */
-    public function clear()
+    public function clear() : void
     {
         $closure = function() {
             $this->items = array();
@@ -276,6 +317,7 @@ class Cart
     }
 
     /**
+     * Return total amount for all items
      * @return float
      */
     public function getItemsTotal(): float
@@ -289,6 +331,7 @@ class Cart
     }
 
     /**
+     * Set data value
      * @param string $name
      * @param string $value
      */
@@ -298,6 +341,7 @@ class Cart
     }
 
     /**
+     * Get data value
      * @param string $name
      * @return string
      */
@@ -307,6 +351,7 @@ class Cart
     }
 
     /**
+     * Check if data value is set
      * @param string $name
      * @return bool
      */
@@ -316,9 +361,10 @@ class Cart
     }
 
     /**
+     * Set not text
      * @param string $text
      */
-    public function setNote(string $text)
+    public function setNote(string $text) : void
     {
         $this->note = mb_substr($text, 0, Cart::NOTE_MAX_LENGTH);
     }
@@ -334,7 +380,7 @@ class Cart
     /**
      * @param bool $mode
      */
-    public function setRequireInvoice(bool $mode)
+    public function setRequireInvoice(bool $mode) : void
     {
         $this->require_invoice = $mode;
     }
@@ -366,7 +412,8 @@ class Cart
     /**
      * @param IDiscountProcessor $proc
      */
-    public function setDiscount(IDiscountProcessor $proc) {
+    public function setDiscount(IDiscountProcessor $proc) : void
+    {
         $this->discountProcessor = $proc;
     }
 

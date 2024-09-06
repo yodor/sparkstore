@@ -348,7 +348,7 @@ class ProductListPageBase extends ProductPageBase
         $item = $this->treeView->getItemRenderer();
         if ($item instanceof TextTreeItem) {
 
-            $itemURL = $item->getTextAction()->getURLBuilder();
+            $itemURL = $item->getTextAction()->getURL();
 
             $pageURL = SparkPage::Instance()->getURL();
 
@@ -361,7 +361,7 @@ class ProductListPageBase extends ProductPageBase
                 }
             }
             //
-            $itemURL->buildFrom($pageURL->url());
+            $itemURL->fromString($pageURL->toString());
             $itemURL->add(new DataParameter("catID"));
         }
 
@@ -422,8 +422,7 @@ class ProductListPageBase extends ProductPageBase
         $num = $query->exec();
 
         echo "<div class='category_list'>";
-        $builder = new URLBuilder();
-        $builder->buildFrom($this->getPageURL());
+        $builder = new URL($this->getPageURL());
         $builder->add(new URLParameter("catID"));
         $si = new StorageItem();
         $si->className = "ProductCategoryPhotosBean";
@@ -431,7 +430,7 @@ class ProductListPageBase extends ProductPageBase
             $builder->get("catID")->setValue($result->get("catID"));
             $si->id = $result->get("pcpID");
             echo "<div class='item'>";
-            echo "<a href='{$builder->url()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
+            echo "<a href='{$builder->toString()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
             echo "</div>";
         }
         echo "</div>";

@@ -60,14 +60,14 @@ class ProductsTape extends Component
     }
 
     /**
-     * @return URLBuilder
+     * @return URL
      * @throws Exception
      */
-    public function getCaptionURL() : URLBuilder
+    public function getCaptionURL() : URL
     {
         $action = $this->getCaptionComponent();
         if ($action instanceof Action) {
-            return $action->getURLBuilder();
+            return $action->getURL();
         }
         throw new Exception("Incorrect action component");
     }

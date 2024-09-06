@@ -154,8 +154,7 @@ class ProductPageBase extends StorePage
         $home_action->translation_enabled = false;
         $actions[] = $home_action;
 
-        $link = new URLBuilder();
-        $link->buildFrom(LOCAL."/products/list.php");
+        $link = new URL(LOCAL."/products/list.php");
 
         if ($this->keyword_search->isProcessed()) {
             $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
@@ -164,14 +163,14 @@ class ProductPageBase extends StorePage
             $actions[] = $search_action;
         }
         else {
-            $product_action = new Action(tr($this->products_title), $link->url(), array());
+            $product_action = new Action(tr($this->products_title), $link->toString(), array());
             $product_action->translation_enabled = false;
             $actions[] = $product_action;
         }
 
         if ($this->section) {
             $link->add(new URLParameter("section", $this->section));
-            $section_action = new Action(tr($this->section), $link->url(), array());
+            $section_action = new Action(tr($this->section), $link->toString(), array());
             $section_action->translation_enabled = false;
             $actions[] = $section_action;
         }
@@ -182,7 +181,7 @@ class ProductPageBase extends StorePage
 
             $link->setData($category);
 
-            $category_action = new Action($category["category_name"], $link->url(), array());
+            $category_action = new Action($category["category_name"], $link->toString(), array());
             $category_action->translation_enabled = false;
             $actions[] = $category_action;
 

@@ -25,7 +25,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     const BUTTON_PAYMENT_UNICREDIT = "UNICREDIT";
 
     protected $categories = array();
-    protected $url = "";
+    protected URL $url;
 
     /**
      * @var SellableItem|null
@@ -63,6 +63,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->initializeCartButtons();
         $this->initializePaymentButtons();
         $this->setCacheable(true);
+
+        $this->url = new URL("/product/details.php");
 
     }
 
@@ -194,7 +196,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->categories = $categores;
     }
 
-    public function setURL(string $url)
+    public function setURL(URL $url): void
     {
         $this->url = $url;
     }
@@ -612,7 +614,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     {
 
 
-        echo "<meta itemprop='url' content='".attributeValue($this->url)."'>";
+        echo "<meta itemprop='url' content='".attributeValue($this->url->toString())."'>";
 
         $content = array();
         foreach ($this->categories as $idx=>$catinfo) {

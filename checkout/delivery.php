@@ -91,12 +91,12 @@ $back_url = Session::get("checkout.navigation.back", "cart.php");
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
 $action->setTitle(tr("Назад"));
 $action->setClassName("edit");
-$action->getURLBuilder()->buildFrom($back_url);
+$action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
 $action->setTitle(tr("Продължи"));
 $action->setClassName("checkout");
-$action->getURLBuilder()->buildFrom("javascript:document.forms.DeliveryCourier.submit();");
+$action->getURL()->fromString("javascript:document.forms.DeliveryCourier.submit();");
 
 $page->renderNavigation();
 

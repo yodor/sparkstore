@@ -115,20 +115,20 @@ if ($page->total) {
     $action = $page->getAction(CheckoutPage::NAV_LEFT);
     $action->setTitle(tr("Изпразни кошницата"));
     $action->setClassName("empty");
-    $action->getURLBuilder()->buildFrom("cart.php?clear");
+    $action->getURL()->fromString("cart.php?clear");
 }
 
 $action = $page->getAction(CheckoutPage::NAV_CENTER);
 $action->setTitle(tr("Продължи пазаруването"));
 $action->setClassName("continue_shopping");
 $href = Session::Get("shopping.list", LOCAL."/products/list.php");
-$action->getURLBuilder()->buildFrom($href);
+$action->getURL()->fromString($href);
 
 if ($page->total) {
     $action = $page->getAction(CheckoutPage::NAV_RIGHT);
     $action->setTitle(tr("Каса"));
     $action->setClassName("checkout");
-    $action->getURLBuilder()->buildFrom("customer.php");
+    $action->getURL()->fromString("customer.php");
 }
 
 $page->renderNavigation();
