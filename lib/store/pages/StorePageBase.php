@@ -1,7 +1,9 @@
 <?php
 include_once("pages/SparkPage.php");
 
+include_once("utils/LDJsonScript.php");
 include_once("utils/MainMenu.php");
+
 include_once("components/MenuBarComponent.php");
 include_once("components/KeywordSearch.php");
 include_once("components/ClosureComponent.php");
@@ -24,7 +26,7 @@ include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/utils/cart/Cart.php");
 include_once("beans/DynamicPagesBean.php");
 include_once("store/responders/json/VoucherFormResponder.php");
-
+include_once("store/utils/TawktoScript.php");
 
 class SectionContainer extends Container {
 
@@ -88,6 +90,83 @@ class StorePageBase extends SparkPage
 
     public bool $vouchers_enabled = false;
 
+    protected function headInitialize()
+    {
+
+        $config = ConfigBean::Factory();
+        $config->setSection("seo");
+
+        $facebookID_pixel = $config->get("facebookID_pixel");
+        if ($facebookID_pixel) {
+            $this->head()->addScript(new FBPixel($facebookID_pixel));
+        }
+
+        $gtag = new GTAG();
+        $googleID_analytics = $config->get("googleID_analytics");
+        if ($googleID_analytics) {
+            $gtag->setID($googleID_analytics);
+            $this->head()->addScript($gtag);
+        }
+
+        $gtag = new GTAG();
+        $googleID_ads = $config->get("googleID_ads");
+        if ($googleID_ads) {
+            $gtag->setID($googleID_ads);
+            $this->head()->addScript($gtag);
+        }
+
+        $adsID = $config->get("googleID_ads", "");
+        $conversionID = $config->get("googleID_ads_conversion", "");
+        if ($adsID && $conversionID) {
+            $obj = new GTAGObject();
+            $obj->setCommand(GTAGObject::COMMAND_EVENT);
+            $obj->setType("conversion");
+            $obj->setParamTemplate("{'send_to': '%googleID_ads_conversion%'}");
+            $obj->setName("googleID_ads_conversion");
+            $data = array("googleID_ads_conversion"=>$conversionID);
+            $obj->setData($data);
+
+            $this->head()->addScript($obj);
+        }
+
+        $config->setSection("store_config");
+        $phone = $config->get("phone", "");
+
+        $page_id = $config->get("tawkto_id", "");
+        if ($page_id) {
+            $this->head()->addScript(new TawktoScript($page_id));
+        }
+
+        $org_data = array("@context"     => "http://schema.org",
+            "@type"        => "Organization",
+            "name"         => SITE_TITLE,
+            "url"          => SITE_URL,
+            "logo"         => SITE_URL . "/images/logo_header.svg",
+            "contactPoint" => array("@type"             => "ContactPoint",
+                "telephone"         => $phone,
+                "contactType"       => "sales",
+                "areaServed"        => substr(DEFAULT_LANGUAGE_ISO3, 0, 2),
+                "availableLanguage" => DEFAULT_LANGUAGE));
+
+
+        $this->head()->addScript(new LDJsonScript($org_data));
+
+        $www_data = array(
+            "@context"=> "http://schema.org",
+            "@type"=> "WebSite",
+            "name"=> mb_strtoupper(SITE_TITLE). " - ОФИЦИАЛНА СТРАНИЦА",
+            "url"=> SITE_URL,
+            "potentialAction"=> array(
+                "@type"=> "SearchAction",
+                "target"=> SITE_URL."/products/list.php?filter=search&keyword={search_term_string}",
+                "query-input"=> "required name=search_term_string"
+            )
+        );
+
+        $this->head()->addScript(new LDJsonScript($www_data));
+
+    }
+
     public function __construct()
     {
 
@@ -103,6 +182,9 @@ class StorePageBase extends SparkPage
             $this->client_name = $this->context->getData()->get(SessionData::FULLNAME);
 
         }
+
+        $this->headInitialize();
+
 
         $menu = new MainMenu();
 
@@ -211,64 +293,6 @@ class StorePageBase extends SparkPage
         return $this->context;
     }
 
-    protected function headStart()
-    {
-        parent::headStart();
-
-
-
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $phone = $cfg->get("phone", "");
-
-        $page_id = $cfg->get("tawkto_id", "");
-        if ($page_id) {
-            $this->renderChatPlugin($page_id);
-        }
-
-        $org_data = array("@context"     => "http://schema.org",
-                          "@type"        => "Organization",
-                          "name"         => SITE_TITLE,
-                          "url"          => SITE_URL,
-                          "logo"         => SITE_URL . "/images/logo_header.svg",
-                          "contactPoint" => array("@type"             => "ContactPoint",
-                                                  "telephone"         => $phone,
-                                                  "contactType"       => "sales",
-                                                  "areaServed"        => substr(DEFAULT_LANGUAGE_ISO3, 0, 2),
-                                                  "availableLanguage" => DEFAULT_LANGUAGE));
-
-        $this->renderLDJSON($org_data);
-
-
-        $this->renderSearchLD();
-
-
-    }
-
-    protected function renderSearchLD()
-    {
-        $www_data = array(
-            "@context"=> "http://schema.org",
-            "@type"=> "WebSite",
-            "name"=> mb_strtoupper(SITE_TITLE). " - ОФИЦИАЛНА СТРАНИЦА",
-            "url"=> SITE_URL,
-            "potentialAction"=> array(
-                "@type"=> "SearchAction",
-                "target"=> SITE_URL."/products/list.php?filter=search&keyword={search_term_string}",
-                "query-input"=> "required name=search_term_string"
-            )
-        );
-
-        $this->renderLDJSON($www_data);
-    }
-
-    public function renderLDJSON(array $data)
-    {
-        echo "<script type='application/ld+json'>";
-        echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        echo "</script>";
-    }
-
     public function getMenuBar()
     {
         return $this->menu_bar;
@@ -280,6 +304,7 @@ class StorePageBase extends SparkPage
         $this->selectActiveMenu();
 
         parent::startRender();
+        //inside body already
 
         echo "\n<!-- startRender StorePage-->\n";
 
@@ -598,28 +623,7 @@ class StorePageBase extends SparkPage
 
     }
 
-    public function renderChatPlugin(string $page_id)
-    {
-?>
-        <!--Start of Tawk.to Script-->
-        <script type="text/javascript">
-            let chatPlugin = function()
-            {
-                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-                (function () {
-                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-                    s1.async = true;
-                    s1.src = 'https://embed.tawk.to/<?php echo $page_id;?>';
-                    s1.charset = 'UTF-8';
-                    s1.setAttribute('crossorigin', '*');
-                    s0.parentNode.insertBefore(s1, s0);
-                })();
-            }
-            setTimeout(chatPlugin, 3000);
-        </script>
-        <!--End of Tawk.to Script-->
-<?php
-    }
+
 }
 
 ?>
