@@ -23,6 +23,7 @@ abstract class ProductsListAddBase extends BeanEditorPage
             $old_stock_amount = -1;
             $closure_editor = function(BeanFormEditorEvent $event) use (&$old_stock_amount) {
                 if ($event->isEvent(BeanFormEditorEvent::FORM_BEAN_LOADED)) {
+                    debug("Closure handing form bean loaded");
                     $editor = $event->getSource();
                     if ($editor instanceof BeanFormEditor) {
                         $old_stock_amount = $editor->getForm()->getInput("stock_amount")->getValue();
@@ -30,11 +31,11 @@ abstract class ProductsListAddBase extends BeanEditorPage
                     }
                 }
             };
-            $this->getEditor()->getObserver()->setCallback($closure_editor);
+            SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closure_editor));
 
             $closure_transactor = function(BeanTransactorEvent $event) use(&$old_stock_amount) {
-
                 if ($event->isEvent(BeanTransactorEvent::AFTER_COMMIT)) {
+                    debug("Processing after commit");
                     $transactor = $event->getSource();
                     if (!($transactor instanceof BeanTransactor)) return;
                     $prodID = $transactor->getEditID();
@@ -44,10 +45,8 @@ abstract class ProductsListAddBase extends BeanEditorPage
                     $proc = new CheckStockState($prodID, $transactor->getValue("product_name"));
                     $proc->process($stock_amount, $old_stock_amount);
                 }
-
             };
-            $transactor->getObserver()->setCallback($closure_transactor);
-
+            SparkEventManager::register(BeanTransactorEvent::class, new SparkObserver($closure_transactor));
         }
     }
 }
