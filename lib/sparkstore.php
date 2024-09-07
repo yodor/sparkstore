@@ -13,18 +13,20 @@ $globals->set("LOGO_NAME", "logo_header.svg");
 $globals->set("LOGO_PATH", $globals->get("INSTALL_PATH")."/storefront/images/");
 
 //setup order recipient email address
-include_once("beans/ConfigBean.php");
-$config = ConfigBean::Factory();
-$config->setSection("store_config");
+if (!defined("SKIP_DB")) {
+    include_once("beans/ConfigBean.php");
+    $config = ConfigBean::Factory();
+    $config->setSection("store_config");
 
 //override ORDER_ADMIN_EMAIL
-$order_email = $config->get("email_orders", "");
-if (strlen(trim($order_email))<1) {
-    if (defined("ORDER_ADMIN_EMAIL")) {
-        $order_email = ORDER_ADMIN_EMAIL;
+    $order_email = $config->get("email_orders", "");
+    if (strlen(trim($order_email)) < 1) {
+        if (defined("ORDER_ADMIN_EMAIL")) {
+            $order_email = ORDER_ADMIN_EMAIL;
+        }
     }
+    $globals->set("ORDER_EMAIL", $order_email);
 }
-$globals->set("ORDER_EMAIL", $order_email);
 
 $globals->set("TRANSLITERATOR_ID", "Bulgarian-Latin/BGN");
 
