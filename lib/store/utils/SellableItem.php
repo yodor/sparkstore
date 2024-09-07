@@ -4,7 +4,7 @@ include_once("components/renderers/IPhotoRenderer.php");
 
 include_once("store/utils/SellableDataParser.php");
 
-class SellableItem extends SparkObject implements JsonSerializable, IPhotoRenderer
+class SellableItem extends SparkObject implements IPhotoRenderer
 {
 
     protected int $prodID = -1;
@@ -293,13 +293,6 @@ class SellableItem extends SparkObject implements JsonSerializable, IPhotoRender
     {
         return $this->height;
     }
-
-    public function jsonSerialize() : array
-    {
-        return get_object_vars($this);
-    }
-
-
 
 }
 ?>
