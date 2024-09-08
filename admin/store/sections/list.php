@@ -28,11 +28,12 @@ $cmp->viewItemActions()->append(
 );
 
 
-$closure = function(ClosureComponent $cmp) {
-    echo "<div class='help summary'>";
-    echo "Тук добавяте секции за изграждане на списъци от продукти за извеждане в началната страница.<BR>";
-    echo "</div>";
-};
-$cmp->items()->insert(new ClosureComponent($closure), 0);
+$text = new TextComponent();
+$text->addClassName("help summary");
+$text->buffer()->start();
+echo "Тук добавяте секции за изграждане на списъци от продукти за извеждане в началната страница.<BR>";
+$text->buffer()->end();
+
+$cmp->items()->insert($text, 0);
 $cmp->render();
 ?>

@@ -170,3 +170,10 @@
 .admin_layout .page_area .page_caption .page_actions .Action[action='download_csv_google'] {
     background-image: url("../images/page_actions/download_csv_google.svg");
 }
+
+.admin_layout .page_area .TextComponent.help.summary {
+    display:block;
+    padding-top:1em;
+    padding-bottom:1em;
+    font-style:italic;
+}

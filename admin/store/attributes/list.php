@@ -15,12 +15,13 @@ $cmp->getView()->setDefaultOrder(" name ASC ");
 
 $cmp->getPage()->navigation()->clear();
 
-$closure = function(ClosureComponent $cmp) {
-    echo "<div class='help summary'>";
-    echo "Тук може да добавяте входни етикет за ползване в продуктовите класове";
-    echo "</div>";
-};
-$cmp->items()->insert(new ClosureComponent($closure), 0);
+$text = new TextComponent();
+$text->addClassName("help summary");
+$text->buffer()->start();
+echo "Тук може да добавяте входни етикет за ползване в продуктовите класове";
+$text->buffer()->end();
+
+$cmp->items()->insert($text, 0);
 $cmp->render();
 
 

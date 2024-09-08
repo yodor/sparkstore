@@ -112,13 +112,15 @@ $act->append(Action::RowSeparator());
 
 $act->append(new Action("Parameters", "parameters/list.php", array(new DataParameter("voID"))));
 
+
+$text = new TextComponent();
+$text->addClassName("help summary");
+$text->buffer()->start();
 //за изграждане на варианти на продукта от съответния клас
-$closure = function(ClosureComponent $cmp) {
-    echo "<div class='help summary'>";
-    echo "Тук може да добавяте опции за изграждане на продуктови варианти.<BR>";
-    echo "</div>";
-};
-$cmp->items()->insert(new ClosureComponent($closure), 0);
+echo "Тук може да добавяте опции за изграждане на продуктови варианти.";
+$text->buffer()->end();
+
+$cmp->items()->insert($text, 0);
 $cmp->render();
 
 
