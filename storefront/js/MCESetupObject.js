@@ -13,8 +13,14 @@ function getMCESetupObject() {
 
         //
         entity_encoding: "raw",
-        force_p_newlines: true,
+
+        force_p_newlines: false,
         force_br_newlines: true,
+        convert_newlines_to_brs: true,
+        remove_linebreaks: true,
+        forced_root_block: false,
+        newline_behavior: 'linebreak',
+
 
         ///ver 4
         menubar: false,
