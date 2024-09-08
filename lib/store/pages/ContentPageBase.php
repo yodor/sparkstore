@@ -26,7 +26,7 @@ class ContentPageBase extends StorePage
         elseif (isset($_GET["page_id"])) {
             $this->id = (int)$_GET["page_id"];
         }
-
+//if passed id and page_class search for exact page_class during menu creation
 //will create menu from all pages containing page_class value in their keywords
 //required class!
 //footer_page; terms; usage
@@ -37,10 +37,18 @@ class ContentPageBase extends StorePage
 //but ?page_class=footer_page;cookies; will output menu for 2 pages
 //
         $this->page_class = array();
+        $request_class = array();
         if (isset($_GET["page_class"])) {
-            $this->page_class = explode(";", DBConnections::Get()->escape($_GET["page_class"]));
-            foreach ($this->page_class as $idx=>$class) {
-                $this->page_class[$idx] = trim($class);
+            $request_class = explode(";", DBConnections::Get()->escape($_GET["page_class"]));
+        }
+        if (isset($_GET["class"])) {
+            $request_class = explode(";", DBConnections::Get()->escape($_GET["class"]));
+        }
+
+        foreach ($request_class as $idx=>$class) {
+            $class = trim($class);
+            if (strlen($class)>0) {
+                $this->page_class[] = $class;
             }
         }
 
@@ -51,6 +59,7 @@ class ContentPageBase extends StorePage
 
             $query = $this->bean->query($this->bean->key(), "item_title", "content", "keywords", "item_date");
             $query->select->fields()->setExpression("( photo IS NOT NULL )", "have_photo");
+            $query->select->where()->add("visible", 1);
             if ($this->id > 0) {
                 $query->select->where()->add($this->bean->key(), $this->id);
             }
@@ -67,8 +76,8 @@ class ContentPageBase extends StorePage
             if (!$this->result) throw new Exception("Unable to query page data");
         }
         catch (Exception $e) {
-            Session::SetAlert($e);
-            header("Location: home.php");
+            Session::SetAlert($e->getMessage());
+            header("Location: ".LOCAL."/home.php");
             exit;
         }
 
@@ -78,30 +87,37 @@ class ContentPageBase extends StorePage
         if ($this->id>0 && count($this->page_class)==0) {
 
         }
-        //footer page lists all from specific class and pass their id and class
-        else if ($this->id>0 && count($this->page_class)>0) {
-            $query->select->where()->removeExpression($this->bean->key());
-            $query->select->limit = "";
-
-            $this->menuQuery = new SQLQuery($query->select, $this->bean->key());
-        }
         //page_class is listed only
         else if (count($this->page_class)>0) {
             //class from keywords, remove last, list remaining
             $result_class = $this->result->get("keywords");
-            $page_class = explode(";", $result_class);
-            foreach ($page_class as $idx=>$class) {
-                $page_class[$idx] = trim($class);
+            $result_class = explode(";", $result_class);
+            $page_class = array();
+            foreach ($result_class as $idx=>$class) {
+                $class = trim($class);
+                if (strlen($class)<1)continue;
+                $page_class[] = trim($class);
             }
+
             //unset the last element
             array_pop($page_class);
-            foreach ($page_class as $clsas) {
-                $query->select->where()->add("keywords", "'%$clsas%'", " LIKE ", " AND ");
-            }
-            $query->select->where()->removeExpression($this->bean->key());
-            $query->select->limit = "";
 
-            $this->menuQuery = new SQLQuery($query->select, $this->bean->key());
+            //limit lising all
+            if (count($page_class)>0) {
+                $query->select->where()->removeExpression("keywords");
+
+                foreach ($page_class as $class) {
+                    $query->select->where()->add("keywords", "'%$class%'", " LIKE ", " AND ");
+                }
+
+                $query->select->where()->removeExpression($this->bean->key());
+                $query->select->limit = "";
+
+                //minimum visible and id
+                if ($query->select->where()->count()>1) {
+                    $this->menuQuery = new SQLQuery($query->select, $this->bean->key());
+                }
+            }
         }
 
         $this->setTItle($this->result->get("item_title"));
@@ -132,6 +148,8 @@ class ContentPageBase extends StorePage
 
     protected function renderPageMenu()
     {
+
+        if (is_null($this->menuQuery)) return;
 
         $menu_items = $this->menuQuery->exec();
         if ($menu_items>0) {
@@ -171,6 +189,7 @@ class ContentPageBase extends StorePage
         $this->renderPageMenu();
 
         $css_class = implode(" ", $this->page_class);
+
         echo "<div class='column page_data $css_class'>";
     }
 

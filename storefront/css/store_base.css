@@ -1034,3 +1034,36 @@ A:hover, A:visited {
     margin-bottom:2em;
     /*text-align:center;*/
 }
+
+
+.ContentPage.pages {
+
+}
+
+.ContentPage.pages .menu_links {
+    display:block;
+    text-align:center;
+    padding:1em;
+}
+
+.ContentPage.pages .menu_links .item {
+    display:inline-block;
+    padding:0.5em;
+}
+
+.ContentPage.pages .page_data .page_photo {
+    display:block;
+}
+
+.ContentPage.pages .page_data .page_photo IMG {
+    display:block;
+    max-width:1200px;
+    width:100%;
+}
+
+.ContentPage.pages .page_data .summary A {
+    word-break: break-word;
+}
+.ContentPage.pages .page_data .summary IMG {
+    max-width:100%;
+}

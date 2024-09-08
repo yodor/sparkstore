@@ -60,7 +60,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "pass", "Парола", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "accept_terms", "Прочетох и приемам <a href='".LOCAL."/terms_usage.php"."'>Общите условия</a>", 1);
+        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "accept_terms", "Прочетох и приемам <a href='".LOCAL."/pages/index.php?page_class=terms"."'>Общите условия</a>", 1);
         $this->addInput($field);
 
 

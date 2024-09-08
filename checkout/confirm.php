@@ -247,7 +247,7 @@ $cmp = $page->getNavigation()->items()->getByName(CheckoutPage::NAV_CENTER);
 if ($cmp instanceof ClosureComponent) {
     $render = function (ClosureComponent $cmp) {
         echo "<div class='note'>";
-        echo "<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='" . LOCAL . "/terms_usage.php'>" . tr("Условия за ползване") . "</a></i>";
+        echo "<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='" . LOCAL . "/pages/index.php?class=terms'>" . tr("Условия за ползване") . "</a></i>";
         echo "</div>";
     };
     $cmp->setClosure($render);

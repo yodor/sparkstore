@@ -407,13 +407,12 @@ class StorePageBase extends SparkPage
 
             echo "<div class='column page_links'>";
         $dp = new DynamicPagesBean();
-        $query = $dp->query("item_title", "keywords", "dpID");
-        $query->select->where()->add("keywords", "'%footer_page%'", " LIKE ");
-        $query->select->where()->add("keywords", "'%terms%'", " LIKE ", " OR ");
+        $query = $dp->query("item_title", "keywords", $dp->key());
+        $query->select->where()->add("keywords", "'%footer_page%'", " LIKE ", " AND ");
         $query->select->where()->add("visible", 1);
             $num = $query->exec();
             while ($result = $query->nextResult()) {
-                $href=LOCAL."/terms_usage.php?dpID=".$result->get("dpID");
+                $href=LOCAL."/pages/index.php?id=".$result->get("dpID");
                 echo "<a class='item' href='$href'>".$result->get("item_title")."</a>";
             }
             echo "</div>";
@@ -463,7 +462,7 @@ class StorePageBase extends SparkPage
             if ($youtube_href) {
                 echo "<a class='slot youtube' title='youtube' href='{$youtube_href}'></a>";
             }
-            echo "<a class='slot terms' title='terms' href='".LOCAL."/terms_usage.php"."'></a>";
+            echo "<a class='slot terms' title='terms' href='".LOCAL."/pages/index.php?class=terms"."'></a>";
 
             echo "<a class='slot contacts' title='contacts' href='".LOCAL."/contacts.php'></a>";
             if ($phone) {
