@@ -4,10 +4,7 @@ include_once("auth/AdminAuthenticator.php");
 
 $auth = new AdminAuthenticator();
 $auth->logout();
-
-if (isset($_SESSION["upload_control"])) {
-    unset($_SESSION["upload_control"]);
-}
+Session::Destroy();
 
 header("Location: " . LOCAL . "/admin/");
 exit;
