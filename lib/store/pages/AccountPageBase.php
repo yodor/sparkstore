@@ -51,7 +51,7 @@ class AccountPageBase extends StorePage
             $menu_items = $this->account_menu->getMenuItems();
             foreach ($menu_items as $idx => $item) {
                 echo "<a class='item' href='" . $item->getHref() . "'>";
-                echo $item->getTitle();
+                echo $item->getName();
                 echo "</a>";
             }
             echo "</div>";

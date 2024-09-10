@@ -149,8 +149,10 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $items = $main_menu->getMenuItems();
         foreach ($items as $idx => $item) {
-            if (strcmp($item->getTitle(), $this->section) == 0) {
-                $main_menu->setSelectedItem($item);
+            if ($item instanceof MenuItem) {
+                if (strcmp($item->getName(), $this->section) == 0) {
+                    $main_menu->setSelectedItem($item);
+                }
             }
         }
         $main_menu->constructSelectedPath();
