@@ -9,7 +9,8 @@ include_once("components/ItemView.php");
 
 include_once("components/ClosureComponent.php");
 
-include_once("utils/GetProcessorCollection.php");
+include_once("objects/SparkMap.php");
+include_once("utils/GETProcessor.php");
 
 include_once("store/components/ProductListFilter.php");
 
@@ -41,7 +42,11 @@ class ProductListPageBase extends ProductPageBase
      */
     protected $view = NULL;
 
-    protected GetProcessorCollection $property_filter;
+    /**
+     * Other get variable filters
+     * @var SparkMap
+     */
+    protected SparkMap $property_filter;
 
     protected GETProcessor $category_filter;
 
@@ -52,7 +57,7 @@ class ProductListPageBase extends ProductPageBase
     {
         parent::__construct();
 
-        $this->property_filter = new GetProcessorCollection();
+        $this->property_filter = new SparkMap();
 
         $section_filter = new GETProcessor("section", "section");
         $closure = function(GETProcessor $filter) {
@@ -62,7 +67,7 @@ class ProductListPageBase extends ProductPageBase
             $filter->getClauseCollection()->append($clause);
         };
         $section_filter->setClosure($closure);
-        $this->property_filter->append($section_filter);
+        $this->property_filter->set($section_filter->getName(), $section_filter);
 
 //        $clause = new SQLClause();
 //        $clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");
@@ -171,7 +176,7 @@ class ProductListPageBase extends ProductPageBase
         $this->section = "";
     }
 
-    public function GetProcessorCollection() : GetProcessorCollection
+    public function getProcessors() : SparkMap
     {
         return $this->property_filter;
     }
@@ -191,17 +196,14 @@ class ProductListPageBase extends ProductPageBase
         // 5 attribute filters
 
         $iterator = $this->property_filter->iterator();
-        while ($iterator->valid()) {
-            $filter = $iterator->current();
-            if ($filter instanceof GETProcessor) {
-                $filter->setSQLSelect($this->select);
-                $filter->processInput();
-            }
-            $iterator->next();
+        while ($filter = $iterator->next()) {
+            if (!($filter instanceof GETProcessor)) continue;
+            $filter->setSQLSelect($this->select);
+            $filter->processInput();
         }
 
         $section_filter = $this->property_filter->get("section");
-        if ($section_filter->isProcessed()) {
+        if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
             $this->section = $section_filter->getValue();
         }
 
@@ -314,12 +316,9 @@ class ProductListPageBase extends ProductPageBase
 
         //append property filter names
         $iterator = $this->property_filter->iterator();
-        while ($iterator->valid()) {
-            $filter = $iterator->current();
-            if ($filter instanceof GETProcessor) {
-                $supported_params[] = $filter->getName();
-            }
-            $iterator->next();
+        while ($filter = $iterator->next()) {
+            if (!($filter instanceof GETProcessor)) continue;
+            $supported_params[] = $filter->getName();
         }
 
         //append dynamic filter names

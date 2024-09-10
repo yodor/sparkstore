@@ -5,7 +5,7 @@ include_once("components/MenuBarComponent.php");
 include_once("components/renderers/cells/CallbackCellRenderer.php");
 include_once("components/renderers/cells/BooleanCellRenderer.php");
 include_once("components/ClosureComponent.php");
-include_once("utils/MenuItem.php");
+include_once("utils/menu/MenuItem.php");
 
 include_once("store/templates/admin/TemplateFactory.php");
 

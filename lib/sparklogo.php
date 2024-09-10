@@ -1,5 +1,5 @@
 <?php
-include_once("utils/SparkFile.php");
+include_once("storage/SparkFile.php");
 include_once("storage/SparkHTTPResponse.php");
 
 $user_logo = new SparkFile();

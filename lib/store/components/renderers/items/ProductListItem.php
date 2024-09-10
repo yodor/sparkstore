@@ -4,8 +4,8 @@ include_once("components/renderers/IHeadContents.php");
 include_once("components/renderers/IPhotoRenderer.php");
 include_once("storage/StorageItem.php");
 
-include_once("utils/URL.php");
-include_once("utils/DataParameter.php");
+include_once("utils/url/URL.php");
+include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
 

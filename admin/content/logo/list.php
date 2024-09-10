@@ -1,7 +1,7 @@
 <?php
 include_once("session.php");
 include_once("templates/admin/ConfigEditorPage.php");
-include_once("utils/SparkFile.php");
+include_once("storage/SparkFile.php");
 
 $page = new AdminPage();
 $page->setName("Logo Management");
