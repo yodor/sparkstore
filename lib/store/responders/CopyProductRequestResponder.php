@@ -43,9 +43,9 @@ class CopyProductRequestResponder extends RequestResponder
         return new Action($title, "?cmd=copy_product$href_add", array_merge($parameters, $parameters_array), $check_code);
     }
 
-    protected function processConfirmation()
+    protected function processConfirmation() : void
     {
-        $this->drawConfirmDialog("Потвърдете копиране", "Потвърдете копиране на този продукт включително атрибути и снимки?");
+        $this->setupConfirmDialog("Потвърдете копиране", "Потвърдете копиране на този продукт включително атрибути и снимки?");
     }
 
     protected function processImpl()
