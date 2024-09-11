@@ -6,7 +6,7 @@ include_once("store/beans/ProductSectionsBean.php");
 
 class SectionChooserFormResponder extends JSONFormResponder
 {
-    protected $prodID = -1;
+    protected int $prodID = -1;
 
     public function __construct()
     {
@@ -49,38 +49,35 @@ class SectionChooserFormResponder extends JSONFormResponder
         $sections = $this->form->getInput("secID")->getValue();
 
         //update selected sections into the bean
+        $field = $this->form->getInput("secID");
+        if (! ($field instanceof ArrayDataInput)) throw new Exception("Incorrect data type");
 
         $db = DBConnections::Get();
         try {
             $db->transaction();
 
+            //delete all sections of this product and insert posted sections only
             $delete = new SQLDelete();
             $delete->from = " product_sections ";
             $delete->where()->add("prodID", $this->prodID);
 
             if (!$db->query($delete->getSQL())) throw new Exception("Unable to delete old values: ".$db->getError());
 
-            debug("Posted: ", $_POST);
+            $insert = new SQLInsert();
+            $insert->from = " product_sections ";
 
-            $sql = "INSERT INTO product_sections (prodID, secID) VALUES ";
-            $field = $this->form->getInput("secID");
-            if ($field instanceof ArrayDataInput) {
-                $section_ids = $field->getValues();
-                debug("Values Count: ".$field->getValuesCount());
-//                var_dump($_POST);
+            $section_ids = $field->getValues();
+
+            if (count($section_ids) > 0) {
+
+                foreach ($section_ids as $idx=>$secID) {
+                    $insert->setAppend("prodID", $this->prodID);
+                    $insert->setAppend("secID", $secID);
+                }
+
+                if (!$db->query($insert->getSQL())) throw new Exception("Unable to insert new values: ".$db->getError());
             }
-            else {
-                throw new Exception("Incorrect data type");
-            }
 
-            $values = array();
-
-            foreach ($section_ids as $idx=>$secID) {
-                $values[] = "({$this->prodID}, $secID)";
-            }
-            $sql.= implode(",", $values);
-
-            if (!$db->query($sql)) throw new Exception("Unable to insert new values: ".$db->getError());
             $db->commit();
 
             $resp->message = tr("Information was updated");
