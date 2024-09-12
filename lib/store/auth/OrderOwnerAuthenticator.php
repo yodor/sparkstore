@@ -5,7 +5,7 @@ include_once("store/beans/OrdersBean.php");
 class OrderOwnerAuthenticator extends UserAuthenticator
 {
 
-    public function authorize(array $user_data = NULL)
+    public function authorize(array $user_data = NULL) : ?AuthContext
     {
 
         $context = parent::authorize($user_data);

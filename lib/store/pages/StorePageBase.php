@@ -90,11 +90,14 @@ class StorePageBase extends SparkPage
 
     public bool $vouchers_enabled = false;
 
-    protected function headInitialize()
+    protected function headInitialize() : void
     {
 
         $config = ConfigBean::Factory();
         $config->setSection("seo");
+
+        $this->keywords = sanitizeKeywords($config->get("meta_keywords"));
+        $this->description = $config->get("meta_description");
 
         $facebookID_pixel = $config->get("facebookID_pixel");
         if ($facebookID_pixel) {
@@ -165,6 +168,13 @@ class StorePageBase extends SparkPage
 
         $this->head()->addScript(new LDJsonScript($www_data));
 
+
+        $this->head()->addCSS(STORE_LOCAL . "/css/store.css");
+        $this->head()->addJS(STORE_LOCAL."/js/StoreCookies.js");
+
+        $this->head()->addOGTag("url", URL::Current()->fullURL()->toString());
+        $this->head()->addOGTag("site_name", SITE_TITLE);
+        $this->head()->addOGTag("type", "website");
     }
 
     public function __construct()
@@ -184,7 +194,6 @@ class StorePageBase extends SparkPage
         }
 
         $this->headInitialize();
-
 
         $menu = new MainMenu();
 
@@ -219,19 +228,7 @@ class StorePageBase extends SparkPage
 
         $this->keyword_search = $ksc;
 
-        $this->head->addCSS(STORE_LOCAL . "/css/store.css");
-        //$this->head()->addCSS("//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");
 
-        //$this->head()->addJS("//code.jquery.com/ui/1.11.4/jquery-ui.js");
-        //$this->head()->addJS(SPARK_LOCAL . "/js/URI.js");
-
-
-
-        $this->head()->addJS(STORE_LOCAL."/js/StoreCookies.js");
-
-        $this->head()->addOGTag("url", fullURL($this->getPageURL()));
-        $this->head()->addOGTag("site_name", SITE_TITLE);
-        $this->head()->addOGTag("type", "website");
 
         $this->_header = new SectionContainer();
         $this->_header->addClassName("header");
@@ -286,11 +283,6 @@ class StorePageBase extends SparkPage
             $voucher_handler = new VoucherFormResponder();
         }
 
-    }
-
-    public function getAuthContext() : ?AuthContext
-    {
-        return $this->context;
     }
 
     public function getMenuBar()

@@ -100,7 +100,7 @@ $action->getURL()->fromString("javascript:document.forms.DeliveryCourier.submit(
 
 $page->renderNavigation();
 
-Session::set("checkout.navigation.back", $page->getPageURL());
+Session::set("checkout.navigation.back",  URL::Current()->toString());
 
 $page->finishRender();
 ?>

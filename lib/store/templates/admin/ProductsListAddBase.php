@@ -1,6 +1,8 @@
 <?php
 include_once("templates/admin/BeanEditorPage.php");
 include_once("store/utils/CheckStockState.php");
+include_once("objects/events/BeanFormEditorEvent.php");
+include_once("objects/events/BeanTransactorEvent.php");
 
 abstract class ProductsListAddBase extends BeanEditorPage
 {

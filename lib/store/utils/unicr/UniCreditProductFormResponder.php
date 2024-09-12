@@ -105,7 +105,7 @@ class OprSucfOnlineSessionStart extends UniCreditOperation
     public function setProductData(SellableItem $item)
     {
         $this->setData("totalPrice", $item->getPriceInfo()->getSellPrice());
-        $this->setData("returnURL", SparkPage::Instance()->getPageURL());
+        $this->setData("returnURL", URL::Current()->fullURL()->toString());
 
         $this->setData("orderNo", time());
 

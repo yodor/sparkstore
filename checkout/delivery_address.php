@@ -54,7 +54,7 @@ echo "<h1 class='Caption'>" . tr("Адрес за доставка") . "</h1>";
 
 $frend->render();
 
-$back_url = Session::get("checkout.navigation.back", $page->getPageURL());
+$back_url = Session::get("checkout.navigation.back",  URL::Current()->toString());
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
 $action->setTitle(tr("Назад"));

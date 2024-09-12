@@ -9,7 +9,7 @@ $page = new ProductDetailsPageBase();
 $sellable = $page->getSellable();
 
 $cmp = new ProductDetailsItem($sellable);
-$cmp->setURL($page->getURL()->fullURL());
+$cmp->setURL(URL::Current()->fullURL());
 $cmp->setCategories($page->getCategoryPath());
 
 $page->startRender();

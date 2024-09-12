@@ -349,7 +349,7 @@ class ProductListPageBase extends ProductPageBase
 
             $itemURL = $item->getTextAction()->getURL();
 
-            $pageURL = SparkPage::Instance()->getURL();
+            $pageURL = URL::Current();
 
             //static url parameter names from the current page
             $page_params = $pageURL->getParameterNames();
@@ -421,7 +421,7 @@ class ProductListPageBase extends ProductPageBase
         $num = $query->exec();
 
         echo "<div class='category_list'>";
-        $builder = new URL($this->getPageURL());
+        $builder =  URL::Current();
         $builder->add(new URLParameter("catID"));
         $si = new StorageItem();
         $si->className = "ProductCategoryPhotosBean";
@@ -542,7 +542,7 @@ class ProductListPageBase extends ProductPageBase
 
         echo "</div>";
 
-        Session::set("shopping.list", $this->getPageURL());
+        Session::set("shopping.list",  URL::Current()->toString());
 
     }
 }

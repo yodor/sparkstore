@@ -11,7 +11,6 @@ include_once("utils/menu/MenuItem.php");
 class AccountPageBase extends StorePage
 {
     protected $account_menu = NULL;
-    protected $authorized_access = TRUE;
 
     public function __construct(bool $authorized_access = TRUE)
     {

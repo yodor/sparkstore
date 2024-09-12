@@ -158,7 +158,7 @@ class ProductPageBase extends StorePage
 
         if ($this->keyword_search->isProcessed()) {
             $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
-            $search_action = new Action($search_title, $this->getPageURL(), array());
+            $search_action = new Action($search_title,  URL::Current()->toString(), array());
             $search_action->translation_enabled = false;
             $actions[] = $search_action;
         }
