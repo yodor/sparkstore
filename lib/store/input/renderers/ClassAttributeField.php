@@ -32,7 +32,11 @@ class ClassAttributeFieldResponder extends JSONResponder
         $this->field = $field;
     }
 
-    public function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function parseParams() : void
     {
         parent::parseParams();
 
@@ -126,7 +130,7 @@ class ClassAttributeField extends DataIteratorField
         $this->setIterator(new SQLQuery($sel, "pcaID"));
     }
 
-    public function setProductID(int $prodID)
+    public function setProductID(int $prodID) : void
     {
         $this->prodID = $prodID;
         $this->updateIterator();

@@ -25,7 +25,11 @@ class CopyProductRequestResponder extends RequestResponder
         return $this->item_id;
     }
 
-    protected function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function parseParams() : void
     {
         if (!isset($_GET["item_id"])) throw new Exception("Item ID not passed");
         $this->item_id = (int)$_GET["item_id"];

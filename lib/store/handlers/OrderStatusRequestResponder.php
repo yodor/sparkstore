@@ -14,7 +14,11 @@ class OrderStatusRequestResponder extends RequestResponder
         parent::__construct("order_status");
     }
 
-    protected function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function parseParams() : void
     {
         if (!isset($_GET["orderID"])) throw new Exception("Order ID not passed");
         $this->orderID = (int)$_GET["orderID"];

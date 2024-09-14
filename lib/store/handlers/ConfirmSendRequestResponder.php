@@ -13,7 +13,11 @@ class ConfirmSendRequestResponder extends RequestResponder
         parent::__construct("confirm_send");
     }
 
-    protected function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function parseParams() : void
     {
         if (!isset($_GET["orderID"])) throw new Exception("Order ID not passed");
         $this->orderID = (int)$_GET["item_id"];

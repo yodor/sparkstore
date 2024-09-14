@@ -42,7 +42,11 @@ class QueryProductResponder extends JSONResponder
 
     }
 
-    protected function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function parseParams() : void
     {
         parent::parseParams();
 

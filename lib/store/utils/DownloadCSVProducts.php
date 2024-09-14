@@ -196,7 +196,11 @@ class DownloadCSVProducts extends RequestResponder
 
     }
 
-    protected function parseParams()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function parseParams() : void
     {
         if (!$this->url->contains("type")) {
             throw new Exception("Target type not specified");
