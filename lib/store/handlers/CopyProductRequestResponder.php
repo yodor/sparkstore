@@ -8,8 +8,8 @@ include_once("store/beans/ClassAttributeValuesBean.php");
 class CopyProductRequestResponder extends RequestResponder
 {
 
-    protected $item_id = -1;
-    protected $bean = NULL;
+    protected int $item_id = -1;
+    protected DBTableBean $bean;
 
     public function __construct()
     {
@@ -20,7 +20,7 @@ class CopyProductRequestResponder extends RequestResponder
         $this->need_confirm = TRUE;
     }
 
-    public function getItemID()
+    public function getItemID() : int
     {
         return $this->item_id;
     }
@@ -31,20 +31,22 @@ class CopyProductRequestResponder extends RequestResponder
      */
     protected function parseParams() : void
     {
-        if (!isset($_GET["item_id"])) throw new Exception("Item ID not passed");
-        $this->item_id = (int)$_GET["item_id"];
-        $arr = $_GET;
-        unset($arr["cmd"]);
-        unset($arr["item_id"]);
-        $this->cancel_url = queryString($arr);
-        $this->cancel_url = $_SERVER['PHP_SELF'] . $this->cancel_url;
-
+        if (!$this->url->contains("item_id"))  throw new Exception("Item ID not passed");
+        $this->item_id = (int)$this->url->get("item_id")->value();
     }
 
-    public function createAction($title = "Copy", $href_add = "", $check_code = NULL, $parameters_array = array())
+    /**
+     * @return void
+     */
+    public function getParameterNames(): array
     {
-        $parameters = array(new DataParameter("item_id", $this->bean->key()));
-        return new Action($title, "?cmd=copy_product$href_add", array_merge($parameters, $parameters_array), $check_code);
+        return parent::getParameterNames() + array("item_id");
+    }
+
+    public function createAction(string $title = "Copy", string $href = "", Closure $check_code = NULL, array $parameters = array()) : ?Action
+    {
+        $parameters[] = new DataParameter("item_id", $this->bean->key());
+        return new Action($title, "?cmd={$this->cmd}&$href", $parameters, $check_code);
     }
 
     protected function processConfirmation() : void
@@ -52,7 +54,7 @@ class CopyProductRequestResponder extends RequestResponder
         $this->setupConfirmDialog("Потвърдете копиране", "Потвърдете копиране на този продукт включително атрибути и снимки?");
     }
 
-    protected function processImpl()
+    protected function processImpl() : void
     {
 
         $db = DBConnections::Factory();

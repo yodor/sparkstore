@@ -1,4 +1,5 @@
 <?php
+include_once("beans/OrderedDataBean.php");
 
 class ProductVariantPhotosBean extends OrderedDataBean
 {
@@ -10,7 +11,7 @@ class ProductVariantPhotosBean extends OrderedDataBean
   PRIMARY KEY (`pvpID`),
   KEY `pvID` (`pvID`) USING BTREE,
   CONSTRAINT `product_variant_photos_ibfk_1` FOREIGN KEY (`pvID`) REFERENCES `product_variants` (`pvID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
     //create trigger on this to delete from variant options of the same class
     public function __construct(DBDriver $dbdriver = NULL)

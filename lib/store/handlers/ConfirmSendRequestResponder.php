@@ -6,11 +6,16 @@ include_once("store/mailers/OrderCompletionMailer.php");
 class ConfirmSendRequestResponder extends RequestResponder
 {
 
-    protected $orderID = -1;
+    protected int $orderID = -1;
 
     public function __construct()
     {
         parent::__construct("confirm_send");
+    }
+
+    public function getParameterNames(): array
+    {
+        return parent::getParameterNames() + array("orderID");
     }
 
     /**
@@ -19,17 +24,11 @@ class ConfirmSendRequestResponder extends RequestResponder
      */
     protected function parseParams() : void
     {
-        if (!isset($_GET["orderID"])) throw new Exception("Order ID not passed");
-        $this->orderID = (int)$_GET["item_id"];
-        $arr = $_GET;
-        unset($arr["cmd"]);
-        unset($arr["orderID"]);
-        $this->cancel_url = queryString($arr);
-        $this->cancel_url = $_SERVER['PHP_SELF'] . $this->cancel_url;
-
+        if (!$this->url->contains("orderID")) throw new Exception("Order ID not passed");
+        $this->orderID = (int)$this->url->get("orderID")->value();
     }
 
-    protected function processImpl()
+    protected function processImpl() : void
     {
 
         //$db = DBConnections::Get();

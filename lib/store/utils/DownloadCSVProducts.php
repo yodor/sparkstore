@@ -30,7 +30,7 @@ class DownloadCSVProducts extends RequestResponder
         $this->supported_content[] = self::TYPE_GOOGLE;
     }
 
-    public function createAction($title = FALSE, $href = FALSE, $check_code = NULL, $data_parameters = array())
+    public function createAction(string $title = "", string $href = "", Closure $check_code = NULL, array $parameters = array()) : ?Action
     {
         $type = "";
         if (strcmp($title, self::TYPE_FACEBOOK) == 0) {
@@ -44,7 +44,7 @@ class DownloadCSVProducts extends RequestResponder
         return $action;
     }
 
-    protected function processImpl()
+    protected function processImpl() : void
     {
 
         //clear rendered state of startRender from SparkPage
@@ -212,5 +212,10 @@ class DownloadCSVProducts extends RequestResponder
 
         $this->type = $type;
 
+    }
+
+    public function getParameterNames() : array
+    {
+        return parent::getParameterNames() + array("type");
     }
 }

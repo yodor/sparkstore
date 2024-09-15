@@ -6,12 +6,17 @@ include_once("store/mailers/OrderStatusMailer.php");
 class OrderStatusRequestResponder extends RequestResponder
 {
 
-    protected $orderID = -1;
-    protected $status = NULL;
+    protected int $orderID = -1;
+    protected string $status = "";
 
     public function __construct()
     {
         parent::__construct("order_status");
+    }
+
+    public function getParameterNames(): array
+    {
+        return parent::getParameterNames() + array("orderID", "status");
     }
 
     /**
@@ -20,25 +25,17 @@ class OrderStatusRequestResponder extends RequestResponder
      */
     protected function parseParams() : void
     {
-        if (!isset($_GET["orderID"])) throw new Exception("Order ID not passed");
-        $this->orderID = (int)$_GET["orderID"];
+        if (!$this->url->contains("orderID")) throw new Exception("Order ID not passed");
+        $this->orderID = (int)$this->url->get("orderID")->value();
 
-        if (!isset($_GET["status"])) throw new Exception("Order status not passed");
-        $this->status = $_GET["status"];
-
-        $arr = $_GET;
-        unset($arr["cmd"]);
-        unset($arr["orderID"]);
-        unset($arr["status"]);
-        $this->cancel_url = queryString($arr);
-        $this->cancel_url = $_SERVER['PHP_SELF'] . $this->cancel_url;
-
+        if (!$this->url->contains("status")) throw new Exception("Order status not passed");
+        $this->status = $this->url->get("status")->value();
     }
 
-    protected function processImpl()
+    protected function processImpl() : void
     {
 
-        $db = DBConnections::factory();
+        $db = DBConnections::Get();
 
         try {
 
@@ -48,10 +45,10 @@ class OrderStatusRequestResponder extends RequestResponder
 
             $bean = new OrdersBean();
 
-            $update_row["status"] = $this->status;
+            $update_row["status"] = $db->escape($this->status);
             $update_row["completion_date"] = $db->dateTime();
 
-            if (!$bean->updateRecord($this->orderID, $update_row, $db)) throw new Exception("Unable to update this order: " . $db->getError());
+            if (!$bean->update($this->orderID, $update_row, $db)) throw new Exception("Unable to update this order: " . $db->getError());
 
             $m = new OrderStatusMailer($this->orderID, $this->status);
             $m->send();

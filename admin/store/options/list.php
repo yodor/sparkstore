@@ -14,7 +14,7 @@ $menu = array(
 
 $cmp = new BeanListPage();
 
-$cmp->getPage()->navigation()->clear();
+
 
 
 $title = tr("Options List");
@@ -52,6 +52,9 @@ if ($product_filter->isProcessed()) {
     }
 }
 else {
+
+    $cmp->getPage()->navigation()->clear();
+
     $class_filter->processInput();
     if ($class_filter->isProcessed()) {
         $pclsID = (int)$class_filter->getValue();
