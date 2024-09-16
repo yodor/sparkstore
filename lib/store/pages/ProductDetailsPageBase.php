@@ -129,7 +129,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $sql->set("p.view_counter", "p.view_counter+1");
         $sql->where()->add("p.prodID", $this->sellable->getProductID());
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
         try {
             $db->transaction();
             $db->query($sql->getSQL());

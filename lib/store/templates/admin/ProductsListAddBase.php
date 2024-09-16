@@ -20,7 +20,7 @@ abstract class ProductsListAddBase extends BeanEditorPage
             parent::initView();
 
             $transactor = $this->getEditor()->getTransactor();
-            $transactor->assignInsertValue("insert_date", DBConnections::Get()->dateTime());
+            $transactor->assignInsertValue("insert_date", DBConnections::Open()->dateTime());
 
             $old_stock_amount = -1;
             $closure_editor = function(BeanFormEditorEvent $event) use (&$old_stock_amount) {

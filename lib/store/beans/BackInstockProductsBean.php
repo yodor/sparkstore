@@ -21,7 +21,7 @@ class BackInstockProductsBean extends DBTableBean
     {
         //insert into backinstock list
         debug("Updating back in stock list for prodID: $prodID");
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
         try {
             $db->transaction();
             if (!$db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP")) {
@@ -38,7 +38,7 @@ class BackInstockProductsBean extends DBTableBean
     {
         debug("Deleting from back in stock list for prodID: $prodID");
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
         try {
             $db->transaction();
             if (!$db->query("DELETE FROM backinstock_products WHERE prodID = $prodID")) {

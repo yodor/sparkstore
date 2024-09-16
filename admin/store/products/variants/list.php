@@ -130,7 +130,7 @@ class ProductVariantsProcessor extends FormProcessor
     protected function storeFormData(InputForm $form)
     {
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
 
 
 

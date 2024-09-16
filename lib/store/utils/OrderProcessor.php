@@ -67,7 +67,7 @@ class OrderProcessor
 
         debug("Using userID='$userID'");
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
 
         $this->orderID = -1;
 
@@ -186,9 +186,9 @@ class OrderProcessor
                 $order_item["price"] = $cartEntry->getPrice();
                 $order_item["position"] = $pos;
                 $order_item["orderID"] = $this->orderID;
-                $order_item["product"] = DBConnections::Get()->escape($description);
+                $order_item["product"] = DBConnections::Open()->escape($description);
                 $order_item["prodID"] = $prodID;
-                $order_item["photo"] = DBConnections::Get()->escape($item_photo);
+                $order_item["photo"] = DBConnections::Open()->escape($item_photo);
 
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
@@ -238,7 +238,7 @@ class OrderProcessor
         }
         $sql->where()->add("p.prodID", $prodID);
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
         try {
             $db->transaction();
             $db->query($sql->getSQL());

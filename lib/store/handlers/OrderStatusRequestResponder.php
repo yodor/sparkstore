@@ -35,7 +35,7 @@ class OrderStatusRequestResponder extends RequestResponder
     protected function processImpl() : void
     {
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
 
         try {
 

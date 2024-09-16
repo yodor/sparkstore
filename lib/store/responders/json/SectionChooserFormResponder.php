@@ -56,7 +56,7 @@ class SectionChooserFormResponder extends JSONFormResponder
         $field = $this->form->getInput("secID");
         if (! ($field instanceof ArrayDataInput)) throw new Exception("Incorrect data type");
 
-        $db = DBConnections::Get();
+        $db = DBConnections::Open();
         try {
             $db->transaction();
 

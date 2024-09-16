@@ -73,7 +73,7 @@ class RegisterClientFormProcessor extends FormProcessor
             //registration requires activation email
             $confirm_code = Authenticator::RandomToken(32);
             $urow["confirmed"] = 0;
-            $urow["date_signup"] = DBConnections::Get()->dateTime();
+            $urow["date_signup"] = DBConnections::Open()->dateTime();
             $urow["confirm_code"] = $confirm_code;
 
             $userID = $users->insert($urow);
