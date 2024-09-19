@@ -30,7 +30,7 @@ class DownloadCSVProducts extends RequestResponder
         $this->supported_content[] = self::TYPE_GOOGLE;
     }
 
-    public function createAction(string $title = "", string $href = "", Closure $check_code = NULL, array $parameters = array()) : ?Action
+    public function createAction(string $title = "") : ?Action
     {
         $type = "";
         if (strcmp($title, self::TYPE_FACEBOOK) == 0) {
@@ -39,7 +39,8 @@ class DownloadCSVProducts extends RequestResponder
             $type = self::TYPE_GOOGLE;
         }
 
-        $action = new Action(self::COMMAND."_".$type, "?cmd=" . self::COMMAND . "&type=" . $type);
+        $action = parent::createAction($title);
+        $action->getURL()->add(new URLParameter("type", $type));
         $action->setTooltipText("Download CSV - ".$type);
         return $action;
     }
@@ -216,6 +217,8 @@ class DownloadCSVProducts extends RequestResponder
 
     public function getParameterNames() : array
     {
-        return parent::getParameterNames() + array("type");
+        $result = parent::getParameterNames();
+        $result[] = "type";
+        return $result;
     }
 }

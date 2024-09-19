@@ -15,7 +15,9 @@ class ConfirmSendRequestResponder extends RequestResponder
 
     public function getParameterNames(): array
     {
-        return parent::getParameterNames() + array("orderID");
+        $result = parent::getParameterNames();
+        $result[] = "orderID";
+        return $result;
     }
 
     /**

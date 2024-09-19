@@ -40,13 +40,16 @@ class CopyProductRequestResponder extends RequestResponder
      */
     public function getParameterNames(): array
     {
-        return parent::getParameterNames() + array("item_id");
+        $result = parent::getParameterNames();
+        $result[] = "item_id";
+        return $result;
     }
 
-    public function createAction(string $title = "Copy", string $href = "", Closure $check_code = NULL, array $parameters = array()) : ?Action
+    public function createAction(string $title = "Copy Product") : ?Action
     {
-        $parameters[] = new DataParameter("item_id", $this->bean->key());
-        return new Action($title, "?cmd={$this->cmd}&$href", $parameters, $check_code);
+        $action = parent::createAction($title);
+        $action->getURL()->add(new DataParameter("item_id", $this->bean->key()));
+        return $action;
     }
 
     protected function processConfirmation() : void

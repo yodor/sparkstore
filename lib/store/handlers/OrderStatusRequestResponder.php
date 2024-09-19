@@ -16,7 +16,10 @@ class OrderStatusRequestResponder extends RequestResponder
 
     public function getParameterNames(): array
     {
-        return parent::getParameterNames() + array("orderID", "status");
+        $result = parent::getParameterNames();
+        $result[] = "orderID";
+        $result[] = "status";
+        return $result;
     }
 
     /**
