@@ -131,8 +131,6 @@ class ProductsList extends BeanListPage
         parent::__construct();
         $this->getPage()->setPageMenu(TemplateFactory::MenuForPage("ProductsList"));
 
-        //$action = new Action("download_csv", "fbexport.php");
-        //$action->setTooltipText("Download CSV");
         $dcsv_responder = new DownloadCSVProducts();
         $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_FACEBOOK);
         $this->getPage()->getActions()->append($action);

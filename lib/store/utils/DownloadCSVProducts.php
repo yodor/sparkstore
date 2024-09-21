@@ -11,12 +11,12 @@ include_once("store/beans/ProductCategoriesBean.php");
 class DownloadCSVProducts extends RequestResponder
 {
 
-    const COMMAND = "download_csv";
-    const FILENAME = "catalog_products.csv";
+    const string COMMAND = "download_csv";
+    const string FILENAME = "catalog_products.csv";
 
 
-    const TYPE_FACEBOOK = "facebook";
-    const TYPE_GOOGLE = "google";
+    const string TYPE_FACEBOOK = "facebook";
+    const string TYPE_GOOGLE = "google";
     protected array $supported_content = array();
     protected string $type = "";
 

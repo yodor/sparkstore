@@ -164,10 +164,10 @@
     display:inline-block;
 }
 
-.admin_layout .page_area .page_caption .page_actions .Action[action='download_csv_facebook'] {
+.admin_layout .page_area .page_caption .page_actions .Action[action='facebook'] {
     background-image: url("../images/page_actions/download_csv_facebook.svg");
 }
-.admin_layout .page_area .page_caption .page_actions .Action[action='download_csv_google'] {
+.admin_layout .page_area .page_caption .page_actions .Action[action='google'] {
     background-image: url("../images/page_actions/download_csv_google.svg");
 }
 
