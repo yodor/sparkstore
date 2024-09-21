@@ -74,9 +74,13 @@ class SectionChooserFormResponder extends JSONFormResponder
 
             if (count($section_ids) > 0) {
 
+                //initialize columns
+                $insert->fields()->setColumn(new SQLColumn("prodID"));
+                $insert->fields()->setColumn(new SQLColumn("secID"));
+
                 foreach ($section_ids as $idx=>$secID) {
-                    $insert->setAppend("prodID", $this->prodID);
-                    $insert->setAppend("secID", $secID);
+                    $insert->fields()->getColumn("prodID")->addValue($this->prodID);
+                    $insert->fields()->getColumn("secID")->addValue($secID);
                 }
 
                 if (!$db->query($insert->getSQL())) throw new Exception("Unable to insert new values: ".$db->getError());
