@@ -74,8 +74,7 @@ ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() 
 
         $sql = "CREATE VIEW IF NOT EXISTS $view_name AS ({$this->getSQL()})";
         $db = DBConnections::Open();
-        $res = $db->query($sql);
-        $db->free($res);
+        $db->query($sql);
 
     }
 }
