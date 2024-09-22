@@ -158,15 +158,14 @@ class ProductVariantsProcessor extends FormProcessor
                 $id_list = implode(",", $posted_voIDs);
                 $db->query("DELETE FROM product_variants WHERE prodID={$this->prodID} AND voID NOT IN ($id_list) ");
 
-                //insert non existing IDs
+                //insert non-existing IDs
                 $values_list = array();
                 foreach ($posted_voIDs as $idx => $voID) {
                     $values_list[] = "({$this->prodID}, $voID)";
                 }
                 $values_list = implode(",", $values_list);
 
-                $result = $db->query("INSERT IGNORE INTO product_variants (prodID, voID) VALUES $values_list ");
-                if (!$result) throw new Exception($db->getError());
+                $db->query("INSERT IGNORE INTO product_variants (prodID, voID) VALUES $values_list ");
 
             }
             else {

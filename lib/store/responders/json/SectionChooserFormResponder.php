@@ -65,7 +65,7 @@ class SectionChooserFormResponder extends JSONFormResponder
             $delete->from = " product_sections ";
             $delete->where()->add("prodID", $this->prodID);
 
-            if (!$db->query($delete->getSQL())) throw new Exception("Unable to delete old values: ".$db->getError());
+            $db->query($delete->getSQL());
 
             $insert = new SQLInsert();
             $insert->from = " product_sections ";
@@ -83,7 +83,7 @@ class SectionChooserFormResponder extends JSONFormResponder
                     $insert->fields()->getColumn("secID")->addValue($secID);
                 }
 
-                if (!$db->query($insert->getSQL())) throw new Exception("Unable to insert new values: ".$db->getError());
+                $db->query($insert->getSQL());
             }
 
             $db->commit();

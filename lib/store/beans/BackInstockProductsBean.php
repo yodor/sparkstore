@@ -24,9 +24,7 @@ class BackInstockProductsBean extends DBTableBean
         $db = DBConnections::Open();
         try {
             $db->transaction();
-            if (!$db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP")) {
-                throw new Exception($db->getError());
-            }
+            $db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP");
             $db->commit();
         }
         catch (Exception $e) {
@@ -41,9 +39,7 @@ class BackInstockProductsBean extends DBTableBean
         $db = DBConnections::Open();
         try {
             $db->transaction();
-            if (!$db->query("DELETE FROM backinstock_products WHERE prodID = $prodID")) {
-                throw new Exception($db->getError());
-            }
+            $db->query("DELETE FROM backinstock_products WHERE prodID = $prodID");
             $db->commit();
         }
         catch (Exception $e) {
