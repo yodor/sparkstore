@@ -279,7 +279,7 @@ class ProductsList extends BeanListPage
     {
         $view = parent::initView();
 
-        $ticr1 = new ImageCellRenderer(-1, 64);
+        $ticr1 = new ImageCellRenderer(275, -1);
         $ticr1->setBean(new ProductPhotosBean());
         $ticr1->setLimit(1);
         $view->getColumn("cover_photo")->setCellRenderer($ticr1);
