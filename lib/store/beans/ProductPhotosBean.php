@@ -3,7 +3,7 @@ include_once("beans/OrderedDataBean.php");
 
 class ProductPhotosBean extends OrderedDataBean
 {
-    protected $createString = "CREATE TABLE `product_photos` (
+    protected string $createString = "CREATE TABLE `product_photos` (
  `ppID` int(11) unsigned NOT NULL AUTO_INCREMENT,
  `photo` longblob NOT NULL,
  `prodID` int(11) unsigned NOT NULL,

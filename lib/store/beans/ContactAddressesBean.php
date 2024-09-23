@@ -3,7 +3,7 @@ include_once("beans/OrderedDataBean.php");
 
 class ContactAddressesBean extends OrderedDataBean
 {
-    protected $createString = "CREATE TABLE `contact_addresses` (
+    protected string $createString = "CREATE TABLE `contact_addresses` (
  `caID` int(11) unsigned NOT NULL AUTO_INCREMENT,
  `city` varchar(255) NOT NULL DEFAULT '',
  `address` text NOT NULL DEFAULT '',

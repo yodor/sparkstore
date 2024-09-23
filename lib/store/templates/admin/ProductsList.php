@@ -160,7 +160,7 @@ class ProductsList extends BeanListPage
 
         );
 
-        $search_fields = array("product_name", "category_name", "class_name",  "keywords", "brand_name", "prodID", "importID" );
+        $search_fields = array("product_name", "category_name", "pcls.class_name",  "keywords", "brand_name", "prodID", "importID" );
 
         $this->keyword_search->getForm()->setFields($search_fields);
         $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
@@ -173,9 +173,8 @@ class ProductsList extends BeanListPage
         $frend->getSubmitLine()->setEnabled(false);
         $frend->setMethod(FormRenderer::METHOD_GET);
         $frend->setAttribute("autocomplete", "off");
-        $this->items()->append($frend);
 
-
+        $this->getPage()->getPageFilters()->items()->append($frend);
 
 
         $qry->select->fields()->set(

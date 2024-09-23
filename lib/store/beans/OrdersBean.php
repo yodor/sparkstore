@@ -3,12 +3,12 @@ include_once("beans/DBTableBean.php");
 
 class OrdersBean extends DBTableBean
 {
-    const STATUS_PROCESSING = "Processing";
-    const STATUS_SENT = "Sent";
-    const STATUS_COMPLETED = "Completed";
-    const STATUS_CANCELED = "Canceled";
+    const string STATUS_PROCESSING = "Processing";
+    const string STATUS_SENT = "Sent";
+    const string STATUS_COMPLETED = "Completed";
+    const string STATUS_CANCELED = "Canceled";
 
-    protected $createString = "CREATE TABLE `orders` (
+    protected string $createString = "CREATE TABLE `orders` (
   `orderID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `total` decimal(10,2) NOT NULL,
   `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.0,

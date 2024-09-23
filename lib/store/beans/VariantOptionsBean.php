@@ -3,7 +3,7 @@ include_once("beans/OrderedDataBean.php");
 
 class VariantOptionsBean extends OrderedDataBean
 {
-    protected $createString = "CREATE TABLE `variant_options` (
+    protected string $createString = "CREATE TABLE `variant_options` (
   `voID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `parentID` int(11) unsigned DEFAULT NULL,
   `option_name` varchar(255) NOT NULL,

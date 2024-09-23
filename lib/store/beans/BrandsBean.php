@@ -4,7 +4,7 @@ include_once("beans/DBTableBean.php");
 class BrandsBean extends DBTableBean
 {
 
-    protected $createString = "CREATE TABLE `brands` (
+    protected string $createString = "CREATE TABLE `brands` (
   `brandID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `brand_name` varchar(255) NOT NULL,
   `home_visible` tinyint(1) DEFAULT 0,

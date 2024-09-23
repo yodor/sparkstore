@@ -3,7 +3,7 @@ include_once("beans/DBTableBean.php");
 
 class BackInstockProductsBean extends DBTableBean
 {
-    protected $createString = "CREATE TABLE `backinstock_products` (
+    protected string $createString = "CREATE TABLE `backinstock_products` (
   `bispID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prodID` int(11) unsigned NOT NULL,
   `update_date` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),

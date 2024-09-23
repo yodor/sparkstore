@@ -3,7 +3,7 @@ include_once("beans/DBTableBean.php");
 
 class StorePromosBean extends DBTableBean
 {
-    protected $createString = "CREATE TABLE `store_promos` (
+    protected string $createString = "CREATE TABLE `store_promos` (
  `spID` int(11) unsigned NOT NULL AUTO_INCREMENT,
  `start_date` date NOT NULL,
  `end_date` date NOT NULL,

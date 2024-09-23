@@ -2,7 +2,7 @@
 
 class ProductVariantsBean extends DBTableBean
 {
-    protected $createString = "CREATE TABLE `product_variants` (
+    protected string $createString = "CREATE TABLE `product_variants` (
   `pvID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prodID` int(11) unsigned NOT NULL,
   `voID` int(11) unsigned NOT NULL,

@@ -3,7 +3,7 @@ include_once("beans/DBTableBean.php");
 
 class OrderItemsBean extends DBTableBean
 {
-    protected $createString = "CREATE TABLE `order_items` (
+    protected string $createString = "CREATE TABLE `order_items` (
  `itemID` int(11) unsigned NOT NULL AUTO_INCREMENT,
  `photo` longblob,
  `product` text NOT NULL,

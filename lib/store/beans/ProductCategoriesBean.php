@@ -4,7 +4,7 @@ include_once("beans/NestedSetBean.php");
 class ProductCategoriesBean extends NestedSetBean
 {
 
-    protected $createString = "CREATE TABLE `product_categories` (
+    protected string $createString = "CREATE TABLE `product_categories` (
   `catID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) NOT NULL,
   `href` text NOT NULL,

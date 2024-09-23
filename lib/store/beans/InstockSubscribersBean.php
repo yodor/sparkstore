@@ -4,7 +4,7 @@ include_once("beans/DBTableBean.php");
 class InstockSubscribersBean extends DBTableBean
 {
 
-    protected $createString = "CREATE TABLE `instock_subscribers` (
+    protected string $createString = "CREATE TABLE `instock_subscribers` (
   `isID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `prodID` int(11) unsigned NOT NULL,

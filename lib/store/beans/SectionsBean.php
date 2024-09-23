@@ -4,7 +4,7 @@ include_once("beans/OrderedDataBean.php");
 class SectionsBean extends OrderedDataBean
 {
 
-    protected $createString = "CREATE TABLE `sections` (
+    protected string $createString = "CREATE TABLE `sections` (
  `secID` int(11) unsigned NOT NULL AUTO_INCREMENT,
  `section_title` varchar(32) NOT NULL,
  `position` int(11) NOT NULL,

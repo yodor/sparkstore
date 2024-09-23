@@ -41,7 +41,7 @@ class NotifyInstockFormResponder extends JSONFormResponder
         }
         $data = array("email"=>$email, "prodID"=>$this->sellable->getProductID());
 
-        if (!$bean->insert($data)) throw new Exception($bean->getError());
+        $bean->insert($data);
 
         $resp->message = tr("Заявката Ви беще приета");
     }
