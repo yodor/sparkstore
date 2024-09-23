@@ -160,7 +160,18 @@ class ProductsList extends BeanListPage
 
         );
 
-        $search_fields = array("product_name", "category_name", "pcls.class_name",  "keywords", "brand_name", "prodID", "importID" );
+        $search_fields = array("p.product_name",
+            "pc.category_name",
+            "pcls.class_name",
+            "p.keywords",
+            "p.brand_name",
+            "p.prodID",
+            "p.importID",
+            "sections",
+            "class_attributes",
+            "product_variants",
+            "p.price"
+            );
 
         $this->keyword_search->getForm()->setFields($search_fields);
         $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
@@ -183,6 +194,7 @@ class ProductsList extends BeanListPage
                         "pcls.class_name",
                         "p.brand_name",
                         "pc.category_name",
+                        "p.keywords",
                         "p.visible",
                         "p.price",
                         "p.promo_price",
