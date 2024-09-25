@@ -52,6 +52,8 @@ class ForgotPasswordProcessor extends FormProcessor
 }
 
 $page = new AccountPage(FALSE);
+$page->setTitle("Забравена парола");
+
 
 $users = new UsersBean();
 
@@ -74,7 +76,6 @@ if ($proc->getStatus() != IFormProcessor::STATUS_NOT_PROCESSED) {
 
 $page->startRender();
 
-$page->setTitle("Забравена парола");
 
 echo "<div class='column'>";
 

@@ -57,9 +57,10 @@ $frend = new FormRenderer($form);
 
 $proc->process($form);
 
+$page->setTitle(tr("Избор на Еконт офис"));
+
 $page->startRender();
 
-$page->setTitle(tr("Избор на Еконт офис"));
 
 $page->drawCartItems();
 

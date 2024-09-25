@@ -6,6 +6,7 @@ include_once("store/forms/InvoiceDetailsInputForm.php");
 include_once("store/forms/processors/InvoiceDetailsFormProcessor.php");
 
 $page = new AccountPage();
+$page->setTitle(tr("Детайли за фактуриране"));
 
 $ccb = new InvoiceDetailsBean();
 $form = new InvoiceDetailsInputForm();
@@ -42,7 +43,6 @@ $page->startRender();
 
 echo "<div class='column'>";
 
-$page->setTitle(tr("Детайли за фактуриране"));
 echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
 
 echo "<div class='panel'>";

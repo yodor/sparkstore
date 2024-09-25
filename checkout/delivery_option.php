@@ -90,8 +90,9 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 
 }
 
-$page->startRender();
 $page->setTitle(tr("Начин на доставка"));
+
+$page->startRender();
 
 // echo "UserID: ".$page->getUserID();
 

@@ -95,9 +95,11 @@ catch (Exception $e) {
     exit;
 }
 
+$page->setTitle(tr("Съдържание на кошницата"));
+
+
 $page->startRender();
 
-$page->setTitle(tr("Съдържание на кошницата"));
 
 /**
  * 1. cart.php

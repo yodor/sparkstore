@@ -5,6 +5,7 @@ include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 
 $page = new AccountPage();
+$page->setTitle(tr("Клиентски профил"));
 
 $form = new RegisterClientInputForm();
 $form->removeInput("accept_terms");
@@ -37,7 +38,6 @@ else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
 $page->startRender();
 
 echo "<div class='column'>";
-$page->setTitle(tr("Клиентски профил"));
 
 echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
 

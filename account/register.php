@@ -6,6 +6,7 @@ include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 
 $page = new AccountPage(FALSE);
+$page->setTitle(tr("Регистрация"));
 
 $page->head()->addJS(STORE_LOCAL."/js/RegisterForm.js");
 $page->head()->addJS(SPARK_LOCAL."/js/md5.js");
@@ -35,7 +36,6 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 }
 
 $page->startRender();
-$page->setTitle(tr("Нова регистрация"));
 
 echo "<div class='column register'>"; //register
 

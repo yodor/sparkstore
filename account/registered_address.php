@@ -6,6 +6,7 @@ include_once("store/beans/ClientAddressesBean.php");
 include_once("store/forms/processors/ClientAddressFormProcessor.php");
 
 $page = new AccountPage();
+$page->setTitle(tr("Регистриран адрес"));
 
 $cab = new ClientAddressesBean();
 $form = new ClientAddressInputForm();
@@ -41,7 +42,6 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
 $page->startRender();
 
 echo "<div class='column'>";
-$page->setTitle(tr("Регистриран адрес"));
 
 echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
 

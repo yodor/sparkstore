@@ -57,15 +57,16 @@ $frend = new FormRenderer($form);
 
 $proc->process($form);
 
+$page->setTitle(tr("Избор на Спиди офис"));
+
 $page->startRender();
 
-$page->setTitle(tr("Избор на Еконт офис"));
 
 $page->drawCartItems();
 
 echo "<div class='item ekont_office $empty'>";
 
-    echo "<div class='Caption'>" . tr("Избран офис на Еконт") . "</div>";
+    echo "<div class='Caption'>" . tr("Избран офис на Спиди") . "</div>";
 
     echo "<div class='selected_office'>";
     echo str_replace("\r", "<br>", (string)$form->getInput("office")->getValue());

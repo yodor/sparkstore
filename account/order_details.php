@@ -10,6 +10,9 @@ include_once("store/beans/OrdersBean.php");
 include_once("store/forms/ClientAddressInputForm.php");
 
 $page = new AccountPage();
+$page->setTitle(tr("Детайли за поръчка"));
+
+
 $page->head()->addCSS(STORE_LOCAL."/css/print.css");
 
 $courier_addresses = new CourierAddressesBean();
@@ -46,7 +49,6 @@ $order = $qry->next();
 
 $page->startRender();
 
-$page->setTitle(tr("Детайли за поръчка"));
 
 
 

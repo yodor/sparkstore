@@ -13,6 +13,7 @@ include_once("store/beans/OrdersBean.php");
 
 
 $page = new AccountPage();
+$page->setTitle(tr("История на поръчките"));
 
 //invoke OrdersBean before OrderItemsBean to allow auto creation of the table structure
 $orders = new OrdersBean();
@@ -65,7 +66,6 @@ $view->getColumn("actions")->setCellRenderer($act);
 $view->getColumn("status")->getCellRenderer()->translation_enabled = true;
 
 $page->startRender();
-$page->setTitle(tr("История на поръчките"));
 
 echo "<div class='column'>";
 echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";

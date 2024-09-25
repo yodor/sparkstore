@@ -41,10 +41,10 @@ if ($proc->getStatus() == FormProcessor::STATUS_OK) {
 else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
     Session::SetAlert($proc->getMessage());
 }
+$page->setTitle(tr("Адрес за доставка"));
 
 $page->startRender();
 
-$page->setTitle(tr("Адрес за доставка"));
 
 $page->drawCartItems();
 

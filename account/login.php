@@ -15,6 +15,8 @@ if ($page->getUserID() > 0) {
     exit;
 }
 
+$page->setTitle(tr("Вход клиенти"));
+
 $auth = new UserAuthenticator();
 
 $req = new AuthenticatorResponder($auth, "doLogin");
@@ -34,7 +36,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Expires: 0");
 
 $page->startRender();
-$page->setTitle(tr("Вход"));
+
 
 //echo "<div class='Caption'>" . tr("Вход") . "</div>";
 

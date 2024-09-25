@@ -5,7 +5,7 @@ include_once("beans/ConfigBean.php");
 include_once("auth/UserAuthenticator.php");
 include_once("beans/UsersBean.php");
 
-include_once("utils/menu/MainMenu.php");
+include_once("utils/menu/MenuItemList.php");
 include_once("utils/menu/MenuItem.php");
 
 class AccountPageBase extends StorePage
@@ -18,17 +18,13 @@ class AccountPageBase extends StorePage
 
         parent::__construct();
 
-        $this->account_menu = new MainMenu();
+        $this->account_menu = new MenuItemList();
 
-        $items = array();
-
-        $items[] = new MenuItem("История на поръчките", "orders.php");
-        $items[] = new MenuItem("Регистриран адрес", "registered_address.php");
-        $items[] = new MenuItem("Детайли за фактуриране", "invoice_details.php");
-        $items[] = new MenuItem("Редакция на профил", "profile.php");
-        $items[] = new MenuItem("Изход", "logout.php");
-
-        $this->account_menu->setMenuItems($items);
+        $this->account_menu->append(new MenuItem("История на поръчките", "orders.php"));
+        $this->account_menu->append(new MenuItem("Регистриран адрес", "registered_address.php"));
+        $this->account_menu->append(new MenuItem("Детайли за фактуриране", "invoice_details.php"));
+        $this->account_menu->append(new MenuItem("Редакция на профил", "profile.php"));
+        $this->account_menu->append(new MenuItem("Изход", "logout.php"));
 
         $this->head()->addCSS(STORE_LOCAL . "/css/account.css");
     }
@@ -47,12 +43,15 @@ class AccountPageBase extends StorePage
             echo "<div class='column account_menu'>";
 
             echo "<div class='menu_links'>";
-            $menu_items = $this->account_menu->getMenuItems();
-            foreach ($menu_items as $idx => $item) {
+
+            $iterator = $this->account_menu->iterator();
+            while ($item = $iterator->next()) {
+                if (! ($item instanceof MenuItem)) continue;
                 echo "<a class='item' href='" . $item->getHref() . "'>";
                 echo $item->getName();
                 echo "</a>";
             }
+
             echo "</div>";
 
             echo "</div>"; //column account

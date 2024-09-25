@@ -133,9 +133,10 @@ $nfrend->getSubmitLine()->setEnabled(false);
 $noteproc = new OrderNoteFormProcessor();
 $noteproc->process($noteform);
 
+$page->setTitle(tr("Потвърди поръчка"));
+
 $page->startRender();
 
-$page->setTitle(tr("Потвърди поръчка"));
 
 $page->drawCartItems();
 

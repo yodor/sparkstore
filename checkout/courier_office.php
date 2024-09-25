@@ -58,9 +58,10 @@ $frend = new FormRenderer($form);
 
 $proc->process($form);
 
+$page->setTitle(tr("Избор на офис на куриер за доставка"));
+
 $page->startRender();
 
-$page->setTitle(tr("Избор на офис на куриер за доставка"));
 
 $page->drawCartItems();
 

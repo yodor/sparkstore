@@ -9,9 +9,11 @@ if (isset($_GET["orderID"])) {
     $orderID = (int)$_GET["orderID"];
 }
 
+$page->setTitle(tr("Завършена поръчка"));
+
 $page->startRender();
 
-$page->setTitle(tr("Завършена поръчка"));
+
 
 echo "<div class='column'>";
 

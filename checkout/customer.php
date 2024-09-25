@@ -54,7 +54,7 @@ $frend = new FormRenderer($form);
 $proc = new FastOrderProcessor();
 $proc->process($form);
 
-$page->setTitle(tr("Fast Order"));
+$page->setTitle(tr("Бърза поръчка"));
 
 $page->startRender();
 

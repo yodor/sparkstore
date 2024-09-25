@@ -66,8 +66,9 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 
 }
 
-$page->startRender();
 $page->setTitle(tr("Избор на куриер"));
+
+$page->startRender();
 
 // echo "UserID: ".$page->getUserID();
 

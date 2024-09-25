@@ -2,7 +2,7 @@
 include_once("pages/SparkPage.php");
 
 include_once("utils/output/LDJsonScript.php");
-include_once("utils/menu/MainMenu.php");
+include_once("utils/menu/BeanMenuFactory.php");
 
 include_once("components/MenuBarComponent.php");
 include_once("components/KeywordSearch.php");
@@ -195,12 +195,9 @@ class StorePageBase extends SparkPage
 
         $this->headInitialize();
 
-        $menu = new MainMenu();
+        $factory = new BeanMenuFactory(new MenuItemsBean());
 
-        $menu->setBean(new MenuItemsBean());
-        $menu->construct();
-
-        $this->menu_bar = new MenuBarComponent($menu);
+        $this->menu_bar = new MenuBarComponent($factory->menu());
 
         $this->menu_bar->setName("StorePage");
         $this->menu_bar->toggle_first = TRUE;
@@ -481,8 +478,8 @@ class StorePageBase extends SparkPage
     protected function selectActiveMenu()
     {
 
-        $main_menu = $this->menu_bar->getMainMenu();
-        $main_menu->selectActive(array(MainMenu::MATCH_FULL,MainMenu::MATCH_PARTIAL));
+        $main_menu = $this->menu_bar->getMenu();
+        $main_menu->selectActive(array(MenuItemList::MATCH_FULL,MenuItemList::MATCH_PARTIAL));
 
     }
 
@@ -496,7 +493,7 @@ class StorePageBase extends SparkPage
     {
         if (mb_strlen($this->getTitle()) > 0) return;
 
-        $main_menu = $this->menu_bar->getMainMenu();
+        $main_menu = $this->menu_bar->getMenu();
 
         $this->setTitle(constructSiteTitle($main_menu->getSelectedPath()));
     }

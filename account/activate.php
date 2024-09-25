@@ -6,6 +6,7 @@ include_once("store/forms/ActivateProfileInputForm.php");
 include_once("store/forms/processors/ActivateProfileFormProcessor.php");
 
 $page = new AccountPage(FALSE);
+$page->setTitle(tr("Активация на профил"));
 
 $form = new ActivateProfileInputForm();
 
@@ -26,7 +27,6 @@ else if ($proc->getStatus() === IFormProcessor::STATUS_ERROR) {
     Session::SetAlert(tr("Възникна грешка при активация на профила")."<div class='error'>".$proc->getMessage()."</div>");
 }
 
-$page->setTitle(tr("Активация на профил"));
 
 $page->startRender();
 
