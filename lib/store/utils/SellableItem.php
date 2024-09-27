@@ -1,10 +1,8 @@
 <?php
 include_once("objects/SparkObject.php");
-include_once("components/renderers/IPhotoRenderer.php");
-
 include_once("store/utils/SellableDataParser.php");
 
-class SellableItem extends SparkObject implements IPhotoRenderer
+class SellableItem extends SparkObject
 {
 
     protected int $prodID = -1;
@@ -224,6 +222,10 @@ class SellableItem extends SparkObject implements IPhotoRenderer
         return $this->attributes;
     }
 
+    /**
+     * Product photo gallery
+     * @return array Array of StorageItems
+     */
     public function galleryItems() : array
     {
         return $this->gallery;
@@ -265,34 +267,6 @@ class SellableItem extends SparkObject implements IPhotoRenderer
         return count(array_keys($this->variants));
     }
 
-    /**
-     * Set the preferred size of the main photo (used from the JS code image gallery)
-     * @param int $width
-     * @param int $height
-     */
-    public function setPhotoSize(int $width, int $height): void
-    {
-        $this->width = $width;
-        $this->height = $height;
-    }
-
-    /**
-     * Get the main photo preferred width
-     * @return int
-     */
-    public function getPhotoWidth(): int
-    {
-        return $this->width;
-    }
-
-    /**
-     * Get the main photo preferred height
-     * @return int
-     */
-    public function getPhotoHeight(): int
-    {
-        return $this->height;
-    }
 
 }
 ?>

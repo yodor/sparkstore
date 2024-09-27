@@ -1,10 +1,11 @@
 <?php
 include_once("components/Component.php");
+include_once("store/utils/SellableItem.php");
 
 include_once("store/beans/ProductFeaturesBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 
-include_once("store/utils/SellableItem.php");
+
 include_once("store/responders/json/QueryProductFormResponder.php");
 include_once("store/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
@@ -12,7 +13,10 @@ include_once("store/responders/json/NotifyInstockFormResponder.php");
 include_once("store/utils/tbi/TBICreditPaymentButton.php");
 include_once("store/utils/unicr/UniCreditPaymentButton.php");
 
-class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRenderer
+include_once("store/components/SellableImageGallery.php");
+
+
+class ProductDetailsItem extends Container implements IHeadContents
 {
 
     const BUTTON_QUERY_PRODUCT = "Query Product";
@@ -30,11 +34,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     /**
      * @var SellableItem|null
      */
-    protected $sellable = null;
-
-    //main photo size
-    protected $width = -1;
-    protected $height = -1;
+    protected SellableItem $sellable;
 
     protected $side_pane = null;
 
@@ -43,29 +43,33 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     //TBI store UID if defined
     protected array $crpayments = array();
 
+    protected ?SellableImageGallery $gallery;
+
     public function __construct(SellableItem $item)
     {
         parent::__construct();
 
-        $this->setAttribute("itemscope","");
-        $this->setAttribute("itemtype", "http://schema.org/Product");
-
-        $this->setAttribute("productID", $item->getProductID());
-
         $this->sellable = $item;
 
-        $this->setPhotoSize(640,640);
+        $this->url = new URL("/product/details.php");
+
+        $this->setAttribute("itemscope","");
+        $this->setAttribute("itemtype", "http://schema.org/Product");
+        $this->setAttribute("productID", $item->getProductID());
 
         $this->side_pane = new Container(false);
         $this->side_pane->setComponentClass("side_pane");
 
-
         $this->initializeCartButtons();
         $this->initializePaymentButtons();
+
+        $this->gallery = new SellableImageGallery($this->sellable);
+
+        $this->items()->append($this->gallery);
+
+        $this->gallery->getImagePopup()->getImage()->setPhotoSize(640,640);
+
         $this->setCacheable(true);
-
-        $this->url = new URL("/product/details.php");
-
     }
 
     public function getCacheName(): string
@@ -166,32 +170,12 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         return $arr;
     }
 
-    public function setPhotoSize(int $width, int $height): void
-    {
-        $this->width = $width;
-        $this->height = $height;
-
-        if ($this->sellable) {
-            $this->sellable->setPhotoSize($width, $height);
-        }
-    }
-
-    public function getPhotoWidth(): int
-    {
-        return $this->width;
-    }
-
-    public function getPhotoHeight(): int
-    {
-        return $this->height;
-    }
-
-    public function setSellable(SellableItem $item)
+    public function setSellable(SellableItem $item) : void
     {
         $this->sellable = $item;
     }
 
-    public function setCategories(array $categores)
+    public function setCategories(array $categores) : void
     {
         $this->categories = $categores;
     }
@@ -201,91 +185,8 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->url = $url;
     }
 
-    protected function renderImagePane()
-    {
 
-
-        echo "<div class='images'>";
-
-        $gallery_items = $this->sellable->galleryItems();
-        $max_pos = count(array_keys($gallery_items));
-
-        $class_add = "";
-        $discount_label = "";
-        if ($this->sellable->isPromotion()) {
-            $class_add = "promo";
-            $discount_label = "Промо";
-        }
-        $stock_amount = $this->sellable->getStockAmount();
-        if ($stock_amount<1) {
-            $class_add = "nostock";
-            $discount_label = "Изчерпан";
-        }
-
-        echo "<div class='image_preview {$class_add}' max_pos='$max_pos'>";
-
-            echo "<div class='discount_label'>";
-            echo $discount_label;
-            echo "</div>";
-
-            $product_name = $this->sellable->getTitle();
-            $si = $gallery_items[0];
-
-            $image_popup = new ImagePopup();
-            $image_popup->setBean(new ProductPhotosBean());
-            $image_popup->setPhotoSize($this->width, $this->height);
-            //no relation here
-            $image_popup->setAttribute("title", $product_name);
-            $image_popup->setAttribute("itemprop", "image");
-            //do not set relation here but use list relation targeting items in hte image_gallery
-            $image_popup->setAttribute("list-relation", "ProductGallery");
-            $image_popup->setID($si->id);
-            $image_popup->setLazyLoadEnabled(false);
-            $image_popup->getImage()->setAttribute("fetchpriority","high");
-            $image_popup->render();
-
-            if ($max_pos>1) {
-                echo "<a href='javascript:prev();' class='arrow prev'></a>";
-                echo "<a href='javascript:next();' class='arrow next'></a>";
-            }
-
-            echo "<div class='blend'></div>";
-        echo "</div>"; //image_preview
-
-        //image galleries per color
-        echo "<div class='image_gallery'>";
-            $class_single = "";
-            if ($max_pos<=1) $class_single = "single";
-            echo "<div class='list $class_single'>";
-
-            $pos = 0;
-
-            $active = "active=1";
-            $si = new StorageItem();
-            $si->className = "ProductPhotosBean";
-
-            foreach ($gallery_items as $key=>$si) {
-                $ppID = $si->id;
-                //$image_popup->setID($ppID);
-
-                echo "<div class='item' itemClass='ProductPhotosBean' itemID='$ppID' pos='$pos' onClick='javascript:galleryItemClicked(this)' relation='ProductGallery' $active>";
-                if ($si instanceof StorageItem) {
-                    $src = $si->hrefThumb(64);
-                    echo "<img src='$src' alt='$product_name' loading='lazy' title='$product_name'>";
-                }
-                echo "</div>";
-
-                $active="";
-                $pos++;
-            }
-
-            echo "</div>";//list
-        echo "</div>";//image_gallery
-
-        echo "</div>"; // images
-    }
-
-    protected function renderGroupCaption()
+    protected function renderGroupCaption() : void
     {
         echo "<div class='group caption'>";
 
@@ -297,9 +198,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     }
 
 
-
-
-    protected function renderGroupDetails()
+    protected function renderGroupDetails() : void
     {
 
         echo "<div class='group details'>";
@@ -324,7 +223,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>"; //details
     }
 
-    protected function renderGroupStockAmount()
+    protected function renderGroupStockAmount() : void
     {
         $stock_amount = $this->sellable->getStockAmount();
 
@@ -345,7 +244,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
 //        echo "</div>"; //details
     }
 
-    protected function renderGroupAttributes()
+    protected function renderGroupAttributes() : void
     {
         echo "<div class='group attributes'>";
             echo "<div class='viewport'>";
@@ -361,7 +260,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>"; //attributes
     }
 
-    protected function renderGroupVariants()
+    protected function renderGroupVariants() : void
     {
         echo "<div class='group variants'>";
         echo "<div class='viewport'>";
@@ -391,7 +290,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>"; //attributes
     }
 
-    protected function renderGroupPricing()
+    protected function renderGroupPricing() : void
     {
 
         $priceInfo = $this->sellable->getPriceInfo();
@@ -432,7 +331,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>"; //pricing
     }
 
-    public function renderGroupCartLink()
+    public function renderGroupCartLink() : void
     {
 
         $stock_amount = $this->sellable->getStockAmount();
@@ -491,7 +390,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         echo "</div>";
     }
 
-    protected function sidePaneStart()
+    protected function sidePaneStart() : void
     {
         $this->side_pane->startRender();
     }
@@ -556,7 +455,7 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
         $this->sidePaneFinish();
     }
 
-    protected function sidePaneFinish()
+    protected function sidePaneFinish() : void
     {
         $this->side_pane->finishRender();
     }
@@ -613,7 +512,6 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
     protected function renderImpl()
     {
 
-
         echo "<meta itemprop='url' content='".attributeValue($this->url->toString())."'>";
 
         $content = array();
@@ -625,7 +523,9 @@ class ProductDetailsItem extends Component implements IHeadContents,  IPhotoRend
             echo "<meta itemprop='category' content='$content'>";
         }
 
-        $this->renderImagePane();
+        parent::renderImpl();
+
+        //$this->renderImagePane();
         $this->renderSidePane();
         $this->renderTabs();
 

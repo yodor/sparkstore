@@ -68,6 +68,9 @@
 }
 
 @media screen and (max-width: 551px) {
+    .side_pane .group.caption .product_name .value {
+        text-align:center;
+    }
     .image_preview {
         display: block;
         margin-left: 0px;
@@ -76,6 +79,7 @@
 
     .image_preview IMG {
         width: 100%;
+        height: auto;
     }
 
     .side_pane .group.pricing {

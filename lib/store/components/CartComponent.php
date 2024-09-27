@@ -49,7 +49,7 @@ class CartComponent extends Component implements IHeadContents
         $this->products = new ProductsBean();
         $this->product_photos = new ProductPhotosBean();
         $this->image_popup = new ImagePopup();
-        $this->image_popup->setPhotoSize(-1, 100);
+        $this->image_popup->getImage()->setPhotoSize(-1, 100);
         $this->image_popup->getStorageItem()->enableExternalURL(TRUE);
 
         $this->table = new Component();
