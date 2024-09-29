@@ -43,7 +43,7 @@ class IteratorRelatedField extends DataIteratorField
         return $arr;
     }
 
-    protected function renderItems()
+    protected function renderItems() : void
     {
 
         if ($this->iterator->count() < 1) {

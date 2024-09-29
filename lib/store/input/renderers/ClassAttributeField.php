@@ -149,7 +149,7 @@ class ClassAttributeField extends DataIteratorField
 
     }
 
-    protected function renderItems()
+    protected function renderItems() : void
     {
 
         if ($this->iterator->count() < 1) {
@@ -157,7 +157,7 @@ class ClassAttributeField extends DataIteratorField
             return;
         }
 
-        $this->getItemRenderer()->setValueKey($this->input->getName());
+        $this->getItemRenderer()->setValueKey($this->dataInput->getName());
 
         parent::renderItems();
     }
@@ -184,7 +184,7 @@ class ClassAttributeField extends DataIteratorField
                     req.onSuccess = function(request_result) {
                         let result = request_result.json_result;
                         let html = result.contents;
-                        $(".ClassAttributeField[field='<?php echo $this->input->getName();?>']").html(html);
+                        $(".ClassAttributeField[field='<?php echo $this->dataInput->getName();?>']").html(html);
                         dispatchEvent(new Event('load'));
                     };
 

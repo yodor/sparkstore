@@ -22,8 +22,8 @@ if ($item instanceof TextTreeItem) {
     $si->className = "ProductCategoryPhotosBean";
     $si->setName("pcpID");
 
-    $item->setPhotoSize(-1, 32);
-    $item->setIcon($si);
+    $item->icon()->setStorageItem($si);
+    $item->icon()->setPhotoSize(-1, 32);
 
     //banners for each category
     $item->getActions()->append(new Action("Banners Gallery", "banners/list.php", array(new DataParameter("catID", $cmp->getBean()->key()))));

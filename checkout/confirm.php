@@ -60,7 +60,7 @@ class OrderNoteInputForm extends InputForm
     {
         parent::__construct();
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "note", "Бележка", 0);
-        $field->getRenderer()->setInputAttribute("maxlength", "200");
+        $field->getRenderer()->input()?->setAttribute("maxlength", "200");
         $this->addInput($field);
     }
 }

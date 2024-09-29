@@ -6,6 +6,7 @@ include_once("store/beans/ProductClassAttributesBean.php");
 
 include_once("input/ArrayDataInput.php");
 include_once("input/validators/SimpleTextValidator.php");
+include_once("components/TextComponent.php");
 
 class ProductClassInputForm extends InputForm
 {
@@ -41,18 +42,15 @@ class ProductClassInputForm extends InputForm
 
         $act = new Action("inline-new", "../attributes/add.php");
         $act->setContents("New attribute");
-        $arend->addControl($act);
+        $arend->controls()->items()->append($act);
 
         $this->addInput($field1);
 
 
-        $closure = function() {
-            echo "<span style='color:red;'>";
-            echo "Ако промените атрибутите ще се ИЗТРИЯТ от всички продукти от този клас";
-            echo "</span>";
-        };
-        $field1->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
-        $field1->getRenderer()->getAddonContainer()->items()->append(new ClosureComponent($closure, true));
+        $info = new TextComponent("Ако промените атрибутите ще се ИЗТРИЯТ от всички продукти от този клас");
+        $info->setStyleAttribute("color","red");
+
+        $arend->getAddonContainer()->items()->append($info);
     }
 
 }

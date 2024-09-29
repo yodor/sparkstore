@@ -10,7 +10,7 @@ class CourierOfficeInputForm extends InputForm
         parent::__construct();
 
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "office", "Въведете адрес на офис за доставка", 1);
-        //$field->getRenderer()->setInputAttribute("readonly", "1");
+        //$field->getRenderer()->input()?->setAttribute("readonly", "1");
         $this->addInput($field);
 
     }

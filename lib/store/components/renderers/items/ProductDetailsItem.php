@@ -67,7 +67,7 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $this->items()->append($this->gallery);
 
-        $this->gallery->getImagePopup()->getImage()->setPhotoSize(640,640);
+        $this->gallery->getImagePopup()->image()->setPhotoSize(640,640);
 
         $this->setCacheable(true);
     }

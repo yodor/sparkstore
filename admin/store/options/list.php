@@ -85,7 +85,7 @@ $closure = function(ClosureComponent $cmp) use ($class_filter, $classes) {
     $input->getRenderer()->getItemRenderer()->setLabelKey("class_name");
     $input->getRenderer()->getItemRenderer()->setValueKey("pclsID");
     $input->getRenderer()->na_label = "--- Всички ---";
-    $input->getRenderer()->setInputAttribute("onChange", "document.forms.Filters.submit()");
+    $input->getRenderer()->input()?->setAttribute("onChange", "document.forms.Filters.submit()");
     if ($class_filter->isProcessed()) {
         $input->setValue($class_filter->getValue());
     }

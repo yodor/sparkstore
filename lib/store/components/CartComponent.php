@@ -49,8 +49,8 @@ class CartComponent extends Component implements IHeadContents
         $this->products = new ProductsBean();
         $this->product_photos = new ProductPhotosBean();
         $this->image_popup = new ImagePopup();
-        $this->image_popup->getImage()->setPhotoSize(-1, 100);
-        $this->image_popup->getStorageItem()->enableExternalURL(TRUE);
+        $this->image_popup->image()->setPhotoSize(-1, 100);
+        $this->image_popup->image()->getStorageItem()->enableExternalURL(TRUE);
 
         $this->table = new Component();
         $this->table->setTagName("TABLE");
@@ -134,7 +134,7 @@ class CartComponent extends Component implements IHeadContents
 
         $sitem = $item->getMainPhoto();
 
-        $this->image_popup->setStorageItem($sitem);
+        $this->image_popup->image()->setStorageItem($sitem);
 
         $this->image_popup->render();
 

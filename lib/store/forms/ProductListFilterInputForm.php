@@ -68,7 +68,7 @@ class FilterDataInput extends DataInput {
         $renderer->getItemRenderer()->setValueKey($this->getName());
         $renderer->getItemRenderer()->setLabelKey($this->getName());
         $renderer->na_label = "--- Всички ---";
-        $renderer->setInputAttribute("onChange", "javascript:applyFilter(this)");
+        $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
     //input name => val value posted
@@ -140,7 +140,7 @@ class ProductAttributeFilter extends SelectFilter {
         $renderer->getItemRenderer()->setValueKey("value");
         $renderer->getItemRenderer()->setLabelKey("value");
         $renderer->na_label = "--- Всички ---";
-        $renderer->setInputAttribute("onChange", "javascript:applyFilter(this)");
+        $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
     public function appendWhereClause(ClauseCollection $where)
@@ -196,7 +196,7 @@ class ProductVariantFilter extends SelectFilter {
         $renderer->getItemRenderer()->setValueKey("option_value");
         $renderer->getItemRenderer()->setLabelKey("option_value");
         $renderer->na_label = "--- Всички ---";
-        $renderer->setInputAttribute("onChange", "javascript:applyFilter(this)");
+        $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
     public function appendWhereClause(ClauseCollection $where)
@@ -241,7 +241,7 @@ class ProductListFilterInputForm extends InputForm {
     {
         parent::__construct();
         $input = new BrandFilter();
-        $input->getRenderer()->setInputAttribute("size", "1");
+        $input->getRenderer()->input()?->setAttribute("size", "1");
         $this->addInput($input);
 //        $this->addInput(new ColorFilter());
 //        $this->addInput(new SizeFilter());

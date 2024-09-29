@@ -25,7 +25,7 @@ class ProductFilterInputForm extends InputForm {
 
         $field->getRenderer()->na_label = "--- Всички ---";
 
-        $field->getRenderer()->setInputAttribute("onChange", "this.form.submit()");
+        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
 
 
         $this->addInput($field);
@@ -41,7 +41,7 @@ class ProductFilterInputForm extends InputForm {
 
         $field->getRenderer()->na_label = "--- Всички ---";
 
-        $field->getRenderer()->setInputAttribute("onChange", "this.form.submit()");
+        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
 
 
         $this->addInput($field);
@@ -57,7 +57,7 @@ class ProductFilterInputForm extends InputForm {
 
         $field->getRenderer()->na_label = "--- Всички ---";
 
-        $field->getRenderer()->setInputAttribute("onChange", "this.form.submit()");
+        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
 
         $this->addInput($field);
 
@@ -72,7 +72,7 @@ class ProductFilterInputForm extends InputForm {
 
         $field->getRenderer()->na_label = "--- Всички ---";
 
-        $field->getRenderer()->setInputAttribute("onChange", "this.form.submit()");
+        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
 
         $this->addInput($field);
     }

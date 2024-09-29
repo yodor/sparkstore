@@ -54,12 +54,12 @@ class SellableImageGallery extends Container {
         if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
         $this->image_popup = new ImagePopup();
-        $this->image_popup->setStorageItem($storageItem);
-        $this->image_popup->getImage()->setUseSizeAttributes(true);
-        $this->image_popup->setTitle( $this->sellable->getTitle());
+        $this->image_popup->image()->setStorageItem($storageItem);
+        $this->image_popup->image()->setUseSizeAttributes(true);
+        $this->image_popup->image()->setAttribute("loading","lazy");
+        $this->image_popup->image()->setAttribute("fetchpriority","high");
 
-        $this->image_popup->getImage()->setAttribute("loading","lazy");
-        $this->image_popup->getImage()->setAttribute("fetchpriority","high");
+        $this->image_popup->setTitle( $this->sellable->getTitle());
 
         //use list-relation targeting items in the image_gallery container
         $this->image_popup->setAttribute("list-relation", "ProductGallery");
