@@ -127,6 +127,7 @@ class SellableImageGallery extends Container {
             $image->setAttribute("loading", "lazy");
             $image->setPhotoSize(64, 64);
             $image->setAttribute("src", $storageItem->hrefThumb(64));
+            $image->setUseSizeAttributes(true);
 
             $item->items()->append($image);
 
