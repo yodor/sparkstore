@@ -56,7 +56,7 @@ class SellableImageGallery extends Container {
         $this->image_popup = new ImagePopup();
         $this->image_popup->image()->setStorageItem($storageItem);
         $this->image_popup->image()->setUseSizeAttributes(true);
-        $this->image_popup->image()->setAttribute("loading","lazy");
+        //$this->image_popup->image()->setAttribute("loading","lazy");
         $this->image_popup->image()->setAttribute("fetchpriority","high");
 
         $this->image_popup->setTitle( $this->sellable->getTitle());
