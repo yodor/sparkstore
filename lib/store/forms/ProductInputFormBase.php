@@ -69,7 +69,7 @@ class ProductInputFormBase extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "visible", "Видим (в продажба)", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимки", 0);
+        $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимки", 1);
         $pphotos = new ProductPhotosBean();
         $field->getProcessor()->setTransactBean($pphotos);
         $field->getProcessor()->setTransactBeanItemLimit(20);
