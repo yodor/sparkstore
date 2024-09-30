@@ -82,12 +82,17 @@ class ProductsTape extends Component
         $this->list_item = $item;
     }
 
+    public function startRender()
+    {
+        parent::startRender();
+        if ($this->query instanceof SQLQuery) {
+            $num = $this->query->exec();
+        }
+    }
 
-    protected function renderItems()
+    protected function renderImpl()
     {
         if (!$this->query instanceof SQLQuery) return;
-
-        $num = $this->query->exec();
 
         $position = 0;
         while ($row = $this->query->next()) {
