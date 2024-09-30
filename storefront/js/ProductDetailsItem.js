@@ -1,23 +1,20 @@
-
-function formatPrice(n)
-{
+function formatPrice(n) {
     return n.toFixed(2);
 }
 
-let curr_pos=0;
+let curr_pos = 0;
 
-onPageLoad(function() {
+onPageLoad(function () {
     //return assigned SparkObject in data
     let image_popup = $(".image_preview .ImagePopup").data("ImagePopup");
     image_popup.addObserver(popupEvent);
 
     let image = $(".image_preview .ImagePopup");
-    image.on("SwipeAction", function(e) {
+    image.on("SwipeAction", function (e) {
 
         if (e.message == "right") {
             next();
-        }
-        else if (e.message == "left") {
+        } else if (e.message == "left") {
             prev();
         }
 
@@ -26,22 +23,25 @@ onPageLoad(function() {
     const listener = new SwipeListener(image);
 });
 
+/**
+ *
+ * @param spark_event {SparkEvent}
+ */
 function popupEvent(spark_event) {
 
     if (spark_event.isEvent(ImagePopup.EVENT_CLOSED)) {
         updateImage();
-    }
-    else if (spark_event.isEvent(ImagePopup.EVENT_POSITION_CHANGED)) {
+    } else if (spark_event.isEvent(ImagePopup.EVENT_POSITION_CHANGED)) {
         curr_pos = spark_event.source.pos;
     }
 }
-function updateImage()
-{
+
+function updateImage() {
 
     //deselect all
     $(".image_gallery .item").removeAttr("active");
 
-    let current_item = $(".image_gallery .item[pos='"+curr_pos+"']");
+    let current_item = $(".image_gallery .item[pos='" + curr_pos + "']");
     current_item.attr("active", 1);
     let itemID = current_item.attr("itemID");
 
@@ -59,19 +59,17 @@ function updateImage()
 
 }
 
-function galleryItemClicked(elm)
-{
+function galleryItemClicked(elm) {
     curr_pos = $(elm).attr("pos");
     updateImage();
 }
 
 
-function next()
-{
-    let max_pos = $(".image_preview").attr("max_pos")-1;
+function next() {
+    let max_pos = $(".image_preview").attr("max_pos") - 1;
 
     curr_pos++;
-    if (curr_pos>max_pos) {
+    if (curr_pos > max_pos) {
         curr_pos = 0;
     }
 
@@ -79,9 +77,8 @@ function next()
 
 }
 
-function prev()
-{
-    let max_pos = $(".image_preview").attr("max_pos")-1;
+function prev() {
+    let max_pos = $(".image_preview").attr("max_pos") - 1;
 
     curr_pos--;
     if (curr_pos < 0) {
@@ -92,13 +89,12 @@ function prev()
 }
 
 
-function selectVariantParameter(elm)
-{
+function selectVariantParameter(elm) {
     let list = $(elm).parents(".list").first();
 
     let variant = list.parents(".item.variant").first();
 
-    list.children(".parameter").each(function (){
+    list.children(".parameter").each(function () {
         $(this).removeAttr("selected");
     });
 
@@ -118,7 +114,7 @@ function addToCart() {
 
     try {
         let items = variants.find(".item.variant");
-        for (let a=0;a<items.length;a++) {
+        for (let a = 0; a < items.length; a++) {
 
             let item = items[a];
             let option_name = $(item).attr("name");
@@ -132,12 +128,10 @@ function addToCart() {
             selected[option_name] = value;
         }
 
-    }
-    catch (e) {
+    } catch (e) {
         showAlert(e);
         return;
     }
-
 
 
     // Usage
@@ -153,13 +147,13 @@ function addToCart() {
     let current_url = new URL(window.location.href);
     let prodID = $(".ProductDetailsItem").first().attr("productID");
 
-    let url = new URL(LOCAL+"/checkout/cart.php", location.href);
-    url.searchParams.set("add","");
+    let url = new URL(LOCAL + "/checkout/cart.php", location.href);
+    url.searchParams.set("add", "");
     url.searchParams.set("prodID", prodID);
     url.searchParams.set("variant", encoded);
 
     console.log(url.href);
-    window.location.href=url.href;
+    window.location.href = url.href;
 
 }
 
@@ -174,24 +168,23 @@ function bytesToBase64(bytes) {
 }
 
 
-function showNotifyInstockForm()
-{
+function showNotifyInstockForm() {
     let notify_dialog = new JSONFormDialog();
-    notify_dialog.caption="Уведоми ме при наличност";
+    notify_dialog.caption = "Уведоми ме при наличност";
     notify_dialog.setResponder("NotifyInstockFormResponder");
     notify_dialog.show();
 }
-function showProductQueryForm()
-{
+
+function showProductQueryForm() {
     let query_dialog = new JSONFormDialog();
-    query_dialog.caption="Запитване";
+    query_dialog.caption = "Запитване";
     query_dialog.setResponder("QueryProductFormResponder");
     query_dialog.show();
 }
-function showOrderProductForm()
-{
+
+function showOrderProductForm() {
     let order_dialog = new JSONFormDialog();
-    order_dialog.caption="Бърза поръчка";
+    order_dialog.caption = "Бърза поръчка";
     order_dialog.setResponder("OrderProductFormResponder");
 
     //check variants selected
@@ -208,11 +201,10 @@ function showOrderProductForm()
 
             let value = option_value.attr("value");
             //console.log(option_name + " => " + value);
-            order_dialog.req.addPostParameter("variant[]", option_name+": "+value);
+            order_dialog.req.addPostParameter("variant[]", option_name + ": " + value);
 
         });
-    }
-    catch (e) {
+    } catch (e) {
         showAlert(e);
         return;
     }

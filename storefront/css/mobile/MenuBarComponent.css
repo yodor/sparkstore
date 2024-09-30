@@ -1,41 +1,4 @@
 
-.MenuBar {
-    /*         border-radius:0px 0px 0px 10px; */
-}
-
-.MenuBar .toggle {
-
-    display: inline-block;
-
-    text-align: right;
-
-    box-sizing: border-box;
-
-    min-height: 35px;
-    margin-right: 5px;
-    margin-left: 5px;
-
-
-}
-
-.MenuBar .toggle {
-    cursor:pointer;
-    display:inline-block;
-    vertical-align:middle;
-    width:1.5em;
-}
-
-.MenuBar .toggle:after,
-.MenuBar .toggle:before,
-.MenuBar .toggle DIV {
-    background-color: #000;
-    border-radius: 3px;
-    content: '';
-    display: block;
-    height: 5px;
-    margin: 5px 0;
-}
-
 
 .MenuBar .MenuSeparator {
     display: none !important;

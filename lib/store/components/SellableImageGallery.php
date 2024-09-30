@@ -24,28 +24,25 @@ class SellableImageGallery extends Container {
         $this->wrapper_enabled = true;
         $this->setComponentClass("images");
 
-        $class_add = "";
-        $discount_label = "";
-        if ($this->sellable->isPromotion()) {
-            $class_add = "promo";
-            $discount_label = "Промо";
-        }
-        $stock_amount = $this->sellable->getStockAmount();
-        if ($stock_amount<1) {
-            $class_add = "nostock";
-            $discount_label = "Изчерпан";
-        }
-
         $image_preview = new Container(false);
         $image_preview->setComponentClass("image_preview");
-        $image_preview->addClassName($class_add);
-
         $this->items()->append($image_preview);
 
-        $discount_label = new TextComponent($discount_label);
-        $discount_label->setComponentClass("discount_label");
+        $label = new TextComponent();
+        $label->setComponentClass("discount_label");
+        $image_preview->items()->append($label);
 
-        $image_preview->items()->append($discount_label);
+        if ($this->sellable->isPromotion()) {
+            $label->setContents("Промо");
+            $image_preview->addClassName("promo");
+        }
+
+        $stock_amount = $this->sellable->getStockAmount();
+        if ($stock_amount<1) {
+            $label->setContents("Изчерпан");
+            $image_preview->addClassName("nostock");
+        }
+
 
         $gallery_items = $this->sellable->galleryItems();
 
@@ -53,17 +50,17 @@ class SellableImageGallery extends Container {
 
         if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
-        $this->image_popup = new ImagePopup();
-        $this->image_popup->image()->setStorageItem($storageItem);
-        $this->image_popup->image()->setUseSizeAttributes(true);
-        //$this->image_popup->image()->setAttribute("loading","lazy");
-        $this->image_popup->image()->setAttribute("fetchpriority","high");
+        $this->image_popup = new ImagePopup($storageItem);
 
         $this->image_popup->setTitle( $this->sellable->getTitle());
-
         //use list-relation targeting items in the image_gallery container
-        $this->image_popup->setAttribute("list-relation", "ProductGallery");
+        $this->image_popup->setListRelation("ProductGallery");
         $this->image_popup->setAttribute("itemprop", "image");
+
+        $image = $this->image_popup->image();
+        $image->setUseSizeAttributes(true);
+        $image->setAttribute("fetchpriority","high");
+        //$image->setAttribute("loading","lazy");
 
         $image_preview->items()->append($this->image_popup);
 
@@ -71,12 +68,14 @@ class SellableImageGallery extends Container {
         $image_preview->setAttribute("max_pos",$max_pos);
 
         if ($max_pos>1) {
-            $action_prev = new Action("", "javascript:prev()");
+            $action_prev = new Action();
+            $action_prev->getURL()->setScriptName("javascript:prev()");
             $action_prev->setComponentClass("arrow");
             $action_prev->setClassName("prev");
             $image_preview->items()->append($action_prev);
 
-            $action_next = new Action("", "javascript:next()");
+            $action_next = new Action();
+            $action_next->getURL()->setScriptName("javascript:next()");
             $action_next->setComponentClass("arrow");
             $action_next->setClassName("next");
             $image_preview->items()->append($action_next);
@@ -107,29 +106,26 @@ class SellableImageGallery extends Container {
         $gallery_items = $this->sellable->galleryItems();
 
         $pos = 0;
-        foreach ($gallery_items as $key=>$storageItem) {
+        foreach ($gallery_items as $storageItem) {
             if (! ($storageItem instanceof StorageItem)) continue;
 
-            $item = new Container(false);
-            $item->setComponentClass("item");
-            $item->setAttribute("relation", "ProductGallery");
-            $item->setAttribute("itemClass", $storageItem->className);
-            $item->setAttribute("itemID", $storageItem->id);
-            $item->setAttribute("pos", $pos);
+            $item = new ImageStorage($storageItem);
+            $item->addClassName("item");
+
+            $item->setRelation("ProductGallery");
+            $item->setPosition($pos);
+
             $item->setAttribute("onClick", "javascript:galleryItemClicked(this)");
 
             if ($pos == 0) {
                 $item->setAttribute("active", "1");
             }
 
-            $image = new Image();
-            $image->setTitle($product_name);
+            $image = $item->image();
+            $image->setAttribute("alt", $product_name);
             $image->setAttribute("loading", "lazy");
             $image->setPhotoSize(64, 64);
-            $image->setAttribute("src", $storageItem->hrefThumb(64));
             $image->setUseSizeAttributes(true);
-
-            $item->items()->append($image);
 
             $list->items()->append($item);
             $pos++;
@@ -140,6 +136,11 @@ class SellableImageGallery extends Container {
     public function getImagePopup() : ImagePopup
     {
         return $this->image_popup;
+    }
+
+    public function finishRender()
+    {
+        parent::finishRender();
     }
 }
 ?>

@@ -1,137 +1,145 @@
+class SellableItem {
+    /**
+     *
+     * @param sellable_json {object} json serialized SellableItem
+     */
+    constructor(sellable_json) {
+        this.prodID = sellable_json.prodID;
+        //initially selected piID
+        this.piID = sellable_json.piID;
 
+        this.sellable = sellable_json;
+    }
 
-function SellableItem(sellable_json) {
-    this.prodID = sellable_json.prodID;
-    //initially selected piID
-    this.piID = sellable_json.piID;
+    getSizeValue(piID) {
+        return this.sellable.sizes[piID];
+    }
 
-    this.sellable = sellable_json;
-}
+    pidsByColorID(pclrID)
+    {
+        let matching_piIDs = Array();
 
+        Object.entries(this.sellable.colors).forEach(entry => {
+            //key = piID
+            //value = pclrID
+            const [key, value] = entry;
 
-SellableItem.prototype.getSizeValue = function (piID)
-{
-    return this.sellable.sizes[piID];
-}
+            if (value == pclrID) {
+                matching_piIDs.push(key);
+            }
+        });
 
+        return matching_piIDs;
+    }
 
-SellableItem.prototype.pidsByColorID = function (pclrID)
-{
-    let matching_piIDs = Array();
+    getSizeValuesByColorID(pclrID)
+    {
 
-    Object.entries(this.sellable.colors).forEach(entry => {
-        //key = piID
-        //value = pclrID
-        const [key, value] = entry;
+        let pids = this.pidsByColorID(pclrID);
 
-        if (value == pclrID) {
-            matching_piIDs.push(key);
+        let size_values = Array();
+
+        Object.entries(pids).forEach(entry =>{
+            //idx = index
+            //value = piID
+            const [idx, piID] = entry;
+            size_values[piID] = this.getSizeValue(piID);
+        });
+
+        return size_values;
+    }
+
+    getPriceInfosByColorID(pclrID)
+    {
+        let pids = this.pidsByColorID(pclrID);
+
+        let price_infos = Array();
+
+        pids.forEach(function(currentValue, index, arr){
+            price_infos[currentValue] = this.getPriceInfo(currentValue);
+        }, this);
+
+        return price_infos;
+    }
+
+    getPriceInfo(piID)
+    {
+        return this.sellable.prices[piID];
+    }
+
+    isPromotion(piID)
+    {
+        let result = false;
+
+        let priceInfo = this.getPriceInfo(piID);
+
+        if (priceInfo.old_price != priceInfo.sell_price && priceInfo.old_price>0) {
+            result = true;
         }
-    });
 
-    return matching_piIDs;
-}
-SellableItem.prototype.getSizeValuesByColorID = function(pclrID)
-{
-
-    let pids = this.pidsByColorID(pclrID);
-
-    let size_values = Array();
-
-    Object.entries(pids).forEach(entry =>{
-        //idx = index
-        //value = piID
-        const [idx, piID] = entry;
-        size_values[piID] = this.getSizeValue(piID);
-    });
-
-    return size_values;
-}
-
-SellableItem.prototype.getPriceInfosByColorID = function(pclrID)
-{
-    let pids = this.pidsByColorID(pclrID);
-
-    let price_infos = Array();
-
-    pids.forEach(function(currentValue, index, arr){
-        price_infos[currentValue] = this.getPriceInfo(currentValue);
-    }, this);
-
-    return price_infos;
-}
-
-SellableItem.prototype.getPriceInfo = function(piID)
-{
-    return this.sellable.prices[piID];
-}
-
-SellableItem.prototype.isPromotion = function(piID)
-{
-    let result = false;
-
-    let priceInfo = this.getPriceInfo(piID);
-
-    if (priceInfo.old_price != priceInfo.sell_price && priceInfo.old_price>0) {
-        result = true;
+        return result;
     }
 
-    return result;
-}
-
-SellableItem.prototype.getColorID = function (piID)
-{
-    return this.sellable.colors[piID];
-}
-
-SellableItem.prototype.getAttributes = function (piID)
-{
-    return this.sellable.attributes[piID];
-}
-
-SellableItem.prototype.getColorChips = function()
-{
-    return this.sellable.color_chips;
-}
-
-SellableItem.prototype.getColorChip = function (pclrID)
-{
-    return this.sellable.color_chips[pclrID];
-}
-
-SellableItem.prototype.getColorName = function (pclrID)
-{
-    if (this.sellable.color_names[pclrID]) {
-        return this.sellable.color_names[pclrID];
+    getColorID(piID)
+    {
+        return this.sellable.colors[piID];
     }
-    return null;
-}
 
-SellableItem.prototype.getColorCode = function(pclrID)
-{
-    if (this.sellable.color_codes[pclrID]) {
-        return this.sellable.color_codes[pclrID];
+    getAttributes(piID)
+    {
+        return this.sellable.attributes[piID];
     }
-    return null;
-}
 
-SellableItem.prototype.galleries = function()
-{
-    return this.sellable.galleries.keys();
-}
-
-SellableItem.prototype.haveGalleryItems = function(pclrID)
-{
-    if (this.sellable.galleries[pclrID]) {
-        return true;
+    getColorChips()
+    {
+        return this.sellable.color_chips;
     }
-    else {
-        return false;
+
+    getColorChip(pclrID)
+    {
+        return this.sellable.color_chips[pclrID];
+    }
+
+    getColorName(pclrID)
+    {
+        if (this.sellable.color_names[pclrID]) {
+            return this.sellable.color_names[pclrID];
+        }
+        return null;
+    }
+
+    getColorCode(pclrID)
+    {
+        if (this.sellable.color_codes[pclrID]) {
+            return this.sellable.color_codes[pclrID];
+        }
+        return null;
+    }
+
+    galleries()
+    {
+        return this.sellable.galleries.keys();
+    }
+
+    haveGalleryItems(pclrID)
+    {
+        if (this.sellable.galleries[pclrID]) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    galleryItems(pclrID)
+    {
+        return this.sellable.galleries[pclrID];
     }
 }
 
-SellableItem.prototype.galleryItems = function (pclrID)
-{
-    return this.sellable.galleries[pclrID];
-}
+
+
+
+
+
 

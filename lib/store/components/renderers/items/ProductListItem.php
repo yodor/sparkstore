@@ -227,12 +227,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     }
 
-
-    public function renderSeparator($idx_curr, $items_total)
-    {
-
-    }
-
     public static function AttributesMeta(array $attributes, array $supported)
     {
 

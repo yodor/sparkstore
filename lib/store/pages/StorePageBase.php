@@ -81,12 +81,12 @@ class StorePageBase extends SparkPage
 
     public $client_name = "";
 
-    protected $_header = null;
-    protected $_menu = null;
-    protected $_main = null;
-    protected $_footer = null;
-    protected $_cookies = null;
-    protected $_page_footer = null;
+    protected ?SectionContainer $_header = null;
+    protected ?SectionContainer $_menu = null;
+    protected ?SectionContainer $_main = null;
+    protected ?SectionContainer $_footer = null;
+    protected ?SectionContainer $_cookies = null;
+    protected ?SectionContainer $_page_footer = null;
 
     public bool $vouchers_enabled = false;
 
@@ -188,19 +188,14 @@ class StorePageBase extends SparkPage
         $this->authorize();
 //
         if ($this->context) {
-
             $this->client_name = $this->context->getData()->get(SessionData::FULLNAME);
-
         }
 
         $this->headInitialize();
 
         $factory = new BeanMenuFactory(new MenuItemsBean());
-
         $this->menu_bar = new MenuBarComponent($factory->menu());
-
         $this->menu_bar->setName("StorePage");
-        $this->menu_bar->toggle_first = TRUE;
 
         $ksc = new KeywordSearch();
 
@@ -208,24 +203,16 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getRenderer()->setAttribute("method", "get");
         $ksc->getForm()->getRenderer()->setAttribute("action", LOCAL . "/products/list.php");
-
-//        $input = DataInputFactory::Create(DataInputFactory::HIDDEN, KeywordSearch::SUBMIT_KEY, "",0);
-//        $input->setValue(KeywordSearch::ACTION_SEARCH);
-//        $input->setEditable(false);
-//        $ksc->getForm()->addInput($input);
-//
-//        $ksc->getButtons()->clear();
         $ksc->getButton("search")->setContents("");
 
-        $show_search = new ColorButton();
-        $show_search->setAttribute("action", "show_search");
-        $show_search->setAttribute("onClick", "showSearch()");
-        $ksc->getButtons()->items()->append($show_search);
+        $ksc->getButton("clear")->setRenderEnabled(false);
 
+//        $show_search = new ColorButton();
+//        $show_search->setAttribute("action", "show_search");
+//        $show_search->setAttribute("onClick", "showSearch()");
+//        $ksc->getButtons()->items()->append($show_search);
 
         $this->keyword_search = $ksc;
-
-
 
         $this->_header = new SectionContainer();
         $this->_header->addClassName("header");
@@ -248,32 +235,19 @@ class StorePageBase extends SparkPage
         $this->_page_footer = new SectionContainer();
         $this->_page_footer->addClassName("pageFooter");
 
+        $this->_header->content()->items()->append(new ClosureComponent($this->renderHeader(...), false));
 
+        $menu_groups = new ClosureComponent($this->renderMenuGroups(...), true);
+        $menu_groups->setComponentClass("menu_groups");
+        $this->menu_bar->items()->append($menu_groups);
 
-        $header_callback = function(ClosureComponent $parent) {
-            $this->renderHeader();
-        };
-        $this->_header->content()->items()->append(new ClosureComponent($header_callback, false));
+        $this->_menu->content()->items()->append($this->menu_bar);
 
-        $menu_callback = function(ClosureComponent $parent) {
-            $this->renderMenu();
-        };
-        $this->_menu->content()->items()->append(new ClosureComponent($menu_callback, false));
+        $this->_cookies->content()->items()->append(new ClosureComponent($this->renderCookiesInfo(...), false));
 
-        $cookies_callback = function(ClosureComponent $parent) {
-            $this->renderCookiesInfo();
-        };
-        $this->_cookies->content()->items()->append(new ClosureComponent($cookies_callback, false));
+        $this->_footer->content()->items()->append(new ClosureComponent($this->renderFooter(...), false));
 
-        $footer_callback = function(ClosureComponent $parent) {
-            $this->renderFooter();
-        };
-        $this->_footer->content()->items()->append(new ClosureComponent($footer_callback, false));
-
-        $pageFooter_callback = function(ClosureComponent $parent) {
-            $this->renderPageFooter();
-        };
-        $this->_page_footer->content()->items()->append(new ClosureComponent($pageFooter_callback, false));
+        $this->_page_footer->content()->items()->append(new ClosureComponent($this->renderPageFooter(...), false));
 
 
         if ($this->vouchers_enabled) {
@@ -300,27 +274,21 @@ class StorePageBase extends SparkPage
         $this->_header->render();
         $this->_menu->render();
 
+
         $this->_main->startRender();
-
         $this->_main->spaceLeft()->render();
-
         $this->_main->content()->startRender();
 
     }
 
-    protected function renderMenu()
+    protected function renderMenuGroups()
     {
-        echo "<div class='menuwrap'>";
 
-        $this->menu_bar->render();
-
-        echo "<div class='group'>";
-        echo "<div class='search_pane'>";
+        echo "<div class='group search_pane'>";
         $this->keyword_search->render();
-        echo "<div class='clear'></div>";
         echo "</div>";
 
-        echo "<div class='customer_pane'>";
+        echo "<div class='group customer_pane'>";
 
         $icon_contents = "<span class='icon'></span>";
         $button_account = new Action();
@@ -348,11 +316,8 @@ class StorePageBase extends SparkPage
         $button_cart->setContents($button_contents);
         $button_cart->render();
 
-        echo "</div>"; //customer_pane
-
         echo "</div>";//group
 
-        echo "</div>";//menuwrap
     }
 
     protected function renderHeader()
@@ -364,9 +329,9 @@ class StorePageBase extends SparkPage
         $cfg = new ConfigBean();
         $cfg->setSection("store_config");
 
-        echo "<div class='marquee'>";
+//        echo "<div class='marquee'>";
             echo "<marquee>" . $cfg->get("marquee_text") . "</marquee>";
-        echo "</div>";
+//        echo "</div>";
 
     }
 

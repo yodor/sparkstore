@@ -1,4 +1,3 @@
-@import url("./mobile/MenuBarComponent.css") (max-width: 786px);
 
 @media screen and (max-width: 1200px) {
     .home .section.main .banner IMG {
@@ -61,144 +60,31 @@
     }
 }
 
-@media screen and (max-width: 1160px) {
-    .section.menu {
-        text-align:center;
-    }
-    .section.menu .group {
-        float:none;
-        display:block;
-        padding-top:10px;
-        padding-bottom:10px;
-        margin-top:auto;
-    }
-
-}
+/*logo space + marque*/
 @media screen and (max-width: 900px) {
-    .section.header {
-        max-height:inherit;
-        height:inherit;
+    .section.header .content {
+        flex-flow: column;
     }
+}
+/*logo space*/
+@media screen and (max-width: 450px) {
+
+
     .section.header .content .logo {
-        display:block;
-        background-origin:content-box;
-        background-size:contain;
         max-width:inherit;
-        width:auto;
-        padding-top:15px;
-        padding-bottom:15px;
-        padding-left:25px;
-        padding-right:25px;
-    }
-    .section.header .content .marquee {
-        display:block;
-    }
-}
-@media screen and (max-width: 786px) {
-
-    .MenuBar {
-        display:inline-block;
-        text-align:left;
+        width: 100%;
+        min-width: inherit;
+        background-size:contain;
+        height:5vh;
     }
 
-    .MenuBar .MenuBarComponent .MenuBarItemRenderer {
-        background-color: #e6e6e6;
+    .section.header .content marquee {
+        font-size: 28px;
     }
-    .section.menu .group {
-        display:inline-block;
-    }
-    /*.section.header .content .marquee {*/
-    /*    font-size:inherit;*/
-    /*    padding-top:5px;*/
-    /*}*/
-
-    .MenuBar .toggle {
-        /*margin-top:2px;*/
-    }
-
-    .section.menu  {
-        text-align:center;
-
-    }
-    .section.menu .MenuBar {
-        float:left;
-        text-align:left;
-        margin-top:8px;
-
-    }
-
-    /*.section.menu .content .search_pane FORM .InputComponent .InputField {*/
-    /*    margin-top:2px;*/
-    /*    margin-bottom:2px;*/
-    /*    height:35px;*/
-    /*}*/
-
-    /*.section.menu .content .search_pane FORM .SubmitLine {*/
-    /*    margin-top:0;*/
-    /*}*/
-
-    /*.section.menu .content .customer_pane {*/
-    /*    margin-top:4px;*/
-    /*}*/
-
-
-    .section.menu .MenuBar .MenuBarComponent {
-        position:absolute;
-        top:50px;
-        height:auto;
-        width:100%;
-        box-shadow:0px 9px 9px  rgba(0,0,0,0.5);
-        border-top:1px dotted #cecece;
-        z-index:2;
-    }
-    /*.PaginatorBottomComponent .cell {*/
-    /*    display:block;*/
-    /*    text-align:center;*/
-    /*    padding-bottom:1em;*/
-    /*}*/
-}
-@media screen and (max-width:444px) {
-    .section.header .content .marquee {
-        padding-top: 0;
-        font-size: 2em;
-    }
-
-    .section.menu .content .customer_pane {
-
-        margin:0;
-        padding:0;
-        margin-right:10px;
-    }
-    .section.menu .content .customer_pane .button {
-        margin:0;
-        padding:0;
-        margin-left:5px;
-    }
-    .section.menu .content .search_pane FORM .InputComponent .InputField {
-        margin-right:5px;
-    }
-    .section.menu .content .search_pane {
-        /*width:190px;*/
-        max-width:190px;
-    }
-    .section.menu .content .search_pane FORM {
-        white-space:nowrap;
-    }
-    .section.menu .content .menuwrap {
-        text-align:right;
-    }
-}
-@media screen and (max-width: 560px) {
     .products {
         text-align:center;
     }
 
-}
-@media screen and (max-width:359px) {
-    .section.menu .content .customer_pane {
-        /*display:block;*/
-    }
-    .section.menu .content .search_pane {
-        /*display:block;*/
-    }
+
+
 }
