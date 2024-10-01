@@ -25,3 +25,10 @@
         min-height: 100%
     }
 }
+
+
+@media (max-width: 275px) {
+    .ProductListItem .photo {
+        min-width:inherit;
+    }
+}

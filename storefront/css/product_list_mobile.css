@@ -3,7 +3,7 @@
         display:block;
     }
     .section.main .content .column.left {
-        width:auto;
+        width: calc(100vw);
     }
 
     .section.main .content .category_path {

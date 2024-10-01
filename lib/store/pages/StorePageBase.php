@@ -72,14 +72,11 @@ class SectionContainer extends Container {
 class StorePageBase extends SparkPage
 {
 
-    protected $menu_bar = NULL;
+    protected ?MenuBarComponent $menu_bar = NULL;
 
-    /**
-     * @var KeywordSearch|null
-     */
-    protected $keyword_search = NULL;
+    protected ?KeywordSearch $keyword_search = NULL;
 
-    public $client_name = "";
+    public string $client_name = "";
 
     protected ?SectionContainer $_header = null;
     protected ?SectionContainer $_menu = null;
@@ -170,7 +167,10 @@ class StorePageBase extends SparkPage
 
 
         $this->head()->addCSS(STORE_LOCAL . "/css/store.css");
-        $this->head()->addJS(STORE_LOCAL."/js/StoreCookies.js");
+
+        $this->head()->addJS(SPARK_LOCAL."/js/SparkCookies.js");
+        $this->head()->addJS(STORE_LOCAL."/js/cookies.js");
+        $this->head()->addJS(STORE_LOCAL."/js/menusticky.js");
 
         $this->head()->addOGTag("url", URL::Current()->fullURL()->toString());
         $this->head()->addOGTag("site_name", SITE_TITLE);
@@ -188,7 +188,7 @@ class StorePageBase extends SparkPage
         $this->authorize();
 //
         if ($this->context) {
-            $this->client_name = $this->context->getData()->get(SessionData::FULLNAME);
+            $this->client_name = (string)$this->context->getData()->get(SessionData::FULLNAME);
         }
 
         $this->headInitialize();
@@ -252,11 +252,12 @@ class StorePageBase extends SparkPage
 
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
+            $this->head()->addJS(STORE_LOCAL."/vouchers.js");
         }
 
     }
 
-    public function getMenuBar()
+    public function getMenuBar(): ?MenuBarComponent
     {
         return $this->menu_bar;
     }
@@ -281,7 +282,7 @@ class StorePageBase extends SparkPage
 
     }
 
-    protected function renderMenuGroups()
+    protected function renderMenuGroups(): void
     {
 
         echo "<div class='group search_pane'>";
@@ -478,100 +479,6 @@ class StorePageBase extends SparkPage
         echo "\n";
         echo "\n<!-- finishRender StorePage-->\n";
 
-
-?>
-        <script type="text/javascript">
-
-            //to check when element get's position sticky
-            var observer = new IntersectionObserver(function(entries) {
-
-                if (entries[0].intersectionRatio === 0) {
-                    document.querySelector(".section.menu").classList.add("sticky");
-
-                }
-                else if (entries[0].intersectionRatio === 1) {
-                    document.querySelector(".section.menu").classList.remove("sticky");
-                }
-
-            }, {
-                threshold: [0, 1]
-            });
-
-
-            observer.observe(document.querySelector(".section.header"));
-
-
-            let storeCookies = new StoreCookies();
-
-            function acceptCookies()
-            {
-                storeCookies.accept();
-                updateCookies();
-            }
-
-            function updateCookies()
-            {
-                let isAccepted = storeCookies.isAccepted();
-
-                $(".section.cookies").attr("checked", 1);
-
-                if (isAccepted) {
-                    $(".section.cookies").attr("accepted", 1);
-                }
-                else {
-                    $(".section.cookies").attr("accepted", 0);
-                }
-            }
-
-            onPageLoad(function(){
-
-                updateCookies();
-
-
-            });
-
-            function showVoucherForm()
-            {
-                let voucher_dialog = new JSONFormDialog();
-                voucher_dialog.setResponder("VoucherFormResponder");
-                voucher_dialog.caption="Kупи Ваучер";
-
-                let dialog = new MessageDialog()
-                dialog.initialize();
-                dialog.text = "Ще получите Вашият ваучер по куриер";
-
-                dialog.buttonAction = function (action) {
-
-                    if (action == "confirm") {
-                        dialog.remove();
-                        voucher_dialog.show();
-                    }
-                    else if (action == "cancel") {
-                        dialog.remove();
-                    }
-                }
-
-                dialog.show();
-            }
-            function showSearch()
-            {
-                let form = document.querySelector(".section.menu .content .search_pane FORM");
-                let dcomp = $(".KeywordSearch .InputComponent").css("display");
-                let dfield = $(".KeywordSearch .InputComponent .InputField").css("display");
-                if (dcomp == "block" && dfield == "inline-block") {
-                    form.submit();
-                    return;
-                }
-
-                if (form.classList.contains("fixed")) {
-                    form.classList.remove("fixed");
-                }
-                else {
-                    form.classList.add("fixed");
-                }
-            }
-        </script>
-<?php
         parent::finishRender();
 
     }
