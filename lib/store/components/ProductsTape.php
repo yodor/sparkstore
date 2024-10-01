@@ -4,7 +4,7 @@ include_once("components/Action.php");
 include_once("iterators/SQLQuery.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 
-class ProductsTape extends Component
+class ProductsTape extends Container
 {
 
     protected ?ProductListItem $list_item = null;
@@ -36,8 +36,9 @@ class ProductsTape extends Component
         $action->translation_enabled = false;
         $action->setClassName("Caption");
 
-        $this->setCaptionComponent($action);
+        $this->caption_component = $action;
 
+        $this->items()->append(new ClosureComponent($this->renderItems(...), false));
     }
 
     public function getCacheName() : string
@@ -65,9 +66,9 @@ class ProductsTape extends Component
      */
     public function getCaptionURL() : URL
     {
-        $action = $this->getCaptionComponent();
-        if ($action instanceof Action) {
-            return $action->getURL();
+
+        if ($this->caption_component instanceof Action) {
+            return $this->caption_component->getURL();
         }
         throw new Exception("Incorrect action component");
     }
@@ -82,17 +83,12 @@ class ProductsTape extends Component
         $this->list_item = $item;
     }
 
-    public function startRender()
-    {
-        parent::startRender();
-        if ($this->query instanceof SQLQuery) {
-            $num = $this->query->exec();
-        }
-    }
 
-    protected function renderImpl()
+    protected function renderItems()
     {
         if (!$this->query instanceof SQLQuery) return;
+
+        $num = $this->query->exec();
 
         $position = 0;
         while ($row = $this->query->next()) {
