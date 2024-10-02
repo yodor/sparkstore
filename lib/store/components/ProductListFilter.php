@@ -19,7 +19,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor
         $this->addClassName("filters");
         $this->setAttribute("autocomplete", "off");
         $this->setMethod(FormRenderer::METHOD_GET);
-        $this->getSubmitLine()->setEnabled(false);
+        $this->getSubmitLine()->setRenderEnabled(false);
     }
     public function resetForm()
     {

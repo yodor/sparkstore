@@ -104,10 +104,8 @@ echo "<div class='delivery_address'>";
 
 echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
 
-$frend->startRender();
-$frend->renderInputs();
-$frend->renderSubmitValue();
-$frend->finishRender();
+$frend->getSubmitLine()->setRenderEnabled(false);
+$frend->render();
 
 echo "</div>";
 

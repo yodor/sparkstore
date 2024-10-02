@@ -93,7 +93,6 @@ class ProductVariantsInputForm extends InputForm
     protected function createInputIterator(DataInput $input, int $parentID)
     {
         $validator = new EmptyValueValidator();
-        $validator->require_array_value = TRUE;
         $input->setValidator($validator);
 
         $query_parameters = $this->voptions->queryFull();

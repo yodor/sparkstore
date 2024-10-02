@@ -21,7 +21,7 @@ class SellableImageGallery extends Container {
         parent::__construct($chained_component_class);
 
         $this->sellable = $item;
-        $this->wrapper_enabled = true;
+
         $this->setComponentClass("images");
 
         $image_preview = new Container(false);

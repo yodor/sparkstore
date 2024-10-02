@@ -27,7 +27,7 @@ $proc->setUserID($page->getUserID());
 $proc->setBean($cab);
 
 $frend = new FormRenderer($form);
-$frend->getSubmitLine()->setEnabled(FALSE);
+$frend->getSubmitLine()->setRenderEnabled(FALSE);
 
 $form->setProcessor($proc);
 

@@ -30,7 +30,7 @@ $proc->setBean($ccb);
 
 $frend = new FormRenderer($form);
 $frend->setClassName("InvoiceDetails");
-$frend->getSubmitLine()->setEnabled(FALSE);
+$frend->getSubmitLine()->setRenderEnabled(FALSE);
 
 $proc->process($form);
 

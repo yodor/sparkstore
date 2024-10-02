@@ -181,7 +181,7 @@ class ProductsList extends BeanListPage
 
         $this->filtersForm = new ProductFilterInputForm();
         $frend = new FormRenderer($this->filtersForm);
-        $frend->getSubmitLine()->setEnabled(false);
+        $frend->getSubmitLine()->setRenderEnabled(false);
         $frend->setMethod(FormRenderer::METHOD_GET);
         $frend->setAttribute("autocomplete", "off");
 

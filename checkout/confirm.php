@@ -119,7 +119,7 @@ $reqproc = new RequireInvoiceFormProcessor();
 $reqproc->setBean($idb);
 
 $frend = new FormRenderer($reqform);
-$frend->getSubmitLine()->setEnabled(false);
+$frend->getSubmitLine()->setRenderEnabled(false);
 $reqproc->process($reqform);
 
 
@@ -128,7 +128,7 @@ $noteform = new OrderNoteInputForm();
 $noteform->getInput("note")->setValue($cart->getNote());
 
 $nfrend = new FormRenderer($noteform);
-$nfrend->getSubmitLine()->setEnabled(false);
+$nfrend->getSubmitLine()->setRenderEnabled(false);
 
 $noteproc = new OrderNoteFormProcessor();
 $noteproc->process($noteform);

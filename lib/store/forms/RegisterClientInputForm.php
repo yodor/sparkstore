@@ -13,8 +13,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "fullname", "Име", 1);
 
         $label = new Component();
-        $label->translation_enabled = true;
-        $label->setContents("Вашето пълно име");
+        $label->setContents(tr("Вашето пълно име"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -24,8 +23,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 1);
 
         $label = new Component();
-        $label->translation_enabled = true;
-        $label->setContents("Ще Ви изпратим e-mail за потвърждение");
+        $label->setContents(tr("Ще Ви изпратим e-mail за потвърждение"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -35,8 +33,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
 
         $label = new Component();
-        $label->translation_enabled = true;
-        $label->setContents("За контакт при доставка");
+        $label->setContents(tr("За контакт при доставка"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -51,8 +48,7 @@ class RegisterClientInputForm extends InputForm
         $this->addInput($field);
 
         $label = new Component();
-        $label->translation_enabled = true;
-        $label->setContents("Необходими са поне 6 символа");
+        $label->setContents(tr("Необходими са поне 6 символа"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);

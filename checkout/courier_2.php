@@ -72,10 +72,8 @@ echo "<div class='item ekont_office $empty'>";
     echo str_replace("\r", "<br>", (string)$form->getInput("office")->getValue());
     echo "</div>";
 
-    $frend->startRender();
-    $frend->renderInputs();//($form->getInput("office"));
-    $frend->renderSubmitValue();
-    $frend->finishRender();
+    $frend->getSubmitLine()->setRenderEnabled(false);
+    $frend->render();
 
     echo "<a class='ColorButton' href='javascript:changeEkontOffice();'>" . tr("Изберете друг офис") . "</a>";
 
