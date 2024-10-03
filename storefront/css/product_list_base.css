@@ -30,6 +30,9 @@
     display:inline-block;
 }
 
+.section.main .content .column.left .panel .viewport .TreeView {
+    display:block;
+}
 
 .section.main .content .column.left .panel .Caption {
     color: #aaaaaa;

@@ -37,12 +37,13 @@ function clearFilters() {
 
 function togglePanel(elm)
 {
-    let e = $(elm).parents(".panel").first().children(".viewport").first();
-    let is_hidden = e.css("display");
-    if (is_hidden == "none") {
-        e.css("display", "inline-block");
+
+    let viewport = elm.closest(".panel").querySelector(".viewport");
+    let isHidden = viewport.style.display;
+    if (isHidden != "block") {
+        viewport.style.display = "block";
     }
     else {
-        e.css("display", "none");
+        viewport.style.display = "none";
     }
 }

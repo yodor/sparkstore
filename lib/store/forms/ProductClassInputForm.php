@@ -48,7 +48,7 @@ class ProductClassInputForm extends InputForm
 
 
         $info = new TextComponent("Ако промените атрибутите ще се ИЗТРИЯТ от всички продукти от този клас");
-        $info->setStyleAttribute("color","red");
+        $info->setStyleProperty("color","red");
 
         $arend->getAddonContainer()->items()->append($info);
     }

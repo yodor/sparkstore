@@ -27,7 +27,7 @@ $gv = new GalleryView($bean);
 $url = URL::Current();
 $url->setScriptName("add.php");
 $action_add = new Action(SparkAdminPage::ACTION_ADD, $url->toString());
-$action_add->setTooltipText("Add new element to this collection");
+$action_add->setTooltip("Add new element to this collection");
 $page->getActions()->append($action_add);
 
 $gv->getItemActions()->addURLParameter($rc->getURLParameter());

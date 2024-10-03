@@ -41,7 +41,7 @@ class DownloadCSVProducts extends RequestResponder
 
         $action = parent::createAction($title);
         $action->getURL()->add(new URLParameter("type", $type));
-        $action->setTooltipText("Download CSV - ".$type);
+        $action->setTooltip("Download CSV - ".$type);
         return $action;
     }
 
