@@ -23,8 +23,7 @@ class ProductCategoryInputForm extends InputForm
         $rend->setIterator(new SQLQuery($pcats->selectTree(array("category_name")), $pcats->key(), $pcats->getTableName()));
         $rend->getItemRenderer()->setValueKey($pcats->key());
         $rend->getItemRenderer()->setLabelKey("category_name");
-        $rend->na_label = '--- TOP ---';
-        $rend->na_value = "0";
+        $rend->setDefaultOption("--- TOP ---", "0");
 
         $this->addInput($field);
 

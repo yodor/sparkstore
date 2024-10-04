@@ -81,11 +81,16 @@ $cmp->getPage()->setName($title);
 $closure = function(ClosureComponent $cmp) use ($class_filter, $classes) {
 
     $input = DataInputFactory::Create(DataInputFactory::SELECT, $class_filter->getName(), $class_filter->getTitle(), 0);
-    $input->getRenderer()->setIterator($classes->query("pclsID", "class_name"));
-    $input->getRenderer()->getItemRenderer()->setLabelKey("class_name");
-    $input->getRenderer()->getItemRenderer()->setValueKey("pclsID");
-    $input->getRenderer()->na_label = "--- Всички ---";
-    $input->getRenderer()->input()?->setAttribute("onChange", "document.forms.Filters.submit()");
+    $renderer = $input->getRenderer();
+    $renderer->setIterator($classes->query("pclsID", "class_name"));
+    $renderer->getItemRenderer()->setLabelKey("class_name");
+    $renderer->getItemRenderer()->setValueKey("pclsID");
+
+    if ($renderer instanceof SelectField) {
+        $renderer->setDefaultOption("--- Всички ---");
+    }
+
+    $renderer->input()?->setAttribute("onChange", "document.forms.Filters.submit()");
     if ($class_filter->isProcessed()) {
         $input->setValue($class_filter->getValue());
     }

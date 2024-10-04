@@ -143,7 +143,7 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer {
     padding:0;
     margin:0;
     margin-bottom:0.5em;
-    display:block;
+
 }
 FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     /*display:none;*/

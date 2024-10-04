@@ -67,7 +67,9 @@ class FilterDataInput extends DataInput {
         $renderer = $this->getRenderer();
         $renderer->getItemRenderer()->setValueKey($this->getName());
         $renderer->getItemRenderer()->setLabelKey($this->getName());
-        $renderer->na_label = "--- Всички ---";
+        if ($renderer instanceof SelectField) {
+            $renderer->setDefaultOption("--- Всички ---");
+        }
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
@@ -139,7 +141,9 @@ class ProductAttributeFilter extends SelectFilter {
         //echo "<HR>".$renderer->getIterator()->select->getSQL()."<HR>";
         $renderer->getItemRenderer()->setValueKey("value");
         $renderer->getItemRenderer()->setLabelKey("value");
-        $renderer->na_label = "--- Всички ---";
+        if ($renderer instanceof SelectField) {
+            $renderer->setDefaultOption("--- Всички ---");
+        }
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
@@ -195,7 +199,10 @@ class ProductVariantFilter extends SelectFilter {
         //echo "<HR>".$renderer->getIterator()->select->getSQL()."<HR>";
         $renderer->getItemRenderer()->setValueKey("option_value");
         $renderer->getItemRenderer()->setLabelKey("option_value");
-        $renderer->na_label = "--- Всички ---";
+        if ($renderer instanceof SelectField) {
+            $renderer->setDefaultOption("--- Всички ---");
+        }
+
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 

@@ -23,9 +23,11 @@ class ProductFilterInputForm extends InputForm {
         $rend->getItemRenderer()->setValueKey("catID");
         $rend->getItemRenderer()->setLabelKey("category_name");
 
-        $field->getRenderer()->na_label = "--- Всички ---";
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
 
-        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
+        $rend->input()?->setAttribute("onChange", "this.form.submit()");
 
 
         $this->addInput($field);
@@ -39,9 +41,11 @@ class ProductFilterInputForm extends InputForm {
         $rend->getItemRenderer()->setValueKey("brand_name");
         $rend->getItemRenderer()->setLabelKey("brand_name");
 
-        $field->getRenderer()->na_label = "--- Всички ---";
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
 
-        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
+        $rend->input()?->setAttribute("onChange", "this.form.submit()");
 
 
         $this->addInput($field);
@@ -55,9 +59,11 @@ class ProductFilterInputForm extends InputForm {
         $rend->getItemRenderer()->setValueKey("section_title");
         $rend->getItemRenderer()->setLabelKey("section_title");
 
-        $field->getRenderer()->na_label = "--- Всички ---";
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
 
-        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
+        $rend->input()?->setAttribute("onChange", "this.form.submit()");
 
         $this->addInput($field);
 
@@ -70,9 +76,11 @@ class ProductFilterInputForm extends InputForm {
         $rend->getItemRenderer()->setValueKey("class_name");
         $rend->getItemRenderer()->setLabelKey("class_name");
 
-        $field->getRenderer()->na_label = "--- Всички ---";
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
 
-        $field->getRenderer()->input()?->setAttribute("onChange", "this.form.submit()");
+        $rend->input()?->setAttribute("onChange", "this.form.submit()");
 
         $this->addInput($field);
     }
