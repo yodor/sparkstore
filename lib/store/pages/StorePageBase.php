@@ -252,7 +252,7 @@ class StorePageBase extends SparkPage
 
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
-            $this->head()->addJS(STORE_LOCAL."/vouchers.js");
+            $this->head()->addJS(STORE_LOCAL."/js/vouchers.js");
         }
 
     }

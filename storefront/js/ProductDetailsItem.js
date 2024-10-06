@@ -31,7 +31,7 @@ function popupEvent(spark_event) {
 
     if (spark_event.isEvent(ImagePopup.EVENT_CLOSED)) {
         updateImage();
-    } else if (spark_event.isEvent(ImagePopup.EVENT_POSITION_CHANGED)) {
+    } else if (spark_event.isEvent(ImagePopup.EVENT_POSITION_NEXT) || spark_event.isEvent(ImagePopup.EVENT_POSITION_PREV)) {
         curr_pos = spark_event.source.pos;
     }
 }

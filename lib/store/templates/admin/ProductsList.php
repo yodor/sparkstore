@@ -8,7 +8,7 @@ include_once("store/beans/ProductSectionsBean.php");
 include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
-
+include_once("components/PageScript.php");
 
 class ProductFilterInputForm extends InputForm {
     public function __construct()
@@ -87,47 +87,43 @@ class ProductFilterInputForm extends InputForm {
 
 }
 
-class PageScript extends Component implements IPageComponent
+class ScrollTopCookiesScript extends PageScript
 {
-    public function __construct()
+    protected function code() : string
     {
-        parent::__construct();
+        $result = <<<JS
+        $("[action='Edit']") . on("click", function (e){
+            let scrollTop = $(window).scrollTop();
+            Cookies.set('scrollTop', scrollTop, { expires: 0 });
+        });
+
+        let scrollTop = Cookies.get('scrollTop');
+        
+        if (scrollTop) {
+            window.scrollTo(0, scrollTop);
+            Cookies.remove('scrollTop');
+        }
+JS;
+        return $result;
     }
-    public function startRender()
+}
+
+class SectionChooserScript extends PageScript
+{
+    protected function code() : string
     {
+        $result = <<<JS
+        function showSectionChooserForm(prodID)
+        {
+            let section_chooser = new JSONFormDialog();
+            section_chooser . caption = "Изберете секции: ";
+            section_chooser . setResponder("SectionChooserFormResponder");
+            section_chooser . getJSONRequest() . setParameter("prodID", prodID);
+            section_chooser . show();
+        }
+JS;
+        return $result;
     }
-    protected function renderImpl()
-    {
-        ?>
-        <script type="text/javascript">
-
-            $("[action='Edit']").on("click", function(e){
-
-                let scrollTop = $(window).scrollTop();
-                Cookies.set('scrollTop', scrollTop , { expires: 365 });
-
-            });
-            let scrollTop = Cookies.get('scrollTop');
-            if (scrollTop) {
-                window.scrollTo(0, scrollTop);
-                Cookies.remove('scrollTop');
-            }
-
-            function showSectionChooserForm(prodID)
-            {
-                let section_chooser = new JSONFormDialog();
-                section_chooser.caption="Изберете секции";
-                section_chooser.setResponder("SectionChooserFormResponder");
-                section_chooser.getJSONRequest().setParameter("prodID", prodID);
-                section_chooser.show();
-            }
-        </script>
-        <?php
-    }
-    public function finishRender()
-    {
-    }
-
 }
 
 class ProductsList extends BeanListPage
@@ -145,8 +141,10 @@ class ProductsList extends BeanListPage
         $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_GOOGLE);
         $this->getPage()->getActions()->append($action);
 
-        $responder = new SectionChooserFormResponder();
-        $chooser_script = new PageScript();
+        new SectionChooserFormResponder();
+        new SectionChooserScript();
+
+        new ScrollTopCookiesScript();
 
         $this->setBean(new ProductsBean());
 
