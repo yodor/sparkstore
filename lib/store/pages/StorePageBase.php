@@ -1,7 +1,7 @@
 <?php
 include_once("pages/SparkPage.php");
 
-include_once("utils/output/LDJsonScript.php");
+include_once("utils/script/LDJsonScript.php");
 include_once("utils/menu/BeanMenuFactory.php");
 
 include_once("components/MenuBarComponent.php");
@@ -126,7 +126,7 @@ class StorePageBase extends SparkPage
             $data = array("googleID_ads_conversion"=>$conversionID);
             $obj->setData($data);
 
-            $this->head()->addScript($obj);
+            $this->head()->addScript($obj->script());
         }
 
         $config->setSection("store_config");
@@ -137,16 +137,20 @@ class StorePageBase extends SparkPage
             $this->head()->addScript(new TawktoScript($page_id));
         }
 
-        $org_data = array("@context"     => "http://schema.org",
-            "@type"        => "Organization",
-            "name"         => SITE_TITLE,
-            "url"          => SITE_URL,
-            "logo"         => SITE_URL . "/images/logo_header.svg",
-            "contactPoint" => array("@type"             => "ContactPoint",
-                "telephone"         => $phone,
-                "contactType"       => "sales",
-                "areaServed"        => substr(DEFAULT_LANGUAGE_ISO3, 0, 2),
-                "availableLanguage" => DEFAULT_LANGUAGE));
+        $org_data = array(
+            "@context"=> "http://schema.org",
+            "@type"=> "Organization",
+            "name"=> SITE_TITLE,
+            "url"=> SITE_URL,
+            "logo"=> SITE_URL."/images/logo_header.svg",
+            "contactPoint" => array(
+                "@type"=> "ContactPoint",
+                "telephone"=> $phone,
+                "contactType"=> "sales",
+                "areaServed"=> substr(DEFAULT_LANGUAGE_ISO3, 0, 2),
+                "availableLanguage"=> DEFAULT_LANGUAGE
+            )
+        );
 
 
         $this->head()->addScript(new LDJsonScript($org_data));
@@ -154,12 +158,15 @@ class StorePageBase extends SparkPage
         $www_data = array(
             "@context"=> "http://schema.org",
             "@type"=> "WebSite",
-            "name"=> mb_strtoupper(SITE_TITLE). " - ОФИЦИАЛНА СТРАНИЦА",
+            "name"=> mb_strtoupper(SITE_TITLE). " - " . tr("Official Page"),
             "url"=> SITE_URL,
             "potentialAction"=> array(
                 "@type"=> "SearchAction",
-                "target"=> SITE_URL."/products/list.php?filter=search&keyword={search_term_string}",
-                "query-input"=> "required name=search_term_string"
+                "target"=> array(
+                    "@type"=>"EntryPoint",
+                    "urlTemplate"=>SITE_URL."/products/list.php?filter=search&keyword={keyword}"
+                ),
+                "query-input" => "required name=keyword"
             )
         );
 

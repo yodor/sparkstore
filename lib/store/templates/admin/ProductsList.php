@@ -89,9 +89,9 @@ class ProductFilterInputForm extends InputForm {
 
 class ScrollTopCookiesScript extends PageScript
 {
-    protected function code() : string
+    public function code() : string
     {
-        $result = <<<JS
+        return <<<JS
         $("[action='Edit']") . on("click", function (e){
             let scrollTop = $(window).scrollTop();
             Cookies.set('scrollTop', scrollTop, { expires: 0 });
@@ -104,15 +104,14 @@ class ScrollTopCookiesScript extends PageScript
             Cookies.remove('scrollTop');
         }
 JS;
-        return $result;
     }
 }
 
 class SectionChooserScript extends PageScript
 {
-    protected function code() : string
+    public function code() : string
     {
-        $result = <<<JS
+        return <<<JS
         function showSectionChooserForm(prodID)
         {
             let section_chooser = new JSONFormDialog();
@@ -122,7 +121,6 @@ class SectionChooserScript extends PageScript
             section_chooser . show();
         }
 JS;
-        return $result;
     }
 }
 
