@@ -1,47 +1,24 @@
 <?php
 include_once("store/utils/CreditPaymentButton.php");
 include_once("store/utils/unicr/UniCreditProductFormResponder.php");
+include_once("components/PageScript.php");
 
-class UniCreditPaymentButton extends CreditPaymentButton
+class UniCreditDialogScript extends PageScript
 {
-
-    protected $handler;
-
-    public function __construct(SellableItem $item)
+    public function code() : string
     {
-        parent::__construct($item);
-
-        try {
-            $this->handler = new UniCreditProductFormResponder($item);
-            $this->enabled = true;
-        }
-        catch (Exception $e) {
-            $this->enabled = false;
-            $this->handler = null;
-            debug("Unable to initialize UniCredit payment module: ".$e->getMessage());
-        }
-
-    }
-
-    public function renderButton()
-    {
-        echo "<a class='button' onClick='javascript:showUniCreditForm()'>";
-        echo "<span class='icon'></span>";
-        echo "<label>"."Купи на кредит"."</label>";
-        echo "</a>";
-
-?>
-        <script>
-            let uniDialog = new JSONFormDialog();
+        return <<<JS
+            const uniDialog = new JSONFormDialog();
 
             function showUniCreditForm()
             {
                 uniDialog.setResponder("UniCreditProductFormResponder");
-                uniDialog.caption="Kупи на кредит";
+                uniDialog.setTitle("Kупи на кредит");
                 uniDialog.processSubmitResult = processSubmit;
                 uniDialog.processRenderResult = processRender;
+                uniDialog.buttons.querySelector("[action='confirm']").innerText = "Продължи";
                 uniDialog.show();
-                $(uniDialog.visibleSelector() + " .Buttons button[action='confirm']").html("Продължи");
+
             }
 
             function calculateMonthly()
@@ -51,12 +28,9 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 //console.log("Submitting form");
                 req.setFunction("calculateMonthly");
 
-                let installmentCount = $(uniDialog.visibleSelector()+" SELECT[name='installmentCount']").find(":selected").val();
-                //let form = $(uniDialog.visibleSelector()+" FORM").get(0);
-                // let formData = new FormData(form);
-                // let installmentCount = formData.get("installmentCount");
-
-                let initialPayment = $(uniDialog.visibleSelector()+" INPUT[name='initialPayment']").val();
+                let installmentCount = uniDialog.element.querySelector("SELECT[name='installmentCount']").value;
+ 
+                let initialPayment = uniDialog.element.querySelector("INPUT[name='initialPayment']").value;
 
                 req.setParameter("installmentCount", installmentCount);
                 req.setParameter("initialPayment", initialPayment);
@@ -64,31 +38,33 @@ class UniCreditPaymentButton extends CreditPaymentButton
                 req.onSuccess = function(request_result) {
                     let result = request_result.json_result;
                     if (result.contents) {
-                        $(uniDialog.visibleSelector() + " .notice").replaceWith(result.contents);
+                        uniDialog.element.querySelector(".notice").innerHTML = result.contents;
                         loadResultValues(result);
                     }
                     else {
                         showAlert(result.message);
                     }
                 };
-                $(uniDialog.visibleSelector() + " .notice").html(uniDialog.loader);
+                uniDialog.element.querySelector(".notice").innerHTML = uniDialog.loader;
 
                 req.start();
             }
 
             function loadResultValues(result)
             {
-                let form = $(uniDialog.visibleSelector()+" FORM").get(0);
-                form.elements["monthlyPayment"].value = result.monthlyPayment;
-                form.elements["installmentCount"].value = result.installmentCount;
-                form.elements["initialPayment"].value = result.initialPayment;
+                const form = uniDialog.element.querySelector("FORM");
+
+                form.monthlyPayment.value = result.monthlyPayment;
+                form.installmentCount.value = result.installmentCount;
+                form.initialPayment.value = result.initialPayment;
             }
 
             function processRender(request_result) {
+                
                 let result = request_result.json_result;
                 uniDialog.loadContent(result.contents);
-
-                loadResultValues(result);
+                
+                //loadResultValues(result);
 
             }
 
@@ -123,9 +99,39 @@ class UniCreditPaymentButton extends CreditPaymentButton
                     showAlert(result.message);
                 }
             }
+JS;
 
-        </script>
-<?php
+    }
+}
+class UniCreditPaymentButton extends CreditPaymentButton
+{
+
+    protected $handler;
+
+    public function __construct(SellableItem $item)
+    {
+        parent::__construct($item);
+
+        try {
+            $this->handler = new UniCreditProductFormResponder($item);
+            $this->enabled = true;
+        }
+        catch (Exception $e) {
+            $this->enabled = false;
+            $this->handler = null;
+            debug("Unable to initialize UniCredit payment module: ".$e->getMessage());
+        }
+
+        new UniCreditDialogScript();
+
+    }
+
+    public function renderButton()
+    {
+        echo "<a class='button' onClick='javascript:showUniCreditForm()'>";
+        echo "<span class='icon'></span>";
+        echo "<label>"."Купи на кредит"."</label>";
+        echo "</a>";
 
     } //renderButton
 }

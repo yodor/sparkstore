@@ -95,16 +95,15 @@ if ($maps_src || $num_addresses>0) {
     {
         let contacts_dialog = new JSONFormDialog();
         contacts_dialog.setResponder("ContactRequestFormResponder");
-        contacts_dialog.caption="Изпрати запитване";
+        contacts_dialog.setTitle("Изпрати запитване");
         contacts_dialog.show();
     }
     function updateMap(elm)
     {
-        $("#google_map").attr("src", $(elm).attr("map-url"));
+        document.querySelector("#google_map").setAttribute("src", elm.getAttribute("map-url"));
     }
     onPageLoad(function(){
-        let elm = $(".details[pos='1']");
-        updateMap(elm);
+        updateMap(document.querySelector(".details[pos='1']"));
     });
 </script>
 
