@@ -185,7 +185,10 @@ class ClassAttributeField extends DataIteratorField
                         let result = request_result.json_result;
                         let html = result.contents;
                         $(".ClassAttributeField[field='<?php echo $this->dataInput->getName();?>']").html(html);
-                        dispatchEvent(new Event('load'));
+
+                        const event = new SparkEvent(SparkEvent.DOM_UPDATED);
+                        event.source = this;
+                        document.dispatchEvent(event);
                     };
 
                     req.start();
