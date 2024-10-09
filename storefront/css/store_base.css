@@ -320,6 +320,7 @@ A.Caption:active {
     align-items: center;
     justify-content: right;
     flex-grow:1;
+    min-width:0;
 }
 
 .section.menu .group {
@@ -329,7 +330,7 @@ A.Caption:active {
 }
 
 .section.menu .group.search_pane {
-
+    min-width:0;
 }
 
 .section.menu .group.search_pane .KeywordSearch {
@@ -345,14 +346,19 @@ A.Caption:active {
     align-items: center;
     justify-content: left;
     flex-grow:1;
+    min-width:0;
 }
 
 .section.menu .group.search_pane .KeywordSearch .InputLabel {
     display:none;
 }
+.section.menu .group.search_pane .KeywordSearch .InputField {
+    min-width:0;
+}
 
 .section.menu .group.search_pane .KeywordSearch .InputField INPUT {
     border:none;
+    min-width:0;
 }
 
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
