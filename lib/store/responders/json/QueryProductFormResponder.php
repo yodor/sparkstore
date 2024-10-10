@@ -13,7 +13,7 @@ class QueryProductFormResponder extends JSONFormResponder
 
     public function __construct(SellableItem $sellable)
     {
-        parent::__construct("QueryProductFormResponder");
+        parent::__construct();
         $this->mailer = new QueryProductMailer();
         $this->sellable = $sellable;
     }

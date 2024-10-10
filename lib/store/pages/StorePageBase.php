@@ -28,6 +28,8 @@ include_once("beans/DynamicPagesBean.php");
 include_once("store/responders/json/VoucherFormResponder.php");
 include_once("store/utils/TawktoScript.php");
 
+include_once("dialogs/json/JSONFormDialog.php");
+
 class SectionContainer extends Container {
 
     protected Container $space_left;
@@ -182,6 +184,10 @@ class StorePageBase extends SparkPage
         $this->head()->addOGTag("url", URL::Current()->fullURL()->toString());
         $this->head()->addOGTag("site_name", SITE_TITLE);
         $this->head()->addOGTag("type", "website");
+
+        //template JSONFormDialog
+        new JSONFormDialog();
+
     }
 
     public function __construct()

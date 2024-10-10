@@ -9,7 +9,7 @@ class ContactRequestFormResponder extends JSONFormResponder
 
     public function __construct()
     {
-        parent::__construct("ContactRequestFormResponder");
+        parent::__construct();
     }
 
     protected function createForm(): InputForm

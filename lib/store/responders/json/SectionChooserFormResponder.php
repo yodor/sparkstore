@@ -10,7 +10,7 @@ class SectionChooserFormResponder extends JSONFormResponder
 
     public function __construct()
     {
-        parent::__construct("SectionChooserFormResponder");
+        parent::__construct();
     }
 
     protected function createForm(): InputForm

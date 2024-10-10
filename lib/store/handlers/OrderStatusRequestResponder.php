@@ -11,7 +11,7 @@ class OrderStatusRequestResponder extends RequestResponder
 
     public function __construct()
     {
-        parent::__construct("order_status");
+        parent::__construct();
     }
 
     public function getParameterNames(): array

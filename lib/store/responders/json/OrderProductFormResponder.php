@@ -13,7 +13,7 @@ class OrderProductFormResponder extends JSONFormResponder
 
     public function __construct(SellableItem $sellable)
     {
-        parent::__construct("OrderProductFormResponder");
+        parent::__construct();
         $this->sellable = $sellable;
     }
 

@@ -11,7 +11,7 @@ class VoucherFormResponder extends JSONFormResponder
 
     public function __construct()
     {
-        parent::__construct("VoucherFormResponder");
+        parent::__construct();
 
     }
 

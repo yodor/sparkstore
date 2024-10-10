@@ -15,7 +15,7 @@ class NotifyInstockFormResponder extends JSONFormResponder
 
     public function __construct(SellableItem $sellable)
     {
-        parent::__construct("NotifyInstockFormResponder");
+        parent::__construct();
         $this->sellable = $sellable;
     }
 

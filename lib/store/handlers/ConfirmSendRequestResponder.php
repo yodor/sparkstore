@@ -10,7 +10,7 @@ class ConfirmSendRequestResponder extends RequestResponder
 
     public function __construct()
     {
-        parent::__construct("confirm_send");
+        parent::__construct();
     }
 
     public function getParameterNames(): array

@@ -19,16 +19,16 @@ include_once("store/components/SellableImageGallery.php");
 class ProductDetailsItem extends Container implements IHeadContents
 {
 
-    const BUTTON_QUERY_PRODUCT = "Query Product";
-    const BUTTON_NOTIFY_INSTOCK = "Notify Instock";
-    const BUTTON_PHONE_ORDER = "Phone Order";
-    const BUTTON_FAST_ORDER = "Fast Order";
-    const BUTTON_CART_ORDER = "Cart Order";
+    const string BUTTON_QUERY_PRODUCT = "Query Product";
+    const string BUTTON_NOTIFY_INSTOCK = "Notify Instock";
+    const string BUTTON_PHONE_ORDER = "Phone Order";
+    const string BUTTON_FAST_ORDER = "Fast Order";
+    const string BUTTON_CART_ORDER = "Cart Order";
 
-    const BUTTON_PAYMENT_TBI = "TBI";
-    const BUTTON_PAYMENT_UNICREDIT = "UNICREDIT";
+    const string BUTTON_PAYMENT_TBI = "TBI";
+    const string BUTTON_PAYMENT_UNICREDIT = "UNICREDIT";
 
-    protected $categories = array();
+    protected array $categories = array();
     protected URL $url;
 
     /**

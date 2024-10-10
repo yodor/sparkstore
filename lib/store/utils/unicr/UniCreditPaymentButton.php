@@ -10,7 +10,7 @@ class UniCreditDialogScript extends PageScript
         return <<<JS
             const uniDialog = new JSONFormDialog();
 
-            function showUniCreditForm()
+            function showUniCreditDialog()
             {
                 uniDialog.setResponder("UniCreditProductFormResponder");
                 uniDialog.setTitle("Kупи на кредит");
@@ -35,14 +35,14 @@ class UniCreditDialogScript extends PageScript
                 req.setParameter("installmentCount", installmentCount);
                 req.setParameter("initialPayment", initialPayment);
 
-                req.onSuccess = function(request_result) {
-                    let result = request_result.json_result;
-                    if (result.contents) {
-                        uniDialog.element.querySelector(".notice").innerHTML = result.contents;
-                        loadResultValues(result);
+                req.onSuccess = function(result) {
+                    let response = result.response;
+                    if (response.contents) {
+                        uniDialog.element.querySelector(".notice").innerHTML = response.contents;
+                        loadResponseValues(response);
                     }
                     else {
-                        showAlert(result.message);
+                        showAlert(response.message);
                     }
                 };
                 uniDialog.element.querySelector(".notice").innerHTML = uniDialog.loader;
@@ -50,7 +50,7 @@ class UniCreditDialogScript extends PageScript
                 req.start();
             }
 
-            function loadResultValues(result)
+            function loadResponseValues(result)
             {
                 const form = uniDialog.element.querySelector("FORM");
 
@@ -59,30 +59,35 @@ class UniCreditDialogScript extends PageScript
                 form.initialPayment.value = result.initialPayment;
             }
 
-            function processRender(request_result) {
+            function processRender(result) {
                 
-                let result = request_result.json_result;
-                uniDialog.loadContent(result.contents);
+                let response = result.response;
+                uniDialog.loadContent(response.contents);
                 
                 //loadResultValues(result);
 
             }
 
-            function processSubmit(request_result, form_name) {
-                let result = request_result.json_result;
+            /**
+            * 
+            * @param result {JSONRequestResult}
+            * @param form_name {string}
+            */
+            function processSubmit(result, form_name) {
+                let response = result.response;
 
-                if (result.redirect) {
+                if (response.redirect) {
 
                     let form = document.createElement("form");
                     form.setAttribute("id", "redirectForm");
                     form.setAttribute("method", "post");
-                    form.setAttribute("action", result.redirect);
+                    form.setAttribute("action", response.redirect);
 
                     // Create an input element for Full Name
                     let data = document.createElement("input");
                     data.setAttribute("type", "hidden");
                     data.setAttribute("name", "suosId");
-                    data.setAttribute("value", result.suosId);
+                    data.setAttribute("value", response.suosId);
 
                     form.appendChild(data);
 
@@ -90,13 +95,13 @@ class UniCreditDialogScript extends PageScript
                     form.submit();
 
                 }
-                else if (result.contents) {
-                    uniDialog.loadContent(result.contents);
-                    showAlert(result.message);
+                else if (response.contents) {
+                    uniDialog.loadContent(response.contents);
+                    showAlert(response.message);
                 }
                 else {
                     uniDialog.remove();
-                    showAlert(result.message);
+                    showAlert(response.message);
                 }
             }
 JS;
@@ -122,13 +127,15 @@ class UniCreditPaymentButton extends CreditPaymentButton
             debug("Unable to initialize UniCredit payment module: ".$e->getMessage());
         }
 
+        //template
+
         new UniCreditDialogScript();
 
     }
 
     public function renderButton()
     {
-        echo "<a class='button' onClick='javascript:showUniCreditForm()'>";
+        echo "<a class='button' onClick='javascript:showUniCreditDialog()'>";
         echo "<span class='icon'></span>";
         echo "<label>"."Купи на кредит"."</label>";
         echo "</a>";

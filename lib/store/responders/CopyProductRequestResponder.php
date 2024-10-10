@@ -13,7 +13,7 @@ class CopyProductRequestResponder extends RequestResponder
 
     public function __construct()
     {
-        parent::__construct("copy_product");
+        parent::__construct();
 
         $this->bean = new ProductsBean();
 

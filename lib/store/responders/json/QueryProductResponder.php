@@ -32,7 +32,7 @@ class QueryProductResponder extends JSONResponder
 
     public function __construct()
     {
-        parent::__construct("query_product");
+        parent::__construct();
         $this->itemID = -1;
         $this->email = "";
         $this->query = "";

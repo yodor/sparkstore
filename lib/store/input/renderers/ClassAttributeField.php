@@ -28,7 +28,7 @@ class ClassAttributeFieldResponder extends JSONResponder
 
     public function __construct(ClassAttributeField $field)
     {
-        parent::__construct("ClassAttributeField");
+        parent::__construct();
         $this->field = $field;
     }
 
@@ -170,30 +170,31 @@ class ClassAttributeField extends DataIteratorField
             onPageLoad(function () {
                 console.log("Adding class changed handler");
 
-                $("[name='pclsID']").on("change", function () {
+                let input = document.querySelector(["name='pclsID'"]);
+                input.addEventListener("change", (event)=>{
                     console.log("Product Class Changed");
 
-                    let classID = $(this).val();
-
                     let req = new JSONRequest();
-                    req.setResponder("ClassAttributeField");
+                    req.setResponder("ClassAttributeFieldResponder");
                     req.setFunction("render");
-                    req.setParameter("classID", classID);
+                    req.setParameter("classID", input.value);
                     req.setParameter("prodID", <?php echo $this->prodID;?>);
 
-                    req.onSuccess = function(request_result) {
-                        let result = request_result.json_result;
-                        let html = result.contents;
-                        $(".ClassAttributeField[field='<?php echo $this->dataInput->getName();?>']").html(html);
+                    req.onSuccess = function(result) {
+
+                        const field = document.querySelector(".ClassAttributeField[field='<?php echo $this->dataInput->getName();?>']");
+                        //no scripts will be parsed or added
+                        field.innerHTML = result.response.contents;
 
                         const event = new SparkEvent(SparkEvent.DOM_UPDATED);
-                        event.source = this;
+                        event.source = field;
                         document.dispatchEvent(event);
                     };
 
                     req.start();
 
                 });
+
             });
         </script>
         <?php

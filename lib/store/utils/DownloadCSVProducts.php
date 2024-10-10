@@ -11,7 +11,6 @@ include_once("store/beans/ProductCategoriesBean.php");
 class DownloadCSVProducts extends RequestResponder
 {
 
-    const string COMMAND = "download_csv";
     const string FILENAME = "catalog_products.csv";
 
 
@@ -24,7 +23,7 @@ class DownloadCSVProducts extends RequestResponder
 
     public function __construct()
     {
-        parent::__construct(self::COMMAND);
+        parent::__construct();
 
         $this->supported_content[] = self::TYPE_FACEBOOK;
         $this->supported_content[] = self::TYPE_GOOGLE;

@@ -998,23 +998,23 @@ A:hover, A:visited {
     text-decoration:underline;
 }
 
-.JSONFormDialog[handler='UniCreditProductFormResponder'] {
+.JSONFormDialog[responder='UniCreditProductFormResponder'] {
     /*border:1px dashed red;*/
 }
-.JSONFormDialog[handler='UniCreditProductFormResponder'] .notice .item SPAN {
+.JSONFormDialog[responder='UniCreditProductFormResponder'] .notice .item SPAN {
     font-weight:bold;
 }
-.JSONFormDialog[handler='UniCreditProductFormResponder'] .unilogo {
+.JSONFormDialog[responder='UniCreditProductFormResponder'] .unilogo {
     text-align:center;
     display:block;
 }
-.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM {
+.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM {
     width:100%;
 }
-.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM [field='installmentCount']{
+.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM [field='installmentCount']{
     display:none;
 }
-.JSONFormDialog[handler='UniCreditProductFormResponder'] FORM [field='monthlyPayment']{
+.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM [field='monthlyPayment']{
     display:none;
 }
 .contacts .section.main .content {
