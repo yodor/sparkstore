@@ -170,21 +170,21 @@ function bytesToBase64(bytes) {
 
 function showNotifyInstockForm() {
     let notify_dialog = new JSONFormDialog();
-    notify_dialog.caption = "Уведоми ме при наличност";
+    notify_dialog.setTitle("Уведоми ме при наличност");
     notify_dialog.setResponder("NotifyInstockFormResponder");
     notify_dialog.show();
 }
 
 function showProductQueryForm() {
     let query_dialog = new JSONFormDialog();
-    query_dialog.caption = "Запитване";
+    query_dialog.setTitle("Запитване");
     query_dialog.setResponder("QueryProductFormResponder");
     query_dialog.show();
 }
 
 function showOrderProductForm() {
     let order_dialog = new JSONFormDialog();
-    order_dialog.caption = "Бърза поръчка";
+    order_dialog.setTitle("Бърза поръчка");
     order_dialog.setResponder("OrderProductFormResponder");
 
     //check variants selected
@@ -201,7 +201,7 @@ function showOrderProductForm() {
 
             let value = option_value.attr("value");
             //console.log(option_name + " => " + value);
-            order_dialog.req.addPostParameter("variant[]", option_name + ": " + value);
+            order_dialog.getJSONRequest().addPostParameter("variant[]", option_name + ": " + value);
 
         });
     } catch (e) {

@@ -92,11 +92,12 @@ class ScrollTopCookiesScript extends PageScript
     public function code() : string
     {
         return <<<JS
-        $("[action='Edit']") . on("click", function (e){
-            let scrollTop = $(window).scrollTop();
-            Cookies.set('scrollTop', scrollTop, { expires: 0 });
-        });
-
+        document.querySelectorAll("[action='Edit']").forEach((element)=>{
+            element.addEventListener("click", (event)=>{
+                Cookies.set('scrollTop', window.scrollTop, { expires: 0 });
+            });
+        })
+        
         let scrollTop = Cookies.get('scrollTop');
         
         if (scrollTop) {
@@ -115,10 +116,10 @@ class SectionChooserScript extends PageScript
         function showSectionChooserForm(prodID)
         {
             let section_chooser = new JSONFormDialog();
-            section_chooser . caption = "Изберете секции: ";
-            section_chooser . setResponder("SectionChooserFormResponder");
-            section_chooser . getJSONRequest() . setParameter("prodID", prodID);
-            section_chooser . show();
+            section_chooser.setTitle("Изберете секции: ");
+            section_chooser.setResponder("SectionChooserFormResponder");
+            section_chooser.getJSONRequest().setParameter("prodID", prodID);
+            section_chooser.show();
         }
 JS;
     }
