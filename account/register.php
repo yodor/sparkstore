@@ -8,8 +8,10 @@ include_once("store/forms/processors/RegisterClientFormProcessor.php");
 $page = new AccountPage(FALSE);
 $page->setTitle(tr("Регистрация"));
 
-$page->head()->addJS(STORE_LOCAL."/js/RegisterForm.js");
 $page->head()->addJS(SPARK_LOCAL."/js/md5.js");
+$page->head()->addJS(SPARK_LOCAL."/js/LoginForm.js");
+$page->head()->addJS(STORE_LOCAL."/js/RegisterForm.js");
+
 
 $form = new RegisterClientInputForm();
 
@@ -54,7 +56,7 @@ echo "</div>"; //column
 ?>
 <script type='text/javascript'>
             onPageLoad(function () {
-                var register_form = new RegisterForm();
+                const register_form = new RegisterForm();
                 register_form.setName("<?php echo $form->getName();?>");
                 register_form.initialize();
             });

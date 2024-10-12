@@ -83,7 +83,7 @@ class ProductListPageBase extends ProductPageBase
 
         //Initialize product categories tree
         $treeView = new NestedSetTreeView();
-        $treeView->setCacheable(true);
+        $treeView->setCacheable(false);
 
         $treeView->setName("products_tree");
 
