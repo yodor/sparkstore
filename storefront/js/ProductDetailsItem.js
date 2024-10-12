@@ -6,8 +6,8 @@ let curr_pos = 0;
 
 onPageLoad(function () {
     //return assigned SparkObject in data
-    let image_popup = $(".image_preview .ImagePopup").data("ImagePopup");
-    image_popup.addObserver(popupEvent);
+
+    document.imagePopup.addObserver(popupEvent);
 
     let image = $(".image_preview .ImagePopup");
     image.on("SwipeAction", function (e) {
