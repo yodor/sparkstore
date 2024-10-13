@@ -22,19 +22,20 @@ class SellableImageGallery extends Component
          */
         this.image = this.preview.querySelector("IMG");
 
+        try {
+            const listener = new SwipeListener(this.image);
 
-        //let image = this.preview.querySelector(".ImagePopup");
-
-        this.image.addEventListener("SwipeAction", (event)=>{
-            if (event.message == "right") {
-                this.next();
-            } else if (event.message == "left") {
-                this.prev();
-            }
-        })
-
-        const listener = new SwipeListener(this.image);
-
+            this.image.addEventListener("SwipeListener", (event) => {
+                if (event.message == "right") {
+                    this.next();
+                } else if (event.message == "left") {
+                    this.prev();
+                }
+            })
+        }
+        catch (ex) {
+            //
+        }
         const observer = this.popupEvent.bind(this);
         document.imagePopup.addObserver(observer);
 
