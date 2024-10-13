@@ -11,7 +11,6 @@ class SellableImageGallery extends Component
         super.initialize();
 
 
-
         this.preview = this.element.querySelector(".preview");
         this.gallery = this.element.querySelector(".gallery");
 
@@ -25,17 +24,18 @@ class SellableImageGallery extends Component
         try {
             const listener = new SwipeListener(this.image);
 
-            this.image.addEventListener("SwipeListener", (event) => {
-                if (event.message == "right") {
+            listener.onAction = (event) => {
+                if (event.isEvent("right")) {
                     this.next();
-                } else if (event.message == "left") {
+                } else if (event.isEvent("left")) {
                     this.prev();
                 }
-            })
+            };
         }
         catch (ex) {
             //
         }
+
         const observer = this.popupEvent.bind(this);
         document.imagePopup.addObserver(observer);
 

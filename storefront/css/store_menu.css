@@ -1,19 +1,19 @@
-@import url("../../sparkfront/css/mobile/MenuBarComponent.css") (max-width: 1024px);
+@import url("../../sparkfront/css/mobile/MenuBar.css") (max-width: 1024px);
 
 .MenuBar {
     height:50px;
 }
 
-.MenuBar.normal .MenuBarComponent {
+.MenuBar[open] .ItemList {
 
 }
 
-.MenuBarComponent {
+.MenuBar .ItemList {
     background-color:#e6e6e6;
     height: 100%;
 }
 
-.MenuBarComponent .MenuBarItemRenderer {
+.MenuBar .ItemList .Item {
     padding:0;
     margin:0;
 
@@ -28,30 +28,30 @@
     align-items:center;
 }
 
-.MenuBarComponent .MenuBarItemRenderer .MenuItemLink {
+.MenuBar .ItemList .Item .Link {
     font-weight:normal;
     text-transform:uppercase;
     font-size:110%;
 }
 
-.MenuBarComponent .MenuBarItemRenderer.Hover {
+.MenuBar .ItemList .Item.Hover {
     background-color:inherit;
 }
 
-.MenuBarComponent .MenuBarItemRenderer.Hover .MenuItemLink {
+.MenuBar .ItemList .Item.Hover .Link {
     color:black;
 }
 
-.MenuBarComponent .MenuBarItemRenderer.Hover {
+.MenuBar .ItemList .Item.Hover {
     border-top:5px solid transparent;
     border-bottom:5px solid var(--theme-accent);
 }
 
-.MenuBarComponent .MenuBarItemRenderer[active="1"] .MenuItemLink {
+.MenuBar .ItemList .Item[active="1"] .Link {
     font-weight:bold;
 }
 
-.MenuBarComponent .MenuBarItemRenderer[active="1"] {
+.MenuBar .ItemList .Item[active="1"] {
     border-top:5px solid transparent;
     border-bottom:5px solid var(--theme-accent);
 }
@@ -59,7 +59,7 @@
 /*mobile*/
 
 
-.MenuBar.normal .MenuBarComponent .MenuBarItemRenderer {
+.MenuBar[open] .ItemList .Item {
     padding-top:0.5em;
     padding-bottom:0.5em;
 }

@@ -4,7 +4,7 @@ include_once("pages/SparkPage.php");
 include_once("utils/script/LDJsonScript.php");
 include_once("utils/menu/BeanMenuFactory.php");
 
-include_once("components/MenuBarComponent.php");
+include_once("components/MenuBar.php");
 include_once("components/KeywordSearch.php");
 include_once("components/ClosureComponent.php");
 
@@ -74,7 +74,7 @@ class SectionContainer extends Container {
 class StorePageBase extends SparkPage
 {
 
-    protected ?MenuBarComponent $menu_bar = NULL;
+    protected ?MenuBar $menu_bar = NULL;
 
     protected ?KeywordSearch $keyword_search = NULL;
 
@@ -207,7 +207,7 @@ class StorePageBase extends SparkPage
         $this->headInitialize();
 
         $factory = new BeanMenuFactory(new MenuItemsBean());
-        $this->menu_bar = new MenuBarComponent($factory->menu());
+        $this->menu_bar = new MenuBar($factory->menu());
         $this->menu_bar->setName("StorePage");
 
         $ksc = new KeywordSearch();
@@ -270,7 +270,7 @@ class StorePageBase extends SparkPage
 
     }
 
-    public function getMenuBar(): ?MenuBarComponent
+    public function getMenuBar(): ?MenuBar
     {
         return $this->menu_bar;
     }
