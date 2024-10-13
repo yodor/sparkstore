@@ -2,150 +2,77 @@ function formatPrice(n) {
     return n.toFixed(2);
 }
 
-let curr_pos = 0;
-
-onPageLoad(function () {
-    //return assigned SparkObject in data
-
-    document.imagePopup.addObserver(popupEvent);
-
-    let image = $(".image_preview .ImagePopup");
-    image.on("SwipeAction", function (e) {
-
-        if (e.message == "right") {
-            next();
-        } else if (e.message == "left") {
-            prev();
-        }
-
-    });
-
-    const listener = new SwipeListener(image);
-});
-
 /**
  *
- * @param spark_event {SparkEvent}
+ * @returns {{}}
  */
-function popupEvent(spark_event) {
+function getSelectedVariants()
+{
+    let result = {};
 
-    if (spark_event.isEvent(ImagePopup.EVENT_CLOSED)) {
-        updateImage();
-    } else if (spark_event.isEvent(ImagePopup.EVENT_POSITION_NEXT) || spark_event.isEvent(ImagePopup.EVENT_POSITION_PREV)) {
-        curr_pos = spark_event.source.pos;
-    }
-}
+    //check variants selected
+    let variant_groups = document.querySelectorAll(".group.variants");
+    variant_groups.forEach((group)=>{
+        group.querySelectorAll(".item.variant").forEach((variant)=>{
+            let option_name = variant.getAttribute("name");
+            let selected_parameter = variant.querySelector(".parameter[selected]");
 
-function updateImage() {
+            if (!selected_parameter) {
+                throw new Error("Изберете опция за " + option_name);
+            }
 
-    //deselect all
-    $(".image_gallery .item").removeAttr("active");
-
-    let current_item = $(".image_gallery .item[pos='" + curr_pos + "']");
-    current_item.attr("active", 1);
-    let itemID = current_item.attr("itemID");
-
-    let main_image = $(".image_preview IMG");
-
-    let src = main_image.attr("src");
-
-    let target_url = new URL(src, document.URL);
-
-    target_url.searchParams.set("id", itemID);
-
-    main_image.attr("src", target_url);
-
-    $(".image_preview .ImagePopup").attr("itemID", itemID);
-
-}
-
-function galleryItemClicked(elm) {
-    curr_pos = $(elm).attr("pos");
-    updateImage();
-}
-
-
-function next() {
-    let max_pos = $(".image_preview").attr("max_pos") - 1;
-
-    curr_pos++;
-    if (curr_pos > max_pos) {
-        curr_pos = 0;
-    }
-
-    updateImage();
-
-}
-
-function prev() {
-    let max_pos = $(".image_preview").attr("max_pos") - 1;
-
-    curr_pos--;
-    if (curr_pos < 0) {
-        curr_pos = max_pos;
-    }
-
-    updateImage();
-}
-
-
-function selectVariantParameter(elm) {
-    let list = $(elm).parents(".list").first();
-
-    let variant = list.parents(".item.variant").first();
-
-    list.children(".parameter").each(function () {
-        $(this).removeAttr("selected");
+            result[option_name] = selected_parameter.getAttribute("value");
+        })
     });
 
-    $(elm).attr("selected", "");
-    let parameter = $(elm).attr("value");
-    variant.children(".value").first().html(parameter);
+    return result;
+}
+/**
+ *
+ * @param elm {HTMLElement}
+ */
+function selectVariantParameter(elm) {
+    let list = elm.closest(".list");
+    list.querySelectorAll(".parameter").forEach((item) => {
+        item.removeAttribute("selected");
+    });
 
+    let variant = list.closest(".item.variant");
+    variant.querySelector(".value").innerHTML = elm.getAttribute("value");
+
+    elm.setAttribute("selected", "");
 }
 
 function addToCart() {
 
-    let stock_amount = parseInt($(".stock_amount .value").html());
-    var selected = {};
-
-    //check variants selected
-    let variants = $(".group.variants");
-
-    try {
-        let items = variants.find(".item.variant");
-        for (let a = 0; a < items.length; a++) {
-
-            let item = items[a];
-            let option_name = $(item).attr("name");
-            let option_value = $(item).find(".parameter[selected]");
-            if (!option_value.length) {
-                throw "Изберете опция за " + option_name
-            }
-
-            let value = option_value.attr("value");
-            console.log(option_name + " => " + value);
-            selected[option_name] = value;
-        }
-
-    } catch (e) {
-        showAlert(e);
-        return;
-    }
-
-
-    // Usage
-    let encoded = bytesToBase64(new TextEncoder().encode(JSON.stringify(selected)));
-    //new TextDecoder().decode(base64ToBytes("YSDEgCDwkICAIOaWhyDwn6aE")); // "a Ā 𐀀 文 🦄"
-
+    //TODO check element existance and use value then
+    //let stock_amount = parseInt(document.querySelector(".stock_amount .value").innerText);
 
     // if (stock_amount < 1) {
     //     showAlert("В момента няма наличност от този артикул");
     //     return;
     // }
 
+    let selected = {};
+
+    //check variants selected
+
+    try {
+
+       selected = this.getSelectedVariants()
+
+    } catch (e) {
+        showAlert(e.message);
+        return;
+    }
+
+
+    // Usage
+    let encoded = bytesToBase64(new TextEncoder().encode(JSON.stringify(selected)));
+
+
     let current_url = new URL(window.location.href);
-    let prodID = $(".ProductDetailsItem").first().attr("productID");
+    let prodID = document.querySelector(".ProductDetailsItem")?.getAttribute("productID");
 
     let url = new URL(LOCAL + "/checkout/cart.php", location.href);
     url.searchParams.set("add", "");
@@ -183,31 +110,25 @@ function showProductQueryForm() {
 }
 
 function showOrderProductForm() {
+
+    let selected_variants = {};
+
+    try {
+        selected_variants = this.getSelectedVariants();
+
+    } catch (e) {
+        showAlert(e.message);
+        return;
+    }
+
     let order_dialog = new JSONFormDialog();
     order_dialog.setTitle("Бърза поръчка");
     order_dialog.setResponder("OrderProductFormResponder");
 
-    //check variants selected
-    let variants = $(".group.variants");
-
-    try {
-        variants.find(".item.variant").each(function () {
-            let option_name = $(this).attr("name");
-            let option_value = $(this).find(".parameter[selected]");
-
-            if (!option_value.length) {
-                throw "Изберете опция за " + option_name
-            }
-
-            let value = option_value.attr("value");
-            //console.log(option_name + " => " + value);
-            order_dialog.getJSONRequest().addPostParameter("variant[]", option_name + ": " + value);
-
-        });
-    } catch (e) {
-        showAlert(e);
-        return;
-    }
+    const keys = Object.keys(selected_variants);
+    keys.forEach((key) => {
+        order_dialog.getJSONRequest().addPostParameter("variant[]", key + ": " + selected_variants[key]);
+    });
 
     order_dialog.show();
 }

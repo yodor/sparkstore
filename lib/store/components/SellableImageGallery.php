@@ -22,10 +22,10 @@ class SellableImageGallery extends Container {
 
         $this->sellable = $item;
 
-        $this->setComponentClass("images");
+        $this->setComponentClass("SellableImageGallery");
 
         $image_preview = new Container(false);
-        $image_preview->setComponentClass("image_preview");
+        $image_preview->setComponentClass("preview");
         $this->items()->append($image_preview);
 
         $label = new TextComponent();
@@ -69,13 +69,13 @@ class SellableImageGallery extends Container {
 
         if ($max_pos>1) {
             $action_prev = new Action();
-            $action_prev->getURL()->setScriptName("javascript:prev()");
+            $action_prev->getURL()->setScriptName("javascript:document.imageGallery.prev()");
             $action_prev->setComponentClass("arrow");
             $action_prev->setClassName("prev");
             $image_preview->items()->append($action_prev);
 
             $action_next = new Action();
-            $action_next->getURL()->setScriptName("javascript:next()");
+            $action_next->getURL()->setScriptName("javascript:document.imageGallery.next()");
             $action_next->setComponentClass("arrow");
             $action_next->setClassName("next");
             $image_preview->items()->append($action_next);
@@ -86,7 +86,7 @@ class SellableImageGallery extends Container {
         $this->items()->append($blend_pane);
 
         $thumbnails = new Container();
-        $thumbnails->setComponentClass("image_gallery");
+        $thumbnails->setComponentClass("gallery");
         $list = $this->thumbnailsList();
         if ($max_pos<2) {
             $list->addClassName("single");
@@ -94,6 +94,20 @@ class SellableImageGallery extends Container {
         $thumbnails->items()->append($list);
 
         $this->items()->append($thumbnails);
+    }
+
+    public function requiredScript(): array
+    {
+        $result =  parent::requiredScript();
+        $result[] = STORE_LOCAL."/js/SellableImageGallery.js";
+        return $result;
+    }
+
+    public function requiredStyle(): array
+    {
+        $result = parent::requiredStyle();
+        $result[] = STORE_LOCAL."/css/SellableImageGallery.css";
+        return $result;
     }
 
     protected function thumbnailsList() : Container
@@ -115,7 +129,7 @@ class SellableImageGallery extends Container {
             $item->setRelation("ProductGallery");
             $item->setPosition($pos);
 
-            $item->setAttribute("onClick", "javascript:galleryItemClicked(this)");
+            $item->setAttribute("onClick", "javascript:document.imageGallery.itemClicked(this)");
 
             if ($pos == 0) {
                 $item->setAttribute("active", "1");

@@ -1,28 +1,18 @@
-let storeCookies = new SparkCookies();
+
 
 function acceptCookies()
 {
-    storeCookies.accept();
+    document.sparkCookies.accept();
     updateCookies();
 }
 
 function updateCookies()
 {
-    let isAccepted = storeCookies.isAccepted();
-
-    $(".section.cookies").attr("checked", 1);
-
-    if (isAccepted) {
-        $(".section.cookies").attr("accepted", 1);
-    }
-    else {
-        $(".section.cookies").attr("accepted", 0);
-    }
+    document.querySelector(".section.cookies").setAttribute("checked", document.sparkCookies.isAccepted());
 }
 
+document.sparkCookies = new SparkCookies();
+
 onPageLoad(function(){
-
     updateCookies();
-
-
 });

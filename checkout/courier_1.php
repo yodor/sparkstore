@@ -134,26 +134,27 @@ $page->renderNavigation();
         text += office[3] + "\r\n";
         text += office[2] + "\r\n";
 
-        $('.item.ekont_office .selected_office').html(text.replace("\r\n", "<BR>"));
+        document.querySelector('.item.ekont_office .selected_office').innerHTML = text.replace("\r\n", "<BR>");
 
-        $('.item.ekont_office .TextArea TEXTAREA[name="office"]').html(text);
+        document.querySelector('.item.ekont_office .TextArea TEXTAREA[name="office"]').innerHTML = text;
 
         showAlert("Избрахте офис на 'Еконт'<br>" + text);
 
-        $(".item.ekont_office").removeClass("empty");
-        $(".item.ekont_locator").css("display", "none");
+        document.querySelector(".item.ekont_office").classList.remove("empty");
+        document.querySelector(".item.ekont_locator").style.display = "none";
 
-//     $(".selected_office").css("display", "block");
     }
 
     function changeEkontOffice() {
-        $(".item.ekont_office").addClass("empty");
-        //$(".selected_office").css("display", "none");
-        $(".item.ekont_locator").css("display", "block");
+
+        document.querySelector(".item.ekont_office").classList.add("empty");
+        document.querySelector(".item.ekont_locator").style.display = "block";
+
     }
 
     onPageLoad(function () {
-        $(".item.ekont_locator").css("display", "none");
+
+        document.querySelector(".item.ekont_locator").style.display = "none";
 
     });
 </script>
