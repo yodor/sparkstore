@@ -19,8 +19,6 @@ $form = new RegisterClientInputForm();
 $frender = new FormRenderer($form);
 $frender->setAttribute("autocomplete", "off");
 
-$frender->setLayout(FormRenderer::FIELD_VBOX);
-
 $frender->getSubmitButton()->setContents("Регистрация");
 
 $proc = new RegisterClientFormProcessor();

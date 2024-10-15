@@ -17,7 +17,6 @@ $form->getInput("password")->setValue("");
 $form->getInput("password")->setRequired(false);
 
 $frend = new FormRenderer($form);
-$frend->setLayout(FormRenderer::FIELD_VBOX);
 $frend->getSubmitButton()->setContents("Submit");
 
 $proc = new RegisterClientFormProcessor();
