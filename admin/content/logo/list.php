@@ -5,6 +5,7 @@ include_once("storage/SparkFile.php");
 
 $page = new AdminPage();
 $page->setName("Logo Management");
+$page->navigation()->clear();
 
 
 

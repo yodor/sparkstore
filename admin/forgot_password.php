@@ -53,6 +53,8 @@ class ForgotPasswordProcessor extends FormProcessor
 }
 
 $page = new AdminLoginPage();
+$page->setTitle(tr("Forgot Password"));
+
 $page->head()->addCSS(SPARK_LOCAL . "/css/LoginForm.css");
 
 $form = new InputForm();
@@ -76,8 +78,6 @@ else {
     Session::setAlert($proc->getMessage());
 }
 $page->startRender();
-
-$page->setTitle(tr("Forgot Password"));
 
 $frend->setCaption(SITE_TITLE . "<BR><small>" . tr("Administration") . "</small>");
 

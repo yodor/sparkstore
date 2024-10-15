@@ -28,7 +28,6 @@ header("Expires: 0");
 
 $page->startRender();
 
-$page->setTitle(tr("Administration"));
 
 $afr->setCaption(SITE_TITLE . "<BR><small>" . tr("Administration") . "</small>");
 

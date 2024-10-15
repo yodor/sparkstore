@@ -13,5 +13,7 @@ $cmp->setConfigSection("delivery_options");
 $form = new DeliveryConfigForm();
 $cmp->setForm($form);
 
+$cmp->getPage()->navigation()->clear();
+
 $cmp->render();
 ?>

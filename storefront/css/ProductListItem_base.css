@@ -14,9 +14,10 @@
     margin-bottom:1.5em;
     margin-left:0.5em;
     margin-right:0.5em;
+
 }
 
-.ProductListItem A, .ProductListItem A:hover, .ProductListItem A:visited {
+.ProductListItem A:any-link {
     text-decoration: none;
     color:black;
 

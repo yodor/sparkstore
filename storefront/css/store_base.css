@@ -10,6 +10,12 @@
     --theme-filter-colorize-gray: invert(0%) sepia(0%) saturate(3463%) hue-rotate(13deg) brightness(112%) contrast(44%);
     /*red*/
     /*filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);*/
+    --spark-button-background-color: var(--theme-accent);
+    --spark-submit-button-background-color: var(--theme-accent);
+
+    --spark-button-border-radius: 2em;
+    --spark-button-text-transfrom: uppercase;
+    --spark-button-text-color: white;
 }
 
 body {
@@ -164,7 +170,7 @@ A.Caption:active {
     text-decoration:none;
 }
 
-.section.header .content marquee {
+.section.header .content .Marquee {
 
     background-color:inherit;
     color:grey;
@@ -681,40 +687,41 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 
 }
 
-A:hover, A:visited {
-    text-decoration:underline;
-    color: var(--theme-accent);
-}
-.ColorButton[action] {
-    background: var(--theme-accent);
-    color: white;
-    -moz-border-radius: 2em;
-    -webkit-border-radius: 2em;
-    border-radius: 2em;
-    font-weight: normal;
-    text-transform: uppercase;
-}
-.ColorButton {
-    background-color: var(--theme-accent);
-    color: white;
-    -moz-border-radius: 2em;
-    -webkit-border-radius: 2em;
-    border-radius: 2em;
-    font-weight: normal;
-    text-transform: uppercase;
-}
 
-.ColorButton:visited {
-    /*color: #0c2226;*/
-    font-weight: normal;
-    text-transform: uppercase;
-}
+/*A:hover:not(*) {*/
+/*    text-decoration:underline;*/
+/*}*/
 
-.ColorButton:hover {
-    /*color: #2b7a88;*/
-    font-weight: normal;
-    text-transform: uppercase;
-}
+/*.ColorButton[action] {*/
+/*    background: var(--theme-accent);*/
+/*    color: white;*/
+/*    -moz-border-radius: 2em;*/
+/*    -webkit-border-radius: 2em;*/
+/*    border-radius: 2em;*/
+/*    font-weight: normal;*/
+/*    text-transform: uppercase;*/
+/*}*/
+/*.ColorButton {*/
+/*    background-color: var(--theme-accent);*/
+/*    color: white;*/
+/*    -moz-border-radius: 2em;*/
+/*    -webkit-border-radius: 2em;*/
+/*    border-radius: 2em;*/
+/*    font-weight: normal;*/
+/*    text-transform: uppercase;*/
+/*}*/
+
+/*.ColorButton:visited {*/
+/*    !*color: #0c2226;*!*/
+/*    font-weight: normal;*/
+/*    text-transform: uppercase;*/
+/*}*/
+
+/*.ColorButton:hover {*/
+/*    !*color: #2b7a88;*!*/
+/*    font-weight: normal;*/
+/*    text-transform: uppercase;*/
+/*}*/
 
 .StorePage.contacts .section.main .content {
     padding:1.5em;

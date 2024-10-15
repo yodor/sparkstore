@@ -170,7 +170,7 @@ class ClassAttributeField extends DataIteratorField
             onPageLoad(function () {
                 console.log("Adding class changed handler");
 
-                let input = document.querySelector(["name='pclsID'"]);
+                let input = document.querySelector("[name='pclsID']");
                 input.addEventListener("change", (event)=>{
                     console.log("Product Class Changed");
 
