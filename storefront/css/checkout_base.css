@@ -173,6 +173,10 @@
 }
 .CheckoutPage.delivery_address .delivery_details FORM {
     min-width:320px;
+
+}
+.CheckoutPage.delivery_address .delivery_details FORM .InputComponent {
+    align-self:stretch;
 }
 
 /*confirmation page*/
@@ -211,7 +215,7 @@
 }
 
 .CheckoutPage.confirm .item.note .InputField.TextArea TEXTAREA {
-   min-width:320px;
+    min-width:320px;
     min-height:200px;
 
 }

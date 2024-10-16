@@ -138,7 +138,7 @@ class ProductVariantsProcessor extends FormProcessor
 
             $posted_voIDs = array();
 
-            foreach ($form->getInputValues() as $idx=>$values) {
+            foreach ($form->inputValues() as $idx=> $values) {
 
                 if (!is_array($values)) continue;
                 foreach ($values as $voID=>$value) {
@@ -191,7 +191,7 @@ class ProductVariantsProcessor extends FormProcessor
         $query = new SQLQuery($select, "pvID");
         $num = $query->exec();
 
-        foreach ($form->getInputs() as $idx=>$input) {
+        foreach ($form->inputs() as $idx=> $input) {
             $input->setValue(array());
         }
 

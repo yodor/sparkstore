@@ -7,24 +7,88 @@ include_once("store/beans/ProductClassAttributeValuesBean.php");
 class ClassAttributeItem extends DataIteratorItem
 {
 
-    public function renderImpl()
-    {
+    protected Component $attributeName;
+    protected Input $attributeValue;
+    protected Input $foreginKey;
 
-        echo "<label data='attribute_name'>" . $this->label . "</label>";
+    public function __construct() {
+        parent::__construct();
 
-        echo "<input data='attribute_value' type='text' value='{$this->value}' name='{$this->name}' placeholder='".tr("input value ...")."'>";
+        $this->setClassName("ClassAttributeItem");
 
-        //value foreign key
-        echo "<input data='foreign_key' type='hidden' name='fk_{$this->name}' value='pcaID:{$this->data["pcaID"]}'>";
+        $this->attributeName = new Component(false);
+        $this->attributeName->setTagName("LABEL");
+        $this->attributeName->setAttribute("data", "attribute_name");
+        $this->items()->append($this->attributeName);
+
+        $this->attributeValue = new Input();
+        $this->attributeValue->setType("text");
+        $this->attributeValue->setAttribute("data", "attribute_value");
+        $this->attributeValue->setAttribute("placeholder", tr("input value ..."));
+        $this->items()->append($this->attributeValue);
+
+        $this->foreginKey = new Input();
+        $this->foreginKey->setType("hidden");
+        $this->foreginKey->setAttribute("data", "foreign_key");
+
+        $this->items()->append($this->foreginKey);
+
     }
+
+    protected function getInput() : Component
+    {
+        return $this->attributeValue;
+    }
+
+    public function setData(array $data): void
+    {
+        parent::setData($data);
+        $this->attributeName->setContents($this->label);
+
+
+    }
+
+    protected function processAttributes(): void
+    {
+        parent::processAttributes();
+        $this->removeAttribute("name");
+
+        $this->attributeValue->setAttribute("value", $this->value);
+
+
+
+        if ($this->parent instanceof DataIteratorField) {
+
+            if (!$this->value) {
+                debug("Request Data: ",$_REQUEST);
+                $dataInput = $this->parent->getDataInput();
+                $inputValue = $dataInput->getValue();
+                //search post data for value
+                if (isset($_REQUEST["fk_" . $dataInput->getName()])) {
+                    if (isset($inputValue[$this->position])) {
+                        $this->value = $inputValue[$this->position];
+                        $this->attributeValue->setAttribute("value", $this->value);
+                    }
+                }
+            }
+
+            //follow main input name and prefix with fk_
+            $this->foreginKey->setName("fk_" . $this->attributeValue->getName());
+            //already set in id ?
+            $prKey = $this->parent->getIterator()->key();
+            $this->foreginKey->setValue($prKey . ":" . $this->getID());
+
+        }
+    }
+
 
 }
 
 class ClassAttributeFieldResponder extends JSONResponder
 {
-    protected $classID = -1;
-    protected $prodID = -1;
-    protected $field;
+    protected int $classID = -1;
+    protected int $prodID = -1;
+    protected ClassAttributeField $field;
 
     public function __construct(ClassAttributeField $field)
     {
@@ -54,48 +118,59 @@ class ClassAttributeFieldResponder extends JSONResponder
         $this->field->setClassID($this->classID);
         $this->field->setProductID($this->prodID);
 
-        $this->field->renderImpl();
-
+        $this->field->render();
     }
 }
 
 class ClassAttributeField extends DataIteratorField
 {
 
-    protected $classID = -1;
-    protected $prodID = -1;
+    protected int $classID = -1;
+    protected int $prodID = -1;
 
     public static function Create(string $name, string $label, bool $required) : ArrayDataInput
     {
-        $field = new ArrayDataInput($name, $label, $required);
+        $dataInput = new ArrayDataInput($name, $label, $required);
 
-        $field->source_label_visible = TRUE;
+        $dataInput->source_label_visible = TRUE;
         //try merge even if posted count is different
-        $field->getProcessor()->merge_with_target_loaded = FALSE;
+        $dataInput->getProcessor()->merge_with_target_loaded = FALSE;
         //check fk_$name values posted
-        $field->getProcessor()->process_datasource_foreign_keys = TRUE;
+        $dataInput->getProcessor()->process_datasource_foreign_keys = TRUE;
         //do not transact empty string during insert
         //instead of update the value will be deleted
-        $field->getProcessor()->transact_bean_skip_empty_values = TRUE;
+        $dataInput->getProcessor()->transact_bean_skip_empty_values = TRUE;
 
         $bean1 = new ProductClassAttributeValuesBean();
-        $field->getProcessor()->setTransactBean($bean1);
+        $dataInput->getProcessor()->setTransactBean($bean1);
 
-        $rend = new ClassAttributeField($field);
-        return $field;
+        $rend = new ClassAttributeField($dataInput);
+        return $dataInput;
     }
 
     public function __construct(DataInput $input)
     {
         parent::__construct($input);
+
         $this->setItemRenderer(new ClassAttributeItem());
 
-        $this->getItemRenderer()->setValueKey("pcaID");
+        //'input->getName()' should match 'value' column from iterator
+        $this->getItemRenderer()->setValueKey($input->getName());
+
+        //'name' column from iterator
         $this->getItemRenderer()->setLabelKey("name");
 
         $responder = new ClassAttributeFieldResponder($this);
 
+        //set initial iterator - without pclsID set will list all attributes for all classes
+        //$this->updateIterator();
+    }
+
+    protected function processAttributes(): void
+    {
+        parent::processAttributes();
         $this->updateIterator();
+
     }
 
     public function requiredStyle(): array
@@ -105,36 +180,33 @@ class ClassAttributeField extends DataIteratorField
         return $arr;
     }
 
-    public function setClassID(int $classID)
+    public function setClassID(int $classID) : void
     {
         $this->classID = $classID;
-        $this->updateIterator();
+    }
+    public function setProductID(int $prodID) : void
+    {
+        $this->prodID = $prodID;
     }
 
-    public function updateIterator()
+    public function updateIterator() : void
     {
         $sel = new SQLSelect();
 
         $sel->fields()->set("pca.pcaID", "attr.name");
-        $sel->fields()->setExpression("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "value");
+        $sel->fields()->setExpression("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", $this->dataInput->getName());
         $sel->fields()->setExpression("(SELECT pcav.pcavID FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "pcavID");
 
-        $sel->from = "`product_class_attributes` pca JOIN `attributes` attr ON attr.attrID=pca.attrID";
+        $sel->from = "product_class_attributes pca JOIN attributes attr ON attr.attrID=pca.attrID";
 
         $sel->order_by = " pcaID ASC ";
 
-        if ($this->classID>0) {
-            $sel->where()->add("pca.pclsID", $this->classID);
-        }
+        $sel->where()->add("pca.pclsID", $this->classID);
 
         $this->setIterator(new SQLQuery($sel, "pcaID"));
     }
 
-    public function setProductID(int $prodID) : void
-    {
-        $this->prodID = $prodID;
-        $this->updateIterator();
-    }
+
 
     public function renderImpl()
     {
@@ -149,18 +221,6 @@ class ClassAttributeField extends DataIteratorField
 
     }
 
-    protected function renderItems() : void
-    {
-
-        if ($this->iterator->count() < 1) {
-            echo tr("No optional attributes");
-            return;
-        }
-
-        $this->getItemRenderer()->setValueKey($this->dataInput->getName());
-
-        parent::renderItems();
-    }
 
     public function render()
     {
@@ -172,7 +232,6 @@ class ClassAttributeField extends DataIteratorField
 
                 let input = document.querySelector("[name='pclsID']");
                 input.addEventListener("change", (event)=>{
-                    console.log("Product Class Changed");
 
                     let req = new JSONRequest();
                     req.setResponder("ClassAttributeFieldResponder");
@@ -182,7 +241,7 @@ class ClassAttributeField extends DataIteratorField
 
                     req.onSuccess = function(result) {
 
-                        const field = document.querySelector(".ClassAttributeField[field='<?php echo $this->dataInput->getName();?>']");
+                        const field = document.querySelector(".InputComponent[field='<?php echo $this->dataInput->getName();?>'] .ClassAttributeField");
                         //no scripts will be parsed or added
                         field.innerHTML = result.response.contents;
 

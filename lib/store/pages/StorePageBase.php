@@ -207,6 +207,7 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getRenderer()->setAttribute("method", "get");
         $ksc->getForm()->getRenderer()->setAttribute("action", LOCAL . "/products/list.php");
+        $ksc->getButton("search")->setComponentClass("");
         $ksc->getButton("search")->setContents("");
 
         $ksc->getButton("clear")->setRenderEnabled(false);

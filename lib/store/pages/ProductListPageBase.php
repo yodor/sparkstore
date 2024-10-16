@@ -323,14 +323,14 @@ class ProductListPageBase extends ProductPageBase
 
         //append dynamic filter names
         if ($this->filters) {
-            foreach ($this->filters->getForm()->getInputNames() as $idx => $name) {
+            foreach ($this->filters->getForm()->inputNames() as $idx => $name) {
                 $supported_params[] = $name;
             }
         }
 
         //keyword search
         if ($this->keyword_search) {
-            foreach ($this->keyword_search->getForm()->getInputNames() as $idx => $name) {
+            foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
                 $supported_params[] = $name;
             }
             $supported_params[] = KeywordSearch::SUBMIT_KEY;

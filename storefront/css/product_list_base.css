@@ -134,8 +134,13 @@
 
 
 FORM[name='ProductListFilterInputForm'] {
-    display: block !important;
-    text-align: center !important;
+    /*display: block !important;*/
+    /*text-align: center !important;*/
+    width:100%;
+}
+
+FORM[name='ProductListFilterInputForm'] .InputComponent {
+    align-self:stretch;
 }
 
 FORM[name='ProductListFilterInputForm'] .InputGroupRenderer {
@@ -143,6 +148,7 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer {
     padding:0;
     margin:0;
     margin-bottom:0.5em;
+    align-self:stretch;
 
 }
 FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {

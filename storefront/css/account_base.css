@@ -26,9 +26,13 @@
     padding:1.5em;
     text-align:left;
 }
-.account .panel FORM {
+.account .panel .FormRenderer {
     width:100%;
     box-sizing: border-box;
+}
+
+.account .panel .FormRenderer .InputComponent {
+    align-self:stretch;
 }
 
 
@@ -61,8 +65,8 @@
 
 
 
-.register .register_component .addon {
-    display:block;
+.InputField .addon {
+    /*display:block;*/
     font-size:90%;
     color:#aaaaaa;
     font-style: italic;

@@ -348,7 +348,7 @@ A.Caption:active {
     border-bottom: 1px solid #dcdcdc;
     background-color:white;
 
-    display:flex;
+    display:inline-flex;
     align-items: center;
     justify-content: left;
     flex-grow:1;
@@ -359,21 +359,34 @@ A.Caption:active {
     display:none;
 }
 .section.menu .group.search_pane .KeywordSearch .InputField {
-    min-width:0;
+    flex-direction:row;
 }
 
 .section.menu .group.search_pane .KeywordSearch .InputField INPUT {
     border:none;
-    min-width:0;
-}
 
+}
+.section.menu .group.search_pane .KeywordSearch .SubmitLine {
+    width:28px;
+    height:30px;
+
+    min-width:28px;
+    min-height:30px;
+
+    max-width:28px;
+    max-height:30px;
+}
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
     display:none;
 }
 
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons {
+
+}
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons * {
     outline:none;
     box-shadow: none;
+
 }
 
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons [action='search'] {

@@ -41,14 +41,11 @@
 }
 
 .products.list .FormRenderer[name='ProductFilterInputForm'] {
-    display:inline-block;
+    flex-direction: row;
 }
-.products.list .FormRenderer[name='ProductFilterInputForm'] .InputComponent {
-    display:inline-block;
-    margin-right:10px;
-}
+
 .products.list .FormRenderer[name='KeywordSearchForm'] {
-    display:inline-block;
+    flex-direction: row;
     margin-top:20px;
 }
 

@@ -100,7 +100,8 @@ $closure = function(ClosureComponent $cmp) use ($class_filter, $classes) {
     echo "</form>";
 };
 if (!$product_filter->isProcessed()) {
-    $cmp->items()->append(new ClosureComponent($closure));
+    $cmp->getPage()->getPageFilters()->items()->append(new ClosureComponent($closure));
+
 }
 
 $cmp->setBean($bean);

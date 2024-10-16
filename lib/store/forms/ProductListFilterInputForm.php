@@ -276,7 +276,7 @@ class ProductListFilterInputForm extends InputForm {
      */
     public function updateIterators(bool $all_values)
     {
-        $inputs = $this->getInputs();
+        $inputs = $this->inputs();
         foreach ($this->inputs as $name=>$input) {
             if ($input instanceof FilterDataInput) {
 
@@ -383,7 +383,7 @@ class ProductListFilterInputForm extends InputForm {
     {
         $where = new ClauseCollection();
 
-        $inputs = $this->getInputs();
+        $inputs = $this->inputs();
         foreach ($this->inputs as $name=>$input) {
             if ($input instanceof FilterDataInput) {
 
@@ -404,7 +404,7 @@ class ProductListFilterInputForm extends InputForm {
     {
         $having = new ClauseCollection();
 
-        $inputs = $this->getInputs();
+        $inputs = $this->inputs();
         foreach ($this->inputs as $name=>$input) {
             if ($input instanceof FilterDataInput) {
 

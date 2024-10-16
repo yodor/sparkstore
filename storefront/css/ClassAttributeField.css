@@ -1,29 +1,19 @@
 .ClassAttributeField .FieldElements {
-    /*display: table !important;*/
-    /*border-collapse: collapse;*/
-    /*width:100%;*/
 
+    /*flex-direction:column;*/
+    display:grid;
+    grid-template-columns: auto auto;
 }
-
 .ClassAttributeField .FieldElements .ClassAttributeItem {
-    /*display: table-row;*/
-
+    display:contents;
 }
 
-.ClassAttributeField .FieldElements .ClassAttributeItem LABEL {
-    display: table-cell;
-    text-align: right;
-    padding:5px;
-    margin:0.1em;
+.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_name'] {
+    justify-self: flex-end;
 }
 
-.ClassAttributeField .FieldElements .ClassAttributeItem INPUT {
-    display: table-cell;
-    width:100%;
-    text-align:left;
-    padding:5px;
-    border:1px solid #cccccc;
-    margin:0.1em;
+.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_value'] {
+    justify-self: flex-start;
 }
 .ClassAttributeField .FieldElements .ClassAttributeItem INPUT::placeholder {
     font-size:1em;

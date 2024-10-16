@@ -20,7 +20,7 @@ class RequireInvoiceInputForm extends InputForm
         parent::__construct();
         $input = DataInputFactory::Create(DataInputFactory::CHECKBOX, "require_invoice", "Да се издаде фактура", 0);
 
-        $input->getRenderer()->getItemRenderer()->setAttribute("onClick", "javascript:this.form.submit()");
+        $input->getRenderer()->getItemRenderer()->setAttribute("onClick", "javascript:document.forms.RequireInvoiceInputForm.submit()");
         $this->addInput($input);
     }
 }

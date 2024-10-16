@@ -33,7 +33,7 @@ class StorePromoInputForm extends InputForm
 
     }
 
-    public function validate()
+    public function validate(): void
     {
 
         parent::validate();

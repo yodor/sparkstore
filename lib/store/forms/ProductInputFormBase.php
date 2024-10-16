@@ -45,6 +45,7 @@ class ProductInputFormBase extends InputForm
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "product_name", "Заглавие / SEO заглавие", 1);
+        $field->getRenderer()->input()->setAttribute("size", "50em");
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание (първите 150 символа се ползват за SEO описание)", 0);
@@ -110,9 +111,6 @@ class ProductInputFormBase extends InputForm
         $this->addInput(ClassAttributeField::Create("value", "Атрибути", 0));
 
 
-
-
-
         //
         $field1 = new ArrayDataInput("feature", "Особености", 0);
         $field1->source_label_visible = TRUE;
@@ -134,11 +132,13 @@ class ProductInputFormBase extends InputForm
         //
 
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "keywords", "Ключови думи", 0);
+        $field->getRenderer()->input()->setAttribute("rows", 5);
+        $field->getRenderer()->input()->setAttribute("cols", 80);
         $this->addInput($field);
 
     }
 
-    public function validate()
+    public function validate(): void
     {
         parent::validate();
 
@@ -151,36 +151,32 @@ class ProductInputFormBase extends InputForm
         }
     }
 
-    public function loadBeanData($editID, DBTableBean $bean)
+    public function loadBeanData($editID, DBTableBean $bean): array
     {
+        $result = parent::loadBeanData($editID, $bean);
+        $renderer = $this->getInput("value")->getRenderer();
+        if ($renderer instanceof ClassAttributeField) {
 
-        if ($editID>0) {
+            $renderer->setProductID((int)$editID);
+            $renderer->setClassID((int)$result["pclsID"]);
 
-            $item_row = parent::loadBeanData($editID, $bean);
-
-            $renderer = $this->getInput("value")->getRenderer();
-            if ($renderer instanceof ClassAttributeField) {
-                $renderer->setClassID((int)$item_row["pclsID"]);
-                $renderer->setProductID((int)$editID);
-            }
         }
-
-
-
+        return $result;
     }
 
     public function loadPostData(array $data) : void
     {
 
+        parent::loadPostData($data);
+
         $renderer = $this->getInput("value")->getRenderer();
         if ($renderer instanceof ClassAttributeField) {
             $renderer->setClassID((int)$data["pclsID"]);
+            debug("Setting PCLSID: ". (int)$data["pclsID"]);
 //            if (isset($arr["prodID"])) {
 //                $renderer->setProductID((int)$arr["prodID"]);
 //            }
         }
-        parent::loadPostData($data);
-
     }
 }
 

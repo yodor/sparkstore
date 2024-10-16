@@ -51,7 +51,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor
     {
         $result = array();
 
-        $filter_inputs = $this->form->getInputs();
+        $filter_inputs = $this->form->inputs();
         foreach ($filter_inputs as $name=>$input) {
             if ($input instanceof FilterDataInput) {
 

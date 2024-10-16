@@ -8,7 +8,7 @@ include_once("store/mailers/RegisterCustomerActivationMailer.php");
 class ActivateProfileFormProcessor extends FormProcessor
 {
 
-    public function setEditID(int $editID)
+    public function setEditID(int $editID): void
     {
         throw new Exception("Unsupported function");
     }
