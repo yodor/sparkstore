@@ -1,13 +1,13 @@
 <?php
 include_once("storage/StorageItem.php");
-include_once("components/renderers/cells/ImageCellRenderer.php");
+include_once("components/renderers/cells/ImageCell.php");
 
-class ProductPhotoCellRenderer extends ImageCellRenderer
+class ProductPhotoCellRenderer extends ImageCell
 {
 
-    protected function constructItems(array $row)
+    protected function constructItems(array $data) : void
     {
-        $this->items = array();
+        $this->elements = array();
 
         if (isset($row["pclrpID"]) && $row["pclrpID"] > 0) {
             $item = new StorageItem((int)$row["pclrpID"], "ProductColorPhotosBean");

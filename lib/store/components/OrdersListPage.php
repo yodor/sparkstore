@@ -3,10 +3,10 @@ include_once("templates/admin/BeanListPage.php");
 include_once("store/responders/OrderStatusRequestResponder.php");
 include_once("store/beans/OrdersBean.php");
 
-include_once("store/components/renderers/cells/OrderClientCellRenderer.php");
+include_once("store/components/renderers/cells/OrderClientCell.php");
 
-include_once("components/renderers/cells/BooleanCellRenderer.php");
-include_once("components/renderers/cells/DateCellRenderer.php");
+include_once("components/renderers/cells/BooleanCell.php");
+include_once("components/renderers/cells/DateCell.php");
 
 include_once("store/utils/OrderListSQL.php");
 
@@ -22,7 +22,7 @@ class OrdersListPage extends BeanListPage
         $h_send = new OrderStatusRequestResponder();
 
 
-        $this->keyword_search->getForm()->setFields(array("orderID", "items", "client", "delivery_address"));
+        $this->keyword_search->getForm()->setColumns(array("orderID", "items", "client", "delivery_address"));
 
         $this->orderList = new OrderListSQL();
 
@@ -64,9 +64,9 @@ class OrdersListPage extends BeanListPage
     {
         parent::initView();
 
-        $this->view->getColumn("order_date")->setCellRenderer(new DateCellRenderer());
+        $this->view->getColumn("order_date")->setCellRenderer(new DateCell());
 
-        $this->view->getColumn("userID")->setCellRenderer(new OrderClientCellRenderer());
+        $this->view->getColumn("userID")->setCellRenderer(new OrderClientCell());
 
         $this->view->setDefaultOrder(" order_date DESC ");
 

@@ -60,7 +60,7 @@ class ClassAttributeItem extends DataIteratorItem
         if ($this->parent instanceof DataIteratorField) {
 
             if (!$this->value) {
-                debug("Request Data: ",$_REQUEST);
+                //debug("Request Data: ",$_REQUEST);
                 $dataInput = $this->parent->getDataInput();
                 $inputValue = $dataInput->getValue();
                 //search post data for value

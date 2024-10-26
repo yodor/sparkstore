@@ -11,14 +11,14 @@ $cmp->setListFields(array("cover"=>"Cover","brand_name"=>"Brand Name", "summary"
 $cmp->setBean(new BrandsBean());
 
 $search_fields = array("brand_name", "summary", "brandID");
-$cmp->getSearch()->getForm()->setFields($search_fields);
+$cmp->getSearch()->getForm()->setColumns($search_fields);
 $cmp->getSearch()->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
 
 $view = $cmp->initView();
 
-$view->getColumn("home_visible")->setCellRenderer(new BooleanCellRenderer("Yes", "No"));
+$view->getColumn("home_visible")->setCellRenderer(new BooleanCell("Yes", "No"));
 
-$view->getColumn("cover")->setCellRenderer(new ImageCellRenderer());
+$view->getColumn("cover")->setCellRenderer(new ImageCell());
 
 $cmp->render();
 

@@ -2,8 +2,7 @@
 include_once("pages/SparkAdminPage.php");
 include_once("components/MenuBar.php");
 
-include_once("components/renderers/cells/CallbackCellRenderer.php");
-include_once("components/renderers/cells/BooleanCellRenderer.php");
+include_once("components/renderers/cells/BooleanCell.php");
 include_once("components/ClosureComponent.php");
 include_once("utils/menu/MenuItem.php");
 

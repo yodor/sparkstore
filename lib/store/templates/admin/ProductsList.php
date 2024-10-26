@@ -178,7 +178,7 @@ class ProductsList extends BeanListPage
             "p.price"
             );
 
-        $this->keyword_search->getForm()->setFields($search_fields);
+        $this->keyword_search->getForm()->setColumns($search_fields);
         $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
 
         $qry = $this->bean->query();
@@ -284,12 +284,12 @@ class ProductsList extends BeanListPage
     {
         $view = parent::initView();
 
-        $ticr1 = new ImageCellRenderer(275, -1);
+        $ticr1 = new ImageCell(275, -1);
         $ticr1->setBean(new ProductPhotosBean());
         $ticr1->setLimit(1);
         $view->getColumn("cover_photo")->setCellRenderer($ticr1);
 
-        $view->getColumn("visible")->setCellRenderer(new BooleanCellRenderer("Yes", "No"));
+        $view->getColumn("visible")->setCellRenderer(new BooleanCell("Yes", "No"));
 
 
         $act = $this->viewItemActions();

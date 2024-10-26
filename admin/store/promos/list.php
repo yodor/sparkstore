@@ -5,8 +5,9 @@ include_once("templates/admin/BeanListPage.php");
 include_once("store/beans/StorePromosBean.php");
 include_once("store/beans/ProductCategoriesBean.php");
 
-include_once("components/renderers/cells/ImageCellRenderer.php");
-include_once("components/renderers/cells/BooleanCellRenderer.php");
+include_once("components/renderers/cells/ImageCell.php");
+include_once("components/renderers/cells/BooleanCell.php");
+include_once("components/renderers/cells/ClosureCell.php");
 
 
 $cmp = new BeanListPage();
@@ -24,13 +25,7 @@ $cmp->setBean($bean);
 
 $cmp->initView();
 
-$cmp->getView()->getColumn("targetID")->setCellRenderer(new CallbackCellRenderer("renderCategory"));
-
-$cmp->getPage()->navigation()->clear();
-
-$cmp->render();
-
-function renderCategory(array $row, TableColumn $tc)
+$renderCategory = function(array $row, TableColumn $tc)
 {
     global $product_categories;
 
@@ -43,7 +38,14 @@ function renderCategory(array $row, TableColumn $tc)
     $category = implode(" // ", $names);
 
     echo $category;
-}
+};
+$cmp->getView()->getColumn("targetID")->setCellRenderer(new ClosureCell($renderCategory));
+
+$cmp->getPage()->navigation()->clear();
+
+$cmp->render();
+
+
 
 
 ?>

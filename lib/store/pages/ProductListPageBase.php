@@ -134,11 +134,11 @@ class ProductListPageBase extends ProductPageBase
      */
     protected function initSortFields()
     {
-        $sort_prod = new PaginatorSortField("prodID", "Най-нови", "", "DESC");
-        $this->view->getPaginator()->addSortField($sort_prod);
+        $sort_prod = new OrderColumn("prodID", "Най-нови",  "DESC");
+        $this->view->getPaginator()->addOrderColumn($sort_prod);
 
-        $sort_price = new PaginatorSortField("sell_price", "Цена", "", "ASC");
-        $this->view->getPaginator()->addSortField($sort_price);
+        $sort_price = new OrderColumn("sell_price", "Цена", "ASC");
+        $this->view->getPaginator()->addOrderColumn($sort_price);
     }
 
 
@@ -156,7 +156,7 @@ class ProductListPageBase extends ProductPageBase
         $this->select = clone $this->bean->select();
 
         $search_fields = array("product_name", "keywords");
-        $this->keyword_search->getForm()->setFields($search_fields);
+        $this->keyword_search->getForm()->setColumns($search_fields);
         //$this->keyword_search->getForm()->setCompareExpression("relation.inventory_attributes", array("%:{keyword}|%", "%:{keyword}"));
 
         //default - all categories not filtered or aggregated

@@ -1,8 +1,8 @@
 <?php
-include_once("components/renderers/cells/TableCellRenderer.php");
+include_once("components/renderers/cells/TableCell.php");
 include_once("store/beans/OrderItemsBean.php");
 
-class OrderItemsCellRenderer extends TableCellRenderer
+class OrderItemsCell extends TableCell
 {
 
     protected $orderID = -1;

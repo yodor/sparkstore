@@ -31,7 +31,7 @@ $cmp->setIterator($query);
 
 $view = $cmp->initView();
 //$cmp->getView()->setDefaultOrder(" color ASC ");
-//$cmp->getView()->getColumn("color_code")->setCellRenderer(new ColorCodeCellRenderer());
+//$cmp->getView()->getColumn("color_code")->setCellRenderer(new ColorCodeCell());
 
 //$cmp->getPage()->navigation()->clear();
 

@@ -1,7 +1,7 @@
 <?php
-include_once("components/renderers/cells/TableCellRenderer.php");
+include_once("components/renderers/cells/TableCell.php");
 
-class OrderInvoiceCellRenderer extends TableCellRenderer
+class OrderInvoiceCell extends TableCell
 {
 
     protected $userID = -1;

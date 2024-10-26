@@ -2,7 +2,7 @@
 include_once("session.php");
 include_once("templates/admin/BeanListPage.php");
 include_once("store/beans/ContactRequestsBean.php");
-include_once("components/renderers/cells/ClosureCellRenderer.php");
+include_once("components/renderers/cells/ClosureCell.php");
 
 $bean = new ContactRequestsBean();
 
@@ -33,7 +33,7 @@ $view = $cmp->initView();
 //    }
 //};
 
-//$cmp->getView()->getColumn("prodID")->setCellRenderer(new ClosureCellRenderer($product_link));
+//$cmp->getView()->getColumn("prodID")->setCellRenderer(new ClosureCell($product_link));
 
 $cmp->viewItemActions()->removeByAction("Edit");
 

@@ -45,7 +45,8 @@
 
     .ItemView .viewport {
 
-        flex-flow:row wrap;
+        /*flex-direction: column;*/
+        /*flex-flow:row wrap;*/
 
 
     }

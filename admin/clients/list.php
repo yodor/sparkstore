@@ -1,8 +1,8 @@
 <?php
 include_once("session.php");
 include_once("templates/admin/BeanListPage.php");
-include_once("components/renderers/cells/DateCellRenderer.php");
-include_once("components/renderers/cells/NumericCellRenderer.php");
+include_once("components/renderers/cells/DateCell.php");
+include_once("components/renderers/cells/NumericCell.php");
 include_once("responders/ToggleFieldResponder.php");
 
 include_once ("beans/UsersBean.php");
@@ -16,7 +16,7 @@ $bean = new UsersBean();
 $h_toggle = new ToggleFieldResponder($bean);
 
 $search_fields = array("email", "fullname", "phone");
-$cmp->getSearch()->getForm()->setFields($search_fields);
+$cmp->getSearch()->getForm()->setColumns($search_fields);
 
 
 
@@ -31,12 +31,12 @@ $cmp->setListFields(array("fullname"    => "Full Name", "email" => "Email", "pho
                           "suspend"     => "Suspend"));
 
 $view = $cmp->initView();
-$view->getColumn("date_signup")->setCellRenderer(new DateCellRenderer());
-$view->getColumn("last_active")->setCellRenderer(new DateCellRenderer());
-$view->getColumn("counter")->setCellRenderer(new NumericCellRenderer("%01.0f"));
+$view->getColumn("date_signup")->setCellRenderer(new DateCell());
+$view->getColumn("last_active")->setCellRenderer(new DateCell());
+$view->getColumn("counter")->setCellRenderer(new NumericCell("%01.0f"));
 $view->getColumn("counter")->setAlignClass(TableColumn::ALIGN_CENTER);
 
-$vis_act = new ActionsCellRenderer();
+$vis_act = new ActionsCell();
 $check_is_suspend = function (Action $act, array $data) {
     return ($data['suspend'] < 1);
 };

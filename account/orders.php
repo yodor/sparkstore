@@ -3,7 +3,7 @@ include_once("session.php");
 include_once("class/pages/AccountPage.php");
 
 include_once("components/TableView.php");
-include_once("components/renderers/cells/DateCellRenderer.php");
+include_once("components/renderers/cells/DateCell.php");
 
 include_once("store/beans/ClientAddressesBean.php");
 include_once("store/beans/CourierAddressesBean.php");
@@ -52,12 +52,12 @@ $view->addColumn(new TableColumn("status", "Status"));
 
 $view->addColumn(new TableColumn("actions", "Actions"));
 
-// $view->getColumn("is_confirmed")->setCellRenderer(new BooleanFieldCellRenderer("Yes", "No"));
-// $view->getColumn("require_invoice")->setCellRenderer(new BooleanFieldCellRenderer("Yes", "No"));
-$view->getColumn("order_date")->setCellRenderer(new DateCellRenderer());
+// $view->getColumn("is_confirmed")->setCellRenderer(new BooleanCell("Yes", "No"));
+// $view->getColumn("require_invoice")->setCellRenderer(new BooleanCell("Yes", "No"));
+$view->getColumn("order_date")->setCellRenderer(new DateCell());
 
 
-$act = new ActionsCellRenderer();
+$act = new ActionsCell();
 
 $act->getActions()->append(new Action("Покажи детайли", "order_details.php", array(new DataParameter("orderID"))));
 
