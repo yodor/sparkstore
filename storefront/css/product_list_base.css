@@ -226,14 +226,6 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     position:relative;
 }
 
-.ItemView .Caption {
-    float: left;
-    position: absolute;
-    top: 0;
-    padding-top:0;
-    padding-bottom:0;
-}
-
 .ItemView .viewport {
     /*margin-left: -5px;*/
     /*margin-right: -5px;*/
@@ -243,49 +235,3 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     align-items:center;
     justify-content: space-evenly;
 }
-
-.ItemView .PaginatorTopComponent {
-    background: none;
-    background-color: transparent !important;
-    border-spacing:1em;
-    color:black;
-}
-
-.ItemView .PaginatorBottomComponent {
-    background: none;
-    background-color: transparent !important;
-    color:black;
-}
-
-.PaginatorTopComponent .view_mode {
-    display: none;
-}
-
-.PaginatorTopComponent .sort_fields {
-    text-align: right;
-    padding-right:20px;
-}
-
-.PaginatorTopComponent .sort_fields .direction {
-    margin-left: 10px;
-    font-weight: bold;
-    color: black;
-    text-decoration: none;
-}
-
-.PaginatorTopComponent .page_navigation.short {
-    display: none;
-}
-
-
-
-/*.InputComponent {
-  margin-bottom:10px;
-  
-}
-.InputComponent.Slider .InputField {
-  margin-top:5px;
-}
-.TableView {
-  width:100%;
-}*/

@@ -1,3 +1,9 @@
+@media (max-width: 900px) {
+    .ResultViewFooter {
+        flex-direction: column;
+        gap:0.5em;
+    }
+}
 @media (max-width: 570px) {
     .section.main .content .column {
         display:block;

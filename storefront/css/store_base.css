@@ -848,29 +848,6 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
     padding:20px;
 }
 
-
-
-.PaginatorBottomComponent .cell {
-    display:block;
-    text-align:center;
-}
-
-.PaginatorComponent .page_navigation.long {
-    font-size:120%;
-}
-.PaginatorComponent .page_navigation.long A {
-    display:table-cell;
-    width:40px;
-    height:40px;
-    max-width:40px;
-    max-height:40px;
-    vertical-align:middle;
-
-}
-.PaginatorComponent .page_navigation.long A.selected {
-
-}
-
 .TreeView .NodeChilds .NodeOuter {
     padding-top:0.8em;
 }
