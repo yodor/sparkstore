@@ -123,12 +123,12 @@ class ProductDetailsItem extends Container implements IHeadContents
         }
     }
 
-    public function isButtonEnabled(string $button_name)
+    public function isButtonEnabled(string $button_name) : bool
     {
         return isset($this->buttons[$button_name]);
     }
 
-    public function setPaymentEnabled(string $payment_name, bool $mode)
+    public function setPaymentEnabled(string $payment_name, bool $mode) : void
     {
         if ($mode) {
 
@@ -149,9 +149,14 @@ class ProductDetailsItem extends Container implements IHeadContents
         }
     }
 
-    public function isPaymentEnabled(string $button_name)
+    public function isPaymentEnabled(string $button_name) : bool
     {
         return isset($this->crpayments[$button_name]);
+    }
+
+    public function addPaymentButton(CreditPaymentButton $button, string $id) : void
+    {
+        $this->crpayments[$id] = $button;
     }
 
     public function requiredStyle(): array
