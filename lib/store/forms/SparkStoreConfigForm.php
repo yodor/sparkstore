@@ -65,6 +65,12 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_uid", "TBI Store UID", 0);
         $this->addInput($field, $grp_tbi);
 
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_fusion_style", "TBI Fusion Style", 0);
+        $this->addInput($field, $grp_tbi);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_fusion_script", "TBI Fusion Script", 0);
+        $this->addInput($field, $grp_tbi);
+
         $grp_uncr = new InputGroup("uncrModule", "UniCredit Module settings");
         $this->addGroup($grp_uncr);
 

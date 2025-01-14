@@ -10,6 +10,7 @@ include_once("store/responders/json/QueryProductFormResponder.php");
 include_once("store/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
 
+include_once("store/utils/tbi/TBIFusionPaymentButton.php");
 include_once("store/utils/tbi/TBICreditPaymentButton.php");
 include_once("store/utils/unicr/UniCreditPaymentButton.php");
 
@@ -26,6 +27,7 @@ class ProductDetailsItem extends Container implements IHeadContents
     const string BUTTON_CART_ORDER = "Cart Order";
 
     const string BUTTON_PAYMENT_TBI = "TBI";
+    const string BUTTON_PAYMENT_TBI_FUSION = "TBI_FUSION";
     const string BUTTON_PAYMENT_UNICREDIT = "UNICREDIT";
 
     protected array $categories = array();
@@ -98,6 +100,7 @@ class ProductDetailsItem extends Container implements IHeadContents
     {
         $this->crpayments[self::BUTTON_PAYMENT_UNICREDIT] = new UniCreditPaymentButton($this->sellable);
         $this->crpayments[self::BUTTON_PAYMENT_TBI] = new TBICreditPaymentButton($this->sellable);
+        $this->crpayments[self::BUTTON_PAYMENT_TBI_FUSION] = new TBIFusionPaymentButton($this->sellable);
     }
 
     public function setButtonEnabled(string $button_name, bool $mode)
@@ -133,6 +136,9 @@ class ProductDetailsItem extends Container implements IHeadContents
         if ($mode) {
 
             switch ($payment_name) {
+                case self::BUTTON_PAYMENT_TBI_FUSION:
+                    $this->crpayments[$payment_name] = new TBIFusionPaymentButton($this->sellable);
+                    break;
                 case self::BUTTON_PAYMENT_TBI:
                     $this->crpayments[$payment_name] = new TBICreditPaymentButton($this->sellable);
                     break;
