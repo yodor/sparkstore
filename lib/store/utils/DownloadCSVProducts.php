@@ -7,6 +7,7 @@ include_once("store/beans/SellableProducts.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/utils/ProductsSQL.php");
 include_once("store/beans/ProductCategoriesBean.php");
+include_once("storage/SparkHTTPResponse.php");
 
 class DownloadCSVProducts extends RequestResponder
 {
@@ -16,6 +17,9 @@ class DownloadCSVProducts extends RequestResponder
 
     const string TYPE_FACEBOOK = "facebook";
     const string TYPE_GOOGLE = "google";
+    const string TYPE_FULL = "full";
+    const string TYPE_IMAGES = "images";
+
     protected array $supported_content = array();
     protected string $type = "";
 
@@ -27,21 +31,111 @@ class DownloadCSVProducts extends RequestResponder
 
         $this->supported_content[] = self::TYPE_FACEBOOK;
         $this->supported_content[] = self::TYPE_GOOGLE;
+        $this->supported_content[] = self::TYPE_FULL;
+        $this->supported_content[] = self::TYPE_IMAGES;
     }
 
-    public function createAction(string $title = "") : ?Action
+    public function createAction(string $title = ""): ?Action
     {
         $type = "";
         if (strcmp($title, self::TYPE_FACEBOOK) == 0) {
             $type = self::TYPE_FACEBOOK;
         } else if (strcmp($title, self::TYPE_GOOGLE) == 0) {
             $type = self::TYPE_GOOGLE;
+        } else if (strcmp($title, self::TYPE_FULL) == 0) {
+            $type = self::TYPE_FULL;
+        } else if (strcmp($title, self::TYPE_IMAGES) == 0) {
+            $type = self::TYPE_IMAGES;
         }
 
         $action = parent::createAction($title);
         $action->getURL()->add(new URLParameter("type", $type));
-        $action->setTooltip("Download CSV - ".$type);
+        $action->setTooltip("Download CSV - " . $type);
         return $action;
+    }
+
+    protected function exportImages() : void
+    {
+
+        //ini_set('max_execution_time', 300);
+
+        $folder = CACHE_PATH."/catalog-images-".time();
+        if (!mkdir($folder)) {
+            throw new Exception("Can not create export folder");
+        }
+
+        $select = new SQLSelect();
+        $select->from = " product_photos  ";
+        $select->fields()->set("ppID");
+
+        $select->order_by = " ppID ASC ";
+        $qry = new SQLQuery($select);
+        $num = $qry->exec();
+
+        while ($result = $qry->nextResult()) {
+            $ppID = $result->get("ppID");
+
+            $select1 = new SQLSelect();
+            $select1->from = " product_photos ";
+            $select1->fields()->set("photo");
+            $select1->where()->add("ppID", $ppID);
+            $qry1 = new SQLQuery($select1);
+            $num1 = $qry1->exec();
+            if ($result1 = $qry1->nextResult()) {
+                $photo = $result1->get("photo");
+                $photo = unserialize($photo);
+                if ($photo instanceof ImageStorageObject) {
+                    $current = new SparkFile();
+                    $current->setPath($folder);
+                    $current->setFilename($ppID);
+                    $current->open("w");
+                    $current->write($photo->data());
+                    $current->close();
+                }
+//                $photo = null;
+//                $result1 = null;
+            }
+
+            $qry1->free();
+
+        }
+
+//        $zipname = $folder.".zip";
+//        $zip = new ZipArchive();
+//        $zip->open($zipname, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+//
+//        // Create recursive directory iterator
+//        $files = new RecursiveIteratorIterator(
+//            new RecursiveDirectoryIterator($folder),
+//            RecursiveIteratorIterator::LEAVES_ONLY
+//        );
+//
+//        foreach ($files as $file)
+//        {
+//            // Skip directories (they would be added automatically)
+//            if (!$file->isDir())
+//            {
+//                // Get real and relative path for current file
+//                $filePath = $file->getRealPath();
+//
+//                // Add current file to archive
+//                $zip->addFile($filePath, "images/".$file->getFilename());
+//            }
+//        }
+//
+//        // Zip archive will be created only after closing object
+//        $zip->close();
+//
+//        $current = new SparkFile();
+//        $current->setPath(CACHE_PATH);
+//        $current->setFilename($zipname);
+//
+//        $response = new SparkHTTPResponse();
+//        if ($current->exists()) {
+//            $response->sendFile($current);
+//        }
+
+
     }
 
     protected function processImpl() : void
@@ -49,6 +143,11 @@ class DownloadCSVProducts extends RequestResponder
 
         //clear rendered state of startRender from SparkPage
         ob_end_clean();
+
+        if (strcmp($this->type, self::TYPE_IMAGES) == 0) {
+            $this->exportImages();
+            exit;
+        }
 
         header("Content-Type: text/csv");
         header("Content-Disposition: attachment;filename=" . $this->type . "_" . self::FILENAME);
@@ -83,18 +182,28 @@ class DownloadCSVProducts extends RequestResponder
                 "customTextCharLimit",
                 "customTextMandatory"
             );
-            $process = function(SellableItem $item, string $category_name) : array {
-                return $this->processGoogle($item, $category_name);
+            $process = function(SellableItem $item) : array {
+                return $this->processGoogle($item);
             };
 
         } else if (strcmp($this->type, self::TYPE_FACEBOOK) == 0)  {
 
             $this->keys = array("id", "content_id", "title", "description", "availability", "condition", "link", "image_link", "brand", "product_type", "price");
 
-            $process = function(SellableItem $item, string $category_name) : array {
-                return $this->processFacebook($item, $category_name);
+            $process = function(SellableItem $item) : array {
+                return $this->processFacebook($item);
             };
+
+        } else if (strcmp($this->type, self::TYPE_FULL) == 0) {
+
+            $this->keys = array("id", "category", "name", "description", "price", "old_price", "images");
+
+            $process = function (SellableItem $item): array {
+                return $this->processFull($item);
+            };
+
         }
+
 
         fputcsv($fp, $this->keys);
 
@@ -106,24 +215,47 @@ class DownloadCSVProducts extends RequestResponder
 
         $total_rows = $query->exec();
 
-        $cats = new ProductCategoriesBean();
-
         while ($result = $query->nextResult()) {
 
             $prodID = $result->get("prodID");
 
             $item = SellableItem::Load($prodID);
 
-            $category_name = $cats->getValue($item->getCategoryID(), "category_name");
-
-            fputcsv($fp, $process($item, $category_name));
+            fputcsv($fp, $process($item));
         }
         fclose($fp);
+
+
         exit;
 
     }
 
-    protected function processGoogle(SellableItem $item, string $category_name)
+    protected function processFull(SellableItem $item) : array
+    {
+        $export_row = array();
+        foreach ($this->keys as $idx => $value) {
+            $export_row[$value] = "";
+        }
+
+        $export_row["id"] = $item->getProductID();
+        $export_row["category"] = $item->getCategoryName();
+        $export_row["name"] = $item->getTitle();
+        $export_row["description"] = $item->getDescription();
+
+        $imageID = array();
+        foreach($item->galleryItems() as $idx=>$storageItem){
+            if ($storageItem instanceof StorageItem) {
+                $imageID[] = $storageItem->id;
+            }
+        }
+        $export_row["images"] = implode("|", $imageID);
+
+        $export_row["price"] = $item->getPriceInfo()->getSellPrice();
+        $export_row["old_price"] = $item->getPriceInfo()->getOldPrice();
+        return $export_row;
+
+    }
+    protected function processGoogle(SellableItem $item) : array
     {
 
         $export_row = array();
@@ -143,7 +275,7 @@ class DownloadCSVProducts extends RequestResponder
         }
         $export_row["productImageUrl"] = $image_link;
 
-        $export_row["collection"] = $category_name;
+        $export_row["collection"] = $item->getCategoryName();
         $export_row["sku"] = $item->getProductID();
         $export_row["ribbon"] = "";
         if ($item->isPromotion()) {
@@ -161,7 +293,7 @@ class DownloadCSVProducts extends RequestResponder
 
     }
 
-    protected function processFacebook(SellableItem $item, string $category_name)
+    protected function processFacebook(SellableItem $item) : array
     {
 
 
@@ -188,7 +320,7 @@ class DownloadCSVProducts extends RequestResponder
         $export_row["image_link"] = $image_link;
 
         $export_row["brand"] = $item->getBrandName();
-        $export_row["product_type"] = $category_name;
+        $export_row["product_type"] = $item->getCategoryName();
 
         $export_row["price"] = $item->getPriceInfo()->getSellPrice();
 
