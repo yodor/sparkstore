@@ -495,7 +495,7 @@ class ProductDetailsItem extends Container implements IHeadContents
     protected function renderDescriptionTab()
     {
         echo "<div class='item description'>";
-        echo "<h1 class='Caption'>" . tr("Описание") . "</h1>";
+        echo "<div class='Caption'>" . tr("Описание") . "</div>";
 
         if ($this->sellable->getDescription()) {
             echo "<div itemprop='description' class='contents long_description'>";

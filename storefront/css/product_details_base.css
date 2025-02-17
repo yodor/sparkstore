@@ -20,7 +20,11 @@
     background-color: #fafafa;
     padding-left:2em;
 }
-
+.Caption H2 {
+    margin:0;
+    font-size:inherit;
+    font-weight:inherit;
+}
 /*.tabs .contents {*/
 /*    background-color: #eaeaea;*/
 /*}*/

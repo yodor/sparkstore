@@ -58,6 +58,7 @@ class ProductsTape extends Container
     {
         parent::setCaption($caption);
         $this->caption_component->setAttribute("title", $caption);
+        $this->caption_component->setContents("<h2>".$caption."</h2>");
     }
 
     /**

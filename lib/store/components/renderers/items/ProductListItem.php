@@ -170,7 +170,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         echo "<a class='details' href='{$this->getDetailsURL()->toString()}'>";
 
-            echo "<div itemprop='name' class='product_name'>" . $this->data["product_name"] . "</div>";
+            echo "<h3 itemprop='name' class='product_name'>" . $this->data["product_name"] . "</h3>";
 
             $this->renderBrand();
 
@@ -199,6 +199,9 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         if ($this->data["sell_price"] < 1) return;
 
         echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
+
+        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+        echo "<meta itemprop='priceValidUntil' content='$priceValidUntil'>";
 
         if ($this->data["stock_amount"]>0) {
             echo "<link itemprop='availability' href='https://schema.org/InStock'>";
