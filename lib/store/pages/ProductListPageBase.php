@@ -22,13 +22,13 @@ class ProductListPageBase extends ProductPageBase
     /**
      * @var NestedSetTreeView|null
      */
-    protected $treeView = NULL;
+    protected ?NestedSetTreeView $treeView = NULL;
 
     /**
      * Used to render products/tree/filters
      * @var SQLSelect|null
      */
-    protected $select = NULL;
+    protected ?SQLSelect $select = NULL;
 
     /**
      * Filters form component
@@ -40,7 +40,7 @@ class ProductListPageBase extends ProductPageBase
      * Products list component
      * @var ItemView|null
      */
-    protected $view = NULL;
+    protected ?ItemView $view = NULL;
 
     /**
      * Other get variable filters
@@ -50,7 +50,7 @@ class ProductListPageBase extends ProductPageBase
 
     protected GETProcessor $category_filter;
 
-    public $treeViewUseAgregateSelect = true;
+    public bool $treeViewUseAgregateSelect = true;
 
 
     public function __construct()
@@ -371,12 +371,12 @@ class ProductListPageBase extends ProductPageBase
         return $this->keyword_search->isProcessed();
     }
 
-    public function renderCategoriesTree()
+    public function renderCategoriesTree(): void
     {
         $this->treeView->render();
     }
 
-    public function renderProductFilters()
+    public function renderProductFilters(): void
     {
         if ($this->filters instanceof ProductListFilter) {
             $this->filters->render();
@@ -437,7 +437,7 @@ class ProductListPageBase extends ProductPageBase
         
     }
 
-    public function renderProductsView()
+    public function renderProductsView(): void
     {
         $this->view->render();
     }
@@ -537,6 +537,16 @@ class ProductListPageBase extends ProductPageBase
         echo "<div class='column product_list'>";
 
         $this->renderChildCategories();
+
+        $catID = $this->treeView->getSelectedID();
+
+        if ($catID>0) {
+            if ($this->product_categories->haveColumn("category_seodescription")) {
+                $seo_description = $this->product_categories->getValue($catID, "category_seodescription");
+                echo "<h2 class='Caption category_description'>$seo_description</h2>";
+
+            }
+        }
 
         $this->renderProductsView();
 

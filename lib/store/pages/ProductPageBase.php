@@ -6,7 +6,7 @@ include_once("store/beans/SellableProducts.php");
 
 class ProductPageBase extends StorePage
 {
-    protected $products_title = "Продукти";
+    protected string $products_title = "Продукти";
 
     /**
      * @var SellableProducts|null
@@ -16,27 +16,27 @@ class ProductPageBase extends StorePage
     /**
      * @var SectionsBean|null
      */
-    public $sections = NULL;
+    public ?SectionsBean $sections = NULL;
 
     /**
      * @var ProductCategoriesBean
      */
-    public $product_categories = NULL;
+    public ?ProductCategoriesBean $product_categories = NULL;
 
     /**
      * Currently selected section (processed as get variable)
      * @var string
      */
-    protected $section = "";
+    protected string $section = "";
 
     /**
      * Array holding the current selected category branch starting from nodeID to the top
      * @var array
      */
-    protected $category_path = array();
+    protected array $category_path = array();
 
 
-    protected $breadcrumb = null;
+    protected ?BreadcrumbList $breadcrumb = null;
 
 
     public function __construct()
