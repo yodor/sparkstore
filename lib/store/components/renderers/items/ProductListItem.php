@@ -145,7 +145,11 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<a class='photo' title='{$title_alt}' href='{$details_url}'>";
             $img_href = $this->photo->hrefImage($this->width, $this->height);
 
-            echo "<img itemprop='image' src='$img_href' alt='$title_alt'>";
+            $lazy = "";
+            if ($this->position>2) $lazy="loading='lazy'";
+
+            echo "<img $lazy itemprop='image' src='$img_href' alt='$title_alt'>";
+
 
             if ($this->data["discount_percent"]>0) {
                 echo "<div class='discount_label'> -".$this->data["discount_percent"]."%</div>";
