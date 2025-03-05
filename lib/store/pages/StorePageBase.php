@@ -155,6 +155,11 @@ class StorePageBase extends SparkPage
         $link->setRelation("preconnect");
         $link->setHref("https://fonts.googleapis.com");
         $this->head()->items()->append($link);
+
+        $linkgtag = new Link();
+        $linkgtag->setRelation("dns-prefetch");
+        $linkgtag->setHref("https://www.googletagmanager.com");
+        $this->head()->items()->append($linkgtag);
     }
 
     protected function selectActiveMenu()
