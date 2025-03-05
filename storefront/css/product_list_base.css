@@ -242,4 +242,5 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     margin:0;
     padding:0;
     color:inherit;
+    font-weight:normal;
 }
