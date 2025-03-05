@@ -151,7 +151,10 @@ class StorePageBase extends SparkPage
         $this->head()->addOGTag("type", "website");
 
 
-
+        $link = new Link();
+        $link->setRelation("preconnect");
+        $link->setHref("https://fonts.googleapis.com");
+        $this->head()->items()->append($link);
     }
 
     protected function selectActiveMenu()

@@ -146,7 +146,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
             $img_href = $this->photo->hrefImage($this->width, $this->height);
 
             $lazy = "";
-            if ($this->position>2) $lazy="loading='lazy'";
+            if ($this->position>3) $lazy="loading='lazy'";
 
             echo "<img $lazy itemprop='image' src='$img_href' alt='$title_alt'>";
 
