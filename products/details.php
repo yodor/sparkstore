@@ -27,9 +27,9 @@ echo "</div>";
 //$page->renderMostOrderedProducts();
 //echo "</div>";
 
-echo "<div class='product_group most_ordered'>";
-$page->renderOtherProducts();
-echo "</div>";
+//echo "<div class='product_group most_ordered'>";
+//$page->renderOtherProducts();
+//echo "</div>";
 
 $page->finishRender();
 ?>
