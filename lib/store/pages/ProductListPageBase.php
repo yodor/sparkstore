@@ -105,7 +105,7 @@ class ProductListPageBase extends ProductPageBase
         $this->view->setCacheable(true);
         
         $this->view->setItemRenderer(new ProductListItem());
-        $this->view->setItemsPerPage(24);
+        $this->view->setItemsPerPage(12);
 
         //disable list/grid
         $this->view->getHeader()->getViewMode()->setRenderEnabled(false);
