@@ -543,7 +543,9 @@ class ProductListPageBase extends ProductPageBase
         if ($catID>0) {
             if ($this->product_categories->haveColumn("category_seodescription")) {
                 $seo_description = $this->product_categories->getValue($catID, "category_seodescription");
-                echo "<h2 class='Caption category_description'>$seo_description</h2>";
+                if ($seo_description) {
+                    echo "<h2 class='Caption category_description'>$seo_description</h2>";
+                }
 
             }
         }
