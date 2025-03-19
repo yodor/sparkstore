@@ -53,7 +53,7 @@ class DeliveryConfigForm extends InputForm
                     tr("Цена"),
                     1);
 
-                $field->setValidator(new NumericValidator());
+                $field->setValidator(new NumericValidator(true,true));
                 // 	    $field->getRenderer()->addon_content = "лв.";
                 $this->addInput($field, $group);
             }

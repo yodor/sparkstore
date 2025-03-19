@@ -191,11 +191,23 @@ echo "</div>";//panel
         echo "<div class='group'>";
             echo "<div class='item products_total'>";
                 echo "<label>" . tr("Продукти общо") . "</label>";
-                echo "<span>" . formatPrice($order["total"] - $order["delivery_price"]) . "</span>";
+                echo "<span>" . formatPrice($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0)) . "</span>";
             echo "</div>";
+
+            $delivery_text = "";
+            if ($order["delivery_price"]>0) {
+                $delivery_text = sprintf("%0.2f лв.", $order["delivery_price"]);
+            }
+            else  if ($order["delivery_price"]==0) {
+                $delivery_text = "Безплатна";
+            }
+            else {
+                $delivery_text = "Според тарифния план на куриера";
+            }
+
             echo "<div class='item delivey_price'>";
                 echo "<label>" . tr("Доставка") . "</label>";
-                echo "<span>" . formatPrice($order["delivery_price"]) . "</span>";
+                echo "<span>$delivery_text</span>";
             echo "</div>";
             echo "<div class='item order_total'>";
                 echo "<label>" . tr("Поръчка общо") . "</label>";

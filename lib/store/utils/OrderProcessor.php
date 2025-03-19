@@ -129,7 +129,7 @@ class OrderProcessor
             $order["discount_amount"] = $discount_amount;
             $order_total = $order_total - $discount_amount;
 
-            $order_total = $order_total + $option->getPrice();
+            $order_total = $order_total + ( ($option->getPrice()>0) ? $option->getPrice() : 0);
             $order["total"] = $order_total;
 
             $this->orderID = $orders->insert($order, $db);

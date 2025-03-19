@@ -169,10 +169,11 @@ echo "<div class='column details'>";
             echo "</div>"; //viewport
         echo "</div>"; //group
 
+
         echo "<div class='group total'>";
             echo "<div class='item products_total'>";
                 echo "<label>" . tr("Продукти общо") . "</label>";
-                echo "<span>" . formatPrice($order["total"] - $order["delivery_price"] + $order["discount_amount"]) . "</span>";
+                echo "<span>" . formatPrice($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0) + $order["discount_amount"]) . "</span>";
             echo "</div>";
 
             echo "<div class='item discount_amount'>";
@@ -184,11 +185,14 @@ echo "<div class='column details'>";
                 echo "<label>" . tr("Доставка") . "</label>";
                 echo "<span>";
                     $delivery_price = $order["delivery_price"];
-                    if ($delivery_price>0) {
-                        echo formatPrice($delivery_price);
+                    if ($order["delivery_price"]>0) {
+                        echo formatPrice($order["delivery_price"]);
+                    }
+                    else if ($order["delivery_price"]==0) {
+                        echo tr("Безплатна");
                     }
                     else {
-                        echo tr("Безплатна");
+                        echo tr("Според тарифния план на куриера");
                     }
                 echo "</span>";
             echo "</div>";

@@ -332,16 +332,24 @@ class CartComponent extends Component implements IHeadContents
 
                 $delivery_price = $selected_option->getPrice();
 
-                $this->delivery_price = $delivery_price;
-
                 //              $price = $currency_rates->getPrice($delivery_price);
-                $order_total = $order_total + $delivery_price;
+
                 if ($delivery_price>0) {
                     echo formatPrice($delivery_price);
                 }
                 else {
-                    echo tr("Безплатна");
+
+                    if ($delivery_price==0) {
+                        echo tr("Безплатна");
+                    }
+                    else {
+                        echo tr("Според тарифния план на куриера");
+                    }
+                    $delivery_price = 0;
                 }
+
+                $this->delivery_price = $delivery_price;
+                $order_total = $order_total + $this->delivery_price;
                 echo "</td>";
 
                 echo "</tr>";

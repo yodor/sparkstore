@@ -112,8 +112,18 @@ class OrderConfirmationMailer extends Mailer
         $message .= "\r\n";
         $message .= "\r\n";
 
-        $message .= "Продкти общо: " . sprintf("%0.2f лв.", ($order["total"] - $order["delivery_price"])) . "\r\n";
-        $message .= "Цена доставка: " . sprintf("%0.2f лв.", $order["delivery_price"]) . "\r\n";
+        $message .= "Продкти общо: " . sprintf("%0.2f лв.", ($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0))) . "\r\n";
+        $delivery_text = "";
+        if ($order["delivery_price"]>0) {
+            $delivery_text = sprintf("%0.2f лв.", $order["delivery_price"]);
+        }
+        else  if ($order["delivery_price"]==0) {
+            $delivery_text = "Безплатна";
+        }
+        else {
+            $delivery_text = "Според тарифния план на куриера";
+        }
+        $message .= "Цена доставка: $delivery_text\r\n";
         $message .= "Поръчка общо: " . sprintf("%0.2f лв.", $order["total"]) . "\r\n";
 
 
