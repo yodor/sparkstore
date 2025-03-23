@@ -546,7 +546,7 @@ class StorePageBase extends SparkPage
         $container = new Container(false);
         $container->setComponentClass("info");
 
-        $button = Button::Action(tr("Добре"), "javascript:acceptCookies()");
+        $button = Button::Action(tr("Добре"), "javascript:document.sparkCookies.accept()");
         $button->setComponentClass("ColorButton");
 
         $container->items()->append($button);

@@ -278,11 +278,11 @@ A.Caption:active {
     display:none;
 }
 
-.section.cookies[accepted="1"] {
+.section.cookies[accepted="true"] {
     display:none;
 }
 
-.section.cookies[accepted="0"] {
+.section.cookies[accepted="false"] {
     display:grid;
 }
 
