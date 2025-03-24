@@ -150,10 +150,6 @@ class ProductPageBase extends StorePage
     {
         $actions = array();
 
-        $home_action = new Action(tr("Начало"), LOCAL . "/home.php", array());
-        $home_action->translation_enabled = false;
-        $actions[] = $home_action;
-
         $link = new URL(LOCAL."/products/list.php");
 
         if ($this->keyword_search->isProcessed()) {
