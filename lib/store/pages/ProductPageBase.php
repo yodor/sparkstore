@@ -225,7 +225,19 @@ class ProductPageBase extends StorePage
             $this->setTitle($title);
         }
         else {
-            parent::constructTitle();
+            $actions = $this->constructPathActions();
+
+            if (count($actions)>0) {
+
+                $item = $actions[0];
+                if ($item instanceof Action) {
+                    $this->setTitle($item->getContents());
+                }
+
+            }
+            else {
+                parent::constructTitle();
+            }
         }
     }
 }
