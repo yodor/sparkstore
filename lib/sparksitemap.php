@@ -1,6 +1,8 @@
 <?php
 include_once("session.php");
 include_once("store/beans/SellableProducts.php");
+include_once("utils/menu/BeanMenuFactory.php");
+include_once("beans/MenuItemsBean.php");
 
 $bean = new SellableProducts();
 $qry = $bean->query();
@@ -13,10 +15,17 @@ $num = $qry->exec();
 
 echo "<?xml version='1.0' encoding='UTF-8'?>";
 echo "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:image='http://www.google.com/schemas/sitemap-image/1.1'>";
-renderItem(fullURL(LOCAL."/home.php"));
-renderItem(fullURL(LOCAL."/products/list.php"));
-renderItem(fullURL(LOCAL."/products/promo.php"));
-renderItem(fullURL(LOCAL."/contacts.php"));
+
+$factory = new BeanMenuFactory(new MenuItemsBean());
+$list = $factory->menu();
+if ($list instanceof MenuItemList) {
+    $itr = $list->iterator();
+    while($menuItem = $itr->next()) {
+        if ($menuItem instanceof MenuItem) {
+            renderItem(fullURL($menuItem->getHref()));
+        }
+    }
+}
 
 //each product
 while ($result = $qry->nextResult()) {
