@@ -307,10 +307,15 @@ A.Caption:active {
     position: sticky;
     top:0;
     z-index:10;
-}
+    border-top: 1px solid transparent;
 
+}
+.section.menu.sticky {
+    border-top:0;
+}
 .section.menu.sticky .content {
     box-shadow:0px 2px 4px  rgba(0,0,0,0.5);
+
 }
 
 .section.menu .content {
