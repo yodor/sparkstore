@@ -9,7 +9,7 @@
 
     /*max-height:370px;*/
 
-    box-sizing:border-box;
+    box-sizing:content-box;
 
     margin-bottom:1.5em;
     margin-left:0.5em;
