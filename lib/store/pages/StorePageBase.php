@@ -97,7 +97,7 @@ class StorePageBase extends SparkPage
         }
 
         $config->setSection("store_config");
-        $phone = $config->get("phone", "");
+        $phone = $config->get("phone_orders", "");
 
         $page_id = $config->get("tawkto_id", "");
         if ($page_id) {
