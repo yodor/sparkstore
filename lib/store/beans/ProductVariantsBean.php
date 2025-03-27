@@ -15,7 +15,7 @@ class ProductVariantsBean extends DBTableBean
   CONSTRAINT `product_variants_ibfk_2` FOREIGN KEY (`voID`) REFERENCES `variant_options` (`voID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-    public function __construct(DBDriver $dbdriver = NULL)
+    public function __construct(?DBDriver $dbdriver = NULL)
     {
         parent::__construct("product_variants", $dbdriver);
     }

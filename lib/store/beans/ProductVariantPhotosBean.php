@@ -14,7 +14,7 @@ class ProductVariantPhotosBean extends OrderedDataBean
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
     //create trigger on this to delete from variant options of the same class
-    public function __construct(DBDriver $dbdriver = NULL)
+    public function __construct(?DBDriver $dbdriver = NULL)
     {
         parent::__construct("product_variant_photos", $dbdriver);
     }
