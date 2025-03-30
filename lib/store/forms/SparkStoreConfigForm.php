@@ -24,9 +24,14 @@ class SparkStoreConfigForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "tawkto_id", "Tawk.to Chat Plugin ID", 0);
         $this->addInput($field, $grp_general);
+//
+        $grp_productInfo = new InputGroup("products", "Products Information");
+        $this->addGroup($grp_productInfo);
+
+        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "products_howtoorder", "How To Order Description", 0);
+        $this->addInput($field,$grp_productInfo);
 
 //
-
         $grp_footer = new InputGroup("footerButtons", "Site Footer - Round Buttons");
         $this->addGroup($grp_footer);
 
@@ -42,7 +47,7 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "maps_url", "Google Maps URL", 0);
         $this->addInput($field,$grp_footer);
 
-
+//
         $grp_pagefooter = new InputGroup("pageFooter", "Page Footer - Info Text");
         $this->addGroup($grp_pagefooter);
 
@@ -58,7 +63,7 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "working_hours_text", "Working hours Text", 0);
         $this->addInput($field, $grp_pagefooter);
 
-
+//
         $grp_tbi = new InputGroup("tbiModule", "TBI Module settings");
         $this->addGroup($grp_tbi);
 
@@ -70,7 +75,7 @@ class SparkStoreConfigForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "tbi_fusion_script", "TBI Fusion Script", 0);
         $this->addInput($field, $grp_tbi);
-
+//
         $grp_uncr = new InputGroup("uncrModule", "UniCredit Module settings");
         $this->addGroup($grp_uncr);
 

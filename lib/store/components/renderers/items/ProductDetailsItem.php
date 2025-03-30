@@ -509,16 +509,34 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         echo "</div>"; //item
     }
+
+    protected function renderHowToOrderTab()
+    {
+        $config = ConfigBean::Factory();
+        $config->setSection("store_config");
+        $text = $config->get("products_howtoorder", "");
+        if ($text) {
+            echo "<div class='item description'>";
+            echo "<div class='Caption'>" . tr("How to order") . "</div>";
+            echo "<div class='contents long_description'>";
+            echo $text;
+            echo "</div>";
+            echo "</div>"; //item
+        }
+
+    }
+
     protected function renderTabs()
     {
         echo "<div class='tabs'>";
 
             $this->renderFeaturesTab();
             $this->renderDescriptionTab();
-
+            $this->renderHowToOrderTab();
 
         echo "</div>"; //tabs
     }
+
 
     protected function renderImpl()
     {
