@@ -317,6 +317,9 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         echo "<div class='item price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
 
+        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+        echo "<meta itemprop='priceValidUntil' content='$priceValidUntil'>";
+
         if ($stock_amount>0) {
             echo "<link itemprop='availability' href='https://schema.org/InStock'>";
         }
