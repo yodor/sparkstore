@@ -11,6 +11,7 @@ $sellable = $page->getSellable();
 $cmp = new ProductDetailsItem($sellable);
 $cmp->setURL(URL::Current()->fullURL());
 $cmp->setCategories($page->getCategoryPath());
+$cmp->initialize();
 
 $page->startRender();
 

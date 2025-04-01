@@ -475,28 +475,28 @@
 /*    text-align: right;*/
 /*}*/
 
-.side_pane .group.credit_payment {
+/*.side_pane .group.credit_payment {*/
 
-    text-align: right;
-    float:right;
-    min-width:10em;
-    /*margin-top:0.5em;*/
-    border:0;
-    display:block;
+/*    text-align: right;*/
+/*    float:right;*/
+/*    min-width:10em;*/
+/*    !*margin-top:0.5em;*!*/
+/*    border:0;*/
+/*    display:block;*/
 
-}
+/*}*/
 
-.side_pane .group.credit_payment .module {
-    text-align:right;
-    display:inline-block;
-    width:100%;
-}
+/*.side_pane .group.credit_payment .module {*/
+/*    text-align:right;*/
+/*    display:inline-block;*/
+/*    width:100%;*/
+/*}*/
 
-.side_pane .group.credit_payment .module.UniCreditPaymentButton .button {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button {
     border-color: red;
     padding:0.2em;
 }
-.side_pane .group.credit_payment .module.UniCreditPaymentButton .button .icon {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button .icon {
     background-image:url("../images/unicredit-logo.png");
     background-repeat:no-repeat;
     background-size:contain;
@@ -504,7 +504,7 @@
     height:24px;
     width:100%;
 }
-.side_pane .group.credit_payment .module.UniCreditPaymentButton .button LABEL {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button LABEL {
     font-size:70%;
     display:block;
     width:100%;
@@ -513,18 +513,22 @@
     margin:0;
 
 }
-.side_pane .group.credit_payment .module.UniCreditPaymentButton .button:hover {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button:hover {
     background-color:red;
     color:white;
 }
 
-.side_pane .group.credit_payment .module.TBICreditPaymentButton {
+.side_pane .group.cart_link .module.TBICreditPaymentButton {
     border:0;
     padding:0;
     margin:0;
 }
-.side_pane .group.credit_payment .module.TBICreditPaymentButton .button {
+.side_pane .group.cart_link .module.TBICreditPaymentButton .button {
     border:0;
     padding:0;
     margin:0;
+}
+
+.side_pane .group:empty {
+    display:none;
 }
