@@ -541,17 +541,23 @@ class ProductListPageBase extends ProductPageBase
         $catID = $this->treeView->getSelectedID();
 
         $seo_description = "";
+        if ($this->section && $this->sections->haveColumn("section_seodescription")) {
+            $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
+            $seo_description = $result["section_seodescription"];
+        }
+
         if ($catID>0 && $this->product_categories->haveColumn("category_seodescription")) {
             $seo_description = $this->product_categories->getValue($catID, "category_seodescription");
         }
-        else {
+
+        if (!$seo_description) {
             $config = ConfigBean::Factory();
             $config->setSection("seo");
-            $seo_description=$config->get("meta_description");
+            $seo_description = $config->get("meta_description");
         }
 
         if ($seo_description) {
-            echo "<h2 class='Caption category_description'>$seo_description</h2>";
+            echo "<h2 class='Caption category_description seo_description'>$seo_description</h2>";
         }
         $this->renderProductsView();
 
