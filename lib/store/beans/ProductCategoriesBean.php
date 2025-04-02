@@ -13,7 +13,7 @@ class ProductCategoriesBean extends NestedSetBean
   `rgt` int(11) unsigned NOT NULL,
   `category_keywords` text DEFAULT NULL,
   `category_seotitle` text DEFAULT NULL,
-  `category_seodescription` varchar(512) DEFAULT NULL,
+  `category_seodescription` text DEFAULT NULL,
   PRIMARY KEY (`catID`),
   KEY `category_name` (`category_name`),
   KEY `parentID` (`parentID`),
