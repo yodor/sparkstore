@@ -11,7 +11,7 @@
 }
 
 /*other products from this category*/
-.column.details .product_group {
+.product_group {
     display: block;
     text-align:center;
 }
