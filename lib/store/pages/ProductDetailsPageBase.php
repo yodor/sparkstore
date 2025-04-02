@@ -4,14 +4,14 @@ include_once("store/components/ProductsTape.php");
 
 include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
-
+include_once("store/components/renderers/items/ProductDetailsItem.php");
 
 class ProductDetailsPageBase extends ProductPageBase
 {
 
     protected SellableItem $sellable;
 
-    protected ProductsTape $tape;
+    protected ?ProductDetailsItem $item = null;
 
     public function __construct()
     {
@@ -20,6 +20,7 @@ class ProductDetailsPageBase extends ProductPageBase
         parent::__construct();
 
         $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
+        $this->head()->addCSS(STORE_LOCAL . "/css/ProductListItem.css");
 
         $prodID = -1;
         if (isset($_GET["prodID"])) {
@@ -56,12 +57,47 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->updateViewCounter();
 
-        $this->tape = new ProductsTape();
-
         $this->head()->addCanonicalParameter("prodID");
 
+        $this->item = $this->createDetailsItem();
     }
 
+    protected function createDetailsItem() : ProductDetailsItem
+    {
+        return new ProductDetailsItem($this->getSellable());
+    }
+
+    public function getDetailsItem() : ProductDetailsItem
+    {
+        return $this->item;
+    }
+
+    public function initialize() : void
+    {
+        $this->item->setURL(URL::Current()->fullURL());
+        $this->item->setCategories($this->getCategoryPath());
+        $this->item->initialize();
+    }
+
+    public function renderContents() : void
+    {
+        $this->renderCategoryPath();
+
+        $this->item->render();
+
+        $this->renderProductTapes();
+    }
+
+    protected function renderProductTapes() : void
+    {
+        $cmp = $this->createTapeContainer("same_category");
+        $cmp->items()->append($this->tapeSameCategory());
+        $cmp->render();
+
+//        $cmp = $this->createTapeContainer("other_products");
+//        $cmp->items()->append($this->tapeOtherProducts());
+//        $cmp->render();
+    }
     /**
      * Use the product name as page title tag
      * @return void
@@ -159,7 +195,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
     }
 
-    public function renderSameCategoryProducts(int $limit = 4)
+    public function tapeSameCategory(int $limit = 4) : ProductsTape
     {
         $catID = (int)$this->sellable->getCategoryID();
 
@@ -179,16 +215,17 @@ class ProductDetailsPageBase extends ProductPageBase
         $qry->select->group_by = " prodID ";
         $qry->select->limit = "$limit";
 
-        $this->tape->setCaption($title);
-        $this->tape->setIterator($qry);
+        $tape = new ProductsTape();
+        $tape->setCaption($title);
+        $tape->setIterator($qry);
 
-        $this->tape->getCaptionURL()->fromString(LOCAL . "/products/list.php");
-        $this->tape->getCaptionURL()->add(new URLParameter("catID", $catID));
+        $tape->getCaptionURL()->fromString(LOCAL . "/products/list.php");
+        $tape->getCaptionURL()->add(new URLParameter("catID", $catID));
 
-        $this->tape->render();
+        return $tape;
     }
 
-    public function renderOtherProducts(int $limit = 4)
+    public function tapeOtherProducts(int $limit = 4) : ProductsTape
     {
         $title = tr("Други продукти");
 
@@ -198,13 +235,21 @@ class ProductDetailsPageBase extends ProductPageBase
         $qry->select->where()->add("stock_amount" , "0", " > ");
         $qry->select->limit = "$limit";
 
-        $this->tape->setCaption($title);
-        $this->tape->setIterator($qry);
-        $this->tape->getCaptionURL()->fromString(LOCAL."/products/list.php");
-        $this->tape->render();
+        $tape = new ProductsTape();
+        $tape->setCaption($title);
+        $tape->setIterator($qry);
+        $tape->getCaptionURL()->fromString(LOCAL."/products/list.php");
+
+        return $tape;
     }
 
-
+    public function createTapeContainer(string $name) : Container
+    {
+        $cmp = new Container(false);
+        $cmp->setComponentClass("product_group");
+        $cmp->setClassName($name);
+        return $cmp;
+    }
 
 }
 
