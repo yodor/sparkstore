@@ -543,11 +543,17 @@ class ProductListPageBase extends ProductPageBase
         $seo_description = "";
         if ($this->section && $this->sections->haveColumn("section_seodescription")) {
             $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
-            $seo_description = $result["section_seodescription"];
+            $section_description = $result["section_seodescription"];
+            if ($section_description) {
+                $seo_description = $section_description;
+            }
         }
 
         if ($catID>0 && $this->product_categories->haveColumn("category_seodescription")) {
-            $seo_description = $this->product_categories->getValue($catID, "category_seodescription");
+            $category_description = $this->product_categories->getValue($catID, "category_seodescription");
+            if ($category_description) {
+                $seo_description = $category_description;
+            }
         }
 
         if (!$seo_description) {
