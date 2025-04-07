@@ -532,3 +532,9 @@
 .side_pane .group:empty {
     display:none;
 }
+
+.side_pane .group.cart_link #tbiButton {
+    height:51px;
+    max-height:51px;
+    box-sizing:border-box;
+}
