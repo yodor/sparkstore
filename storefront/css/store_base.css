@@ -1061,3 +1061,7 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 .ContentPage.pages .page_data .summary IMG {
     max-width:100%;
 }
+H2 A {
+    font-weight: normal;
+    font-size:100%;
+}
