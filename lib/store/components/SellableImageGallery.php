@@ -55,7 +55,6 @@ class SellableImageGallery extends Container {
         $this->image_popup->setTitle( $this->sellable->getTitle());
         //use list-relation targeting items in the image_gallery container
         $this->image_popup->setListRelation("ProductGallery");
-        $this->image_popup->setAttribute("itemprop", "image");
 
         $image = $this->image_popup->image();
         $image->setUseSizeAttributes(true);

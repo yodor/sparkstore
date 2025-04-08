@@ -56,9 +56,6 @@ class ProductDetailsItem extends Container implements IHeadContents
 
     protected ?Container $tabs = null;
 
-    protected Meta $metaURL;
-    protected Meta $metaCategory;
-
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
@@ -83,19 +80,7 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $this->url = new URL("/product/details.php");
 
-        $this->setAttribute("itemscope","");
-        $this->setAttribute("itemtype", "http://schema.org/Product");
         $this->setAttribute("productID", $item->getProductID());
-
-        $this->metaURL = new Meta();
-        $this->metaURL->setAttribute("itemprop", "url");
-        $this->metaURL->setContent($this->url->toString());
-        $this->items()->append($this->metaURL);
-
-        $this->metaCategory = new Meta();
-        $this->metaCategory->setAttribute("itemprop", "category");
-        $this->metaCategory->setContent("products");
-        $this->items()->append($this->metaCategory);
 
         $this->gallery = new SellableImageGallery($this->sellable);
         $this->gallery->getImagePopup()->image()->setPhotoSize(640,640);
@@ -125,14 +110,35 @@ class ProductDetailsItem extends Container implements IHeadContents
     }
 
     /**
-     * Post CTOR initialization
+     * Post CTOR initialization. Call before startRender of page class
      * @return void
      */
     public function initialize() : void
     {
         //init buttons first
         $this->side_pane->initialize();
+
+        if (LINKED_DATA_ENABLED) {
+            $linkedData = $this->initializeLinkedData();
+            if ($linkedData instanceof LinkedData) {
+                $script = new LDJsonScript();
+                $script->setLinkedData($linkedData);
+                SparkPage::Instance()->head()->addScript($script);
+            }
+        }
+
     }
+
+    /**
+     * Initialize structured LinkedData by calling SellableDataParaser::linkedData
+     * @return LinkedData
+     */
+    protected function initializeLinkedData() : LinkedData
+    {
+        $parser = SellableItem::GetDefaultDataParser();
+        return $parser->linkedData($this->sellable, $this->url);
+    }
+
     /**
      * Initialize and enable cart buttons needed
      * @return void
@@ -159,23 +165,11 @@ class ProductDetailsItem extends Container implements IHeadContents
     public function setCategories(array $categores) : void
     {
         $this->categories = $categores;
-        $content = array();
-        foreach ($this->categories as $idx=>$catinfo) {
-            $content[] = $catinfo["category_name"];
-        }
-        $content = implode(" // ",$content);
-        if ($content) {
-            $this->metaCategory->setContent($content);
-        }
-        else {
-            $this->metaCategory->setRenderEnabled(false);
-        }
     }
 
     public function setURL(URL $url): void
     {
         $this->url = $url;
-        $this->metaURL->setContent(attributeValue($this->url->toString()));
     }
 
 
@@ -211,7 +205,6 @@ class ProductDetailsItem extends Container implements IHeadContents
             $tab = new DetailsTab();
             $tab->setCaption(tr("Описание"));
             $tab->addClassName("description");
-            $tab->getContent()->setAttribute("itemprop", "description");
             $tab->getContent()->addClassName("long_description");
             $tab->getContent()->setContents($this->sellable->getDescription());
             $tabs->items()->append($tab);

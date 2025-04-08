@@ -226,7 +226,7 @@ class DetailsSidePane extends Container
 
         $grp->buffer()->start();
         echo "<div class='item product_name'>";
-        echo "<h1 itemprop='name' class='value'>". $this->sellable->getTitle() . "</h1>";
+        echo "<h1 class='value'>". $this->sellable->getTitle() . "</h1>";
         echo "</div>";
         $grp->buffer()->end();
 
@@ -337,26 +337,6 @@ class DetailsSidePane extends Container
         $item = new Container(false);
         $item->setComponentClass("item");
         $item->setClassName("price_info");
-        $item->setAttribute("itemprop", "offers");
-        $item->setAttribute("itemscope");
-        $item->setAttribute("itemtype", "http://schema.org/Offer");
-
-        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
-        $meta = new Meta();
-        $meta->setAttribute("itemprop", "priceValidUntil");
-        $meta->setContent($priceValidUntil);
-        $item->items()->append($meta);
-
-        $link = new Link();
-        $link->removeAttribute("rel");
-        $link->setAttribute("itemprop", "availability");
-        if ($stock_amount>0) {
-            $link->setHref("https://schema.org/InStock");
-        }
-        else {
-            $link->setHref("https://schema.org/OutOfStock");
-        }
-        $item->items()->append($link);
 
         $labelOld = new LabelSpan();
         $labelOld->label()->setTagName("SPAN");
@@ -366,7 +346,6 @@ class DetailsSidePane extends Container
         }
         $labelOld->label()->setComponentClass("value");
         $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice()));
-
         $labelOld->span()->setComponentClass("currency");
         $labelOld->span()->setContents("&nbsp лв.");
         $item->items()->append($labelOld);
@@ -375,15 +354,10 @@ class DetailsSidePane extends Container
         $labelSell->label()->setTagName("SPAN");
         $labelSell->setComponentClass("sell");
         $labelSell->label()->setComponentClass("value");
-        $labelSell->label()->setAttribute("itemprop", "price");
         $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()));
-
         $labelSell->span()->setComponentClass("currency");
         $labelSell->span()->setContents("&nbsp лв.");
-        $metaCurrency = new Meta();
-        $metaCurrency->setAttribute("itemprop", "priceCurrency");
-        $metaCurrency->setContent("BGN");
-        $labelSell->items()->append($metaCurrency);
+
         $item->items()->append($labelSell);
 
         $grp->items()->append($item);
@@ -462,9 +436,6 @@ class DetailsSidePane extends Container
 
     protected function initPaymentButtons(SidePaneGroup $grp) : void
     {
-//        $grp = new SidePaneGroup();
-//        $grp->setClassName("credit_payment");
-
 
         //payment modules
         foreach ($this->crpayments as $idx=>$object) {
@@ -494,7 +465,6 @@ class DetailsSidePane extends Container
 
         }
 
-//        $this->items()->append($grp);
     }
 
 }

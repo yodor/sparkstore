@@ -31,7 +31,7 @@ include_once("store/responders/json/VoucherFormResponder.php");
 include_once("store/utils/TawktoScript.php");
 
 include_once("dialogs/json/JSONFormDialog.php");
-
+include_once("objects/data/LinkedData.php");
 
 class StorePageBase extends SparkPage
 {
@@ -104,40 +104,37 @@ class StorePageBase extends SparkPage
             $this->head()->addScript(new TawktoScript($page_id));
         }
 
-        $org_data = array(
-            "@context"=> "http://schema.org",
-            "@type"=> "Organization",
-            "name"=> SITE_TITLE,
-            "url"=> SITE_URL,
-            "logo"=> SITE_URL."/images/logo_header.svg",
-            "contactPoint" => array(
-                "@type"=> "ContactPoint",
-                "telephone"=> $phone,
-                "contactType"=> "sales",
-                "areaServed"=> substr(DEFAULT_LANGUAGE_ISO3, 0, 2),
-                "availableLanguage"=> DEFAULT_LANGUAGE
-            )
-        );
+        $organization = new LinkedData("Organization");
+        $organization->set("name", SITE_TITLE);
+        $organization->set("url", SITE_URL);
+        $organization->set("logo", SITE_URL."/images/logo_header.svg");
+        $contactPoint = new LinkedData("ContactPoint");
+        $contactPoint->set("telephone", $phone);
+        $contactPoint->set("contactType", "sales");
+        $contactPoint->set("areaServed", substr(DEFAULT_LANGUAGE_ISO3, 0, 2));
+        $contactPoint->set("availableLanguage", DEFAULT_LANGUAGE);
+        $organization->set("contactPoint", $contactPoint->toArray());
 
+        $orgScript = new LDJsonScript();
+        $orgScript->setLinkedData($organization);
+        $this->head()->addScript($orgScript);
 
-        $this->head()->addScript(new LDJsonScript($org_data));
+        $website = new LinkedData("WebSite");
+        $website->set("name", mb_strtoupper(SITE_TITLE). " - " . tr("Official Page"));
+        $website->set("url", SITE_URL);
 
-        $www_data = array(
-            "@context"=> "http://schema.org",
-            "@type"=> "WebSite",
-            "name"=> mb_strtoupper(SITE_TITLE). " - " . tr("Official Page"),
-            "url"=> SITE_URL,
-            "potentialAction"=> array(
-                "@type"=> "SearchAction",
-                "target"=> array(
-                    "@type"=>"EntryPoint",
-                    "urlTemplate"=>SITE_URL."/products/list.php?filter=search&keyword={keyword}"
-                ),
-                "query-input" => "required name=keyword"
-            )
-        );
+        $potentialAction = new LinkedData("SearchAction");
 
-        $this->head()->addScript(new LDJsonScript($www_data));
+        $entryPoint = new LinkedData("EntryPoint");
+        $entryPoint->set("urlTemplate", SITE_URL."/products/list.php?filter=search&keyword={keyword}");
+        $potentialAction->set("target", $entryPoint->toArray());
+        $potentialAction->set("query-input", "required name=keyword");
+
+        $website->set("potentialAction", $potentialAction->toArray());
+
+        $wwwScript = new LDJsonScript();
+        $wwwScript->setLinkedData($website);
+        $this->head()->addScript($wwwScript);
 
 
         $this->head()->addCSS(STORE_LOCAL . "/css/store.css");

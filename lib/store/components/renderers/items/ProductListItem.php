@@ -112,7 +112,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='url' content='{$details_url}'>";
         echo "<meta itemprop='image' content='{$img_href}'>";
 
-        echo "<div class='wrap' itemscope itemtype='http://schema.org/Product'>";
+        echo "<div class='wrap' itemscope itemtype='Product'>";
 
             //meta for product
             $this->renderMeta();
@@ -234,22 +234,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     }
 
-    public static function AttributesMeta(array $attributes, array $supported)
-    {
 
-        foreach ($attributes as $name => $value) {
-            if ($name && $value) {
-                $attributeName = mb_strtolower($name);
-                $attributeValue = mb_strtolower($value);
-                foreach ($supported as $itemProp=>$matches) {
-                    if (in_array($attributeName, $matches)) {
-                        echo "<meta itemprop='$itemProp' content='".attributeValue($attributeValue)."'>";
-                    }
-                }
-            }
-        }
-
-    }
 }
 
 ?>

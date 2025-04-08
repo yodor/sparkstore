@@ -30,6 +30,7 @@ if (!defined("SKIP_DB")) {
 
 $globals->set("TRANSLITERATOR_ID", "Bulgarian-Latin/BGN");
 
+$globals->set("LINKED_DATA_ENABLED", true);
 $globals->export();
 
 ?>

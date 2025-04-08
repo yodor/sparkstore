@@ -8,6 +8,7 @@ include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductVariantsBean.php");
 include_once("store/beans/SellableProducts.php");
+include_once("objects/data/LinkedData.php");
 
 class SellableDataParser
 {
@@ -26,10 +27,10 @@ class SellableDataParser
     /**
      * Populate sellable item properties using data from db result record
      * @param SellableItem $item
-     * @param array $result
+     * @param RawResult $result
      * @throws Exception
      */
-    public function parse(SellableItem $item, RawResult $result)
+    public function parse(SellableItem $item, RawResult $result) : void
     {
 
         $item->setProductID($result->get("prodID"));
@@ -136,6 +137,50 @@ class SellableDataParser
         }
 
     }
+
+    public function linkedData(SellableItem $item, ?URL $productURL=null) : LinkedData
+    {
+
+        $product = new LinkedData("Product");
+        $product->set("name", $item->getTitle());
+        $product->set("description", strip_tags($item->getDescription()));
+        if ($productURL instanceof URL) {
+            $product->set("url",$productURL->toString());
+        }
+        $product->set("category", $item->getCategoryName());
+
+        $product->set("brand", $item->getBrandName());
+
+        $si = $item->getMainPhoto();
+        if ($si instanceof StorageItem) {
+            $si->enableExternalURL(true);
+            $product->set("image", fullURL($si->hrefFull()));
+        }
+
+        $offer = new LinkedData("Offer");
+        if ($item->getStockAmount()>0) {
+            $offer->set("availability", "https://schema.org/InStock");
+        }
+        else {
+            $offer->set("availability", "https://schema.org/OutOfStock");
+        }
+        $offer->set("price", formatPrice($item->getPriceInfo()->getSellPrice(), ""));
+        $offer->set("priceCurrency", DEFAULT_CURRENCY);
+        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+        $offer->set("priceValidUntil", $priceValidUntil);
+
+        $product->set("offers", $offer->toArray());
+
+        //TODO: multiple priceCurrency eg EUR/USD
+        // $product->set("offers", array($offerEUR->toArray(), $offerUSD->toArray()));
+        // or setArray using variadic parameters
+        // $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());
+
+
+        return $product;
+
+    }
+
 
 }
 ?>
