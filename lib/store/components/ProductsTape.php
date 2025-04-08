@@ -31,6 +31,7 @@ class ProductsTape extends Container
         parent::__construct();
 
         $this->list_item = ProductsTape::GetDefaultItemRenderer();
+        $this->list_item->setProductLinkedDataEnabled(false);
 
         $action = new Action();
         $action->translation_enabled = false;
