@@ -128,7 +128,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $wrap = new ClosureComponent($closure,true, false);
         $wrap->setComponentClass("wrap");
 
-        if ($this->product_linked_data_enabled) {
+        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
             $wrap->setAttribute("itemscope", "");
             $wrap->setAttribute("itemtype", "http://schema.org/Product");
         }
