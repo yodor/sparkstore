@@ -34,6 +34,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected $width = 275;
     protected $height = 275;
 
+    protected bool $product_linked_data_enabled = true;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -50,6 +52,11 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
+    }
+
+    public function setProductLinkedDataEnabled(bool $mode) : void
+    {
+        $this->product_linked_data_enabled = $mode;
     }
 
     public function getDetailsURL(): URL
@@ -112,16 +119,22 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='url' content='{$details_url}'>";
         echo "<meta itemprop='image' content='{$img_href}'>";
 
-        echo "<div class='wrap' itemscope itemtype='http://schema.org/Product'>";
-
-            //meta for product
+        $closure = function() {
             $this->renderMeta();
-
             $this->renderPhoto();
-
             $this->renderDetails();
+        };
 
-        echo "</div>"; //wrap
+        $wrap = new ClosureComponent($closure,true, false);
+        $wrap->setComponentClass("wrap");
+
+        if ($this->product_linked_data_enabled) {
+            $wrap->setAttribute("itemscope", "");
+            $wrap->setAttribute("itemtype", "http://schema.org/Product");
+        }
+
+        $wrap->render();
+
 
     }
 
