@@ -112,7 +112,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='url' content='{$details_url}'>";
         echo "<meta itemprop='image' content='{$img_href}'>";
 
-        echo "<div class='wrap' itemscope itemtype='Product'>";
+        echo "<div class='wrap' itemscope itemtype='http://schema.org/Product'>";
 
             //meta for product
             $this->renderMeta();
