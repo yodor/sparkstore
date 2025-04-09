@@ -79,7 +79,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->item->initialize();
     }
 
-    public function renderContents() : void
+    protected function renderImpl() : void
     {
         $this->renderCategoryPath();
 

@@ -2,12 +2,8 @@
 include_once("session.php");
 include_once("class/pages/ProductDetailsPage.php");
 
-$page = new ProductDetailsPageBase();
+$page = new ProductDetailsPage();
 $page->initialize();
-
-$page->startRender();
-
-$page->renderContents();
-
-$page->finishRender();
+$page->processInput();
+$page->render();
 ?>

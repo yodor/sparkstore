@@ -1,23 +1,14 @@
 <?php
 include_once("session.php");
-include_once("store/pages/ProductListPageBase.php");
+include_once("class/pages/ProductListPage.php");
 
-$page = new ProductListPageBase();
-
-$bean = new SellableProducts();
+$page = new ProductListPage();
 
 $clause = new SQLClause();
 $clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");
-$bean->select()->where()->append($clause);
-$page->setSellableProducts($bean);
+$page->getSellableProducts()->select()->where()->append($clause);
 
 $page->initialize();
-
 $page->processInput();
-
-$page->startRender();
-
-$page->renderContents();
-
-$page->finishRender();
+$page->render();
 ?>

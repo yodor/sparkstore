@@ -57,6 +57,8 @@ class ProductListPageBase extends ProductPageBase
     {
         parent::__construct();
 
+        $this->setSellableProducts($this->createSellableProducts());
+
         $this->property_filter = new SparkMap();
 
         $section_filter = new GETProcessor("section", "section");
@@ -118,6 +120,11 @@ class ProductListPageBase extends ProductPageBase
 
     }
 
+    protected function createSellableProducts() : SellableProducts
+    {
+        return new SellableProducts();
+    }
+
     public function getItemView() : ItemView
     {
         return $this->view;
@@ -147,7 +154,7 @@ class ProductListPageBase extends ProductPageBase
      * @return void
      * @throws Exception
      */
-    public function initialize()
+    public function initialize() : void
     {
         //main products select - no grouping here as filters are not applied yet
         if (is_null($this->bean)) {
@@ -187,7 +194,7 @@ class ProductListPageBase extends ProductPageBase
      * @return void
      * @throws Exception
      */
-    public function processInput()
+    public function processInput() : void
     {
 
         //filter precedence
@@ -465,7 +472,7 @@ class ProductListPageBase extends ProductPageBase
         return $this->section;
     }
 
-    public function renderContents()
+    protected function renderImpl()
     {
         $this->renderCategoryPath();
 

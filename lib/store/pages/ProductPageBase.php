@@ -49,6 +49,16 @@ class ProductPageBase extends StorePage
 
     }
 
+    public function initialize() : void
+    {
+
+    }
+
+    public function processInput() : void
+    {
+
+    }
+
     /**
      * Construct the page keywords meta tag contents
      * Use the summary of current category and its parents keywords
@@ -108,6 +118,11 @@ class ProductPageBase extends StorePage
     public function setSellableProducts(DBTableBean $bean)
     {
         $this->bean = $bean;
+    }
+
+    public function getSellableProducts() : SellableProducts
+    {
+        return $this->bean;
     }
 
     public function getCategoryPath()
