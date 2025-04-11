@@ -92,14 +92,14 @@
     padding:0.5em;
     font-size:inherit;
 }
-
 .ProductListItem .price_info {
     text-align:right;
-    font-size:1.4em;
+    font-size:1.3em;
     display:block;
     padding:0.5em;
     padding-top:0;
     box-sizing: border-box;
+    white-space: nowrap;
 }
 
 .ProductListItem .price_info .price {
@@ -135,4 +135,16 @@
 .ProductListItem:hover {
     overflow:visible;
 
+}
+
+.ProductListItem .price_label {
+    display:flex;
+    flex-direction: row;
+    flex-basis: auto;
+}
+.ProductListItem .price_label .price_info {
+    flex-grow:1;
+}
+.ProductListItem .price_label .price_info.left {
+    text-align:left;
 }

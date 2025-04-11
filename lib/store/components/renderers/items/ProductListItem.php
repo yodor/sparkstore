@@ -8,7 +8,71 @@ include_once("utils/url/URL.php");
 include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
+class PriceLabel extends Container {
 
+    protected ?Link $availabilityLink = null;
+    protected ?Meta $currencyMeta = null;
+
+    protected ?Container $priceOld = null;
+    protected ?Container $priceSell = null;
+
+    public function __construct()
+    {
+        parent::__construct(false);
+        $this->setComponentClass("price_info");
+        $this->setAttribute("itemscope");
+        $this->setAttribute("itemprop", "offers");
+        $this->setAttribute("itemtype", "http://schema.org/Offer");
+
+        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+        $metaValidUntil = new Meta();
+        $metaValidUntil->setAttribute("itemprop", "priceValidUntil");
+        $metaValidUntil->setContent($priceValidUntil);
+        $this->items()->append($metaValidUntil);
+
+        $this->availabilityLink = new Link();
+        $this->availabilityLink->removeAttribute("rel");
+        $this->availabilityLink->setAttribute("itemprop", "availability");
+        $this->items()->append($this->availabilityLink);
+
+        $this->currencyMeta = new Meta();
+        $this->currencyMeta->setAttribute("itemprop", "priceCurrency");
+        $this->currencyMeta->setContent(DEFAULT_CURRENCY);
+        $this->items()->append($this->currencyMeta);
+
+        $this->priceOld = new Container(false);
+        $this->priceOld->setComponentClass("price");
+        $this->priceOld->addClassName("old");
+        $this->priceOld->setContents("<BR>");
+        $this->items()->append($this->priceOld);
+
+        $this->priceSell = new Container(false);
+        $this->priceSell->setComponentClass("price");
+        $this->priceSell->addClassName("sell");
+        $this->priceSell->setContents("<BR>");
+        $this->items()->append($this->priceSell);
+
+    }
+
+    public function availability() : Link
+    {
+        return $this->availabilityLink;
+    }
+
+    public function currency() : Meta
+    {
+        return $this->currencyMeta;
+    }
+
+    public function priceOld() : Container
+    {
+        return $this->priceOld;
+    }
+    public function priceSell() : Container
+    {
+        return $this->priceSell;
+    }
+}
 class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
 {
 
@@ -36,6 +100,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected bool $product_linked_data_enabled = true;
 
+    protected PriceLabel $priceLabel;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -52,6 +118,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
+
+        $this->priceLabel = new PriceLabel();
     }
 
     public function setProductLinkedDataEnabled(bool $mode) : void
@@ -215,32 +283,45 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     {
         if ($this->data["sell_price"] < 1) return;
 
-        echo "<div class='price_info' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
-
-        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
-        echo "<meta itemprop='priceValidUntil' content='$priceValidUntil'>";
-
         if ($this->data["stock_amount"]>0) {
-            echo "<link itemprop='availability' href='https://schema.org/InStock'>";
+            $this->priceLabel->availability()->setHref("https://schema.org/InStock");
         }
         else {
-            echo "<link itemprop='availability' href='https://schema.org/OutOfStock'>";
+            $this->priceLabel->availability()->setHref("https://schema.org/OutOfStock");
         }
 
-        echo "<div class='price old'>";
+        echo "<div class='price_label'>";
+
+        if (DOUBLE_PRICE_ENABLED) {
+            $this->priceLabel->addClassName("left");
+            $this->priceLabel->currency()->setContent("EUR");
+            $priceOld = "<BR>";
+            if ($this->isPromo()) {
+                $priceOld = formatPrice( $this->data["price"] / DOUBLE_PRICE_RATE,"&euro;", true);
+            }
+            $this->priceLabel->priceOld()->setContents($priceOld);
+
+            $priceSell = formatPrice($this->data["sell_price"] / DOUBLE_PRICE_RATE, "&euro;", true);
+            $priceSell = "<span itemprop='price'>$priceSell</span>";
+            $this->priceLabel->priceSell()->setContents($priceSell);
+
+            $this->priceLabel->render();
+        }
+
+        $this->priceLabel->removeClassName("left");
+        $this->priceLabel->currency()->setContent(DEFAULT_CURRENCY);
+
+        $priceOld = "<BR>";
         if ($this->isPromo()) {
-            echo sprintf("%1.2f", $this->data["price"]) . " " . tr("лв.");
+            $priceOld = formatPrice($this->data["price"],"лв", false);
         }
-        else {
-            echo "<BR>";
-        }
-        echo "</div>";
+        $this->priceLabel->priceOld()->setContents($priceOld);
 
-        echo "<meta itemprop='priceCurrency' content='" . DEFAULT_CURRENCY . "'>";
-        echo "<div class='price sell'>";
-        echo "<span itemprop='price'>" . sprintf("%1.2f", $this->data["sell_price"]) . "</span> ";
-        echo tr("лв.");
-        echo "</div>";
+        $priceSell = formatPrice($this->data["sell_price"], "лв", false);
+        $priceSell = "<span itemprop='price'>$priceSell</span>";
+        $this->priceLabel->priceSell()->setContents($priceSell);
+
+        $this->priceLabel->render();
 
         echo "</div>";
 

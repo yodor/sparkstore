@@ -30,7 +30,12 @@ if (!defined("SKIP_DB")) {
 
 $globals->set("TRANSLITERATOR_ID", "Bulgarian-Latin/BGN");
 
+//enable disable 'product' structure data
 $globals->set("LINKED_DATA_ENABLED", true);
+
+//show double prices - convert from default currency to EURO
+$globals->set("DOUBLE_PRICE_ENABLED", false);
+$globals->set("DOUBLE_PRICE_RATE", 1.95583);
 $globals->export();
 
 ?>

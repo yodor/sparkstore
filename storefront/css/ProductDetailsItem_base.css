@@ -539,3 +539,11 @@
     box-sizing:border-box;
     margin-top:30px;
 }
+
+.side_pane .group.pricing .price_info.left .currency {
+    float:left;
+
+}
+.side_pane .group.pricing .price_info.left .old .currency {
+    text-decoration: line-through;
+}

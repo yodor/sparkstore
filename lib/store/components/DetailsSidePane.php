@@ -334,6 +334,37 @@ class DetailsSidePane extends Container
             $grp->setAttribute("no_stock", "");
         }
 
+        if (DOUBLE_PRICE_ENABLED) {
+            $item = new Container(false);
+            $item->setComponentClass("item");
+            $item->setClassName("price_info left");
+
+            $labelOld = new LabelSpan();
+            $labelOld->label()->setTagName("SPAN");
+            $labelOld->setComponentClass("old");
+            if (!$this->sellable->isPromotion()) {
+                $labelOld->setClassName("disabled");
+            }
+            $labelOld->label()->setComponentClass("value");
+            $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice()/DOUBLE_PRICE_RATE));
+            $labelOld->span()->setComponentClass("currency");
+            $labelOld->span()->setContents("&euro;&nbsp");
+            $item->items()->append($labelOld);
+
+            $labelSell = new LabelSpan();
+            $labelSell->label()->setTagName("SPAN");
+            $labelSell->setComponentClass("sell");
+            $labelSell->label()->setComponentClass("value");
+            $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()/DOUBLE_PRICE_RATE));
+            $labelSell->span()->setComponentClass("currency");
+            $labelSell->span()->setContents("&euro;&nbsp");
+
+            $item->items()->append($labelSell);
+
+            $grp->items()->append($item);
+        }
+
+
         $item = new Container(false);
         $item->setComponentClass("item");
         $item->setClassName("price_info");
