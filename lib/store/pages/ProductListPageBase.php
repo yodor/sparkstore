@@ -206,7 +206,7 @@ class ProductListPageBase extends ProductPageBase
         while ($filter = $iterator->next()) {
             if (!($filter instanceof GETProcessor)) continue;
             $filter->setSQLSelect($this->select);
-            $filter->processInput();
+            if (!$filter->isProcessed()) $filter->processInput();
         }
 
         $section_filter = $this->property_filter->get("section");
