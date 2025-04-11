@@ -29,6 +29,9 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Цена Всичко: " . $order_row["order_total"] . " " . $order_row["active_currency"];
+        if (DOUBLE_PRICE_ENABLED) {
+            $message .= "Цена Всичко: " . formatPrice($order_row["order_total"]/DOUBLE_PRICE_RATE," EUR");
+        }
 
         $message .= "<BR><BR>\r\n\r\nС Уважение,<BR>\r\n";
         $message .= SITE_DOMAIN;
@@ -49,7 +52,9 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Order Total: " . $order_row["order_total"] . " " . $order_row["active_currency"];
-
+        if (DOUBLE_PRICE_ENABLED) {
+            $message .= "Order Total: " . formatPrice($order_row["order_total"]/DOUBLE_PRICE_RATE," EUR");
+        }
         $message .= "<BR><BR>\r\n\r\nSincerely,<BR>\r\n";
         $message .= SITE_DOMAIN;
 

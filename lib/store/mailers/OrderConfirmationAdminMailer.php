@@ -104,7 +104,9 @@ class OrderConfirmationAdminMailer extends Mailer
         }
         $message .= "Цена доставка: $delivery_text\r\n";
         $message .= "Поръчка oбщо: " . sprintf("%0.2f лв.", $order["total"]) . "\r\n";
-
+        if (DOUBLE_PRICE_ENABLED) {
+            $message .= "Поръчка oбщо: " . sprintf("%0.2f eur", $order["total"] / DOUBLE_PRICE_RATE) . "\r\n";
+        }
 
         $message .= "\r\n";
         $message .= "\r\n";

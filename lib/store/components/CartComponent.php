@@ -179,6 +179,9 @@ class CartComponent extends Component implements IHeadContents
         //                 echo sprintf("%0.2f ".$price["symbol"] , $price["price_value"]);
 
 
+        if (DOUBLE_PRICE_ENABLED) {
+            echo "<div class='addon_price'>" . formatPrice($cartEntry->getPrice() / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
+        }
         echo "<span>" . formatPrice($cartEntry->getPrice()) . "</span>";
 
         echo "</td>";
@@ -188,6 +191,9 @@ class CartComponent extends Component implements IHeadContents
         //                 $line_total = ($qty * (float)$price["price_value"]);
         //                 echo sprintf("%0.2f ".$price["symbol"], $line_total );
 
+        if (DOUBLE_PRICE_ENABLED) {
+            echo "<div class='addon_price'>" . formatPrice($cartEntry->getLineTotal() / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
+        }
         echo "<span>" . formatPrice($cartEntry->getLineTotal()) . "</span>";
 
         echo "</td>";
@@ -289,6 +295,10 @@ class CartComponent extends Component implements IHeadContents
             echo "</td>";
 
             echo "<td class='value'>";
+
+            if (DOUBLE_PRICE_ENABLED) {
+                echo "<div class='addon_price'>" . formatPrice($total / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
+            }
             echo formatPrice($total);
             echo "</td>";
 
@@ -335,6 +345,9 @@ class CartComponent extends Component implements IHeadContents
                 //              $price = $currency_rates->getPrice($delivery_price);
 
                 if ($delivery_price>0) {
+                    if (DOUBLE_PRICE_ENABLED) {
+                        echo "<div class='addon_price'>" . formatPrice($delivery_price / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
+                    }
                     echo formatPrice($delivery_price);
                 }
                 else {
@@ -363,6 +376,9 @@ class CartComponent extends Component implements IHeadContents
             echo "</td>";
 
             echo "<td class='value'>";
+            if (DOUBLE_PRICE_ENABLED) {
+                echo "<div class='addon_price'>" . formatPrice($order_total / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
+            }
             echo formatPrice($order_total);
             echo "</td>";
 

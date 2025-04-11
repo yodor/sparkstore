@@ -1,19 +1,23 @@
 
 .navigation {
 
-    display:table;
+    display:flex;
+    flex-direction: row;
     
-    width:100%;
+    /*width:100%;*/
     border-spacing:10px;
     margin-top:40px;
     margin-bottom:40px;
-
+    flex-wrap:wrap;
+    flex-basis:30%;
 }
 
 .navigation .slot {
-    display: table-cell;
+    display: inline-block;
     text-align: center;
     vertical-align: bottom;
+    flex-grow:1;
+    flex-basis:30%;
     /*      */
 }
 .navigation A {
@@ -288,6 +292,9 @@
     box-sizing: border-box;
 }
 
+.CheckoutPage.customer .panel FORM .InputComponent {
+    align-self:stretch;
+}
 .CheckoutPage.customer .column.login .panel {
     text-align:center;
 }
