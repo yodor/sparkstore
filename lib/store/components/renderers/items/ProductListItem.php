@@ -301,8 +301,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
             }
             $this->priceLabel->priceOld()->setContents($priceOld);
 
-            $priceSell = formatPrice($this->data["sell_price"] / DOUBLE_PRICE_RATE, "&euro;", true);
-            $priceSell = "<span itemprop='price'>$priceSell</span>";
+            $priceSell = formatPrice($this->data["sell_price"] / DOUBLE_PRICE_RATE, "", true);
+            $priceSell = "<span class='currency'>&euro;&nbsp;</span><span itemprop='price'>$priceSell</span>";
             $this->priceLabel->priceSell()->setContents($priceSell);
 
             $this->priceLabel->render();
@@ -317,8 +317,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         }
         $this->priceLabel->priceOld()->setContents($priceOld);
 
-        $priceSell = formatPrice($this->data["sell_price"], "лв", false);
-        $priceSell = "<span itemprop='price'>$priceSell</span>";
+        $priceSell = formatPrice($this->data["sell_price"], "", false);
+        $priceSell = "<span itemprop='price'>$priceSell</span><span class='currency'>лв.</span>";
         $this->priceLabel->priceSell()->setContents($priceSell);
 
         $this->priceLabel->render();
