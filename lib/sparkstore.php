@@ -49,6 +49,6 @@ function formatPrice($price, string $currency_symbol="лв", bool $symbol_front=
         $format = $format." ".$currency_symbol;
     }
 
-    return sprintf($format, $price);
+    return sprintf(trim($format), $price);
 }
 ?>

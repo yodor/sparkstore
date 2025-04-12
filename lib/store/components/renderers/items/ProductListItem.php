@@ -318,7 +318,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->priceLabel->priceOld()->setContents($priceOld);
 
         $priceSell = formatPrice($this->data["sell_price"], "", false);
-        $priceSell = "<span itemprop='price'>$priceSell</span><span class='currency'>лв.</span>";
+        $priceSell = "<span itemprop='price'>$priceSell</span><span class='currency'>&nbsp;лв.</span>";
         $this->priceLabel->priceSell()->setContents($priceSell);
 
         $this->priceLabel->render();
