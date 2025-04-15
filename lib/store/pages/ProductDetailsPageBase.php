@@ -55,7 +55,10 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
         }
 
-        $this->updateViewCounter();
+        register_shutdown_function(function()  {
+            ProductDetailsPageBase::UpdateViewCounter($this->sellable->getProductID());
+        });
+
 
         $this->head()->addCanonicalParameter("prodID");
 
@@ -158,24 +161,7 @@ class ProductDetailsPageBase extends ProductPageBase
         return $this->sellable;
     }
 
-    protected function updateViewCounter()
-    {
-        $sql = new SQLUpdate();
-        $sql->from = "products p";
-        $sql->set("p.view_counter", "p.view_counter+1");
-        $sql->where()->add("p.prodID", $this->sellable->getProductID());
 
-        $db = DBConnections::Open();
-        try {
-            $db->transaction();
-            $db->query($sql->getSQL());
-            $db->commit();
-        }
-        catch (Exception $e) {
-            $db->rollback();
-            debug("Unable to increment view count: ".$db->getError());
-        }
-    }
 
     protected function selectActiveMenu()
     {
@@ -253,6 +239,23 @@ class ProductDetailsPageBase extends ProductPageBase
         return $cmp;
     }
 
+    protected static function UpdateViewCounter(int $prodID) : void
+    {
+        debug("Updating view counter for prodID: " . $prodID);
+
+        //INSERT INTO product_view_log (prodID, view_counter, order_counter) select p.prodID, coalesce(p.view_counter,0), coalesce(p.order_counter,0) FROM products p ON DUPLICATE KEY UPDATE view_counter=coalesce(p.view_counter,0), order_counter=coalesce(p.order_counter,0)
+//        $db = DBConnections::Open();
+//        try {
+//            $db->transaction();
+//            $db->query("INSERT INTO product_view_log (prodID, view_counter, order_counter) VALUES ($prodID, 1, 0) ON DUPLICATE KEY UPDATE view_counter=(view_counter+1)");
+//            $db->commit();
+//        }
+//        catch (Exception $e) {
+//            $db->rollback();
+//            debug("Unable to increment view counter: ".$e->getMessage());
+//        }
+
+    }
 }
 
 ?>

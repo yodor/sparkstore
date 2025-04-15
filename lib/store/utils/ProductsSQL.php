@@ -13,7 +13,7 @@ class ProductsSQL extends SQLSelect
              "p.product_name", "p.product_description", "p.keywords",
             "p.visible", "p.pclsID", "p.promo_price", "p.price",
             "p.insert_date", "p.update_date", "p.stock_amount",
-            "p.order_counter", "p.view_counter"
+            "pvl.order_counter", "pvl.view_counter"
 
         );
 
@@ -62,6 +62,7 @@ class ProductsSQL extends SQLSelect
 LEFT JOIN store_promos sp 
 ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) ) 
 
+LEFT JOIN product_view_log pvl ON pvl.prodID = p.prodID
 
 
 ";

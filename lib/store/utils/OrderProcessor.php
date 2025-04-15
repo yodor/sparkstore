@@ -228,25 +228,40 @@ class OrderProcessor
 
     protected function updateCounterStock(int $prodID, int $amount=1)
     {
-        $sql = new SQLUpdate();
-        $sql->from = "products p";
-        if ($this->manage_order_counter) {
-            $sql->set("p.order_counter", "p.order_counter+$amount");
-        }
-        if ($this->manage_stock_amount) {
-            $sql->set("p.stock_amount", "p.stock_amount-$amount");
-        }
-        $sql->where()->add("p.prodID", $prodID);
 
         $db = DBConnections::Open();
-        try {
-            $db->transaction();
-            $db->query($sql->getSQL());
-            $db->commit();
+
+        if ($this->manage_stock_amount) {
+            $sql = new SQLUpdate();
+            $sql->from = "products p";
+            $sql->set("p.stock_amount", "p.stock_amount-$amount");
+            $sql->where()->add("p.prodID", $prodID);
+
+            try {
+                $db->transaction();
+                $db->query($sql->getSQL());
+                $db->commit();
+            }
+            catch (Exception $e) {
+                $db->rollback();
+                debug("Unable to increment stock_amount: ".$e->getMessage());
+            }
         }
-        catch (Exception $e) {
-            $db->rollback();
-            debug("Unable to increment order_counter or stock_amount count: ".$db->getError());
+        else if($this->manage_order_counter) {
+
+            $sql = new SQLUpdate();
+            $sql->from = "product_view_log pvl";
+            $sql->set("pvl.order_counter", "pvl.order_counter+$amount");
+            $sql->where()->add("pvl.prodID", $prodID);
+
+            try {
+                $db->transaction();
+                $db->query($sql->getSQL());
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollback();
+                debug("Unable to increment order_counter: " . $e->getMessage());
+            }
         }
     }
 

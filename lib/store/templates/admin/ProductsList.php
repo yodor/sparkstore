@@ -9,6 +9,7 @@ include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
 include_once("components/PageScript.php");
+include_once("store/beans/ProductViewLogBean.php");
 
 class ProductFilterInputForm extends InputForm {
     public function __construct()
@@ -150,6 +151,8 @@ class ProductsList extends BeanListPage
 
         new ScrollTopCookiesScript();
 
+        new ProductViewLogBean();
+
         $this->setBean(new ProductsBean());
 
         $this->fields = array(
@@ -232,7 +235,10 @@ class ProductsList extends BeanListPage
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->select->from = " products p JOIN product_categories pc ON pc.catID=p.catID LEFT JOIN product_classes pcls ON pcls.pclsID=p.pclsID";
+        $qry->select->from = " products p 
+        JOIN product_categories pc ON pc.catID=p.catID 
+        LEFT JOIN product_classes pcls ON pcls.pclsID=p.pclsID
+        LEFT JOIN product_view_log pvl ON pvl.prodID=p.prodID";
 
         $qry->select->group_by = "  p.prodID ";
 
