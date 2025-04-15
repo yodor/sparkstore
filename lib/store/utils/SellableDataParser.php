@@ -169,7 +169,24 @@ class SellableDataParser
         $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
         $offer->set("priceValidUntil", $priceValidUntil);
 
-        $product->set("offers", $offer->toArray());
+        if (DOUBLE_PRICE_ENABLED) {
+            $offerEUR = new LinkedData("Offer");
+            if ($item->getStockAmount()>0) {
+                $offerEUR->set("availability", "https://schema.org/InStock");
+            }
+            else {
+                $offerEUR->set("availability", "https://schema.org/OutOfStock");
+            }
+            $offerEUR->set("price", formatPrice($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE, ""));
+            $offerEUR->set("priceCurrency", "EUR");
+            $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+            $offerEUR->set("priceValidUntil", $priceValidUntil);
+
+            $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());
+        }
+        else {
+            $product->set("offers", $offer->toArray());
+        }
 
         //TODO: multiple priceCurrency eg EUR/USD
         // $product->set("offers", array($offerEUR->toArray(), $offerUSD->toArray()));
