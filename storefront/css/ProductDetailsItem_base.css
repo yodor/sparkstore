@@ -540,6 +540,13 @@
     margin-top:30px;
 }
 
+.side_pane .group.pricing {
+
+}
+.side_pane .group.pricing .price_info {
+    display:inline-block;
+}
+
 .side_pane .group.pricing .price_info.left .currency {
     float:left;
 
