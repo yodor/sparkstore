@@ -177,15 +177,12 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderImpl()
     {
-        $title_alt = attributeValue($this->data["product_name"]);
-        $details_url = attributeValue($this->getDetailsURL()->fullURL()->toString());
-        $img_href = $this->photo->hrefImage($this->width, $this->height);
+//        $title_alt = attributeValue($this->data["product_name"]);
+//        $details_url = attributeValue($this->getDetailsURL()->fullURL()->toString());
+//        $img_href = $this->photo->hrefImage($this->width, $this->height);
 
         //meta for ListItem
         echo "<meta itemprop='position' content='{$this->position}'>";
-        echo "<meta itemprop='name' content='{$title_alt}'>";
-        echo "<meta itemprop='url' content='{$details_url}'>";
-        echo "<meta itemprop='image' content='{$img_href}'>";
 
         $closure = function() {
             $this->renderMeta();
@@ -208,14 +205,15 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderMeta()
     {
-        $title_alt = attributeValue($this->data["product_name"]);
         $details_url = $this->getDetailsURL()->toString();
 
-        echo "<meta itemprop='url' content='".attributeValue(fullURL($details_url))."'>";
-        echo "<meta itemprop='category' content='".attributeValue($this->data["category_name"])."'>";
-        $description_content = $this->data["product_name"];
+        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
+            echo "<meta itemprop='url' content='" . attributeValue(fullURL($details_url)) . "'>";
+            echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
+            $description_content = $this->data["product_name"];
 
-        echo "<meta itemprop='description' content='".attributeValue($description_content)."'>";
+            echo "<meta itemprop='description' content='" . attributeValue($description_content) . "'>";
+        }
     }
 
     protected function renderPhoto()
