@@ -20,6 +20,7 @@ class PriceLabel extends Container {
     {
         parent::__construct(false);
         $this->setComponentClass("price_info");
+
         $this->setAttribute("itemscope");
         $this->setAttribute("itemprop", "offers");
         $this->setAttribute("itemtype", "http://schema.org/Offer");
@@ -119,12 +120,30 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
 
+        $this->initPriceLabel();
+
+    }
+
+    protected function initPriceLabel() : void
+    {
         $this->priceLabel = new PriceLabel();
+        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
+
+        }
+        else {
+            $this->priceLabel->removeAttribute("itemscope");
+            $this->priceLabel->removeAttribute("itemprop");
+            $this->priceLabel->removeAttribute("itemtype");
+            $this->priceLabel->availability()->setRenderEnabled(false);
+            $this->priceLabel->currency()->setRenderEnabled(false);
+        }
+
     }
 
     public function setProductLinkedDataEnabled(bool $mode) : void
     {
         $this->product_linked_data_enabled = $mode;
+        $this->initPriceLabel();
     }
 
     public function getDetailsURL(): URL
