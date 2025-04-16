@@ -105,7 +105,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     public function __construct()
     {
-        parent::__construct(false);
+        parent::__construct();
 
         $this->photo = new StorageItem();
 
