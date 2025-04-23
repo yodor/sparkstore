@@ -17,6 +17,7 @@ class DownloadCSVProducts extends RequestResponder
 
     const string TYPE_FACEBOOK = "facebook";
     const string TYPE_GOOGLE = "google";
+    const string TYPE_GOOGLE_MERCHANT = "google_merchant";
     const string TYPE_FULL = "full";
     const string TYPE_IMAGES = "images";
 
@@ -31,6 +32,7 @@ class DownloadCSVProducts extends RequestResponder
 
         $this->supported_content[] = self::TYPE_FACEBOOK;
         $this->supported_content[] = self::TYPE_GOOGLE;
+        $this->supported_content[] = self::TYPE_GOOGLE_MERCHANT;
         $this->supported_content[] = self::TYPE_FULL;
         $this->supported_content[] = self::TYPE_IMAGES;
     }
@@ -42,6 +44,8 @@ class DownloadCSVProducts extends RequestResponder
             $type = self::TYPE_FACEBOOK;
         } else if (strcmp($title, self::TYPE_GOOGLE) == 0) {
             $type = self::TYPE_GOOGLE;
+        } else if (strcmp($title, self::TYPE_GOOGLE_MERCHANT) == 0) {
+            $type = self::TYPE_GOOGLE_MERCHANT;
         } else if (strcmp($title, self::TYPE_FULL) == 0) {
             $type = self::TYPE_FULL;
         } else if (strcmp($title, self::TYPE_IMAGES) == 0) {
@@ -186,7 +190,22 @@ class DownloadCSVProducts extends RequestResponder
                 return $this->processGoogle($item);
             };
 
-        } else if (strcmp($this->type, self::TYPE_FACEBOOK) == 0)  {
+        }
+        else if (strcmp($this->type, self::TYPE_GOOGLE_MERCHANT) == 0) {
+            $this->keys = array(
+                "ID [id]",
+                "Title [title]",
+                "Description [description]",
+                "Link [link]",
+                "Image link [image_link]",
+                "Availability [availability]",
+                "Price [price]"
+            );
+            $process = function(SellableItem $item) : array {
+                return $this->processGoogleMerchant($item);
+            };
+        }
+        else if (strcmp($this->type, self::TYPE_FACEBOOK) == 0)  {
 
             $this->keys = array("id", "content_id", "title", "description", "availability", "condition", "link", "image_link", "brand", "product_type", "price");
 
@@ -205,14 +224,17 @@ class DownloadCSVProducts extends RequestResponder
         }
 
 
-        fputcsv($fp, $this->keys);
+        fputcsv($fp, $this->keys, ",", '"' , "\\", PHP_EOL);
 
         $bean = new SellableProducts();
 
         $query = $bean->query("prodID");
         $query->select->group_by = " prodID ";
         $query->select->order_by = " update_date DESC ";
-
+        if (isset($_GET["filter_catID"])) {
+            $catID = (int)$_GET["filter_catID"];
+            $query->select->where()->add("catID", $catID);
+        }
         $total_rows = $query->exec();
 
         while ($result = $query->nextResult()) {
@@ -221,7 +243,7 @@ class DownloadCSVProducts extends RequestResponder
 
             $item = SellableItem::Load($prodID);
 
-            fputcsv($fp, $process($item));
+            fputcsv($fp, $process($item),",", '"' , "\\", PHP_EOL);
         }
         fclose($fp);
 
@@ -254,6 +276,32 @@ class DownloadCSVProducts extends RequestResponder
         $export_row["old_price"] = $item->getPriceInfo()->getOldPrice();
         return $export_row;
 
+    }
+    protected function processGoogleMerchant(SellableItem $item) : array
+    {
+        $export_row = array();
+        foreach ($this->keys as $idx => $value) {
+            $export_row[$value] = "";
+        }
+
+        $export_row["ID [id]"] = $item->getProductID();
+        $export_row["Title [title]"] = $item->getTitle();
+        $export_row["Description [description]"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
+
+        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
+        $export_row["Link [link]"] = fullURL($link);
+
+        $image_link = "";
+        if ($item->getMainPhoto() instanceof StorageItem) {
+            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
+            $image_link = fullURL($image_link);
+        }
+        $export_row["Image link [image_link]"] = $image_link;
+
+        $export_row["Availability [availability]"] = "In stock [in_stock]";
+        $export_row["Price [price]"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", false);
+
+        return $export_row;
     }
     protected function processGoogle(SellableItem $item) : array
     {
