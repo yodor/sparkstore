@@ -153,6 +153,11 @@ class DownloadCSVProducts extends RequestResponder
             exit;
         }
 
+        $separator = ",";
+        $enclosure = '"';
+        $escape = "\\";
+        $eol = PHP_EOL;
+
         header("Content-Type: text/csv");
         header("Content-Disposition: attachment;filename=" . $this->type . "_" . self::FILENAME);
         $fp = fopen("php://output", "w");
@@ -192,6 +197,7 @@ class DownloadCSVProducts extends RequestResponder
 
         }
         else if (strcmp($this->type, self::TYPE_GOOGLE_MERCHANT) == 0) {
+            $separator = "\t";
             $this->keys = array(
                 "ID [id]",
                 "Title [title]",
@@ -224,7 +230,7 @@ class DownloadCSVProducts extends RequestResponder
         }
 
 
-        fputcsv($fp, $this->keys, ",", '"' , "\\", PHP_EOL);
+        fputcsv($fp, $this->keys, $separator, $enclosure, $escape, $eol);
 
         $bean = new SellableProducts();
 
@@ -243,7 +249,7 @@ class DownloadCSVProducts extends RequestResponder
 
             $item = SellableItem::Load($prodID);
 
-            fputcsv($fp, $process($item),",", '"' , "\\", PHP_EOL);
+            fputcsv($fp, $process($item), $separator, $enclosure, $escape, $eol);
         }
         fclose($fp);
 
