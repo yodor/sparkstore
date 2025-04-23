@@ -202,6 +202,7 @@ class DownloadCSVProducts extends RequestResponder
                 "ID [id]",
                 "Title [title]",
                 "Description [description]",
+                "Condition [condition]",
                 "Link [link]",
                 "Image link [image_link]",
                 "Availability [availability]",
@@ -290,22 +291,23 @@ class DownloadCSVProducts extends RequestResponder
             $export_row[$value] = "";
         }
 
-        $export_row["ID [id]"] = $item->getProductID();
-        $export_row["Title [title]"] = $item->getTitle();
-        $export_row["Description [description]"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
+        $export_row["id"] = $item->getProductID();
+        $export_row["title"] = $item->getTitle();
+        $export_row["description"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
+        $export_row["condition"] = "new";
 
         $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
-        $export_row["Link [link]"] = fullURL($link);
+        $export_row["link"] = fullURL($link);
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
             $image_link = $item->getMainPhoto()->hrefImage(640, -1);
             $image_link = fullURL($image_link);
         }
-        $export_row["Image link [image_link]"] = $image_link;
+        $export_row["image_link"] = $image_link;
 
-        $export_row["Availability [availability]"] = "In stock [in_stock]";
-        $export_row["Price [price]"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", false);
+        $export_row["availability"] = "in_stock";
+        $export_row["price"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", true);
 
         return $export_row;
     }
