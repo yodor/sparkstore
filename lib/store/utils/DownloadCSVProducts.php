@@ -199,14 +199,14 @@ class DownloadCSVProducts extends RequestResponder
         else if (strcmp($this->type, self::TYPE_GOOGLE_MERCHANT) == 0) {
             $separator = "\t";
             $this->keys = array(
-                "ID [id]",
-                "Title [title]",
-                "Description [description]",
-                "Condition [condition]",
-                "Link [link]",
-                "Image link [image_link]",
-                "Availability [availability]",
-                "Price [price]"
+                "id",
+                "title",
+                "description",
+                "condition",
+                "link",
+                "image_link",
+                "availability",
+                "price"
             );
             $process = function(SellableItem $item) : array {
                 return $this->processGoogleMerchant($item);
