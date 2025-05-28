@@ -142,10 +142,10 @@ class ProductsList extends BeanListPage
         $this->getPage()->getActions()->append($action);
         $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_GOOGLE_MERCHANT);
         $this->getPage()->getActions()->append($action);
-//        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_FULL);
-//        $this->getPage()->getActions()->append($action);
-//        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
-//        $this->getPage()->getActions()->append($action);
+        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_FULL);
+        $this->getPage()->getActions()->append($action);
+        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
+        $this->getPage()->getActions()->append($action);
 
 
         new SectionChooserFormResponder();
