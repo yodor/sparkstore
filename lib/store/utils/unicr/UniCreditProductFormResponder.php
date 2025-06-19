@@ -389,7 +389,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         return $result;
     }
 
-    protected function validateInitialPayment(int $initialPayment) : int
+    protected function validateInitialPayment(float $initialPayment) : float
     {
         $result = $initialPayment;
         $productPrice = $this->sellable->getPriceInfo()->getSellPrice();
@@ -487,6 +487,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
         $this->calculateMonthlyPayment($installmentCount, $initialPayment, $resp);
 
+        $this->form->getInput("monthlyPayment")->setValue($resp->monthlyPayment);
         $this->form->getRenderer()->render();
 
     }
@@ -510,14 +511,14 @@ class UniCreditProductFormResponder extends JSONFormResponder
             return;
         }
 
-        $installmentCount = $this->validateInstallmentCount($this->form->getInput("installmentCount")->getValue());
+        $installmentCount = $this->validateInstallmentCount(intval($this->form->getInput("installmentCount")->getValue()));
         if (!$installmentCount) {
             $this->onProcessError($resp);
             $resp->message = "No installmentCount specified";
             return;
         }
 
-        $initialPayment = $this->validateInitialPayment($this->form->getInput("initialPayment")->getValue());
+        $initialPayment = $this->validateInitialPayment(floatval($this->form->getInput("initialPayment")->getValue()));
 
 
         $opr = new OprSucfOnlineSessionStart($this->serviceStub);

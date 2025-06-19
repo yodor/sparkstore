@@ -60,12 +60,8 @@ class UniCreditDialogScript extends PageScript
             }
 
             function processRender(result) {
-                
                 let response = result.response;
                 uniDialog.loadContent(response.contents);
-                
-                //loadResultValues(result);
-
             }
 
             /**
