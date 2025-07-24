@@ -14,6 +14,7 @@ class ProductCategoriesBean extends NestedSetBean
   `category_keywords` text DEFAULT NULL,
   `category_seotitle` text DEFAULT NULL,
   `category_seodescription` text DEFAULT NULL,
+  `category_description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`catID`),
   KEY `category_name` (`category_name`),
   KEY `parentID` (`parentID`),

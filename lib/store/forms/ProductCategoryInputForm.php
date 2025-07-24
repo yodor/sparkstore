@@ -27,6 +27,8 @@ class ProductCategoryInputForm extends InputForm
 
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
+        $this->addInput($field);
 
         $field = new DataInput("category_seotitle", "SEO Заглавие (опция)", 0);
         new TextField($field);

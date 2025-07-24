@@ -576,6 +576,17 @@ class ProductListPageBase extends ProductPageBase
         }
         $this->renderProductsView();
 
+
+        if ($catID>0 && $this->product_categories->haveColumn("category_description")) {
+            $category_description = $this->product_categories->getValue($catID, "category_description");
+            if ($category_description) {
+                echo "<div class='category_description'>";
+                echo $category_description;
+                echo "</div>";
+            }
+        }
+
+
         echo "</div>";
 
         Session::set("shopping.list",  URL::Current()->toString());
