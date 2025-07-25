@@ -5,14 +5,16 @@ include_once("beans/UsersBean.php");
 class QueryProductMailer extends Mailer
 {
 
+    protected $client_phone = "";
     protected $client_email = "";
     protected $client_name = "";
     protected $query_text = "";
     protected $product_name = "";
     protected $product_link = "";
 
-    public function setClient(string $client_email, string $client_name)
+    public function setClient(string $client_phone, string $client_email, string $client_name)
     {
+        $this->client_phone = $client_phone;
         $this->client_email = $client_email;
         $this->client_name = $client_name;
     }
@@ -44,6 +46,8 @@ class QueryProductMailer extends Mailer
         debug ("Preparing message contents ...");
 
         $message  = "От: ".$this->client_name;
+        $message .= "\r\n";
+        $message .= "Телефон: ".$this->client_phone;
         $message .= "\r\n";
         $message .= "Email: ".$this->client_email;
         $message .= "\r\n";

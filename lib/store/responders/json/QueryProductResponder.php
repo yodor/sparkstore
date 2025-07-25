@@ -8,27 +8,27 @@ class QueryProductResponder extends JSONResponder
     /**
      * @var int
      */
-    protected $itemID = -1;
+    protected int $itemID = -1;
+
+    /**
+     * @var string Client email address (not required)
+     */
+    protected string $email = "";
 
     /**
      * @var string
      */
-    protected $email = "";
+    protected string $phone = "";
 
     /**
      * @var string
      */
-    protected $name = "";
-
-    /**
-     * @var string
-     */
-    protected $query = "";
+    protected string $query = "";
 
     /**
      * @var QueryProductMailer|null
      */
-    protected $mailer = null;
+    protected ?QueryProductMailer $mailer = null;
 
     public function __construct()
     {
@@ -37,6 +37,7 @@ class QueryProductResponder extends JSONResponder
         $this->email = "";
         $this->query = "";
         $this->name = "";
+        $this->phone = "";
 
         $this->mailer = new QueryProductMailer();
 
@@ -58,9 +59,16 @@ class QueryProductResponder extends JSONResponder
         $this->name = strip_tags(trim($_REQUEST["name"]));
         if (!$this->name) throw new Exception("Incorrect name parameter value");
 
-        if (!isset($_REQUEST["email"])) throw new Exception("email not passed");
-        $this->email = strip_tags(trim($_REQUEST["email"]));
-        if (!$this->email) throw new Exception("Incorrect email parameter value");
+//        if (!isset($_REQUEST["email"])) throw new Exception("email not passed");
+//        $this->email = strip_tags(trim($_REQUEST["email"]));
+//        if (!$this->email) throw new Exception("Incorrect email parameter value");
+        if (isset($_REQUEST["email"])) {
+            $this->email = strip_tags(trim($_REQUEST["email"]));
+        }
+
+        if (!isset($_REQUEST["phone"])) throw new Exception("phone not passed");
+        $this->phone = strip_tags(trim($_REQUEST["phone"]));
+        if (!$this->phone) throw new Exception("Incorrect phone parameter value");
 
         if (!isset($_REQUEST["query"])) throw new Exception("query not passed");
         $this->query = strip_tags(trim($_REQUEST["query"]));
@@ -87,7 +95,7 @@ class QueryProductResponder extends JSONResponder
             $prodID = $result->get("prodID");
 
 
-            $this->mailer->setClient($this->email, $this->name);
+            $this->mailer->setClient($this->phone, $this->email, $this->name);
             $this->mailer->setProduct($result->get("product_name"), fullURL(LOCAL."/products/details.php?prodID=$prodID"));
             $this->mailer->setQueryText($this->query);
             $this->mailer->prepareMessage();

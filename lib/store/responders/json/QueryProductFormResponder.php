@@ -28,11 +28,12 @@ class QueryProductFormResponder extends JSONFormResponder
     {
         parent::onProcessSuccess($resp);
         $prodID = $this->sellable->getProductID();
-        $email = $this->form->getInput("email")->getValue();
+        $email = "".$this->form->getInput("email")->getValue();
+        $phone = "".$this->form->getInput("phone")->getValue();
         $name = $this->form->getInput("fullname")->getValue();
         $query_text = $this->form->getInput("query")->getValue();
 
-        $this->mailer->setClient($email, $name);
+        $this->mailer->setClient($phone, $email, $name);
         $this->mailer->setProduct($this->sellable->getTitle(), fullURL(LOCAL."/products/details.php?prodID=$prodID"));
         $this->mailer->setQueryText($query_text);
         $this->mailer->prepareMessage();
