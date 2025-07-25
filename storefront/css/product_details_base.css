@@ -28,3 +28,21 @@
 /*.tabs .contents {*/
 /*    background-color: #eaeaea;*/
 /*}*/
+
+.JSONFormDialog[responder='QueryProductFormResponder'] input {
+    font-size:120%;
+}
+.JSONFormDialog[responder='QueryProductFormResponder'] textarea {
+    font-size:120%;
+    min-height:120px;
+    min-width:320px;
+}
+
+.JSONFormDialog[responder='OrderProductFormResponder'] input {
+    font-size:120%;
+}
+.JSONFormDialog[responder='OrderProductFormResponder'] textarea {
+    font-size:120%;
+    min-height:120px;
+    min-width:320px;
+}
