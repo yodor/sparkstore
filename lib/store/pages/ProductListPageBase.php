@@ -549,6 +549,15 @@ class ProductListPageBase extends ProductPageBase
 
         $catID = $this->treeView->getSelectedID();
 
+        if ($catID>0) {
+            $cmp = new Component();
+            $cmp->setTagName("H2");
+            $cmp->setComponentClass("Caption");
+            $cmp->setClassName("category_name");
+            $cmp->setContents($this->view->getName());
+            $cmp->render();
+        }
+
         $seo_description = "";
         if ($this->section && $this->sections->haveColumn("section_seodescription")) {
             $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
@@ -575,7 +584,6 @@ class ProductListPageBase extends ProductPageBase
             echo "<h2 class='Caption category_description seo_description'>$seo_description</h2>";
         }
         $this->renderProductsView();
-
 
         if ($catID>0 && $this->product_categories->haveColumn("category_description")) {
             $category_description = $this->product_categories->getValue($catID, "category_description");

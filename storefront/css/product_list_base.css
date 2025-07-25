@@ -1,6 +1,6 @@
 .section.main .content {
-    padding-top:20px;
-    text-align:center;
+    padding:1em;
+    text-align:left;
     font-size:80%;
 }
 .section.main .content .column {
@@ -16,9 +16,10 @@
 
 .section.main .content .column.left {
     width:270px;
-    padding-left:20px;
+    /*padding-left:20px;*/
     padding-right:20px;
     margin-bottom:1em;
+
 }
 
 .section.main .content .column.left .panel {
@@ -39,6 +40,7 @@
     font-weight: normal;
     display: block;
     padding-top:0;
+    padding-bottom:0;
     text-align:left;
 
     cursor:pointer;
@@ -245,4 +247,15 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     font-weight:normal;
     padding-left:1em;
     padding-right:1em;
+}
+
+.section.main .BreadcrumbList {
+
+}
+.section.main .Caption.category_name {
+    /*text-align:left;*/
+    padding-top:0;
+}
+.section.main .category_description {
+    padding:1em;
 }
