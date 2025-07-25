@@ -189,13 +189,13 @@
 }
 
 .admin_layout .page_area .page_caption .page_actions .Action[action='export_update'] {
-    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    background-image: url("../../sparkfront/images/icon_sort_desc.svg");
     border-radius: 50%;
     border-color: black;
     border-style: solid;
 }
 .admin_layout .page_area .page_caption .page_actions .Action[action='import_update'] {
-    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    background-image: url("../../sparkfront/images/icon_sort_asc.svg");
     border-radius: 50%;
     border-color: black;
     border-style: solid;
