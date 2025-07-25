@@ -20,6 +20,7 @@ class DownloadCSVProducts extends RequestResponder
     const string TYPE_GOOGLE_MERCHANT = "google_merchant";
     const string TYPE_FULL = "full";
     const string TYPE_IMAGES = "images";
+    const string TYPE_EXPORT_UPDATE = "export_update";
 
     protected array $supported_content = array();
     protected string $type = "";
@@ -35,11 +36,13 @@ class DownloadCSVProducts extends RequestResponder
         $this->supported_content[] = self::TYPE_GOOGLE_MERCHANT;
         $this->supported_content[] = self::TYPE_FULL;
         $this->supported_content[] = self::TYPE_IMAGES;
+        $this->supported_content[] = self::TYPE_EXPORT_UPDATE;
     }
 
     public function createAction(string $title = ""): ?Action
     {
         $type = "";
+        $tooltip = "";
         if (strcmp($title, self::TYPE_FACEBOOK) == 0) {
             $type = self::TYPE_FACEBOOK;
         } else if (strcmp($title, self::TYPE_GOOGLE) == 0) {
@@ -48,13 +51,23 @@ class DownloadCSVProducts extends RequestResponder
             $type = self::TYPE_GOOGLE_MERCHANT;
         } else if (strcmp($title, self::TYPE_FULL) == 0) {
             $type = self::TYPE_FULL;
+            $tooltip = "Download full products - data part";
         } else if (strcmp($title, self::TYPE_IMAGES) == 0) {
             $type = self::TYPE_IMAGES;
+            $tooltip = "Download full products - images part";
+        } else if (strcmp($title, self::TYPE_EXPORT_UPDATE) == 0) {
+            $type = self::TYPE_EXPORT_UPDATE;
+            $tooltip = "Download products data for external edit";
         }
+
 
         $action = parent::createAction($title);
         $action->getURL()->add(new URLParameter("type", $type));
-        $action->setTooltip("Download CSV - " . $type);
+        if (strlen($tooltip) < 1) {
+            $tooltip = "Download CSV - " . $type;
+        }
+        $action->setTooltip($tooltip);
+
         return $action;
     }
 
@@ -142,6 +155,19 @@ class DownloadCSVProducts extends RequestResponder
 
     }
 
+    protected function processExportUpdate(SellableItem $item) : array
+    {
+        $export_row = array();
+        foreach ($this->keys as $idx => $value) {
+            $export_row[$value] = "";
+        }
+
+        $export_row["prodID"] = $item->getProductID();
+        $export_row["product_name"] =  $item->getTitle();
+        $export_row["product_description"] = $item->getDescription();
+
+        return $export_row;
+    }
     protected function processImpl() : void
     {
 
@@ -164,7 +190,13 @@ class DownloadCSVProducts extends RequestResponder
 
         $process = null;
 
-        if (strcmp($this->type, self::TYPE_GOOGLE) == 0) {
+        if (strcmp($this->type, self::TYPE_EXPORT_UPDATE) == 0) {
+            $this->keys = array("prodID", "product_name", "product_description");
+            $process = function(SellableItem $item) : array {
+                return $this->processExportUpdate($item);
+            };
+        }
+        else if (strcmp($this->type, self::TYPE_GOOGLE) == 0) {
 
             $this->keys = array(
                 "handleId",
@@ -231,13 +263,18 @@ class DownloadCSVProducts extends RequestResponder
         }
 
 
-        fputcsv($fp, $this->keys, $separator, $enclosure, $escape, $eol);
+        fputcsv($fp, $this->keys, $separator, $enclosure, $escape);
 
         $bean = new SellableProducts();
 
         $query = $bean->query("prodID");
         $query->select->group_by = " prodID ";
-        $query->select->order_by = " update_date DESC ";
+        if (strcmp($this->type, self::TYPE_EXPORT_UPDATE) == 0) {
+            $query->select->order_by = " prodID DESC ";
+        }
+        else {
+            $query->select->order_by = " update_date DESC ";
+        }
         if (isset($_GET["filter_catID"])) {
             $catID = (int)$_GET["filter_catID"];
             $query->select->where()->add("catID", $catID);
@@ -250,7 +287,7 @@ class DownloadCSVProducts extends RequestResponder
 
             $item = SellableItem::Load($prodID);
 
-            fputcsv($fp, $process($item), $separator, $enclosure, $escape, $eol);
+            fputcsv($fp, $process($item), $separator, $enclosure, $escape);
         }
         fclose($fp);
 

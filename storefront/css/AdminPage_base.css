@@ -169,9 +169,47 @@
     background-image: url("../images/page_actions/download_csv_google.svg");
 }
 
+.admin_layout .page_area .page_caption .page_actions .Action[action='google_merchant'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+.admin_layout .page_area .page_caption .page_actions .Action[action='full'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+.admin_layout .page_area .page_caption .page_actions .Action[action='images'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+
+.admin_layout .page_area .page_caption .page_actions .Action[action='export_update'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+.admin_layout .page_area .page_caption .page_actions .Action[action='import_update'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+
+
 .admin_layout .page_area .TextComponent.help.summary {
     display:block;
     padding-top:1em;
     padding-bottom:1em;
     font-style:italic;
+}
+
+.FormRenderer[name='SectionChooserForm'] SELECT {
+    /*min-width: min-content;*/
+    min-height: 100px;
 }

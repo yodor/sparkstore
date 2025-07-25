@@ -7,6 +7,7 @@ include_once("store/beans/ProductClassesBean.php");
 include_once("store/beans/ProductSectionsBean.php");
 include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
+include_once("store/responders/json/ImportUpdateFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
 include_once("components/PageScript.php");
 include_once("store/beans/ProductViewLogBean.php");
@@ -126,6 +127,22 @@ JS;
     }
 }
 
+class ImportUpdateScript extends PageScript
+{
+    public function code() : string
+    {
+        return <<<JS
+        function showImportUpdateDialog()
+        {
+            let import_dialog = new JSONFormDialog();
+            import_dialog.setTitle("Изберете файл: ");
+            import_dialog.setResponder("ImportUpdateFormResponder");
+            import_dialog.show();
+        }
+JS;
+    }
+}
+
 class ProductsList extends BeanListPage
 {
     protected $filtersForm;
@@ -147,6 +164,19 @@ class ProductsList extends BeanListPage
         $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
         $this->getPage()->getActions()->append($action);
 
+        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_EXPORT_UPDATE);
+        $this->getPage()->getActions()->append($action);
+
+
+
+        $import_responder = new ImportUpdateFormResponder();
+        $action = new Action("import_update");
+
+        $action->getURL()->fromString("javascript:showImportUpdateDialog()");
+        $action->setTooltip("Import product data from external edit");
+
+        $this->getPage()->getActions()->append($action);
+        new ImportUpdateScript();
 
         new SectionChooserFormResponder();
         new SectionChooserScript();
