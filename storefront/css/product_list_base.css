@@ -258,4 +258,5 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
 }
 .section.main .category_description {
     padding:1em;
+    font-size:120%;
 }
