@@ -35,8 +35,6 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
         $stream = fopen('data://text/plain,' . $file->data(),'r');
 
-
-
         $bean = new ProductsBean();
 
         $db = DBConnections::Open();
@@ -59,7 +57,9 @@ class ImportUpdateFormResponder extends JSONFormResponder
                 }
 
                 $prodID = (int)$line[0];
-                $updateData = array("product_name"=>$line[1], "product_description"=>$line[2]);
+                $productName = sanitizeInput(strip_tags($line[1]));
+                $productDescription = sanitizeInput(strip_tags($line[2]));
+                $updateData = array("product_name"=>$productName, "product_description"=>$productDescription);
 
                 $bean->update($prodID, $updateData, $db);
 

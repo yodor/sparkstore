@@ -11,7 +11,11 @@ class ImportUpdateChooserForm extends InputForm
 
 
         $field = DataInputFactory::Create(DataInputFactory::SESSION_FILE, "update_file", "Select CSV update file", 1);
-
+        $field->getProcessor()->setTransactBeanItemLimit(1);
+        $validator = $field->getValidator();
+        if ($validator instanceof UploadDataValidator) {
+            $validator->setAcceptMimes(array("text/csv"));
+        }
         $this->addInput($field);
 
 
