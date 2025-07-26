@@ -11,7 +11,7 @@ class QueryProductForm extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "fullname", "Име", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Phone", 1);
+        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 0);

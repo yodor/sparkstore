@@ -30,10 +30,9 @@ class ImportUpdateFormResponder extends JSONFormResponder
         $separator = ",";
         $enclosure = '"';
         $escape = "\\";
-        $eol = PHP_EOL;
-
 
         $stream = fopen('data://text/plain,' . $file->data(),'r');
+        if (!$stream) throw new Exception("Unable to open uploaded file as stream");
 
         $bean = new ProductsBean();
 
