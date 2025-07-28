@@ -52,14 +52,17 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
                 if ($linePosition == 1) {
 
-                    if (strcmp($line[0], "prodID") !== 0) {
-                        throw new Exception("Incorrect column keys name for prodID: ".$line[0]);
+                    $key_prodID = preg_replace('/[[:^print:]]/', '', $line[0]);
+                    if (strcmp($key_prodID, "prodID") !== 0) {
+                        throw new Exception("Incorrect column keys name for prodID: ".$line[0]." size (".strlen($line[0]).")");
                     }
-                    if (strcmp($line[1], "product_name") !== 0) {
-                        throw new Exception("Incorrect column keys name for product_name: ".$line[1]);
+                    $key_productName = preg_replace('/[[:^print:]]/', '', $line[1]);
+                    if (strcmp($key_productName, "product_name") !== 0) {
+                        throw new Exception("Incorrect column keys name for product_name: ".$line[1]." size (".strlen($line[1]).")");
                     }
-                    if (strcmp($line[2], "product_description") !== 0) {
-                        throw new Exception("Incorrect column keys name for product_description".$line[2]);
+                    $key_productDescription = preg_replace('/[[:^print:]]/', '', $line[2]);
+                    if (strcmp($key_productDescription, "product_description") !== 0) {
+                        throw new Exception("Incorrect column keys name for product_description: ".$line[2]." size (".strlen($line[2]).")");
                     }
                     continue;
                 }
@@ -74,7 +77,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
             }
 
             $db->commit();
-            $resp->message = "Updated ".$linePosition." products.";
+            $resp->message = "Updated ".($linePosition-1)." products.";
         }
         catch (Exception $e) {
             $db->rollback();
