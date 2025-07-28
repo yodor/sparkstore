@@ -12,10 +12,15 @@ class ImportUpdateChooserForm extends InputForm
 
         $field = DataInputFactory::Create(DataInputFactory::SESSION_FILE, "update_file", "Select CSV update file", 1);
         $field->getProcessor()->setTransactBeanItemLimit(1);
-        $validator = $field->getValidator();
-        if ($validator instanceof UploadDataValidator) {
-            $validator->setAcceptMimes(array("text/csv"));
+        $arrValidator = $field->getValidator();
+        if ($arrValidator instanceof ArrayInputValidator) {
+            $validator = $arrValidator->getItemValidator();
+            if ($validator  instanceof UploadDataValidator) {
+                $validator->setAcceptMimes(array("text/csv", "text/html"));
+                debug("Setting accept mimes to text/csv");
+            }
         }
+
         $this->addInput($field);
 
 

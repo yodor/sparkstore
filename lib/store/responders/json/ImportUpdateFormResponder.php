@@ -31,6 +31,8 @@ class ImportUpdateFormResponder extends JSONFormResponder
         $enclosure = '"';
         $escape = "\\";
 
+        debug("Uploaded file: ".$file->data());
+
         $stream = fopen('data://text/plain,' . $file->data(),'r');
         if (!$stream) throw new Exception("Unable to open uploaded file as stream");
 
@@ -49,8 +51,15 @@ class ImportUpdateFormResponder extends JSONFormResponder
                 if (count($line) != 3) throw new Exception("Incorrect number of columns. Expected 3 columns");
 
                 if ($linePosition == 1) {
-                    if (strcmp($line[0], "prodID") != 0 || strcmp($line[1], "product_name") != 0 || strcmp($line[2], "product_description") != 0) {
-                        throw new Exception("Incorrect column keys names. Required keys: prodID, product_name, product_description");
+
+                    if (strcmp($line[0], "prodID") !== 0) {
+                        throw new Exception("Incorrect column keys name for prodID: ".$line[0]);
+                    }
+                    if (strcmp($line[1], "product_name") !== 0) {
+                        throw new Exception("Incorrect column keys name for product_name: ".$line[1]);
+                    }
+                    if (strcmp($line[2], "product_description") !== 0) {
+                        throw new Exception("Incorrect column keys name for product_description".$line[2]);
                     }
                     continue;
                 }
