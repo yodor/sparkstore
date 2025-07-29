@@ -153,29 +153,22 @@ class ProductsList extends BeanListPage
         $this->getPage()->setPageMenu(TemplateFactory::MenuForPage("ProductsList"));
 
         $dcsv_responder = new DownloadCSVProducts();
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_FACEBOOK);
-        $this->getPage()->getActions()->append($action);
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_GOOGLE);
-        $this->getPage()->getActions()->append($action);
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_GOOGLE_MERCHANT);
-        $this->getPage()->getActions()->append($action);
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_FULL);
-        $this->getPage()->getActions()->append($action);
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
-        $this->getPage()->getActions()->append($action);
+        $typeNames = $dcsv_responder->getProcessorTypes();
 
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_EXPORT_UPDATE);
-        $this->getPage()->getActions()->append($action);
-
-
+        foreach ($typeNames as $idx=>$typeName) {
+            $action = $dcsv_responder->createAction($typeName);
+            $this->getPage()->getActions()->append($action);
+        }
 
         $import_responder = new ImportUpdateFormResponder();
         $action = new Action("import_update");
-
         $action->getURL()->fromString("javascript:showImportUpdateDialog()");
         $action->setTooltip("Import product data from external edit");
-
         $this->getPage()->getActions()->append($action);
+
+        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
+        $this->getPage()->getActions()->append($action);
+
         new ImportUpdateScript();
 
         new SectionChooserFormResponder();

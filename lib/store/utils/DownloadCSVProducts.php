@@ -9,63 +9,371 @@ include_once("store/utils/ProductsSQL.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("storage/SparkHTTPResponse.php");
 
-class DownloadCSVProducts extends RequestResponder
+abstract class CSVProductExporter
+{
+    protected string $FILENAME = "catalog_products.csv";
+
+    protected array $keys = array();
+    protected array $values = array();
+    protected string $SEPARATOR = ",";
+    protected string $ENCLOSURE = '"';
+    protected string $ESCAPE = "\\";
+    protected string $EOL = PHP_EOL;
+    protected mixed $fp = null;
+    protected string $typeName = "";
+
+
+    public function __construct()
+    {
+        //$this->type . "_" . self::FILENAME;
+        $this->keys = array();
+        $this->values = array();
+        $this->createKeys();
+
+    }
+
+    public function getToolTipText() : string
+    {
+        return "Download CSV - " . $this->typeName;
+    }
+
+    public function __destruct()
+    {
+        if ($this->fp) {
+            fclose($this->fp);
+        }
+    }
+
+    public function getTypeName() : string
+    {
+        return $this->typeName;
+    }
+
+    /**
+     * Cleanup the value associative array and prepare
+     * @return void
+     */
+    protected function resetValues() : void
+    {
+        $this->values = array();
+        foreach ($this->keys as $idx => $keyName) {
+            $this->values[$keyName] = "";
+        }
+    }
+
+    public function writeHeader() : void
+    {
+        $outputFilename = $this->typeName . "_" . $this->FILENAME;
+        header("Content-Type: text/csv");
+        header("Content-Disposition: attachment;filename=".$outputFilename);
+        $this->fp = fopen("php://output", "w");
+        fputcsv($this->fp, $this->keys, $this->SEPARATOR, $this->ENCLOSURE, $this->ESCAPE);
+    }
+
+    /**
+     * Output using fputcsv the values array
+     * @param SellableItem $item
+     * @return void
+     */
+    public function writeItem(SellableItem $item) : void
+    {
+        $this->resetValues();
+        $this->processItem($item);
+        fputcsv($this->fp, $this->values, $this->SEPARATOR, $this->ENCLOSURE, $this->ESCAPE);
+    }
+
+    /**
+     * Setup the $keys associative array
+     * @return void
+     */
+    protected abstract function createKeys() : void;
+
+    /**
+     * Fill values using data from SellableItem
+     * @param SellableItem $item
+     * @return void
+     */
+    protected abstract function processItem(SellableItem $item) : void;
+
+}
+
+class FacebookCSVExporter extends CSVProductExporter
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "facebook";
+    }
+
+    protected function createKeys(): void
+    {
+        $this->keys = array("id", "content_id", "title", "description", "availability", "condition", "link", "image_link", "brand", "product_type", "price");
+
+    }
+
+    protected function processItem(SellableItem $item): void
+    {
+        $this->values["id"] = $item->getProductID();
+        $this->values["content_id"] = $item->getProductID();
+        $this->values["title"] = $item->getTitle();
+        $this->values["description"] = mb_substr(strip_tags($item->getDescription()), 0, 8000);
+        $this->values["availability"] = "in stock";
+        $this->values["condition"] = "new";
+
+        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
+        $this->values["link"] = fullURL($link);
+
+        $image_link = "";
+        if ($item->getMainPhoto() instanceof StorageItem) {
+            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
+            $image_link = fullURL($image_link);
+        }
+        $this->values["image_link"] = $image_link;
+
+        $this->values["brand"] = $item->getBrandName();
+        $this->values["product_type"] = $item->getCategoryName();
+
+        $this->values["price"] = $item->getPriceInfo()->getSellPrice();
+    }
+}
+
+class GoogleCSVExporter extends CSVProductExporter
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "google";
+    }
+
+    protected function createKeys(): void
+    {
+        $this->keys = array(
+            "handleId",
+            "fieldType",
+            "name",
+            "description",
+            "productImageUrl",
+            "collection",
+            "sku",
+            "ribbon",
+            "price",
+            "surcharge",
+            "visible",
+            "discountMode",
+            "discountValue",
+            "inventory",
+            "weight",
+            "productOptionName",
+            "productOptionType",
+            "productOptionDescription",
+            "additionalInfoTitle",
+            "Additional info description",
+            "customTextField",
+            "customTextCharLimit",
+            "customTextMandatory"
+        );
+    }
+
+    protected function processItem(SellableItem $item): void
+    {
+
+        $this->values["handleId"] = $item->getProductID();
+        $this->values["fieldType"] = "Product";
+        $this->values["name"] = $item->getTitle();
+        $this->values["description"] = mb_substr(strip_tags($item->getDescription()), 0, 8000);
+
+        $image_link = "";
+        if ($item->getMainPhoto() instanceof StorageItem) {
+            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
+            $image_link = fullURL($image_link);
+        }
+        $this->values["productImageUrl"] = $image_link;
+
+        $this->values["collection"] = $item->getCategoryName();
+        $this->values["sku"] = $item->getProductID();
+        $this->values["ribbon"] = "";
+        if ($item->isPromotion()) {
+            $this->values["ribbon"] = "Promo";
+        }
+        $this->values["price"] = $item->getPriceInfo()->getSellPrice();
+        $this->values["surcharge"] = "";
+        $this->values["visible"] = "TRUE";
+        $this->values["discountMode"] = "AMOUNT";
+        $this->values["discountValue"] = $item->getPriceInfo()->getDiscountAmount();
+        $this->values["inventory"] = "InStock";
+        $this->values["weight"] = "0.000";
+    }
+}
+
+class GoogleMerchantCSVExporter extends CSVProductExporter
 {
 
-    const string FILENAME = "catalog_products.csv";
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "google_merchant";
+        $this->SEPARATOR = "\t";
+    }
 
+    protected function createKeys(): void
+    {
 
-    const string TYPE_FACEBOOK = "facebook";
-    const string TYPE_GOOGLE = "google";
-    const string TYPE_GOOGLE_MERCHANT = "google_merchant";
-    const string TYPE_FULL = "full";
+        $this->keys = array(
+            "id",
+            "title",
+            "description",
+            "condition",
+            "link",
+            "image_link",
+            "availability",
+            "price"
+        );
+    }
+
+    protected function processItem(SellableItem $item): void
+    {
+        $this->values["id"] = $item->getProductID();
+        $this->values["title"] = $item->getTitle();
+        $this->values["description"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
+        $this->values["condition"] = "new";
+
+        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
+        $this->values["link"] = fullURL($link);
+
+        $image_link = "";
+        if ($item->getMainPhoto() instanceof StorageItem) {
+            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
+            $image_link = fullURL($image_link);
+        }
+        $this->values["image_link"] = $image_link;
+
+        $this->values["availability"] = "in_stock";
+        $this->values["price"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", true);
+
+    }
+}
+
+class FullCSVExporter extends CSVProductExporter
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "full";
+    }
+
+    public function getToolTipText(): string
+    {
+        return "Download CSV full products - data part";
+    }
+
+    protected function createKeys(): void
+    {
+        $this->keys = array("id", "category", "name", "description", "price", "old_price", "images");
+    }
+
+    protected function processItem(SellableItem $item): void
+    {
+        $this->values["id"] = $item->getProductID();
+        $this->values["category"] = $item->getCategoryName();
+        $this->values["name"] = $item->getTitle();
+        $this->values["description"] = $item->getDescription();
+
+        $imageID = array();
+        foreach($item->galleryItems() as $idx=>$storageItem){
+            if ($storageItem instanceof StorageItem) {
+                $imageID[] = $storageItem->id;
+            }
+        }
+        $this->values["images"] = implode("|", $imageID);
+
+        $this->values["price"] = $item->getPriceInfo()->getSellPrice();
+        $this->values["old_price"] = $item->getPriceInfo()->getOldPrice();
+    }
+}
+
+class UpdateCSVExporter extends CSVProductExporter
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "export_update";
+    }
+
+    public function getToolTipText(): string
+    {
+        return "Download products data for external edit";
+    }
+
+    protected function createKeys(): void
+    {
+        $this->keys = array("prodID", "product_name", "product_description");
+    }
+
+    protected function processItem(SellableItem $item): void
+    {
+        $this->values["prodID"] = $item->getProductID();
+        $this->values["product_name"] =  $item->getTitle();
+        $this->values["product_description"] = $item->getDescription();
+    }
+}
+
+class DownloadCSVProducts extends RequestResponder
+{
     const string TYPE_IMAGES = "images";
-    const string TYPE_EXPORT_UPDATE = "export_update";
 
     protected array $supported_content = array();
     protected string $type = "";
-
-    protected array $keys = array();
+    protected array $processors = array();
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->supported_content[] = self::TYPE_FACEBOOK;
-        $this->supported_content[] = self::TYPE_GOOGLE;
-        $this->supported_content[] = self::TYPE_GOOGLE_MERCHANT;
-        $this->supported_content[] = self::TYPE_FULL;
         $this->supported_content[] = self::TYPE_IMAGES;
-        $this->supported_content[] = self::TYPE_EXPORT_UPDATE;
+
+        $this->addProcessor(new FacebookCSVExporter());
+        $this->addProcessor(new GoogleCSVExporter());
+        $this->addProcessor(new GoogleMerchantCSVExporter());
+        $this->addProcessor(new FullCSVExporter());
+        $this->addProcessor(new UpdateCSVExporter());
+    }
+
+    public function addProcessor(CSVProductExporter $processor) : void
+    {
+        $this->supported_content[] = $processor->getTypeName();
+        $this->processors[$processor->getTypeName()] = $processor;
+    }
+
+    public function getProcessor(string $typeName) : CSVProductExporter
+    {
+        return $this->processors[$typeName];
+    }
+
+    public function getProcessorTypes() : array
+    {
+        return array_keys($this->processors);
     }
 
     public function createAction(string $title = ""): ?Action
     {
         $type = "";
         $tooltip = "";
-        if (strcmp($title, self::TYPE_FACEBOOK) == 0) {
-            $type = self::TYPE_FACEBOOK;
-        } else if (strcmp($title, self::TYPE_GOOGLE) == 0) {
-            $type = self::TYPE_GOOGLE;
-        } else if (strcmp($title, self::TYPE_GOOGLE_MERCHANT) == 0) {
-            $type = self::TYPE_GOOGLE_MERCHANT;
-        } else if (strcmp($title, self::TYPE_FULL) == 0) {
-            $type = self::TYPE_FULL;
-            $tooltip = "Download full products - data part";
-        } else if (strcmp($title, self::TYPE_IMAGES) == 0) {
+        if (strcmp($title, self::TYPE_IMAGES) == 0) {
             $type = self::TYPE_IMAGES;
             $tooltip = "Download full products - images part";
-        } else if (strcmp($title, self::TYPE_EXPORT_UPDATE) == 0) {
-            $type = self::TYPE_EXPORT_UPDATE;
-            $tooltip = "Download products data for external edit";
         }
-
+        else {
+            if (!isset($this->processors[$title])) {
+                throw new Exception("Unknown processor type $title");
+            }
+            $type = $title;
+            $processor = $this->processors[$type];
+            $tooltip = $processor->getToolTipText();
+        }
 
         $action = parent::createAction($title);
         $action->getURL()->add(new URLParameter("type", $type));
-        if (strlen($tooltip) < 1) {
-            $tooltip = "Download CSV - " . $type;
-        }
         $action->setTooltip($tooltip);
 
         return $action;
@@ -155,19 +463,7 @@ class DownloadCSVProducts extends RequestResponder
 
     }
 
-    protected function processExportUpdate(SellableItem $item) : array
-    {
-        $export_row = array();
-        foreach ($this->keys as $idx => $value) {
-            $export_row[$value] = "";
-        }
 
-        $export_row["prodID"] = $item->getProductID();
-        $export_row["product_name"] =  $item->getTitle();
-        $export_row["product_description"] = $item->getDescription();
-
-        return $export_row;
-    }
     protected function processImpl() : void
     {
 
@@ -179,247 +475,39 @@ class DownloadCSVProducts extends RequestResponder
             exit;
         }
 
-        $separator = ",";
-        $enclosure = '"';
-        $escape = "\\";
-        $eol = PHP_EOL;
+        $processor = null;
 
-        header("Content-Type: text/csv");
-        header("Content-Disposition: attachment;filename=" . $this->type . "_" . self::FILENAME);
-        $fp = fopen("php://output", "w");
-
-        $process = null;
-
-        if (strcmp($this->type, self::TYPE_EXPORT_UPDATE) == 0) {
-            $this->keys = array("prodID", "product_name", "product_description");
-            $process = function(SellableItem $item) : array {
-                return $this->processExportUpdate($item);
-            };
-        }
-        else if (strcmp($this->type, self::TYPE_GOOGLE) == 0) {
-
-            $this->keys = array(
-                "handleId",
-                "fieldType",
-                "name",
-                "description",
-                "productImageUrl",
-                "collection",
-                "sku",
-                "ribbon",
-                "price",
-                "surcharge",
-                "visible",
-                "discountMode",
-                "discountValue",
-                "inventory",
-                "weight",
-                "productOptionName",
-                "productOptionType",
-                "productOptionDescription",
-                "additionalInfoTitle",
-                "Additional info description",
-                "customTextField",
-                "customTextCharLimit",
-                "customTextMandatory"
-            );
-            $process = function(SellableItem $item) : array {
-                return $this->processGoogle($item);
-            };
-
-        }
-        else if (strcmp($this->type, self::TYPE_GOOGLE_MERCHANT) == 0) {
-            $separator = "\t";
-            $this->keys = array(
-                "id",
-                "title",
-                "description",
-                "condition",
-                "link",
-                "image_link",
-                "availability",
-                "price"
-            );
-            $process = function(SellableItem $item) : array {
-                return $this->processGoogleMerchant($item);
-            };
-        }
-        else if (strcmp($this->type, self::TYPE_FACEBOOK) == 0)  {
-
-            $this->keys = array("id", "content_id", "title", "description", "availability", "condition", "link", "image_link", "brand", "product_type", "price");
-
-            $process = function(SellableItem $item) : array {
-                return $this->processFacebook($item);
-            };
-
-        } else if (strcmp($this->type, self::TYPE_FULL) == 0) {
-
-            $this->keys = array("id", "category", "name", "description", "price", "old_price", "images");
-
-            $process = function (SellableItem $item): array {
-                return $this->processFull($item);
-            };
-
+        if (array_key_exists($this->type, $this->processors)) {
+            $processor = $this->processors[$this->type];
         }
 
-
-        fputcsv($fp, $this->keys, $separator, $enclosure, $escape);
+        if (!($processor instanceof CSVProductExporter)) throw new Exception("Export processor was not created");
 
         $bean = new SellableProducts();
 
         $query = $bean->query("prodID");
         $query->select->group_by = " prodID ";
-        if (strcmp($this->type, self::TYPE_EXPORT_UPDATE) == 0) {
+
+        if ($processor instanceof UpdateCSVExporter) {
             $query->select->order_by = " prodID DESC ";
         }
         else {
             $query->select->order_by = " update_date DESC ";
         }
+
         if (isset($_GET["filter_catID"])) {
             $catID = (int)$_GET["filter_catID"];
             $query->select->where()->add("catID", $catID);
         }
+
         $total_rows = $query->exec();
-
         while ($result = $query->nextResult()) {
-
-            $prodID = $result->get("prodID");
-
-            $item = SellableItem::Load($prodID);
-
-            fputcsv($fp, $process($item), $separator, $enclosure, $escape);
+            $processor->writeItem(SellableItem::Load($result->get("prodID")));
         }
-        fclose($fp);
-
-
         exit;
 
     }
 
-    protected function processFull(SellableItem $item) : array
-    {
-        $export_row = array();
-        foreach ($this->keys as $idx => $value) {
-            $export_row[$value] = "";
-        }
-
-        $export_row["id"] = $item->getProductID();
-        $export_row["category"] = $item->getCategoryName();
-        $export_row["name"] = $item->getTitle();
-        $export_row["description"] = $item->getDescription();
-
-        $imageID = array();
-        foreach($item->galleryItems() as $idx=>$storageItem){
-            if ($storageItem instanceof StorageItem) {
-                $imageID[] = $storageItem->id;
-            }
-        }
-        $export_row["images"] = implode("|", $imageID);
-
-        $export_row["price"] = $item->getPriceInfo()->getSellPrice();
-        $export_row["old_price"] = $item->getPriceInfo()->getOldPrice();
-        return $export_row;
-
-    }
-    protected function processGoogleMerchant(SellableItem $item) : array
-    {
-        $export_row = array();
-        foreach ($this->keys as $idx => $value) {
-            $export_row[$value] = "";
-        }
-
-        $export_row["id"] = $item->getProductID();
-        $export_row["title"] = $item->getTitle();
-        $export_row["description"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
-        $export_row["condition"] = "new";
-
-        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
-        $export_row["link"] = fullURL($link);
-
-        $image_link = "";
-        if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
-        }
-        $export_row["image_link"] = $image_link;
-
-        $export_row["availability"] = "in_stock";
-        $export_row["price"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", true);
-
-        return $export_row;
-    }
-    protected function processGoogle(SellableItem $item) : array
-    {
-
-        $export_row = array();
-        foreach ($this->keys as $idx => $value) {
-            $export_row[$value] = "";
-        }
-
-        $export_row["handleId"] = $item->getProductID();
-        $export_row["fieldType"] = "Product";
-        $export_row["name"] = $item->getTitle();
-        $export_row["description"] = mb_substr(strip_tags($item->getDescription()), 0, 8000);
-
-        $image_link = "";
-        if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
-        }
-        $export_row["productImageUrl"] = $image_link;
-
-        $export_row["collection"] = $item->getCategoryName();
-        $export_row["sku"] = $item->getProductID();
-        $export_row["ribbon"] = "";
-        if ($item->isPromotion()) {
-            $export_row["ribbon"] = "Promo";
-        }
-        $export_row["price"] = $item->getPriceInfo()->getSellPrice();
-        $export_row["surcharge"] = "";
-        $export_row["visible"] = "TRUE";
-        $export_row["discountMode"] = "AMOUNT";
-        $export_row["discountValue"] = $item->getPriceInfo()->getDiscountAmount();
-        $export_row["inventory"] = "InStock";
-        $export_row["weight"] = "0.000";
-
-        return $export_row;
-
-    }
-
-    protected function processFacebook(SellableItem $item) : array
-    {
-
-
-        $export_row = array();
-        foreach ($this->keys as $idx => $value) {
-            $export_row[$value] = "";
-        }
-
-        $export_row["id"] = $item->getProductID();
-        $export_row["content_id"] = $item->getProductID();
-        $export_row["title"] = $item->getTitle();
-        $export_row["description"] = mb_substr(strip_tags($item->getDescription()), 0, 8000);
-        $export_row["availability"] = "in stock";
-        $export_row["condition"] = "new";
-
-        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
-        $export_row["link"] = fullURL($link);
-
-        $image_link = "";
-        if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
-        }
-        $export_row["image_link"] = $image_link;
-
-        $export_row["brand"] = $item->getBrandName();
-        $export_row["product_type"] = $item->getCategoryName();
-
-        $export_row["price"] = $item->getPriceInfo()->getSellPrice();
-
-        return $export_row;
-
-    }
 
     /**
      * @return void
