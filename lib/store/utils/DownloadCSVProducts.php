@@ -501,6 +501,8 @@ class DownloadCSVProducts extends RequestResponder
         }
 
         $total_rows = $query->exec();
+
+        $processor->writeHeader();
         while ($result = $query->nextResult()) {
             $processor->writeItem(SellableItem::Load($result->get("prodID")));
         }
