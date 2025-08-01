@@ -72,7 +72,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
                 $db->transaction();
 
-                $linePosition = 1;
+                $productsUpdated = 0;
 
                 while (($line = fgetcsv($stream, 0, $separator, $enclosure, $escape)) !== FALSE) {
 
@@ -83,12 +83,14 @@ class ImportUpdateFormResponder extends JSONFormResponder
                     $productDescription = sanitizeInput($line[2]);
                     $updateData = array("product_name" => $productName, "product_description" => $productDescription);
 
-                    $bean->update($prodID, $updateData, $db);
+                    debug("Going to update prodID: $prodID ...");
 
+                    $bean->update($prodID, $updateData, $db);
+                    $productsUpdated++;
                 }
 
                 $db->commit();
-                $resp->message = "Updated " . $linePosition . " products.";
+                $resp->message = "Updated " . $productsUpdated . " products.";
 
                 fclose($stream);
 

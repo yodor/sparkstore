@@ -8,8 +8,123 @@ include_once("store/utils/SellableItem.php");
 include_once("store/utils/ProductsSQL.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("storage/SparkHTTPResponse.php");
+abstract class ProductExporter {
+    protected string $typeName = "";
 
-abstract class CSVProductExporter
+    public function __construct()
+    {
+
+    }
+
+    public abstract function getToolTipText() : string;
+
+    public abstract function process() : void;
+
+    public function getTypeName() : string
+    {
+        return $this->typeName;
+    }
+
+}
+
+class ImagesExporter extends ProductExporter {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->typeName = "images";
+    }
+
+    public function getToolTipText() : string
+    {
+        return "Download full products - images part";
+    }
+
+    public function process() : void
+    {
+
+        //ini_set('max_execution_time', 300);
+
+        $folder = CACHE_PATH."/catalog-images-".time();
+        if (!mkdir($folder)) {
+            throw new Exception("Can not create export folder");
+        }
+
+        $select = new SQLSelect();
+        $select->from = " product_photos  ";
+        $select->fields()->set("ppID");
+
+        $select->order_by = " ppID ASC ";
+        $qry = new SQLQuery($select);
+        $num = $qry->exec();
+
+        while ($result = $qry->nextResult()) {
+            $ppID = $result->get("ppID");
+
+            $select1 = new SQLSelect();
+            $select1->from = " product_photos ";
+            $select1->fields()->set("photo");
+            $select1->where()->add("ppID", $ppID);
+            $qry1 = new SQLQuery($select1);
+            $num1 = $qry1->exec();
+            if ($result1 = $qry1->nextResult()) {
+                $photo = $result1->get("photo");
+                $photo = unserialize($photo);
+                if ($photo instanceof ImageStorageObject) {
+                    $current = new SparkFile();
+                    $current->setPath($folder);
+                    $current->setFilename($ppID);
+                    $current->open("w");
+                    $current->write($photo->data());
+                    $current->close();
+                }
+//                $photo = null;
+//                $result1 = null;
+            }
+
+            $qry1->free();
+
+        }
+
+//        $zipname = $folder.".zip";
+//        $zip = new ZipArchive();
+//        $zip->open($zipname, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+//
+//        // Create recursive directory iterator
+//        $files = new RecursiveIteratorIterator(
+//            new RecursiveDirectoryIterator($folder),
+//            RecursiveIteratorIterator::LEAVES_ONLY
+//        );
+//
+//        foreach ($files as $file)
+//        {
+//            // Skip directories (they would be added automatically)
+//            if (!$file->isDir())
+//            {
+//                // Get real and relative path for current file
+//                $filePath = $file->getRealPath();
+//
+//                // Add current file to archive
+//                $zip->addFile($filePath, "images/".$file->getFilename());
+//            }
+//        }
+//
+//        // Zip archive will be created only after closing object
+//        $zip->close();
+//
+//        $current = new SparkFile();
+//        $current->setPath(CACHE_PATH);
+//        $current->setFilename($zipname);
+//
+//        $response = new SparkHTTPResponse();
+//        if ($current->exists()) {
+//            $response->sendFile($current);
+//        }
+
+    }
+}
+
+abstract class CSVProductExporter extends ProductExporter
 {
     protected string $FILENAME = "catalog_products.csv";
 
@@ -20,16 +135,40 @@ abstract class CSVProductExporter
     protected string $ESCAPE = "\\";
     protected string $EOL = PHP_EOL;
     protected mixed $fp = null;
-    protected string $typeName = "";
-
 
     public function __construct()
     {
-        //$this->type . "_" . self::FILENAME;
+        parent::__construct();
         $this->keys = array();
         $this->values = array();
         $this->createKeys();
+    }
 
+    public function process() : void
+    {
+        $bean = new SellableProducts();
+
+        $query = $bean->query("prodID");
+        $query->select->group_by = " prodID ";
+
+        $this->processQuery($query);
+
+        if (isset($_GET["filter_catID"])) {
+            $catID = (int)$_GET["filter_catID"];
+            $query->select->where()->add("catID", $catID);
+        }
+
+        $total_rows = $query->exec();
+
+        $this->writeHeader();
+        while ($result = $query->nextResult()) {
+            $this->writeItem(SellableItem::Load($result->get("prodID")));
+        }
+    }
+
+    protected function processQuery(SQLQuery $query) : void
+    {
+        $query->select->order_by = " update_date DESC ";
     }
 
     public function getToolTipText() : string
@@ -42,11 +181,6 @@ abstract class CSVProductExporter
         if ($this->fp) {
             fclose($this->fp);
         }
-    }
-
-    public function getTypeName() : string
-    {
-        return $this->typeName;
     }
 
     /**
@@ -316,11 +450,15 @@ class UpdateCSVExporter extends CSVProductExporter
         $this->values["product_name"] =  $item->getTitle();
         $this->values["product_description"] = $item->getDescription();
     }
+
+    protected function processQuery(SQLQuery $query): void
+    {
+        $query->select->order_by = " prodID DESC ";
+    }
 }
 
 class DownloadCSVProducts extends RequestResponder
 {
-    const string TYPE_IMAGES = "images";
 
     protected array $supported_content = array();
     protected string $type = "";
@@ -330,16 +468,15 @@ class DownloadCSVProducts extends RequestResponder
     {
         parent::__construct();
 
-        $this->supported_content[] = self::TYPE_IMAGES;
-
         $this->addProcessor(new FacebookCSVExporter());
         $this->addProcessor(new GoogleCSVExporter());
         $this->addProcessor(new GoogleMerchantCSVExporter());
         $this->addProcessor(new FullCSVExporter());
+        $this->addProcessor(new ImagesExporter());
         $this->addProcessor(new UpdateCSVExporter());
     }
 
-    public function addProcessor(CSVProductExporter $processor) : void
+    public function addProcessor(ProductExporter $processor) : void
     {
         $this->supported_content[] = $processor->getTypeName();
         $this->processors[$processor->getTypeName()] = $processor;
@@ -357,20 +494,12 @@ class DownloadCSVProducts extends RequestResponder
 
     public function createAction(string $title = ""): ?Action
     {
-        $type = "";
-        $tooltip = "";
-        if (strcmp($title, self::TYPE_IMAGES) == 0) {
-            $type = self::TYPE_IMAGES;
-            $tooltip = "Download full products - images part";
+        if (!isset($this->processors[$title])) {
+            throw new Exception("Unknown processor type $title");
         }
-        else {
-            if (!isset($this->processors[$title])) {
-                throw new Exception("Unknown processor type $title");
-            }
-            $type = $title;
-            $processor = $this->processors[$type];
-            $tooltip = $processor->getToolTipText();
-        }
+        $type = $title;
+        $processor = $this->processors[$type];
+        $tooltip = $processor->getToolTipText();
 
         $action = parent::createAction($title);
         $action->getURL()->add(new URLParameter("type", $type));
@@ -379,101 +508,11 @@ class DownloadCSVProducts extends RequestResponder
         return $action;
     }
 
-    protected function exportImages() : void
-    {
-
-        //ini_set('max_execution_time', 300);
-
-        $folder = CACHE_PATH."/catalog-images-".time();
-        if (!mkdir($folder)) {
-            throw new Exception("Can not create export folder");
-        }
-
-        $select = new SQLSelect();
-        $select->from = " product_photos  ";
-        $select->fields()->set("ppID");
-
-        $select->order_by = " ppID ASC ";
-        $qry = new SQLQuery($select);
-        $num = $qry->exec();
-
-        while ($result = $qry->nextResult()) {
-            $ppID = $result->get("ppID");
-
-            $select1 = new SQLSelect();
-            $select1->from = " product_photos ";
-            $select1->fields()->set("photo");
-            $select1->where()->add("ppID", $ppID);
-            $qry1 = new SQLQuery($select1);
-            $num1 = $qry1->exec();
-            if ($result1 = $qry1->nextResult()) {
-                $photo = $result1->get("photo");
-                $photo = unserialize($photo);
-                if ($photo instanceof ImageStorageObject) {
-                    $current = new SparkFile();
-                    $current->setPath($folder);
-                    $current->setFilename($ppID);
-                    $current->open("w");
-                    $current->write($photo->data());
-                    $current->close();
-                }
-//                $photo = null;
-//                $result1 = null;
-            }
-
-            $qry1->free();
-
-        }
-
-//        $zipname = $folder.".zip";
-//        $zip = new ZipArchive();
-//        $zip->open($zipname, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-//
-//        // Create recursive directory iterator
-//        $files = new RecursiveIteratorIterator(
-//            new RecursiveDirectoryIterator($folder),
-//            RecursiveIteratorIterator::LEAVES_ONLY
-//        );
-//
-//        foreach ($files as $file)
-//        {
-//            // Skip directories (they would be added automatically)
-//            if (!$file->isDir())
-//            {
-//                // Get real and relative path for current file
-//                $filePath = $file->getRealPath();
-//
-//                // Add current file to archive
-//                $zip->addFile($filePath, "images/".$file->getFilename());
-//            }
-//        }
-//
-//        // Zip archive will be created only after closing object
-//        $zip->close();
-//
-//        $current = new SparkFile();
-//        $current->setPath(CACHE_PATH);
-//        $current->setFilename($zipname);
-//
-//        $response = new SparkHTTPResponse();
-//        if ($current->exists()) {
-//            $response->sendFile($current);
-//        }
-
-
-    }
-
-
     protected function processImpl() : void
     {
 
         //clear rendered state of startRender from SparkPage
         ob_end_clean();
-
-        if (strcmp($this->type, self::TYPE_IMAGES) == 0) {
-            $this->exportImages();
-            exit;
-        }
 
         $processor = null;
 
@@ -481,31 +520,10 @@ class DownloadCSVProducts extends RequestResponder
             $processor = $this->processors[$this->type];
         }
 
-        if (!($processor instanceof CSVProductExporter)) throw new Exception("Export processor was not created");
+        if (!($processor instanceof ProductExporter)) throw new Exception("Export processor was not created");
 
-        $bean = new SellableProducts();
+        $processor->process();
 
-        $query = $bean->query("prodID");
-        $query->select->group_by = " prodID ";
-
-        if ($processor instanceof UpdateCSVExporter) {
-            $query->select->order_by = " prodID DESC ";
-        }
-        else {
-            $query->select->order_by = " update_date DESC ";
-        }
-
-        if (isset($_GET["filter_catID"])) {
-            $catID = (int)$_GET["filter_catID"];
-            $query->select->where()->add("catID", $catID);
-        }
-
-        $total_rows = $query->exec();
-
-        $processor->writeHeader();
-        while ($result = $query->nextResult()) {
-            $processor->writeItem(SellableItem::Load($result->get("prodID")));
-        }
         exit;
 
     }

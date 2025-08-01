@@ -166,8 +166,6 @@ class ProductsList extends BeanListPage
         $action->setTooltip("Import product data from external edit");
         $this->getPage()->getActions()->append($action);
 
-        $action = $dcsv_responder->createAction(DownloadCSVProducts::TYPE_IMAGES);
-        $this->getPage()->getActions()->append($action);
 
         new ImportUpdateScript();
 
