@@ -123,7 +123,7 @@ class ContentPageBase extends StorePage
         $this->setTItle($this->result->get("item_title"));
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
         $content = $this->result->get("content");
         $title = $this->result->get("item_title");
@@ -182,7 +182,7 @@ class ContentPageBase extends StorePage
 
     }
 
-    public function startRender()
+    public function startRender(): void
     {
         parent::startRender();
 
@@ -193,7 +193,7 @@ class ContentPageBase extends StorePage
         echo "<div class='column page_data $css_class'>";
     }
 
-    public function finishRender()
+    public function finishRender(): void
     {
         echo "</div>";
         parent::finishRender();

@@ -194,7 +194,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
 //        $title_alt = attributeValue($this->data["product_name"]);
 //        $details_url = attributeValue($this->getDetailsURL()->fullURL()->toString());

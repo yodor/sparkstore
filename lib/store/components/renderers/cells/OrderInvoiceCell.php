@@ -7,7 +7,7 @@ class OrderInvoiceCell extends TableCell
     protected $userID = -1;
     protected $require_invoice = 0;
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
 
         if ($this->require_invoice > 0) {

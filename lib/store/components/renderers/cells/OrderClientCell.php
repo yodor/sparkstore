@@ -13,7 +13,7 @@ class OrderClientCell extends TableCell
         $this->clients = new UsersBean();
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
 
         $client = $this->clients->getByID($this->userID, "fullname", "email", "phone");

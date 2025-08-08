@@ -151,7 +151,7 @@ class SellableImageGallery extends Container {
         return $this->image_popup;
     }
 
-    public function finishRender()
+    public function finishRender(): void
     {
         parent::finishRender();
     }

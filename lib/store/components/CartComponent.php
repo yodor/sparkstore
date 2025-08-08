@@ -204,7 +204,7 @@ class CartComponent extends Component implements IHeadContents
 
     }
 
-    public function startRender()
+    public function startRender(): void
     {
         parent::startRender();
 
@@ -217,13 +217,13 @@ class CartComponent extends Component implements IHeadContents
         $this->table->startRender();
     }
 
-    public function finishRender()
+    public function finishRender(): void
     {
         $this->table->finishRender();
         parent::finishRender();
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
 
         $cart = Cart::Instance();

@@ -34,7 +34,7 @@ class ProductListPageBase extends ProductPageBase
      * Filters form component
      * @var ProductListFilter|null
      */
-    protected ?ProductListFilter $filters;
+    protected ?ProductListFilter $filters = NULL;
 
     /**
      * Products list component
@@ -139,7 +139,7 @@ class ProductListPageBase extends ProductPageBase
      * Initialize the list view sorting fields
      * @return void
      */
-    protected function initSortFields()
+    protected function initSortFields(): void
     {
         $sort_prod = new OrderColumn("prodID", "Най-нови",  "DESC");
         $this->view->getPaginator()->addOrderColumn($sort_prod);
@@ -398,7 +398,7 @@ class ProductListPageBase extends ProductPageBase
      * @return void
      * @throws Exception
      */
-    public function renderChildCategories()
+    public function renderChildCategories(): void
     {
 
         $sel_catID = $this->treeView->getSelectedID();
@@ -474,7 +474,7 @@ class ProductListPageBase extends ProductPageBase
         return $this->section;
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
         $this->renderCategoryPath();
 

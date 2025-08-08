@@ -14,7 +14,7 @@ class OrderItemsCell extends TableCell
 
     }
 
-    protected function renderImpl()
+    protected function renderImpl(): void
     {
 
         global $order_items;

@@ -280,7 +280,7 @@ class StorePageBase extends SparkPage
         return $this->menu_bar;
     }
 
-    public function startRender()
+    public function startRender(): void
     {
         //first prepare the menus - can be used from the title tag
         $this->selectActiveMenu();
@@ -300,7 +300,7 @@ class StorePageBase extends SparkPage
 
     }
 
-    public function finishRender()
+    public function finishRender(): void
     {
         $this->_main->content()->finishRender();
         $this->_main->spaceRight()->render();

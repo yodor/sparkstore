@@ -29,7 +29,7 @@ class AccountPageBase extends StorePage
         $this->head()->addCSS(STORE_LOCAL . "/css/account.css");
     }
 
-    public function startRender()
+    public function startRender(): void
     {
 
         parent::startRender();
@@ -62,7 +62,7 @@ class AccountPageBase extends StorePage
 
     }
 
-    public function finishRender()
+    public function finishRender(): void
     {
 
         echo "</div>";//columns

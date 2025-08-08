@@ -208,7 +208,7 @@ class ClassAttributeField extends DataIteratorField
 
 
 
-    public function renderImpl()
+    public function renderImpl(): void
     {
 
         if ($this->classID < 1) {
@@ -222,7 +222,7 @@ class ClassAttributeField extends DataIteratorField
     }
 
 
-    public function render()
+    public function render(): void
     {
         parent::render();
         ?>
