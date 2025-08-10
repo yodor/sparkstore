@@ -52,7 +52,7 @@ class ProductDetailsPageBase extends ProductPageBase
             if (STORAGE_ITEM_SLUGIFY_URLS) {
                 $mainPhotoURL = URL::Slugify($mainPhotoURL);
             }
-            $this->head()->addOGTag("image", fullURL($mainPhotoURL));
+            $this->head()->addOGTag("image", fullURL($mainPhotoURL.slugify($this->sellable->getTitle())."webp"));
 
             $this->head()->addOGTag("image:height", "600");
             $this->head()->addOGTag("image:width", "600");
