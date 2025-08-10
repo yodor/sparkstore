@@ -18,7 +18,7 @@ include_once("store/components/ProductListFilter.php");
 class ProductListPageBase extends ProductPageBase
 {
 
-
+    protected bool $useCategorySlug = false;
     /**
      * @var NestedSetTreeView|null
      */
@@ -373,6 +373,27 @@ class ProductListPageBase extends ProductPageBase
             $itemURL->add(new DataParameter("catID"));
         }
 
+        if ($this->useCategorySlug) {
+            //slug enablement for categories
+            $ir = $this->treeView->getItemRenderer();
+            if ($ir instanceof TextTreeItem) {
+                //already cleaned up
+                $categoryURL = $ir->getTextAction()->getURL();
+
+                $url = new URL();
+                $url->copyParametersFrom($categoryURL);
+
+                //reset category url parameters
+                $categoryURL->fromString(LOCAL . "/products/category/");
+
+                $url->copyParametersTo($categoryURL);
+
+                $categoryURL->remove("catID");
+                //set slugs parameters
+                $categoryURL->add(new DataParameter("catID", "catID", true));
+                $categoryURL->add(new DataParameter("category_name", "category_name", true));
+            }
+        }
 
     }
     public function isProcessed(): bool
