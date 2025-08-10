@@ -91,6 +91,17 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->renderProductTapes();
     }
 
+    protected function constructPathActions(): array
+    {
+        $actions = parent::constructPathActions();
+
+        $action = new Action($this->sellable->getTitle(), URL::Current()->fullURL()->toString(), array());
+        $action->translation_enabled = false;
+
+        $actions[] = $action;
+        return $actions;
+    }
+
     protected function renderProductTapes() : void
     {
         $cmp = $this->createTapeContainer("same_category");
