@@ -142,6 +142,7 @@ class SellableDataParser
     {
 
         $product = new LinkedData("Product");
+        $product->set("sku", $item->getProductID());
         $product->set("name", $item->getTitle());
         $product->set("description", strip_tags($item->getDescription()));
         if ($productURL instanceof URL) {
