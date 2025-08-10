@@ -235,7 +235,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $details_url = $this->getDetailsURL()->toString();
 
         if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
-            echo "<meta itemprop='sku' content='" .$this->data["prodUD"]."'>";
+            echo "<meta itemprop='sku' content='" .$this->data["prodID"]."'>";
             echo "<meta itemprop='url' content='" . attributeValue(fullURL($details_url)) . "'>";
             echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
             $description_content = $this->data["product_name"];
