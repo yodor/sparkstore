@@ -48,7 +48,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
-            $mainPhotoURL = $this->sellable->getMainPhoto()->hrefImage(600, -1);
+            $mainPhotoURL = $this->sellable->getMainPhoto()->hrefImage(600, 0);
             if (STORAGE_ITEM_SLUGIFY_URLS) {
                 $mainPhotoURL = URL::Slugify($mainPhotoURL);
             }
