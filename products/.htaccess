@@ -1,5 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
-    RewriteRule   ^([0-9]+)/([A-Za-z0-9-\+]+)/?$ details.php?prodID=$1 [NC,L,QSA]
-    RewriteRule   ^category/([0-9]+)/([A-Za-z0-9-\+]+)/?$ list.php?catID=$1 [NC,L,QSA]
+    RewriteRule   ^details/([0-9]+)/?$ details.php?prodID=$1 [NC,L,QSA]
+    RewriteRule   ^category/([0-9]+)/?$ list.php?catID=$1 [NC,L,QSA]
 </IfModule>

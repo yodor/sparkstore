@@ -145,7 +145,14 @@ class SellableDataParser
         $product->set("name", $item->getTitle());
         $product->set("description", strip_tags($item->getDescription()));
         if ($productURL instanceof URL) {
-            $product->set("url",$productURL->toString());
+            if (PRODUCT_ITEM_SLUG) {
+                $result = clone $productURL;
+                $result->add(new URLParameter("product_name", slugify($item->getTitle())));
+                $product->set("url", URL::Slugify($result));
+            }
+            else {
+                $product->set("url", $productURL->toString());
+            }
         }
         $product->set("category", $item->getCategoryName());
 
