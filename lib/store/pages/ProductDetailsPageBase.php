@@ -48,7 +48,11 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
-            $this->head()->addOGTag("image", fullURL($this->sellable->getMainPhoto()->hrefImage(600, -1)));
+            $mainPhotoURL = $this->sellable->getMainPhoto()->hrefImage(600, -1);
+            if (STORAGE_ITEM_SLUGIFY_URLS) {
+                $mainPhotoURL = URL::Slugify($mainPhotoURL);
+            }
+            $this->head()->addOGTag("image", fullURL($mainPhotoURL));
 
             $this->head()->addOGTag("image:height", "600");
             $this->head()->addOGTag("image:width", "600");
