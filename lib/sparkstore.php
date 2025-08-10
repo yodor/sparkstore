@@ -36,6 +36,10 @@ $globals->set("LINKED_DATA_ENABLED", true);
 //show double prices - convert from default currency to EURO
 $globals->set("DOUBLE_PRICE_ENABLED", false);
 $globals->set("DOUBLE_PRICE_RATE", 1.95583);
+
+$globals->set("PRODUCT_ITEM_SLUG", FALSE);
+$globals->set("CATEGORY_ITEM_SLUG", FALSE);
+
 $globals->export();
 
 function formatPrice($price, string $currency_symbol="лв", bool $symbol_front=false)

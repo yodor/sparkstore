@@ -77,7 +77,6 @@ class PriceLabel extends Container {
 class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
 {
 
-
     /**
      * To render the main inventory photo
      * @var StorageItem
@@ -110,8 +109,13 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->photo = new StorageItem();
 
         $this->detailsURL = new URL();
-        $this->detailsURL->setScriptName(LOCAL . "/products/details.php");
-        $this->detailsURL->add(new DataParameter("prodID"));
+        if (PRODUCT_ITEM_SLUG) {
+            $this->detailsURL->setScriptName(LOCAL . "/products/");
+        }
+        else {
+            $this->detailsURL->setScriptName(LOCAL . "/products/details.php");
+            $this->detailsURL->add(new DataParameter("prodID"));
+        }
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
@@ -148,7 +152,22 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     public function getDetailsURL(): URL
     {
-        return $this->detailsURL;
+        if (PRODUCT_ITEM_SLUG) {
+            $result = clone $this->detailsURL;
+            $product_name = slugify($this->data["product_name"]);
+
+            $script_name = $result->getScriptName();
+            //$script_name = str_replace(".php","/", $script_name);
+            $script_name.= $this->data["prodID"]."/";
+            $script_name.= $product_name;
+
+            $result->remove("prodID");
+            $result->setScriptName($script_name);
+            return $result;
+        }
+        else {
+            return $this->detailsURL;
+        }
     }
 
     public function getPhoto(): StorageItem

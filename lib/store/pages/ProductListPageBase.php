@@ -18,7 +18,6 @@ include_once("store/components/ProductListFilter.php");
 class ProductListPageBase extends ProductPageBase
 {
 
-    protected bool $useCategorySlug = false;
     /**
      * @var NestedSetTreeView|null
      */
@@ -373,7 +372,7 @@ class ProductListPageBase extends ProductPageBase
             $itemURL->add(new DataParameter("catID"));
         }
 
-        if ($this->useCategorySlug) {
+        if (CATEGORY_ITEM_SLUG) {
             //slug enablement for categories
             $ir = $this->treeView->getItemRenderer();
             if ($ir instanceof TextTreeItem) {
