@@ -243,6 +243,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<a class='photo' title='{$title_alt}' href='{$details_url}'>";
             $img_href = $this->photo->hrefImage($this->width, $this->height);
 
+            if (STORAGE_ITEM_SLUGIFY_URLS) {
+                $img_href->setScriptName($img_href->getScriptName() . slugify($title_alt) . ".webp");
+            }
+
             $lazy = "";
             if ($this->position>3) $lazy="loading='lazy'";
 
