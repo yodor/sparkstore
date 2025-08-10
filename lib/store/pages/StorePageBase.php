@@ -216,7 +216,7 @@ class StorePageBase extends SparkPage
         $ksc->getButton("search")->setContents("");
 
         $ksc->getButton("clear")->setRenderEnabled(false);
-
+        $ksc->setMethod(FormRenderer::METHOD_GET);
 //        $show_search = new ColorButton();
 //        $show_search->setAttribute("action", "show_search");
 //        $show_search->setAttribute("onClick", "showSearch()");
