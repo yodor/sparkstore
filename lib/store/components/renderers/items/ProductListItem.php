@@ -108,11 +108,17 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->photo = new StorageItem();
 
-        $this->detailsURL = new URL();
+        if (PRODUCT_ITEM_SLUG) {
 
-        $this->detailsURL->setScriptName(LOCAL . "/products/details.php");
-        $this->detailsURL->add(new DataParameter("prodID"));
-
+            $this->detailsURL = new URL(LOCAL . "/products/");
+            //set slugs parameters
+            $this->detailsURL->add(new DataParameter("prodID", "prodID", true));
+            $this->detailsURL->add(new DataParameter("product_name", "product_name", true));
+        }
+        else {
+            $this->detailsURL = new URL(LOCAL . "/products/details.php");
+            $this->detailsURL->add(new DataParameter("prodID"));
+        }
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
@@ -149,14 +155,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     public function getDetailsURL(): URL
     {
-        if (PRODUCT_ITEM_SLUG) {
-            $result = clone $this->detailsURL;
-            $result->add(new URLParameter("product_name", slugify($this->data["product_name"])));
-            return URL::Slugify($result);
-        }
-        else {
-            return $this->detailsURL;
-        }
+        return $this->detailsURL;
     }
 
     public function getPhoto(): StorageItem

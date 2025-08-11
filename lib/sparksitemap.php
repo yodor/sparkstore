@@ -3,11 +3,12 @@ include_once("session.php");
 include_once("store/beans/SellableProducts.php");
 include_once("utils/menu/BeanMenuFactory.php");
 include_once("beans/MenuItemsBean.php");
+include_once("storage/StorageItem.php");
 
 $bean = new SellableProducts();
 $qry = $bean->query();
 $qry->select->fields()->reset();
-$qry->select->fields()->set("prodID", "update_date");
+$qry->select->fields()->set("prodID", "product_name", "update_date");
 $qry->select->fields()->setExpression("(SELECT GROUP_CONCAT(pp.ppID SEPARATOR ';') FROM product_photos pp WHERE pp.prodID=sellable_products.prodID ORDER BY pp.position ASC)", "photos");
 $qry->select->group_by = " prodID ";
 
@@ -30,29 +31,38 @@ if ($list instanceof MenuItemList) {
 //each product
 while ($result = $qry->nextResult()) {
     $prodID = $result->get("prodID");
+    $productName = $result->get("product_name");
 
     $update_date = new DateTime($result->get("update_date"));
     $photos = (string)$result->get("photos");
     if (strlen($photos)>0) {
-        renderItem(fullURL(LOCAL . "/products/details.php?prodID=$prodID"), $update_date->format('Y-m-d'), $photos);
+        $productURL = LOCAL . "/products/details.php?prodID=$prodID";
+        if (PRODUCT_ITEM_SLUG) {
+            $productURL = LOCAL."/products/".$prodID."/".$productName;
+        }
+        renderItem(fullURL($productURL), $update_date->format('Y-m-d'), $photos);
     }
 }
 
 //each category
 $select = new SQLSelect();
-$select->fields()->set("pc.catID");
+$select->fields()->set("pc.catID, pc.category_name");
 $select->fields()->setExpression("(SELECT group_concat(sp.ppID ORDER BY sp.prodID DESC SEPARATOR ';' LIMIT 6) FROM sellable_products sp WHERE sp.catID = pc.catID)", "product_photos");
 $select->from = " product_categories pc ";
-
+//echo $select->getSQL();
 $query = new SQLQuery($select);
 $num = $query->exec();
 while ($result = $query->nextResult())
 {
     $catID = $result->get("catID");
+    $categoryName = $result->get("category_name");
     $photos = (string)$result->get("product_photos");
-    if (strlen($photos)>0) {
-        renderItem(fullURL(LOCAL . "/products/list.php?catID=$catID"), "", $photos);
+    $categoryURL = LOCAL . "/products/list.php?catID=$catID";
+    if (CATEGORY_ITEM_SLUG) {
+        $categoryURL = LOCAL . "/products/category/".$catID."/".$categoryName;
     }
+    renderItem(fullURL($categoryURL), "", $photos);
+
 }
 
 if (isset($items_add) && is_array($items_add)) {
@@ -66,7 +76,6 @@ echo "</urlset>";
 function renderItem(string $loc, string $lastmod="", string $photos="")
 {
     //2018-06-04
-
     echo "<url>";
     echo "<loc>$loc</loc>";
     if ($lastmod) {
@@ -76,7 +85,8 @@ function renderItem(string $loc, string $lastmod="", string $photos="")
         $photos = explode(";", $photos);
         foreach ($photos as $idx=>$ppID) {
             echo "<image:image>";
-                echo "<image:loc>".fullURL(LOCAL."/storage.php?cmd=image&amp;width=640&amp;height=-1&amp;class=ProductPhotosBean&amp;id=".$ppID)."</image:loc>";
+                $imageLocation = StorageItem::Image($ppID,"ProductPhotosBean", 0,0);
+                echo "<image:loc>".fullURL($imageLocation)."</image:loc>";
             echo "</image:image>";
         }
     }
