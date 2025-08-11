@@ -370,29 +370,44 @@ class ProductListPageBase extends ProductPageBase
             //
             $itemURL->fromString($pageURL->toString());
             $itemURL->add(new DataParameter("catID"));
-        }
 
-        if (CATEGORY_ITEM_SLUG) {
-            //slug enablement for categories
-            $ir = $this->treeView->getItemRenderer();
-            if ($ir instanceof TextTreeItem) {
+            if (CATEGORY_ITEM_SLUG) {
+                //slug enablement for categories
                 //already cleaned up
-                $categoryURL = $ir->getTextAction()->getURL();
-
                 $url = new URL();
-                $url->copyParametersFrom($categoryURL);
+                $url->copyParametersFrom($itemURL);
 
                 //reset category url parameters
-                $categoryURL->fromString(LOCAL . "/products/category/");
+                $itemURL->fromString(LOCAL . "/products/category/");
 
-                $url->copyParametersTo($categoryURL);
+                $url->copyParametersTo($itemURL);
 
-                $categoryURL->remove("catID");
+                $itemURL->remove("catID");
                 //set slugs parameters
-                $categoryURL->add(new DataParameter("catID", "catID", true));
-                $categoryURL->add(new DataParameter("category_name", "category_name", true));
+                $itemURL->add(new DataParameter("catID", "catID", true));
+                $itemURL->add(new DataParameter("category_name", "category_name", true));
+
+            }
+
+
+        }
+
+    }
+    public function currentURL() : URL
+    {
+        $url = URL::Current();
+
+        $nodeID = $this->treeView->getSelectedID();
+        if (CATEGORY_ITEM_SLUG && $nodeID>0) {
+
+            $item = $this->treeView->getItemRenderer();
+            if ($item instanceof TextTreeItem) {
+                $url = clone $item->getTextAction()->getURL();
+                $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
             }
         }
+
+        return $url;
 
     }
     public function isProcessed(): bool
