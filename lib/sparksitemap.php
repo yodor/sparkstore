@@ -32,15 +32,16 @@ if ($list instanceof MenuItemList) {
 while ($result = $qry->nextResult()) {
     $prodID = $result->get("prodID");
     $productName = $result->get("product_name");
+    $productNameSlug = slugify($productName);
 
     $update_date = new DateTime($result->get("update_date"));
     $photos = (string)$result->get("photos");
     if (strlen($photos)>0) {
         $productURL = LOCAL . "/products/details.php?prodID=$prodID";
         if (PRODUCT_ITEM_SLUG) {
-            $productURL = LOCAL."/products/".$prodID."/".$productName;
+            $productURL = LOCAL."/products/".$prodID."/".$productNameSlug;
         }
-        renderItem(fullURL($productURL), $update_date->format('Y-m-d'), $photos);
+        renderItem(fullURL($productURL), $update_date->format('Y-m-d'), $photos, $productNameSlug);
     }
 }
 
@@ -59,7 +60,7 @@ while ($result = $query->nextResult())
     $photos = (string)$result->get("product_photos");
     $categoryURL = LOCAL . "/products/list.php?catID=$catID";
     if (CATEGORY_ITEM_SLUG) {
-        $categoryURL = LOCAL . "/products/category/".$catID."/".$categoryName;
+        $categoryURL = LOCAL . "/products/category/".$catID."/".slugify($categoryName);
     }
     renderItem(fullURL($categoryURL), "", $photos);
 
@@ -73,7 +74,8 @@ if (isset($items_add) && is_array($items_add)) {
 
 echo "</urlset>";
 
-function renderItem(string $loc, string $lastmod="", string $photos="")
+//expectin already slugified $relationName
+function renderItem(string $loc, string $lastmod="", string $photos="", string $relationName="")
 {
     //2018-06-04
     echo "<url>";
@@ -86,6 +88,9 @@ function renderItem(string $loc, string $lastmod="", string $photos="")
         foreach ($photos as $idx=>$ppID) {
             echo "<image:image>";
                 $imageLocation = StorageItem::Image($ppID,"ProductPhotosBean", 0,0);
+                if (STORAGE_ITEM_SLUG && $relationName) {
+                    $imageLocation = $imageLocation->toString().$relationName.".webp";
+                }
                 echo "<image:loc>".fullURL($imageLocation)."</image:loc>";
             echo "</image:image>";
         }
