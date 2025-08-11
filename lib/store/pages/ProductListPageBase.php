@@ -400,11 +400,17 @@ class ProductListPageBase extends ProductPageBase
         $nodeID = $this->treeView->getSelectedID();
         if (CATEGORY_ITEM_SLUG && $nodeID>0) {
 
-            $item = $this->treeView->getItemRenderer();
-            if ($item instanceof TextTreeItem) {
-                $url = clone $item->getTextAction()->getURL();
-                $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
-            }
+            $url = new URL(LOCAL . "/products/category/");
+
+            $url->copyParametersFrom(URL::Current());
+
+            $url->remove("catID");
+            //set slugs parameters
+            $url->add(new DataParameter("catID", "catID", true));
+            $url->add(new DataParameter("category_name", "category_name", true));
+
+            $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
+
         }
 
         return $url;
