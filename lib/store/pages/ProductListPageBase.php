@@ -393,6 +393,8 @@ class ProductListPageBase extends ProductPageBase
         }
 
     }
+
+    //return slugified url if category is selected
     public function currentURL() : URL
     {
         $url = URL::Current();
