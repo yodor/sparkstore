@@ -112,8 +112,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
             $this->detailsURL = new URL(LOCAL . "/products/");
             //set slugs parameters
-            $this->detailsURL->add(new DataParameter("prodID", "prodID", true));
-            $this->detailsURL->add(new DataParameter("product_name", "product_name", true));
+            $this->detailsURL->add(new PathParameter("prodID", "prodID", false));
+            $this->detailsURL->add(new PathParameter("product_name", "product_name", true));
         }
         else {
             $this->detailsURL = new URL(LOCAL . "/products/details.php");
@@ -195,9 +195,11 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
             $this->photo->id = (int)$data["ppID"];
             $this->photo->className = "ProductPhotosBean";//ProductPhotosBean::class;
+
         }
 
         $this->detailsURL->setData($data);
+
 
     }
 
@@ -249,10 +251,11 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $details_url = $this->getDetailsURL()->toString();
 
         echo "<a class='photo' title='{$title_alt}' href='{$details_url}'>";
+
             $img_href = $this->photo->hrefImage($this->width, $this->height);
 
             if (STORAGE_ITEM_SLUG) {
-                $img_href->setScriptName($img_href->getScriptName() . slugify($title_alt) . ".webp");
+                $img_href = $img_href->toString() . slugify($title_alt) . ".webp";
             }
 
             $lazy = "";

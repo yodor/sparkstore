@@ -371,22 +371,19 @@ class ProductListPageBase extends ProductPageBase
             $itemURL->fromString($pageURL->toString());
             $itemURL->add(new DataParameter("catID"));
 
+            //slug enablement for categories
             if (CATEGORY_ITEM_SLUG) {
-                //slug enablement for categories
-                //already cleaned up
+                //temp copy of all url parameters
                 $url = new URL();
-                $url->copyParametersFrom($itemURL);
+                $url->copyParametersFrom($itemURL, true);
 
-                //reset category url parameters
+                //reset with slug url
                 $itemURL->fromString(LOCAL . "/products/category/");
+                $itemURL->add(new PathParameter("catID", "catID", false));
+                $itemURL->add(new PathParameter("category_name", "category_name", true));
 
-                $url->copyParametersTo($itemURL);
-
-                $itemURL->remove("catID");
-                //set slugs parameters
-                $itemURL->add(new DataParameter("catID", "catID", true));
-                $itemURL->add(new DataParameter("category_name", "category_name", true));
-
+                //transfer parameters from temp without overwriting existing
+                $url->copyParametersTo($itemURL, false);
             }
 
 
@@ -403,14 +400,12 @@ class ProductListPageBase extends ProductPageBase
         if (CATEGORY_ITEM_SLUG && $nodeID>0) {
 
             $url = new URL(LOCAL . "/products/category/");
+            $url->add(new PathParameter("catID", "catID", false));
+            $url->add(new PathParameter("category_name", "category_name", true));
 
-            $url->copyParametersFrom(URL::Current());
+            $url->copyParametersFrom(URL::Current(), false);
 
-            $url->remove("catID");
             //set slugs parameters
-            $url->add(new DataParameter("catID", "catID", true));
-            $url->add(new DataParameter("category_name", "category_name", true));
-
             $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
 
         }

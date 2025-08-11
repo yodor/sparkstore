@@ -50,9 +50,9 @@ class ProductDetailsPageBase extends ProductPageBase
         if ($main_photo instanceof StorageItem) {
             $mainPhotoURL = $this->sellable->getMainPhoto()->hrefImage(600, 0);
             if (STORAGE_ITEM_SLUG) {
-                $mainPhotoURL = URL::Slugify($mainPhotoURL);
+                $mainPhotoURL = $mainPhotoURL->toString().slugify($this->sellable->getTitle()).".webp";
             }
-            $this->head()->addOGTag("image", fullURL($mainPhotoURL.slugify($this->sellable->getTitle()).".webp"));
+            $this->head()->addOGTag("image", fullURL($mainPhotoURL));
 
             $this->head()->addOGTag("image:height", "600");
             $this->head()->addOGTag("image:width", "600");
@@ -81,7 +81,6 @@ class ProductDetailsPageBase extends ProductPageBase
 
     public function initialize() : void
     {
-        $this->item->setURL(URL::Current()->fullURL());
         $this->item->setCategories($this->getCategoryPath());
         $this->item->initialize();
     }
