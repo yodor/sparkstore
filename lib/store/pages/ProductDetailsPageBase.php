@@ -269,6 +269,12 @@ class ProductDetailsPageBase extends ProductPageBase
 //        }
 
     }
+
+    //return slugified url if category is selected
+    public function currentURL() : URL
+    {
+        return $this->item->getURL();
+    }
 }
 
 ?>
