@@ -2,8 +2,8 @@
 include_once("session.php");
 include_once("class/pages/ProductListPage.php");
 
+CategoryURL::$urlCategorySlug = "/products/promos/";
 $page = new ProductListPage();
-$page->category_slug_name = "/products/promos/";
 
 $clause = new SQLClause();
 $clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");

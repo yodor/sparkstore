@@ -78,17 +78,7 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $this->sellable = $item;
 
-        if (PRODUCT_ITEM_SLUG) {
-
-            $this->url = new URL(LOCAL . "/products/");
-            //set slugs parameters
-            $this->url->add(new PathParameter("prodID", "prodID", false));
-            $this->url->add(new PathParameter("product_name", "product_name", true));
-        }
-        else {
-            $this->url = new URL(LOCAL . "/products/details.php");
-            $this->url->add(new DataParameter("prodID"));
-        }
+        $this->url = new ProductURL();
 
         $this->url->setData(array("prodID"=>$item->getProductID(),"product_name"=>$item->getTitle()));
 
@@ -114,6 +104,11 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->initHowToOrderTab($this->tabs);
 
         $this->setCacheable(true);
+    }
+
+    public function getURL() : URL
+    {
+        return $this->url;
     }
 
     public function getCacheName(): string

@@ -32,16 +32,13 @@ if ($list instanceof MenuItemList) {
 while ($result = $qry->nextResult()) {
     $prodID = $result->get("prodID");
     $productName = $result->get("product_name");
-    $productNameSlug = slugify($productName);
 
     $update_date = new DateTime($result->get("update_date"));
     $photos = (string)$result->get("photos");
     if (strlen($photos)>0) {
-        $productURL = LOCAL . "/products/details.php?prodID=$prodID";
-        if (PRODUCT_ITEM_SLUG) {
-            $productURL = LOCAL."/products/".$prodID."/".$productNameSlug;
-        }
-        renderItem(fullURL($productURL), $update_date->format('Y-m-d'), $photos, $productNameSlug);
+        $productURL = new ProductURL();
+        $productURL->setData(array("prodID"=>$prodID,"product_name"=>$productName));
+        renderItem(fullURL($productURL->toString()), $update_date->format('Y-m-d'), $photos, slugify($productName));
     }
 }
 
@@ -58,11 +55,9 @@ while ($result = $query->nextResult())
     $catID = $result->get("catID");
     $categoryName = $result->get("category_name");
     $photos = (string)$result->get("product_photos");
-    $categoryURL = LOCAL . "/products/list.php?catID=$catID";
-    if (CATEGORY_ITEM_SLUG) {
-        $categoryURL = LOCAL . "/products/category/".$catID."/".slugify($categoryName);
-    }
-    renderItem(fullURL($categoryURL), "", $photos);
+    $categoryURL = new CategoryURL();
+    $categoryURL->setData(array("catID"=>$catID,"category_name"=>$categoryName));
+    renderItem(fullURL($categoryURL), "", $photos, slugify($categoryName));
 
 }
 

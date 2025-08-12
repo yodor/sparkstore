@@ -108,17 +108,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->photo = new StorageItem();
 
-        if (PRODUCT_ITEM_SLUG) {
-
-            $this->detailsURL = new URL(LOCAL . "/products/");
-            //set slugs parameters
-            $this->detailsURL->add(new PathParameter("prodID", "prodID", false));
-            $this->detailsURL->add(new PathParameter("product_name", "product_name", true));
-        }
-        else {
-            $this->detailsURL = new URL(LOCAL . "/products/details.php");
-            $this->detailsURL->add(new DataParameter("prodID"));
-        }
+        $this->detailsURL = new ProductURL();
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");

@@ -3,6 +3,8 @@ include_once("class/pages/StorePage.php");
 include_once("components/BreadcrumbList.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
+include_once("store/utils/url/CategoryURL.php");
+include_once("store/utils/url/ProductURL.php");
 
 class ProductPageBase extends StorePage
 {
@@ -35,9 +37,7 @@ class ProductPageBase extends StorePage
      */
     protected array $category_path = array();
 
-
     protected ?BreadcrumbList $breadcrumb = null;
-
 
     public function __construct()
     {
@@ -165,7 +165,7 @@ class ProductPageBase extends StorePage
     {
         $actions = array();
 
-        $link = new URL(LOCAL."/products/list.php");
+        $link = new CategoryURL();
 
         if ($this->keyword_search->isProcessed()) {
             $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
@@ -185,8 +185,6 @@ class ProductPageBase extends StorePage
             $section_action->translation_enabled = false;
             $actions[] = $section_action;
         }
-
-        $link->add(new DataParameter("catID"));
 
         foreach ($this->category_path as $idx => $category) {
 

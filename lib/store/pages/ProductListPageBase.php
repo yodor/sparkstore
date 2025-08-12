@@ -51,8 +51,6 @@ class ProductListPageBase extends ProductPageBase
 
     public bool $treeViewUseAgregateSelect = true;
 
-    public string $category_slug_name = "/products/category/";
-
     public function __construct()
     {
         parent::__construct();
@@ -375,19 +373,8 @@ class ProductListPageBase extends ProductPageBase
             //slug enablement for categories
             if (CATEGORY_ITEM_SLUG) {
                 //temp copy of all url parameters
-                $url = new URL();
-                $url->copyParametersFrom($itemURL, true);
-
-                //reset with slug url
-                $itemURL->fromString(LOCAL . $this->category_slug_name);
-                $itemURL->add(new PathParameter("catID", "catID", false));
-                $itemURL->add(new PathParameter("category_name", "category_name", true));
-
-                //transfer parameters from temp without overwriting existing
-                $url->copyParametersTo($itemURL, false);
+                $item->getTextAction()->setURL(new CategoryURL($itemURL));
             }
-
-
         }
 
     }
@@ -395,24 +382,18 @@ class ProductListPageBase extends ProductPageBase
     //return slugified url if category is selected
     public function currentURL() : URL
     {
-        $url = URL::Current();
+
+        $url = parent::currentURL();
 
         $nodeID = $this->treeView->getSelectedID();
         if (CATEGORY_ITEM_SLUG && $nodeID>0) {
 
-            $url = new URL(LOCAL . $this->category_slug_name);
-            $url->add(new PathParameter("catID", "catID", false));
-            $url->add(new PathParameter("category_name", "category_name", true));
-
-            $url->copyParametersFrom(URL::Current(), false);
-
+            $url = new CategoryURL($url);
             //set slugs parameters
             $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
 
         }
-
         return $url;
-
     }
     public function isProcessed(): bool
     {
@@ -470,11 +451,14 @@ class ProductListPageBase extends ProductPageBase
 
         echo "<div class='category_list'>";
         $builder =  URL::Current();
-        $builder->add(new URLParameter("catID"));
+        $builder->add(new DataParameter("catID"));
+        if (CATEGORY_ITEM_SLUG) {
+            $builder = new CategoryURL($builder);
+        }
         $si = new StorageItem();
         $si->className = "ProductCategoryPhotosBean";
         while ($result = $query->nextResult()) {
-            $builder->get("catID")->setValue($result->get("catID"));
+            $builder->setData($result->toArray());
             $si->id = $result->get("pcpID");
             echo "<div class='item'>";
             echo "<a href='{$builder->toString()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
