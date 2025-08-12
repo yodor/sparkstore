@@ -372,14 +372,15 @@ class ProductListPageBase extends ProductPageBase
 
     }
 
-    //return slugified url if category is selected
+    //return current selected category page url or the main products list
     public function currentURL() : URL
     {
 
-        $url = new CategoryURL();
+        $url = parent::currentURL();
 
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
+            $url = new CategoryURL();
             $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
         }
 
@@ -467,8 +468,8 @@ class ProductListPageBase extends ProductPageBase
     protected function loadCategoryPath(int $nodeID) : void
     {
         parent::loadCategoryPath($nodeID);
-        if (is_array($this->category_path) && count($this->category_path)>0) {
-            $length = count($this->category_path);
+        $length = count($this->category_path);
+        if ($length>0) {
             $this->view->setName($this->category_path[$length-1]["category_name"]);
         }
 
