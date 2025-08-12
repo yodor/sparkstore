@@ -598,18 +598,21 @@ class ProductListPageBase extends ProductPageBase
         }
         $this->renderProductsView();
 
-
+        $category_description="";
         if ($catID>0 && $this->product_categories->haveColumn("category_description")) {
             $category_description = $this->product_categories->getValue($catID, "category_description");
-            if ($category_description) {
-
-                echo "<h2 class='category_description'>";
-//                $cmp->render();
-                echo $category_description;
-                echo "</h2>";
-            }
+        }
+        if (!$category_description) {
+            $config = ConfigBean::Factory();
+            $config->setSection("store_config");
+            $category_description = $config->get("product_list_footer");
         }
 
+        if ($category_description) {
+            echo "<h2 class='category_description'>";
+            echo $category_description;
+            echo "</h2>";
+        }
 
         echo "</div>";
 
