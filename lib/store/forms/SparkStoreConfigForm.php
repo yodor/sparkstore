@@ -28,7 +28,7 @@ class SparkStoreConfigForm extends InputForm
         $grp_productInfo = new InputGroup("products", "Products Information");
         $this->addGroup($grp_productInfo);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "product_list_footer", "All products list footer description", 0);
+        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "product_list_footer", "All products list footer (When no category is selected)", 0);
         $rend = $field->getRenderer();
         $rend->input()?->setAttribute("rows", 10);
         $rend->input()?->setAttribute("cols", 80);
