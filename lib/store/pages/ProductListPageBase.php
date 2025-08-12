@@ -354,8 +354,6 @@ class ProductListPageBase extends ProductPageBase
         $item = $this->treeView->getItemRenderer();
         if ($item instanceof TextTreeItem) {
 
-            $itemURL = $item->getTextAction()->getURL();
-
             $pageURL = URL::Current();
 
             //static url parameter names from the current page
@@ -366,15 +364,10 @@ class ProductListPageBase extends ProductPageBase
                     $pageURL->remove($name);
                 }
             }
-            //
-            $itemURL->fromString($pageURL->toString());
-            $itemURL->add(new DataParameter("catID"));
 
-            //slug enablement for categories
-            if (CATEGORY_ITEM_SLUG) {
-                //temp copy of all url parameters
-                $item->getTextAction()->setURL(new CategoryURL($itemURL));
-            }
+            $itemURL = new CategoryURL($pageURL);
+            $item->getTextAction()->setURL($itemURL);
+
         }
 
     }
@@ -383,18 +376,16 @@ class ProductListPageBase extends ProductPageBase
     public function currentURL() : URL
     {
 
-        $url = parent::currentURL();
+        $url = new CategoryURL();
 
         $nodeID = $this->treeView->getSelectedID();
-        if (CATEGORY_ITEM_SLUG && $nodeID>0) {
-
-            $url = new CategoryURL($url);
-            //set slugs parameters
+        if ($nodeID>0) {
             $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
-
         }
+
         return $url;
     }
+
     public function isProcessed(): bool
     {
         return $this->keyword_search->isProcessed();
@@ -450,16 +441,13 @@ class ProductListPageBase extends ProductPageBase
         $num = $query->exec();
 
         echo "<div class='category_list'>";
-        $builder =  URL::Current();
-        $builder->add(new DataParameter("catID"));
-        if (CATEGORY_ITEM_SLUG) {
-            $builder = new CategoryURL($builder);
-        }
+        $builder =  new CategoryURL();
         $si = new StorageItem();
         $si->className = "ProductCategoryPhotosBean";
         while ($result = $query->nextResult()) {
             $builder->setData($result->toArray());
             $si->id = $result->get("pcpID");
+            $si->setName($result->get("category_name"));
             echo "<div class='item'>";
             echo "<a href='{$builder->toString()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
             echo "</div>";

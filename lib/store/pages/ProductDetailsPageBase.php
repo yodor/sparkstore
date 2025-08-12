@@ -48,14 +48,13 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
-            $mainPhotoURL = $this->sellable->getMainPhoto()->hrefImage(600, 0);
-            if (STORAGE_ITEM_SLUG) {
-                $mainPhotoURL = $mainPhotoURL->toString().slugify($this->sellable->getTitle()).".webp";
-            }
-            $this->head()->addOGTag("image", fullURL($mainPhotoURL));
+            $main_photo->setName($this->sellable->getTitle());
+
+            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
 
             $this->head()->addOGTag("image:height", "600");
             $this->head()->addOGTag("image:width", "600");
+
             $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
         }
 

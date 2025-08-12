@@ -4,6 +4,8 @@ include_once("store/beans/SellableProducts.php");
 include_once("utils/menu/BeanMenuFactory.php");
 include_once("beans/MenuItemsBean.php");
 include_once("storage/StorageItem.php");
+include_once("store/utils/url/ProductURL.php");
+include_once("store/utils/url/CategoryURL.php");
 
 $bean = new SellableProducts();
 $qry = $bean->query();
@@ -82,11 +84,11 @@ function renderItem(string $loc, string $lastmod="", string $photos="", string $
         $photos = explode(";", $photos);
         foreach ($photos as $idx=>$ppID) {
             echo "<image:image>";
-                $imageLocation = StorageItem::Image($ppID,"ProductPhotosBean", 0,0);
-                if (STORAGE_ITEM_SLUG && $relationName) {
-                    $imageLocation = $imageLocation->toString().$relationName.".webp";
+                $imageLocation = new StorageItem($ppID,"ProductPhotosBean");
+                if ($relationName) {
+                    $imageLocation->setName($relationName);
                 }
-                echo "<image:loc>".fullURL($imageLocation)."</image:loc>";
+                echo "<image:loc>".fullURL($imageLocation->hrefImage()->toString())."</image:loc>";
             echo "</image:image>";
         }
     }

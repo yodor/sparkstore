@@ -4,7 +4,7 @@ include_once("components/renderers/IHeadContents.php");
 include_once("components/renderers/IPhotoRenderer.php");
 include_once("storage/StorageItem.php");
 
-include_once("utils/url/URL.php");
+include_once("store/utils/url/ProductURL.php");
 include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
@@ -242,11 +242,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         echo "<a class='photo' title='{$title_alt}' href='{$details_url}'>";
 
+            $this->photo->setName($title_alt);
             $img_href = $this->photo->hrefImage($this->width, $this->height);
-
-            if (STORAGE_ITEM_SLUG) {
-                $img_href = $img_href->toString() . slugify($title_alt) . ".webp";
-            }
 
             $lazy = "";
             if ($this->position>3) $lazy="loading='lazy'";
