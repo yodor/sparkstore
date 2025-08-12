@@ -259,4 +259,15 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
 .section.main .category_description {
     padding:1em;
     font-size:120%;
+
+
+    margin-block-start: inherit;
+    margin-block-end: inherit;
+    margin-inline-start: inherit;
+    margin-inline-end: inherit;
+    font-weight: inherit;
+    unicode-bidi: inherit;
+}
+.section.main .category_description A:any-link {
+    color:var(--theme-accent);
 }

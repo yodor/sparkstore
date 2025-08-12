@@ -603,10 +603,10 @@ class ProductListPageBase extends ProductPageBase
             $category_description = $this->product_categories->getValue($catID, "category_description");
             if ($category_description) {
 
-                echo "<div class='category_description'>";
+                echo "<h2 class='category_description'>";
 //                $cmp->render();
                 echo $category_description;
-                echo "</div>";
+                echo "</h2>";
             }
         }
 
