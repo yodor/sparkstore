@@ -51,6 +51,7 @@ class ProductListPageBase extends ProductPageBase
 
     public bool $treeViewUseAgregateSelect = true;
 
+    public string $category_slug_name = "/products/category/";
 
     public function __construct()
     {
@@ -378,7 +379,7 @@ class ProductListPageBase extends ProductPageBase
                 $url->copyParametersFrom($itemURL, true);
 
                 //reset with slug url
-                $itemURL->fromString(LOCAL . "/products/category/");
+                $itemURL->fromString(LOCAL . $this->category_slug_name);
                 $itemURL->add(new PathParameter("catID", "catID", false));
                 $itemURL->add(new PathParameter("category_name", "category_name", true));
 
@@ -399,7 +400,7 @@ class ProductListPageBase extends ProductPageBase
         $nodeID = $this->treeView->getSelectedID();
         if (CATEGORY_ITEM_SLUG && $nodeID>0) {
 
-            $url = new URL(LOCAL . "/products/category/");
+            $url = new URL(LOCAL . $this->category_slug_name);
             $url->add(new PathParameter("catID", "catID", false));
             $url->add(new PathParameter("category_name", "category_name", true));
 
