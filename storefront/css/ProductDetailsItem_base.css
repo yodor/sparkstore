@@ -450,6 +450,23 @@
     font-size:1.1em;
     line-height:160%;
 }
+.tabs .item.description H2 {
+
+    /*word-break: break-word;*/
+
+    /*font-size:1.1em;*/
+    /*line-height:160%;*/
+    /*font-weight:inherit;*/
+
+    display: inherit;
+    font-size: inherit;
+    margin-block-start: inherit;
+    margin-block-end: inherit;
+    margin-inline-start: inherit;
+    margin-inline-end: inherit;
+    font-weight: inherit;
+    unicode-bidi: inherit;
+}
 
 .tabs .item.description IFRAME {
 
