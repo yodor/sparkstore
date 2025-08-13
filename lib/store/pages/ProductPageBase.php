@@ -165,16 +165,23 @@ class ProductPageBase extends StorePage
     {
         $actions = array();
 
-        $link = new CategoryURL();
+        $link = new URL(LOCAL."/products/list.php");
+        $current = URL::Current();
+
 
         if ($this->keyword_search->isProcessed()) {
+            foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
+                $link->add($current->get($name));
+            }
+            $link->add($current->get(KeywordSearch::SUBMIT_KEY));
+
             $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
-            $search_action = new Action($search_title,  URL::Current()->toString(), array());
+            $search_action = new Action($search_title,  $link, array());
             $search_action->translation_enabled = false;
             $actions[] = $search_action;
         }
         else {
-            $product_action = new Action(tr($this->products_title), $link->toString(), array());
+            $product_action = new Action(tr($this->products_title), $link->toString() , array());
             $product_action->translation_enabled = false;
             $actions[] = $product_action;
         }
@@ -187,10 +194,10 @@ class ProductPageBase extends StorePage
         }
 
         foreach ($this->category_path as $idx => $category) {
+            $catLink = new CategoryURL($link);
+            $catLink->setData($category);
 
-            $link->setData($category);
-
-            $category_action = new Action($category["category_name"], $link->toString(), array());
+            $category_action = new Action($category["category_name"], $catLink->toString(), array());
             $category_action->translation_enabled = false;
             $actions[] = $category_action;
 
