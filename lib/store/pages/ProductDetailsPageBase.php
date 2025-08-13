@@ -72,7 +72,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->head()->addMeta("twitter:card", "summary_large_image");
         $this->head()->addMeta("twitter:title", $this->sellable->getTitle());
-        $this->head()->addMeta("twitter:description", $this->sellable->getDescription());
+        $this->head()->addMeta("twitter:description", attributeValue(strip_tags($this->sellable->getDescription())));
         $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
 
 
