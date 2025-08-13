@@ -79,10 +79,9 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->sellable = $item;
 
         $this->url = new ProductURL();
+        $this->url->setData(array("prodID"=>$this->sellable->getProductID(),"product_name"=>$this->sellable->getTitle()));
 
-        $this->url->setData(array("prodID"=>$item->getProductID(),"product_name"=>$item->getTitle()));
-
-        $this->setAttribute("productID", $item->getProductID());
+        $this->setAttribute("productID", $this->sellable->getProductID());
 
         $this->gallery = new SellableImageGallery($this->sellable);
         $this->gallery->getImagePopup()->image()->setPhotoSize(640,640);
@@ -104,11 +103,6 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->initHowToOrderTab($this->tabs);
 
         $this->setCacheable(true);
-    }
-
-    public function getURL() : URL
-    {
-        return $this->url;
     }
 
     public function getCacheName(): string

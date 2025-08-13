@@ -66,6 +66,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->head()->addCanonicalParameter("prodID");
 
         $this->item = $this->createDetailsItem();
+
     }
 
     protected function createDetailsItem() : ProductDetailsItem
@@ -97,7 +98,7 @@ class ProductDetailsPageBase extends ProductPageBase
     {
         $actions = parent::constructPathActions();
 
-        $action = new Action($this->sellable->getTitle(), $this->item->getURL(), array());
+        $action = new Action($this->sellable->getTitle(), $this->currentURL(), array());
         $action->translation_enabled = false;
 
         $actions[] = $action;
@@ -273,7 +274,9 @@ class ProductDetailsPageBase extends ProductPageBase
     //return slugified url if category is selected
     public function currentURL() : URL
     {
-        return $this->item->getURL();
+        $productURL = new ProductURL();
+        $productURL->setData(array("prodID"=>$this->sellable->getProductID(), "product_name"=>$this->sellable->getTitle()));
+        return $productURL;
     }
 }
 

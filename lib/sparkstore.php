@@ -28,8 +28,6 @@ if (!defined("SKIP_DB")) {
     $globals->set("ORDER_EMAIL", $order_email);
 }
 
-$globals->set("TRANSLITERATOR_ID", "Bulgarian-Latin/BGN");
-
 //enable disable 'product' structure data
 $globals->set("LINKED_DATA_ENABLED", true);
 

@@ -25,7 +25,7 @@ while ($result = $qry->nextResult()) {
     $update_date = new DateTime($result->get("update_date"));
     $photos = (string)$result->get("photos");
     if (strlen($photos)>0) {
-        $slug = transliterate($result->get("product_name"));
+        $slug = slugify($result->get("product_name"));
         renderItem(fullURL(LOCAL . "/products/$prodID/$slug"), $update_date->format('Y-m-d'), $photos);
     }
 }
@@ -42,7 +42,7 @@ while ($result = $query->nextResult())
 {
     $catID = $result->get("catID");
     $photos = (string)$result->get("product_photos");
-    $slug = transliterate($result->get("category_name"));
+    $slug = slugify($result->get("category_name"));
     renderItem(fullURL(LOCAL . "/products/category/$catID/$slug"), "", $photos);
 
 }
