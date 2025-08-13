@@ -46,6 +46,18 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->prepareKeywords();
         $this->prepareDescription();
 
+        $this->head()->addOGTag("type", "product");
+        $this->head()->addOGTag("title", $this->sellable->getTitle());
+
+        $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
+        $this->head()->addOGTag("product:price:currency", "BGN");
+
+//        if (DOUBLE_PRICE_ENABLED) {
+//            $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE);
+//            $this->head()->addOGTag("product:price:currency", "EUR");
+//        }
+
+
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
             $main_photo->setName($this->sellable->getTitle());
@@ -58,6 +70,12 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
         }
 
+        $this->head()->addMeta("twitter:card", "summary_large_image");
+        $this->head()->addMeta("twitter:title", $this->sellable->getTitle());
+        $this->head()->addMeta("twitter:description", $this->sellable->getDescription());
+        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
+
+
         register_shutdown_function(function()  {
             ProductDetailsPageBase::UpdateViewCounter($this->sellable->getProductID());
         });
@@ -67,6 +85,9 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->head()->addCanonicalParameter("product_name");
 
         $this->item = $this->createDetailsItem();
+        //
+        $this->head()->addOGTag("url", fullURL($this->currentURL()));
+
 
     }
 
