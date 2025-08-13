@@ -105,6 +105,11 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->setCacheable(true);
     }
 
+    public function getURL() : URL
+    {
+        return $this->url;
+    }
+
     public function getCacheName(): string
     {
         return parent::getCacheName()."-".$this->sellable->getProductID();

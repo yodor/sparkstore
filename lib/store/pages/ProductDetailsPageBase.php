@@ -64,6 +64,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
 
         $this->head()->addCanonicalParameter("prodID");
+        $this->head()->addCanonicalParameter("product_name");
 
         $this->item = $this->createDetailsItem();
 
@@ -274,9 +275,7 @@ class ProductDetailsPageBase extends ProductPageBase
     //return slugified url if category is selected
     public function currentURL() : URL
     {
-        $productURL = new ProductURL();
-        $productURL->setData(array("prodID"=>$this->sellable->getProductID(), "product_name"=>$this->sellable->getTitle()));
-        return $productURL;
+        return clone $this->item->getURL();
     }
 }
 
