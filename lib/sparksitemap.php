@@ -88,7 +88,7 @@ function renderItem(string $loc, string $lastmod="", string $photos="", string $
                 if ($relationName) {
                     $imageLocation->setName($relationName);
                 }
-                echo "<image:loc>".fullURL($imageLocation->hrefImage()->toString())."</image:loc>";
+                echo "<image:loc>".fullURL(urlencode($imageLocation->hrefImage()->toString()))."</image:loc>";
             echo "</image:image>";
         }
     }
