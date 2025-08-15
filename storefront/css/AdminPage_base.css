@@ -1,4 +1,6 @@
-
+.AdminPage {
+    font-family: sans-serif;
+}
 .group .item LABEL:after {
     content: ": ";
 }
