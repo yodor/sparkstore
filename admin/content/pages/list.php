@@ -4,7 +4,9 @@ include_once("templates/admin/DynamicPageList.php");
 
 $cmp = new DynamicPageList();
 
-$cmp->getPage()->navigation()->clear();
+if (!$cmp->isChooser()) {
+    $cmp->getPage()->navigation()->clear();
+}
 
 $cmp->render();
 
