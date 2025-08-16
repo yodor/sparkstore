@@ -71,8 +71,6 @@ class ProductDetailsPageBase extends ProductPageBase
         }
 
         $this->head()->addMeta("twitter:card", "summary_large_image");
-        $this->head()->addMeta("twitter:title", $this->sellable->getTitle());
-        $this->head()->addMeta("twitter:description", attributeValue(strip_tags($this->sellable->getDescription())));
         $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
 
 
@@ -176,7 +174,10 @@ class ProductDetailsPageBase extends ProductPageBase
     {
         $description = "";
 
-        if ($this->sellable->getDescription()) {
+        if ($this->sellable->getSeoDescription()) {
+            $description = $this->sellable->getSeoDescription();
+        }
+        else if ($this->sellable->getDescription()) {
             $description = $this->sellable->getDescription();
         }
         else {
@@ -184,9 +185,8 @@ class ProductDetailsPageBase extends ProductPageBase
         }
 
         $description = trim($description);
-        if ($description) {
-            $description = prepareMeta($description);
-            $this->description = $description;
+        if (mb_strlen($description)>0) {
+            $this->setMetaDescription($description);
         }
 
         return $description;

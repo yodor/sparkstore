@@ -10,7 +10,7 @@ class ProductsSQL extends SQLSelect
         $this->fields()->set(
 
             "p.prodID", "p.catID", "p.brand_name", "p.model",
-             "p.product_name", "p.product_description", "p.keywords",
+             "p.product_name", "p.product_description", "p.seo_description","p.keywords",
             "p.visible", "p.pclsID", "p.promo_price", "p.price",
             "p.insert_date", "p.update_date", "p.stock_amount",
             "pvl.order_counter", "pvl.view_counter"

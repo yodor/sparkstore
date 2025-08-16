@@ -463,8 +463,6 @@ class ProductListPageBase extends ProductPageBase
         $this->view->render();
     }
 
-
-
     protected function loadCategoryPath(int $nodeID) : void
     {
         parent::loadCategoryPath($nodeID);
@@ -572,27 +570,28 @@ class ProductListPageBase extends ProductPageBase
             $cmp->render();
         }
 
-        $seo_description = "";
-        if ($this->section && $this->sections->haveColumn("section_seodescription")) {
-            $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
-            $section_description = $result["section_seodescription"];
-            if ($section_description) {
-                $seo_description = $section_description;
-            }
-        }
+        $seo_description = $this->description;
 
-        if ($catID>0 && $this->product_categories->haveColumn("category_seodescription")) {
-            $category_description = $this->product_categories->getValue($catID, "category_seodescription");
-            if ($category_description) {
-                $seo_description = $category_description;
-            }
-        }
-
-        if (!$seo_description) {
-            $config = ConfigBean::Factory();
-            $config->setSection("seo");
-            $seo_description = $config->get("meta_description");
-        }
+//        if ($this->section && $this->sections->haveColumn("section_seodescription")) {
+//            $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
+//            $section_description = $result["section_seodescription"];
+//            if ($section_description) {
+//                $seo_description = $section_description;
+//            }
+//        }
+//
+//        if ($catID>0 && $this->product_categories->haveColumn("category_seodescription")) {
+//            $category_description = $this->product_categories->getValue($catID, "category_seodescription");
+//            if ($category_description) {
+//                $seo_description = $category_description;
+//            }
+//        }
+//
+//        if (!$seo_description) {
+//            $config = ConfigBean::Factory();
+//            $config->setSection("seo");
+//            $seo_description = $config->get("meta_description");
+//        }
 
         if ($seo_description) {
             echo "<h2 class='Caption category_description seo_description'>$seo_description</h2>";
@@ -603,6 +602,7 @@ class ProductListPageBase extends ProductPageBase
         if ($catID>0 && $this->product_categories->haveColumn("category_description")) {
             $category_description = $this->product_categories->getValue($catID, "category_description");
         }
+
         if (!$category_description) {
             $config = ConfigBean::Factory();
             $config->setSection("store_config");

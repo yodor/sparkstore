@@ -17,6 +17,7 @@ class SellableItem extends SparkObject
     protected string $model = "";
 
     protected string $description = "";
+    protected string $seoDescription = "";
     protected string $keywords = "";
 
     protected ?StorageItem $main_photo = NULL;
@@ -207,9 +208,18 @@ class SellableItem extends SparkObject
     {
         return $this->description;
     }
-    public function setDescription(string $description)
+    public function setDescription(string $description) : void
     {
         $this->description = $description;
+    }
+
+    public function getSeoDescription() : string
+    {
+        return $this->seoDescription;
+    }
+    public function setSeoDescription(string $seoDescription) : void
+    {
+        $this->seoDescription = $seoDescription;
     }
 
     public function setAttribute(string $name, string $value)

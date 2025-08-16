@@ -48,7 +48,14 @@ class ProductInputFormBase extends InputForm
         $field->getRenderer()->input()->setAttribute("size", "50em");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание (първите 150 символа се ползват за SEO описание)", 0);
+        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание", 0);
+        $this->addInput($field);
+
+        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "seo_description", "SEO описание (до 150 символа)", 0);
+        $field->enableTranslator(true);
+        $field->getRenderer()->input()->setAttribute("maxLength","150");
+        $field->getRenderer()->input()->setAttribute("rows","3");
+        $field->getRenderer()->input()->setAttribute("cols","60");
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);

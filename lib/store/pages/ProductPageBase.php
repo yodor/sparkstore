@@ -98,6 +98,7 @@ class ProductPageBase extends StorePage
     protected function prepareDescription() : string
     {
         $description = "";
+
         if (count($this->category_path)>0) {
             $category_path = array_reverse($this->category_path, true);
 
@@ -108,9 +109,9 @@ class ProductPageBase extends StorePage
                 if (mb_strlen($description)>0) break;
             }
         }
+        $description = trim($description);
         if (mb_strlen($description)>0) {
-            $description = prepareMeta($description);
-            $this->description = $description;
+            $this->setMetaDescription($description);
         }
         return $description;
     }
@@ -218,6 +219,9 @@ class ProductPageBase extends StorePage
      */
     protected function constructTitle() : void
     {
+        //set title from menu
+        parent::constructTitle();
+
         $title = "";
         if ($this->keyword_search->isProcessed()) {
             $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
@@ -237,28 +241,12 @@ class ProductPageBase extends StorePage
                 $title = $element["category_name"];
             }
         }
-        else if ($this->section) {
-            $title = $this->section;
-        }
+
 
         if (mb_strlen($title)>0) {
             $this->setTitle($title);
         }
-        else {
-            $actions = $this->constructPathActions();
 
-            if (count($actions)>0) {
-
-                $item = $actions[0];
-                if ($item instanceof Action) {
-                    $this->setTitle($item->getContents());
-                }
-
-            }
-            else {
-                parent::constructTitle();
-            }
-        }
     }
 }
 

@@ -61,7 +61,7 @@ class StorePageBase extends SparkPage
         $config->setSection("seo");
 
         $this->keywords = sanitizeKeywords($config->get("meta_keywords"));
-        $this->description = $config->get("meta_description");
+        $this->description = "";
 
         $facebookID_pixel = $config->get("facebookID_pixel");
         if ($facebookID_pixel) {
@@ -169,17 +169,69 @@ class StorePageBase extends SparkPage
 
     /**
      * Construct the title tag.
-     * Default implementation use the value set as preferred_title property
-     * if preferred_title is empty construct title using the selected menu items (getSelectedPath)
+     * Default implementation use the value of 'preferred_title' property
+     * if preferred_title is empty construct title using the selected
+     * menu items (getSelectedPath)
      * @return void
      */
     protected function constructTitle() : void
     {
         if (mb_strlen($this->getTitle()) > 0) return;
 
-        $main_menu = $this->menu_bar->getMenu();
+        $title = "";
 
-        $this->setTitle(constructSiteTitle($main_menu->getSelectedPath()));
+        $main_menu = $this->menu_bar->getMenu();
+        $selectedPath = $main_menu->getSelectedPath();
+        $countPath = count($selectedPath);
+        if ($countPath>0) {
+            $selectedItem = $selectedPath[$countPath-1];
+            if ($selectedItem instanceof MenuItem) {
+                $title = $selectedItem->getSeoTitle();
+            }
+        }
+        if (mb_strlen($title)>0) {
+            $this->setTitle($title);
+        }
+        else {
+            $this->setTitle(constructSiteTitle($selectedPath));
+        }
+    }
+
+    /**
+     * Construct value for meta-description
+     * Called before startRender and after selectActiveMenus
+     * value preference:
+     * 1. Value that is already set in $this->description
+     * 2. Value of current active MenuItem seo_description
+     * 3. configured meta-description from seo-section
+     * @return void
+     */
+    protected function constructMetaDescription() : void
+    {
+        //already set before startRender
+        if (mb_strlen($this->description)>0) return;
+
+        $config = ConfigBean::Factory();
+        $config->setSection("seo");
+
+        $description = "";
+        $main_menu = $this->menu_bar->getMenu();
+        $selectedPath = $main_menu->getSelectedPath();
+        $countPath = count($selectedPath);
+        if ($countPath>0) {
+            $selectedItem = $selectedPath[$countPath-1];
+            if ($selectedItem instanceof MenuItem) {
+                $description = $selectedItem->getSeoDescription();
+            }
+        }
+
+        if (mb_strlen($description)>0) {
+            $this->setMetaDescription($description);
+        }
+        else {
+            $this->setMetaDescription($config->get("meta_description"));
+        }
+
     }
 
     public function __construct()

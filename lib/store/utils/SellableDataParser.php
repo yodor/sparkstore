@@ -65,6 +65,10 @@ class SellableDataParser
             $item->setDescription($result->get("product_description"));
         }
 
+        if ($result->isSet("seo_description")) {
+            $item->setSeoDescription($result->get("seo_description"));
+        }
+
         if ($result->isSet("keywords")) {
             $item->setKeywords($result->get("keywords"));
         }
