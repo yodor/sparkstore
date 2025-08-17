@@ -59,64 +59,7 @@ class ProductPageBase extends StorePage
 
     }
 
-    /**
-     * Construct the page keywords meta tag contents
-     * Use the summary of current category and its parents keywords
-     * @return string Return the keywords set by this method
-     */
-    protected function prepareKeywords() : string
-    {
-        $keywords = "";
-
-        if (count($this->category_path)>0) {
-            $keywords_all = array();
-            foreach ($this->category_path as $idx=>$element) {
-                if (isset($element["category_keywords"])) {
-                    $category_keywords = sanitizeKeywords($element["category_keywords"]);
-                    if (mb_strlen($category_keywords) > 0) {
-                        $keywords_all[] = $category_keywords;
-                    }
-                }
-
-            }
-            $keywords = implode(", ", $keywords_all);
-        }
-
-        if (mb_strlen($keywords)>0) {
-            $this->keywords = $keywords;
-        }
-
-        return $keywords;
-    }
-
-    /**
-     * Sets the value of 'description' page property, used to overload the description meta-tag.
-     * Uses the first available 'category_seodescription' of the selected category.
-     * If category_seodescription is empty does not override the default page meta-tag
-     * @return string
-     */
-    protected function prepareDescription() : string
-    {
-        $description = "";
-
-        if (count($this->category_path)>0) {
-            $category_path = array_reverse($this->category_path, true);
-
-            foreach ($category_path as $idx=>$element) {
-                if (isset($element["category_seodescription"]) && mb_strlen($element["category_seodescription"])>0) {
-                    $description = $element["category_seodescription"];
-                }
-                if (mb_strlen($description)>0) break;
-            }
-        }
-        $description = trim($description);
-        if (mb_strlen($description)>0) {
-            $this->setMetaDescription($description);
-        }
-        return $description;
-    }
-
-    public function setSellableProducts(DBTableBean $bean)
+    public function setSellableProducts(DBTableBean $bean) : void
     {
         $this->bean = $bean;
     }
@@ -126,14 +69,14 @@ class ProductPageBase extends StorePage
         return $this->bean;
     }
 
-    public function getCategoryPath()
+    public function getCategoryPath() : array
     {
         return $this->category_path;
     }
 
     /**
-     * Load the current selected category branch into the category_path array. Starting from nodeID to the top
-     * @param int $nodeID
+     * Load the current selected category branch into the category_path array.
+     * Starting from nodeID to the top
      */
     protected function loadCategoryPath(int $nodeID): void
     {
@@ -150,7 +93,7 @@ class ProductPageBase extends StorePage
         $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 
-    public function renderCategoryPath()
+    public function renderCategoryPath() : void
     {
         $actions = $this->constructPathActions();
 
@@ -207,46 +150,41 @@ class ProductPageBase extends StorePage
         return $actions;
     }
 
-    /**
-     * Construct the page title tag. Called after finish render of the page class
-     * Preference of title tag
-     * - search results title (local searching)
-     * - category_title/category_seotitle
-     * - section name
-     * - default implementation of StorePageBase
-     * @return void
-     * @throws Exception
-     */
-    protected function constructTitle() : void
+    protected function headFinalize() : void
     {
-        //set title from menu
-        parent::constructTitle();
 
         $title = "";
+        $description = "";
+
+        //use the title or seotitle of the selected category
+        foreach ($this->category_path as $idx => $element) {
+            if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"]) > 0) {
+                $title = $element["category_seotitle"];
+            } else {
+                $title = $element["category_name"];
+            }
+            if (isset($element["category_seodescription"]) && mb_strlen($element["category_seodescription"])>0) {
+                $description = $element["category_seodescription"];
+            }
+            else if (isset($element["category_description"]) && mb_strlen($element["category_description"])>0) {
+                $description = $element["category_description"];
+            }
+        }
+
         if ($this->keyword_search->isProcessed()) {
             $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
             $title = tr("Резултати от търсене").": ".mysql_real_unescape_string($search_value);
         }
 
-        else if (is_array($this->category_path) && count($this->category_path)>0) {
-            //use the title or seotitle of the selected category
-//            foreach ($this->category_path as $idx => $element) {
-//                $title[] = $element["category_name"];
-//            }
-            $element = end($this->category_path);
-            if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"])>0) {
-                $title = $element["category_seotitle"];
-            }
-            else {
-                $title = $element["category_name"];
-            }
-        }
-
-
         if (mb_strlen($title)>0) {
-            $this->setTitle($title);
+            $this->preferred_title = $title;
         }
 
+        if (mb_strlen($description)>0) {
+            $this->description = $description;
+        }
+
+        parent::headFinalize();
     }
 }
 

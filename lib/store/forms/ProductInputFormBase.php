@@ -138,11 +138,6 @@ class ProductInputFormBase extends InputForm
         $this->addInput($field1);
         //
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "keywords", "Ключови думи", 0);
-        $field->getRenderer()->input()->setAttribute("rows", 5);
-        $field->getRenderer()->input()->setAttribute("cols", 80);
-        $this->addInput($field);
-
     }
 
     public function validate(): void

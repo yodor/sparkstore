@@ -39,10 +39,6 @@ class ProductCategoryInputForm extends InputForm
         $rend->input()?->setAttribute("maxLength", 150);
         $this->addInput($field);
 
-        $field = new DataInput("category_keywords", "SEO Ключови думи", 0);
-        new TextArea($field);
-        $this->addInput($field);
-
         $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимка", 0);
         $field->getProcessor()->setTransactBean(new ProductCategoryPhotosBean());
         $field->getProcessor()->setTransactBeanItemLimit(1);

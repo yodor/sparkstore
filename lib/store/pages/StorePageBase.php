@@ -53,14 +53,13 @@ class StorePageBase extends SparkPage
 
     protected function headInitialize() : void
     {
-
+        parent::headInitialize();
 
         $this->head()->addMeta("robots", "index, follow, snippet");
 
         $config = ConfigBean::Factory();
         $config->setSection("seo");
 
-        $this->keywords = sanitizeKeywords($config->get("meta_keywords"));
         $this->description = "";
 
         $facebookID_pixel = $config->get("facebookID_pixel");
@@ -143,7 +142,7 @@ class StorePageBase extends SparkPage
         $this->head()->addJS(STORE_LOCAL."/js/cookies.js");
         $this->head()->addJS(STORE_LOCAL."/js/menusticky.js");
 
-        $this->head()->addOGTag("url", URL::Current()->fullURL()->toString());
+
         $this->head()->addOGTag("site_name", SITE_TITLE);
         $this->head()->addOGTag("type", "website");
 
@@ -159,78 +158,52 @@ class StorePageBase extends SparkPage
         $this->head()->items()->append($linkgtag);
     }
 
-    protected function selectActiveMenu()
+
+    protected function headFinalize(): void
+    {
+        $main_menu = $this->menu_bar->getMenu();
+        $selectedPath = $main_menu->getSelectedPath();
+
+        //no title is set - try seo title of selected menu or names of selected items
+
+        $title = "";
+        $description = "";
+
+        //from top to bottom
+        foreach ($selectedPath as $idx=>$selectedItem) {
+            if ($selectedItem instanceof MenuItem) {
+                if (mb_strlen($selectedItem->getSeoTitle())>0) {
+                    $title = $selectedItem->getSeoTitle();
+                }
+                if (mb_strlen($selectedItem->getSeoDescription())>0) {
+                    $description = $selectedItem->getSeoDescription();
+                }
+            }
+        }
+
+        if (!$this->preferred_title) {
+            if (mb_strlen($title) > 0) {
+                $this->preferred_title = $title;
+            } else {
+                $this->preferred_title = constructSiteTitle($selectedPath);
+            }
+        }
+
+        if (!$this->description) {
+            if (mb_strlen($description) > 0) {
+                $this->description = $description;
+            }
+        }
+
+        parent::headFinalize();
+
+    }
+
+    protected function selectActiveMenu(): void
     {
 
         $main_menu = $this->menu_bar->getMenu();
         $main_menu->selectActive(array(MenuItemList::MATCH_FULL,MenuItemList::MATCH_PARTIAL));
-
-    }
-
-    /**
-     * Construct the title tag.
-     * Default implementation use the value of 'preferred_title' property
-     * if preferred_title is empty construct title using the selected
-     * menu items (getSelectedPath)
-     * @return void
-     */
-    protected function constructTitle() : void
-    {
-        if (mb_strlen($this->getTitle()) > 0) return;
-
-        $title = "";
-
-        $main_menu = $this->menu_bar->getMenu();
-        $selectedPath = $main_menu->getSelectedPath();
-        $countPath = count($selectedPath);
-        if ($countPath>0) {
-            $selectedItem = $selectedPath[$countPath-1];
-            if ($selectedItem instanceof MenuItem) {
-                $title = $selectedItem->getSeoTitle();
-            }
-        }
-        if (mb_strlen($title)>0) {
-            $this->setTitle($title);
-        }
-        else {
-            $this->setTitle(constructSiteTitle($selectedPath));
-        }
-    }
-
-    /**
-     * Construct value for meta-description
-     * Called before startRender and after selectActiveMenus
-     * value preference:
-     * 1. Value that is already set in $this->description
-     * 2. Value of current active MenuItem seo_description
-     * 3. configured meta-description from seo-section
-     * @return void
-     */
-    protected function constructMetaDescription() : void
-    {
-        //already set before startRender
-        if (mb_strlen($this->description)>0) return;
-
-        $config = ConfigBean::Factory();
-        $config->setSection("seo");
-
-        $description = "";
-        $main_menu = $this->menu_bar->getMenu();
-        $selectedPath = $main_menu->getSelectedPath();
-        $countPath = count($selectedPath);
-        if ($countPath>0) {
-            $selectedItem = $selectedPath[$countPath-1];
-            if ($selectedItem instanceof MenuItem) {
-                $description = $selectedItem->getSeoDescription();
-            }
-        }
-
-        if (mb_strlen($description)>0) {
-            $this->setMetaDescription($description);
-        }
-        else {
-            $this->setMetaDescription($config->get("meta_description"));
-        }
 
     }
 
@@ -239,20 +212,15 @@ class StorePageBase extends SparkPage
 
         $this->auth = new UserAuthenticator();
         $this->loginURL = LOCAL . "/account/login.php";
-//
+
         parent::__construct();
-//
-        $this->authorize();
-//
+
         if ($this->context) {
             $this->client_name = (string)$this->context->getData()->get(SessionData::FULLNAME);
         }
 
         //template JSONFormDialog
         new JSONFormDialog();
-
-
-        $this->headInitialize();
 
         $factory = new BeanMenuFactory(new MenuItemsBean());
         $this->menu_bar = new MenuBar($factory->menu());

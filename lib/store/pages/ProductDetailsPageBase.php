@@ -13,14 +13,37 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected ?ProductDetailsItem $item = null;
 
+    protected function headInitialize() : void
+    {
+        parent::headInitialize();
+
+        $this->head()->addOGTag("type", "product");
+        $this->head()->addOGTag("title", $this->sellable->getTitle());
+
+        $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
+        $this->head()->addOGTag("product:price:currency", "BGN");
+
+        $main_photo = $this->sellable->getMainPhoto();
+        if ($main_photo instanceof StorageItem) {
+            $main_photo->setName($this->sellable->getTitle());
+
+            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
+
+            $this->head()->addOGTag("image:height", "600");
+            $this->head()->addOGTag("image:width", "600");
+
+            $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
+        }
+
+        $this->head()->addMeta("twitter:card", "summary_large_image");
+        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
+
+    }
+
     public function __construct()
     {
         //should reach storepage constructor to initialize defaults
         //is sellabledataparaser is customizable
-        parent::__construct();
-
-        $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
-        $this->head()->addCSS(STORE_LOCAL . "/css/ProductListItem.css");
 
         $prodID = -1;
         if (isset($_GET["prodID"])) {
@@ -38,55 +61,51 @@ class ProductDetailsPageBase extends ProductPageBase
             exit;
         }
 
+        //after sellable is constructed
+        parent::__construct();
+
         $this->section = "";
 
         $catID = $this->sellable->getCategoryID();
         $this->loadCategoryPath($catID);
-
-        $this->prepareKeywords();
-        $this->prepareDescription();
-
-        $this->head()->addOGTag("type", "product");
-        $this->head()->addOGTag("title", $this->sellable->getTitle());
-
-        $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
-        $this->head()->addOGTag("product:price:currency", "BGN");
-
-//        if (DOUBLE_PRICE_ENABLED) {
-//            $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE);
-//            $this->head()->addOGTag("product:price:currency", "EUR");
-//        }
-
-
-        $main_photo = $this->sellable->getMainPhoto();
-        if ($main_photo instanceof StorageItem) {
-            $main_photo->setName($this->sellable->getTitle());
-
-            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
-
-            $this->head()->addOGTag("image:height", "600");
-            $this->head()->addOGTag("image:width", "600");
-
-            $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
-        }
-
-        $this->head()->addMeta("twitter:card", "summary_large_image");
-        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
-
 
         register_shutdown_function(function()  {
             ProductDetailsPageBase::UpdateViewCounter($this->sellable->getProductID());
         });
 
 
+        $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
+        $this->head()->addCSS(STORE_LOCAL . "/css/ProductListItem.css");
+
         $this->head()->addCanonicalParameter("prodID");
         $this->head()->addCanonicalParameter("product_name");
 
         $this->item = $this->createDetailsItem();
-        //
-        $this->head()->addOGTag("url", fullURL($this->currentURL()));
 
+        //$this->head()->addOGTag("url", fullURL($this->currentURL()));
 
+    }
+
+    protected function headFinalize(): void
+    {
+        $this->preferred_title = $this->sellable->getTitle();
+
+        $description = $this->sellable->getTitle();
+
+        if ($this->sellable->getSeoDescription()) {
+            $description = $this->sellable->getSeoDescription();
+        }
+        else if ($this->sellable->getDescription()) {
+            $description = $this->sellable->getDescription();
+        }
+
+        $description = trim($description);
+        if (mb_strlen($description)>0) {
+            $this->description = $description;
+        }
+
+        //no parent call
+        //parent::headFinalize();
     }
 
     protected function createDetailsItem() : ProductDetailsItem
@@ -135,71 +154,13 @@ class ProductDetailsPageBase extends ProductPageBase
 //        $cmp->items()->append($this->tapeOtherProducts());
 //        $cmp->render();
     }
-    /**
-     * Use the product name as page title tag
-     * @return void
-     */
-    protected function constructTitle() : void
-    {
-        $this->setTitle($this->sellable->getTitle());
-    }
-
-    /**
-     * @return string
-     */
-    protected function prepareKeywords() : string
-    {
-        $catID = $this->sellable->getCategoryID();
-
-        //use keywords of the sellable if set
-        $keywords = sanitizeKeywords($this->sellable->getKeywords());
-        if (mb_strlen($keywords)>0) {
-            $this->keywords = $keywords;
-            return $keywords;
-        }
-
-        //no keywords added for this sellable. try category keywords if any
-        $this->loadCategoryPath($catID);
-        $keywords = parent::prepareKeywords();
-        //no category keywords were set, use the sellable title as keywords
-        if (mb_strlen($keywords)<1) {
-            $keywords = $this->sellable->getTitle();
-        }
-
-        $this->keywords = $keywords;
-        return $keywords;
-    }
-
-    protected function prepareDescription(): string
-    {
-        $description = "";
-
-        if ($this->sellable->getSeoDescription()) {
-            $description = $this->sellable->getSeoDescription();
-        }
-        else if ($this->sellable->getDescription()) {
-            $description = $this->sellable->getDescription();
-        }
-        else {
-            $description = $this->sellable->getTitle();
-        }
-
-        $description = trim($description);
-        if (mb_strlen($description)>0) {
-            $this->setMetaDescription($description);
-        }
-
-        return $description;
-    }
 
     public function getSellable(): SellableItem
     {
         return $this->sellable;
     }
 
-
-
-    protected function selectActiveMenu()
+    protected function selectActiveMenu(): void
     {
         parent::selectActiveMenu();
 

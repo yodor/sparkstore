@@ -304,9 +304,6 @@ class ProductListPageBase extends ProductPageBase
             $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
         }
 
-        $this->prepareKeywords();
-        $this->prepareDescription();
-
         $this->processTreeViewURL();
     }
 
@@ -570,31 +567,8 @@ class ProductListPageBase extends ProductPageBase
             $cmp->render();
         }
 
-        $seo_description = $this->description;
-
-//        if ($this->section && $this->sections->haveColumn("section_seodescription")) {
-//            $result = $this->sections->getResult("section_title", $this->section, "section_seodescription");
-//            $section_description = $result["section_seodescription"];
-//            if ($section_description) {
-//                $seo_description = $section_description;
-//            }
-//        }
-//
-//        if ($catID>0 && $this->product_categories->haveColumn("category_seodescription")) {
-//            $category_description = $this->product_categories->getValue($catID, "category_seodescription");
-//            if ($category_description) {
-//                $seo_description = $category_description;
-//            }
-//        }
-//
-//        if (!$seo_description) {
-//            $config = ConfigBean::Factory();
-//            $config->setSection("seo");
-//            $seo_description = $config->get("meta_description");
-//        }
-
-        if ($seo_description) {
-            echo "<h2 class='Caption category_description seo_description'>$seo_description</h2>";
+        if ($this->description) {
+            echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
         }
         $this->renderProductsView();
 
@@ -617,7 +591,7 @@ class ProductListPageBase extends ProductPageBase
 
         echo "</div>";
 
-        Session::set("shopping.list",  URL::Current()->toString());
+        Session::set("shopping.list", $this->currentURL());
 
     }
 }
