@@ -560,12 +560,10 @@ class ProductListPageBase extends ProductPageBase
         $cmp->setTagName("H1");
         $cmp->setComponentClass("Caption");
         $cmp->setClassName("category_name");
-        $cmp->setContents($this->view->getName());
+        $cmp->setContents($this->getTitle());
+        $cmp->render();
 
-        if ($catID>0) {
 
-            $cmp->render();
-        }
 
         if ($this->description) {
             echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
