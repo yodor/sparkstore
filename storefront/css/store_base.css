@@ -1065,3 +1065,10 @@ H2 A {
     font-weight: normal;
     font-size:100%;
 }
+.ErrorPage .section.main .content{
+    text-align:center;
+}
+.ErrorPage .description {
+    font-size:150%;
+    padding:2em;
+}

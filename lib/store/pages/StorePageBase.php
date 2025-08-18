@@ -1,4 +1,7 @@
 <?php
+
+use JetBrains\PhpStorm\NoReturn;
+
 include_once("pages/SparkPage.php");
 
 include_once("utils/script/LDJsonScript.php");
@@ -576,6 +579,18 @@ class StorePageBase extends SparkPage
 
 
 
+    #[NoReturn] public static function ErrorPage(string $message, int $code=404) : void
+    {
+        http_response_code($code);
+        $page = new StorePage();
+        $page->addClassName("ErrorPage $code");
+        $page->startRender();
+        echo "<div class='description'>";
+        echo $message;
+        echo "</div>";
+        $page->finishRender();
+        exit;
+    }
 
 
 

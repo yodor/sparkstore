@@ -9,41 +9,15 @@ include_once("store/components/renderers/items/ProductDetailsItem.php");
 class ProductDetailsPageBase extends ProductPageBase
 {
 
-    protected SellableItem $sellable;
+    protected ?SellableItem $sellable = null;
 
     protected ?ProductDetailsItem $item = null;
 
-    protected function headInitialize() : void
-    {
-        parent::headInitialize();
-
-        $this->head()->addOGTag("type", "product");
-        $this->head()->addOGTag("title", $this->sellable->getTitle());
-
-        $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
-        $this->head()->addOGTag("product:price:currency", "BGN");
-
-        $main_photo = $this->sellable->getMainPhoto();
-        if ($main_photo instanceof StorageItem) {
-            $main_photo->setName($this->sellable->getTitle());
-
-            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
-
-            $this->head()->addOGTag("image:height", "600");
-            $this->head()->addOGTag("image:width", "600");
-
-            $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
-        }
-
-        $this->head()->addMeta("twitter:card", "summary_large_image");
-        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
-
-    }
-
     public function __construct()
     {
-        //should reach storepage constructor to initialize defaults
-        //is sellabledataparaser is customizable
+        //should reach StorePage constructor to initialize defaults
+        //SellableDataParser is customizable
+        parent::__construct();
 
         $prodID = -1;
         if (isset($_GET["prodID"])) {
@@ -56,13 +30,9 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->sellable = SellableItem::Load($prodID);
         }
         catch (Exception $e) {
-            Session::set("alert", "Този продукт е недостъпен. Грешка: " . $e->getMessage());
-            header("Location: list.php");
-            exit;
+            StorePage::ErrorPage("Този продукт е недостъпен. Грешка: " . $e->getMessage(),404);
         }
 
-        //after sellable is constructed
-        parent::__construct();
 
         $this->section = "";
 
@@ -103,6 +73,28 @@ class ProductDetailsPageBase extends ProductPageBase
         if (mb_strlen($description)>0) {
             $this->description = $description;
         }
+
+        //fill additional SEO data
+        $this->head()->addOGTag("type", "product");
+        $this->head()->addOGTag("title", $this->sellable->getTitle());
+
+        $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
+        $this->head()->addOGTag("product:price:currency", "BGN");
+
+        $main_photo = $this->sellable->getMainPhoto();
+        if ($main_photo instanceof StorageItem) {
+            $main_photo->setName($this->sellable->getTitle());
+
+            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
+
+            $this->head()->addOGTag("image:height", "600");
+            $this->head()->addOGTag("image:width", "600");
+
+            $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
+        }
+
+        $this->head()->addMeta("twitter:card", "summary_large_image");
+        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
 
         //no parent call
         //parent::headFinalize();
