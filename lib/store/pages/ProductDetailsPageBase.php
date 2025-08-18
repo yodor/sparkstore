@@ -233,16 +233,16 @@ class ProductDetailsPageBase extends ProductPageBase
         debug("Updating view counter for prodID: " . $prodID);
 
         //INSERT INTO product_view_log (prodID, view_counter, order_counter) select p.prodID, coalesce(p.view_counter,0), coalesce(p.order_counter,0) FROM products p ON DUPLICATE KEY UPDATE view_counter=coalesce(p.view_counter,0), order_counter=coalesce(p.order_counter,0)
-//        $db = DBConnections::Open();
-//        try {
-//            $db->transaction();
-//            $db->query("INSERT INTO product_view_log (prodID, view_counter, order_counter) VALUES ($prodID, 1, 0) ON DUPLICATE KEY UPDATE view_counter=(view_counter+1)");
-//            $db->commit();
-//        }
-//        catch (Exception $e) {
-//            $db->rollback();
-//            debug("Unable to increment view counter: ".$e->getMessage());
-//        }
+        $db = DBConnections::Open();
+        try {
+            $db->transaction();
+            $db->query("INSERT INTO product_view_log (prodID, view_counter, order_counter) VALUES ($prodID, 1, 0) ON DUPLICATE KEY UPDATE view_counter=(view_counter+1)");
+            $db->commit();
+        }
+        catch (Exception $e) {
+            $db->rollback();
+            debug("Unable to increment view counter: ".$e->getMessage());
+        }
 
     }
 

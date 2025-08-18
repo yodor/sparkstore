@@ -5,6 +5,7 @@ include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductURL.php");
+include_once("store/beans/ProductViewLogBean.php");
 
 class ProductPageBase extends StorePage
 {
@@ -42,6 +43,8 @@ class ProductPageBase extends StorePage
     public function __construct()
     {
         parent::__construct();
+
+        new ProductViewLogBean();
 
         $this->product_categories = new ProductCategoriesBean();
         $this->sections = new SectionsBean();
