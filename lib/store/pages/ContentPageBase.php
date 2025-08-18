@@ -120,7 +120,7 @@ class ContentPageBase extends StorePage
             }
         }
 
-        $this->setTItle($this->result->get("item_title"));
+        //$this->setTItle($this->result->get("item_title"));
     }
 
     protected function renderImpl(): void
