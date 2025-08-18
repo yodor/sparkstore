@@ -87,9 +87,6 @@ class ProductPageBase extends StorePage
         if ($this->product_categories->haveColumn("category_seodescription")) {
             $columns[] = "category_seodescription";
         }
-        if ($this->product_categories->haveColumn("category_keywords")) {
-            $columns[] = "category_keywords";
-        }
         $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 

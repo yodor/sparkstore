@@ -54,6 +54,27 @@ class StorePageBase extends SparkPage
 
     public bool $vouchers_enabled = false;
 
+    /**
+     * Apply additional og and twitter meta data - copy title and description
+     * Set og url
+     * @return void
+     */
+    protected function applyTitleDescription(): void
+    {
+        parent::applyTitleDescription();
+
+        $title = $this->head()->getTitle();
+        $this->head()->addOGTag("title", $title);
+        $this->head()->addMeta("twitter:title", $title);
+
+        $meta_description = $this->head()->getMeta("description");
+        $this->head()->addOGTag("description", $meta_description);
+        $this->head()->addMeta("twitter:description", $meta_description);
+
+        $this->head()->addOGTag("url", $this->currentURL()->fullURL()->toString());
+
+    }
+
     protected function headInitialize() : void
     {
         parent::headInitialize();
