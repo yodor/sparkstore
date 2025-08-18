@@ -32,8 +32,8 @@ include_once("store/utils/TawktoScript.php");
 
 include_once("dialogs/json/JSONFormDialog.php");
 include_once("objects/data/LinkedData.php");
-include_once("store/utils/urls/ProductURL.php");
-include_once("store/utils/urls/CategoryURL.php");
+include_once("store/utils/url/ProductURL.php");
+include_once("store/utils/url/CategoryURL.php");
 
 class StorePageBase extends SparkPage
 {
