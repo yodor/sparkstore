@@ -1,7 +1,4 @@
 <?php
-
-use JetBrains\PhpStorm\NoReturn;
-
 include_once("pages/SparkPage.php");
 
 include_once("utils/script/LDJsonScript.php");
@@ -35,6 +32,8 @@ include_once("store/utils/TawktoScript.php");
 
 include_once("dialogs/json/JSONFormDialog.php");
 include_once("objects/data/LinkedData.php");
+include_once("store/utils/urls/ProductURL.php");
+include_once("store/utils/urls/CategoryURL.php");
 
 class StorePageBase extends SparkPage
 {
@@ -600,7 +599,7 @@ class StorePageBase extends SparkPage
 
 
 
-    #[NoReturn] public static function ErrorPage(string $message, int $code=404) : void
+    public static function ErrorPage(string $message, int $code=404) : void
     {
         http_response_code($code);
         $page = new StorePage();
