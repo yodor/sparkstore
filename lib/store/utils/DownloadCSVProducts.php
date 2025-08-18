@@ -403,7 +403,7 @@ class FullCSVExporter extends CSVProductExporter
 
     protected function createKeys(): void
     {
-        $this->keys = array("id", "category", "name", "description", "price", "old_price", "images");
+        $this->keys = array("id", "category", "name", "seo_description", "description", "price", "old_price", "images");
     }
 
     protected function processItem(SellableItem $item): void
@@ -411,6 +411,7 @@ class FullCSVExporter extends CSVProductExporter
         $this->values["id"] = $item->getProductID();
         $this->values["category"] = $item->getCategoryName();
         $this->values["name"] = $item->getTitle();
+        $this->values["seo_description"] = $item->getSeoDescription();
         $this->values["description"] = $item->getDescription();
 
         $imageID = array();
@@ -441,7 +442,7 @@ class UpdateCSVExporter extends CSVProductExporter
 
     protected function createKeys(): void
     {
-        $this->keys = array("prodID", "product_name", "product_description");
+        $this->keys = array("prodID", "product_name", "product_description", "seo_description");
     }
 
     protected function processItem(SellableItem $item): void
@@ -449,6 +450,7 @@ class UpdateCSVExporter extends CSVProductExporter
         $this->values["prodID"] = $item->getProductID();
         $this->values["product_name"] =  $item->getTitle();
         $this->values["product_description"] = $item->getDescription();
+        $this->values["seo_description"] = $item->getSeoDescription();
     }
 
     protected function processQuery(SQLQuery $query): void

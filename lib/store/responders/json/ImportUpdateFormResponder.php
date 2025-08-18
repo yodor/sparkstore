@@ -51,7 +51,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
                 throw new Exception("Incorrect CSV format of file");
             }
 
-            $keyNames = array(0 => "prodID", 1 => "product_name", 2 => "product_description");
+            $keyNames = array(0 => "prodID", 1 => "product_name", 2 => "product_description", 3 => "seo_description");
 
             if (count($line) != count($keyNames)) {
                 throw new Exception("Incorrect number of key columns");
@@ -81,7 +81,11 @@ class ImportUpdateFormResponder extends JSONFormResponder
                     $prodID = (int)$line[0];
                     $productName = sanitizeInput($line[1]);
                     $productDescription = sanitizeInput($line[2]);
-                    $updateData = array("product_name" => $productName, "product_description" => $productDescription);
+                    $seoDescription = sanitizeInput($line[3]);
+                    $updateData = array("product_name" => $productName,
+                        "product_description" => $productDescription,
+                        "seo_description" => $seoDescription,
+                    );
 
                     debug("Going to update prodID: $prodID ...");
 
