@@ -116,6 +116,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
+        $this->setTagName("article");
 
         $this->initPriceLabel();
 
