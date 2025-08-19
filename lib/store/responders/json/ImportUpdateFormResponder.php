@@ -53,11 +53,12 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
             $keyNames = array(0 => "prodID", 1 => "product_name", 2 => "product_description", 3 => "seo_description");
 
-            if (count($line) != count($keyNames)) {
+            $keyCount = count($keyNames);
+            if (count($line) != $keyCount) {
                 throw new Exception("Incorrect number of key columns");
             }
 
-            for ($i = 0; $i < count($keyNames); $i++) {
+            for ($i = 0; $i < $keyCount; $i++) {
                 if (strcmp($line[$i], $keyNames[$i]) !== 0) {
                     throw new Exception("Incorrect column keys name: " . $line[$i]);
                 }
@@ -76,7 +77,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
                 while (($line = fgetcsv($stream, 0, $separator, $enclosure, $escape)) !== FALSE) {
 
-                    if (count($line) != 3) throw new Exception("Incorrect number of columns. Expected 3 columns");
+                    if (count($line) != $keyCount) throw new Exception("Incorrect number of columns. Expected $keyCount columns");
 
                     $prodID = (int)$line[0];
                     $productName = sanitizeInput($line[1]);
