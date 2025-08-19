@@ -49,7 +49,8 @@ class ProductListPageBase extends ProductPageBase
 
     protected GETProcessor $category_filter;
 
-    public bool $treeViewUseAgregateSelect = true;
+    protected bool $treeViewAggregateSelect = true;
+    protected bool $treeViewAggregateSelectCount = true;
 
     public function __construct()
     {
@@ -295,11 +296,10 @@ class ProductListPageBase extends ProductPageBase
         $products_tree->fields()->set("relation.prodID", "relation.catID");
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
-        $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"));
+        $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
         //echo $aggregateSelect->getSQL();
 
-        //$aggregateSelect->fields()->removeValue("related_count");
-        if ($this->treeViewUseAgregateSelect) {
+        if ($this->treeViewAggregateSelect) {
             $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
         }
 
