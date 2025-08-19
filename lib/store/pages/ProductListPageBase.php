@@ -160,9 +160,8 @@ class ProductListPageBase extends ProductPageBase
         }
         $this->select = clone $this->bean->select();
 
-        $search_fields = array("product_name", "keywords");
+        $search_fields = array("product_name");
         $this->keyword_search->getForm()->setColumns($search_fields);
-        //$this->keyword_search->getForm()->setCompareExpression("relation.inventory_attributes", array("%:{keyword}|%", "%:{keyword}"));
 
         //default - all categories not filtered or aggregated
         $treeSelect = $this->product_categories->selectTree(array("category_name"));
