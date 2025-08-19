@@ -1062,8 +1062,9 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
     max-width:100%;
 }
 H2 A {
-    font-weight: normal;
-    font-size:100%;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    color: inherit !important;
 }
 .ErrorPage .section.main .content{
     text-align:center;
