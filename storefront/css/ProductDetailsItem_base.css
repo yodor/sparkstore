@@ -436,6 +436,7 @@
 .tabs {
     text-align:left;
     display:block;
+    clear:both;
 }
 .tabs .item {
     display:block;
