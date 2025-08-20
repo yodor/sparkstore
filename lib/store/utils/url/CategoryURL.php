@@ -1,7 +1,7 @@
 <?php
-include_once("utils/url/URL.php");
+include_once("store/utils/url/ProductListURL.php");
 
-class CategoryURL extends URL
+class CategoryURL extends ProductListURL
 {
     public static string $urlCategorySlug = "/products/category/";
 
