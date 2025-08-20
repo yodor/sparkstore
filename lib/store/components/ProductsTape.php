@@ -39,6 +39,8 @@ class ProductsTape extends Container
         $this->action = new Action();
         $this->action->translation_enabled = false;
 
+        //create caption_component
+        $this->getCaptionComponent()->setContents("");
 
         $this->items()->append(new ClosureComponent($this->renderItems(...), false));
     }
@@ -66,18 +68,13 @@ class ProductsTape extends Container
 
     public function setCaption(string $caption): void
     {
-        $this->getCaptionComponent()->setContents("");
         $this->action->setAttribute("title", $caption);
         $this->action->setContents($caption);
     }
 
-    /**
-     * @return URL
-     * @throws Exception
-     */
-    public function getCaptionURL() : URL
+    public function getAction() : Action
     {
-        return $this->action->getURL();
+        return $this->action;
     }
 
     public function getListItem() : ProductListItem

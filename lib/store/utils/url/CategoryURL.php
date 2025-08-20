@@ -4,7 +4,6 @@ include_once("utils/url/URL.php");
 class CategoryURL extends URL
 {
     public static string $urlCategorySlug = "/products/category/";
-    public static string $urlCategory = "/products/list.php";
 
     public function __construct(?URL $other=null)
     {
@@ -15,7 +14,6 @@ class CategoryURL extends URL
             $this->add(new PathParameter("category_name", "category_name", true));
         }
         else {
-            $this->fromString(LOCAL.self::$urlCategory);
             $this->add(new DataParameter("catID"));
         }
 

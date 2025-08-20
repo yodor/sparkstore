@@ -109,7 +109,7 @@ class ProductPageBase extends StorePage
     {
         $actions = array();
 
-        $link = new URL(LOCAL."/products/list.php");
+        $link = new ProductListURL();
         $current = URL::Current();
 
 

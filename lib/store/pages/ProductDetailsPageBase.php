@@ -195,8 +195,11 @@ class ProductDetailsPageBase extends ProductPageBase
         $tape->setCaption($title);
         $tape->setIterator($qry);
 
-        $tape->getCaptionURL()->fromString(LOCAL . "/products/list.php");
-        $tape->getCaptionURL()->add(new URLParameter("catID", $catID));
+        $categoryURL = new CategoryURL();
+        $categoryURL->setCategoryID($catID);
+        $categoryURL->setCategoryName($this->sellable->getCategoryName());
+
+        $tape->getAction()->setURL($categoryURL);
 
         return $tape;
     }
@@ -215,7 +218,8 @@ class ProductDetailsPageBase extends ProductPageBase
         $tape->getListItem()->setProductLinkedDataEnabled(false);
         $tape->setCaption($title);
         $tape->setIterator($qry);
-        $tape->getCaptionURL()->fromString(LOCAL."/products/list.php");
+
+        $tape->getAction()->setURL(new ProductListURL());
 
         return $tape;
     }

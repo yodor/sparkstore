@@ -123,7 +123,7 @@ if ($page->total) {
 $action = $page->getAction(CheckoutPage::NAV_CENTER);
 $action->setTitle(tr("Продължи пазаруването"));
 $action->setClassName("continue_shopping");
-$href = Session::Get("shopping.list", LOCAL."/products/list.php");
+$href = Session::Get("shopping.list", new ProductListURL());
 $action->getURL()->fromString($href);
 
 if ($page->total) {

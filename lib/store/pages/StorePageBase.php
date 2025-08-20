@@ -32,6 +32,7 @@ include_once("store/utils/TawktoScript.php");
 
 include_once("dialogs/json/JSONFormDialog.php");
 include_once("objects/data/LinkedData.php");
+include_once("store/utils/url/ProductListURL.php");
 include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
 
@@ -148,7 +149,10 @@ class StorePageBase extends SparkPage
         $potentialAction = new LinkedData("SearchAction");
 
         $entryPoint = new LinkedData("EntryPoint");
-        $entryPoint->set("urlTemplate", SITE_URL."/products/list.php?filter=search&keyword={keyword}");
+        $entryURL = new ProductListURL();
+        $entryURL->add(new URLParameter("filter","search"));
+        $entryURL->add(new URLParameter("keyword", "{keyword}"));
+        $entryPoint->set("urlTemplate", $entryURL->fullURL()->toString());
         $potentialAction->set("target", $entryPoint->toArray());
         $potentialAction->set("query-input", "required name=keyword");
 
@@ -254,7 +258,7 @@ class StorePageBase extends SparkPage
         //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is posted there
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getRenderer()->setAttribute("method", "get");
-        $ksc->getForm()->getRenderer()->setAttribute("action", LOCAL . "/products/list.php");
+        $ksc->getForm()->getRenderer()->setAttribute("action", new ProductListURL());
         $ksc->getButton("search")->setComponentClass("");
         $ksc->getButton("search")->setContents("");
 
