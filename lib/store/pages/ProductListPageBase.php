@@ -128,21 +128,23 @@ class ProductListPageBase extends ProductPageBase
         $paginator = Paginator::Instance();
         $currentPage = $paginator->currentPage();
         if ($paginator->hasPrevPage()) {
+            $page = $currentPage - 1;
             $url = URL::Current();
             $link = new Link();
             $link->setRelation("prev");
-            $url->add(new URLParameter("page", $currentPage-11));
-            if ($currentPage-1==0) {
+            $url->add(new URLParameter("page", $page));
+            if ($page<1) {
                 $url->remove("page");
             }
             $link->setHref($url);
             $this->head()->items()->append($link);
         }
         if ($paginator->hasNextPage()) {
+            $page = $currentPage + 1;
             $url = URL::Current();
             $link = new Link();
             $link->setRelation("next");
-            $url->add(new URLParameter("page", $currentPage+1));
+            $url->add(new URLParameter("page", $page));
             $link->setHref($url);
             $this->head()->items()->append($link);
         }
