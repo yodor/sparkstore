@@ -125,7 +125,7 @@ class ProductListPageBase extends ProductPageBase
         //execute query and prepare pagination
         $this->view->processIterator();
 
-        $paginator = Paginator::Instance();
+        $paginator = $this->view->getPaginator();
         $currentPage = $paginator->currentPage();
         if ($paginator->hasPrevPage()) {
             $page = $currentPage - 1;
