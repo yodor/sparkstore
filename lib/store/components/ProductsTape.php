@@ -38,6 +38,7 @@ class ProductsTape extends Container
 
         $this->action = new Action();
         $this->action->translation_enabled = false;
+        $this->action->setAttribute("itemprop", "url");
 
         //create caption_component
         $this->getCaptionComponent()->setContents("");
@@ -49,16 +50,19 @@ class ProductsTape extends Container
     {
         $container = parent::CreateCaption();
         $container->setTagName("H2");
+        $container->setAttribute("itemprop", "name");
         $container->items()->append($this->action);
         return $container;
     }
 
     public function getCacheName() : string
     {
-        if (!($this->query instanceof SQLQuery)) return parent::getCacheName();
+        $result = parent::getCacheName();
 
-        return parent::getCacheName()."-".$this->query->select->getSQL();
-
+        if ($this->query instanceof SQLQuery) {
+            $result.="-".$this->query->select->getSQL();
+        }
+        return $result;
     }
 
     public function setIterator(SQLQuery $query): void
