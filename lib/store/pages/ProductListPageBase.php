@@ -119,6 +119,37 @@ class ProductListPageBase extends ProductPageBase
 
     }
 
+    protected function headFinalize() : void
+    {
+        parent::headFinalize();
+        //execute query and prepare pagination
+        $this->view->processIterator();
+
+        $paginator = Paginator::Instance();
+        $currentPage = $paginator->currentPage();
+        if ($paginator->hasPrevPage()) {
+            $url = URL::Current();
+            $link = new Link();
+            $link->setRelation("prev");
+            if ($currentPage-1>0) {
+                $url->get("page")->setValue($currentPage-1);
+            }
+            else {
+                $url->remove("page");
+            }
+            $link->setHref($url);
+            $this->head()->items()->append($link);
+        }
+        if ($paginator->hasNextPage()) {
+            $url = URL::Current();
+            $link = new Link();
+            $link->setRelation("next");
+            $url->get("page")->setValue($currentPage+1);
+            $link->setHref($url);
+            $this->head()->items()->append($link);
+        }
+    }
+
     protected function createSellableProducts() : SellableProducts
     {
         return new SellableProducts();
@@ -304,6 +335,8 @@ class ProductListPageBase extends ProductPageBase
         }
 
         $this->processTreeViewURL();
+
+
     }
 
     /**
