@@ -131,10 +131,8 @@ class ProductListPageBase extends ProductPageBase
             $url = URL::Current();
             $link = new Link();
             $link->setRelation("prev");
-            if ($currentPage-1>0) {
-                $url->get("page")->setValue($currentPage-1);
-            }
-            else {
+            $url->add(new URLParameter("page", $currentPage-11));
+            if ($currentPage-1==0) {
                 $url->remove("page");
             }
             $link->setHref($url);
@@ -144,7 +142,7 @@ class ProductListPageBase extends ProductPageBase
             $url = URL::Current();
             $link = new Link();
             $link->setRelation("next");
-            $url->get("page")->setValue($currentPage+1);
+            $url->add(new URLParameter("page", $currentPage+1));
             $link->setHref($url);
             $this->head()->items()->append($link);
         }
