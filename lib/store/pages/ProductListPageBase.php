@@ -418,7 +418,7 @@ class ProductListPageBase extends ProductPageBase
 
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
-            $url = new CategoryURL();
+            $url = new CategoryURL($url);
             $url->setData(array("catID" => $nodeID, "category_name"=>$this->view->getName()));
         }
 
