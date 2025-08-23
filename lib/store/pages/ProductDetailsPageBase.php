@@ -58,6 +58,8 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected function applyTitleDescription(): void
     {
+        parent::applyTitleDescription();
+
         $this->preferred_title = $this->sellable->getTitle();
 
         $description = $this->sellable->getTitle();
@@ -74,7 +76,6 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->description = $description;
         }
 
-        parent::applyTitleDescription();
     }
 
     protected function headFinalize(): void
