@@ -56,7 +56,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
     }
 
-    protected function headFinalize(): void
+    protected function applyTitleDescription(): void
     {
         $this->preferred_title = $this->sellable->getTitle();
 
@@ -74,9 +74,15 @@ class ProductDetailsPageBase extends ProductPageBase
             $this->description = $description;
         }
 
+        parent::applyTitleDescription();
+    }
+
+    protected function headFinalize(): void
+    {
+        parent::headFinalize();
+
         //fill additional SEO data
         $this->head()->addOGTag("type", "product");
-        $this->head()->addOGTag("title", $this->sellable->getTitle());
 
         $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
         $this->head()->addOGTag("product:price:currency", "BGN");
@@ -96,8 +102,6 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->head()->addMeta("twitter:card", "summary_large_image");
         $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
 
-        //no parent call
-        //parent::headFinalize();
     }
 
     protected function createDetailsItem() : ProductDetailsItem

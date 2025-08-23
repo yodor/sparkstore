@@ -122,8 +122,6 @@ class ProductListPageBase extends ProductPageBase
     protected function headFinalize() : void
     {
         parent::headFinalize();
-        //execute query and prepare pagination
-        $this->view->processIterator();
 
         $paginator = $this->view->getPaginator();
         $currentPage = $paginator->currentPage();
@@ -148,6 +146,17 @@ class ProductListPageBase extends ProductPageBase
             $link->setHref($url);
             $this->head()->items()->append($link);
         }
+
+        //apply page number to the title
+        $headTitle = $this->head()->getTitle();
+        $this->head()->setTitle($headTitle." | ".tr("Page")." ".($currentPage+1));
+    }
+
+    protected function applyTitleDescription(): void
+    {
+        parent::applyTitleDescription();
+        //execute query and prepare pagination
+        $this->view->processIterator();
     }
 
     protected function createSellableProducts() : SellableProducts

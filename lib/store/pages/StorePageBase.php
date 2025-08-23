@@ -59,9 +59,9 @@ class StorePageBase extends SparkPage
      * Set og url
      * @return void
      */
-    protected function applyTitleDescription(): void
+    protected function headFinalize(): void
     {
-        parent::applyTitleDescription();
+        parent::headFinalize();
 
         $title = $this->head()->getTitle();
         $this->head()->addOGTag("title", $title);
@@ -186,7 +186,11 @@ class StorePageBase extends SparkPage
     }
 
 
-    protected function headFinalize(): void
+    /**
+     * Use menu
+     * @return void
+     */
+    protected function applyTitleDescription(): void
     {
         $main_menu = $this->menu_bar->getMenu();
         $selectedPath = $main_menu->getSelectedPath();
@@ -222,7 +226,7 @@ class StorePageBase extends SparkPage
             }
         }
 
-        parent::headFinalize();
+        parent::applyTitleDescription();
 
     }
 

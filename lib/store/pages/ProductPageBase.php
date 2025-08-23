@@ -150,7 +150,7 @@ class ProductPageBase extends StorePage
         return $actions;
     }
 
-    protected function headFinalize() : void
+    protected function applyTitleDescription() : void
     {
 
         $title = "";
@@ -184,7 +184,7 @@ class ProductPageBase extends StorePage
             $this->description = $description;
         }
 
-        parent::headFinalize();
+        parent::applyTitleDescription();
     }
 }
 
