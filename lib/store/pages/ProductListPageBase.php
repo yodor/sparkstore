@@ -131,7 +131,7 @@ class ProductListPageBase extends ProductPageBase
             $link = new Link();
             $link->setRelation("prev");
             $url->add(new URLParameter("page", $page));
-            if ($page<1) {
+            if ($page < 1) {
                 $url->remove("page");
             }
             $link->setHref($url);
@@ -147,9 +147,11 @@ class ProductListPageBase extends ProductPageBase
             $this->head()->items()->append($link);
         }
 
-        //apply page number to the title
-        $headTitle = $this->head()->getTitle();
-        $this->head()->setTitle($headTitle." | ".tr("Page")." ".($currentPage+1));
+        if ($paginator->totalPages() > 1) {
+            //apply page number to the title
+            $headTitle = $this->head()->getTitle();
+            $this->head()->setTitle($headTitle . " | " . tr("Page") . " " . ($currentPage + 1));
+        }
     }
 
     protected function applyTitleDescription(): void
