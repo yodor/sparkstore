@@ -102,6 +102,9 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected PriceLabel $priceLabel;
 
+    protected ClosureComponent $wrap;
+    protected Meta $positionMeta;
+
     public function __construct()
     {
         parent::__construct();
@@ -112,13 +115,31 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
-        $this->setAttribute("itemtype", "https://schema.org/Product");
+        $this->setAttribute("itemtype", "https://schema.org/ListItem");
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
         $this->setTagName("article");
 
         $this->initPriceLabel();
+
+        $this->positionMeta = new Meta();
+        $this->positionMeta->setAttribute("itemprop","position");
+
+        $closure = function() {
+            $this->renderMeta();
+            $this->renderPhoto();
+            $this->renderDetails();
+        };
+
+        $this->wrap = new ClosureComponent($closure,true, false);
+        $this->wrap->setComponentClass("wrap");
+        $this->wrap->setAttribute("itemprop", "item");
+        $this->wrap->setAttribute("itemscope");
+        $this->wrap->setAttribute("itemtype", "https://schema.org/Product");
+
+        $this->items()->append($this->positionMeta);
+        $this->items()->append($this->wrap);
 
     }
 
@@ -181,31 +202,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         }
 
         $this->detailsURL->setData($data);
-
-
-    }
-
-    protected function renderImpl(): void
-    {
-//        $title_alt = attributeValue($this->data["product_name"]);
-//        $details_url = attributeValue($this->getDetailsURL()->fullURL()->toString());
-//        $img_href = $this->photo->hrefImage($this->width, $this->height);
-
-        //meta for ListItem
-        echo "<meta itemprop='position' content='{$this->position}'>";
-
-        $closure = function() {
-            $this->renderMeta();
-            $this->renderPhoto();
-            $this->renderDetails();
-        };
-
-        $wrap = new ClosureComponent($closure,true, false);
-        $wrap->setComponentClass("wrap");
-        $wrap->render();
-
+        $this->positionMeta->setContent($this->position);
 
     }
+
 
     protected function renderMeta()
     {
