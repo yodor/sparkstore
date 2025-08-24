@@ -148,7 +148,11 @@ class SellableDataParser
         $product = new LinkedData("Product");
         $product->set("sku", $item->getProductID());
         $product->set("name", $item->getTitle());
-        $product->set("description", strip_tags($item->getDescription()));
+        $description = $item->getDescription();
+        $seoDescription = $item->getSeoDescription();
+        if ($seoDescription) $description = $seoDescription;
+        $product->set("description", strip_tags($description));
+
         if (!is_null($productURL)) {
             $product->set("url", fullURL($productURL->toString()));
         }
@@ -158,8 +162,8 @@ class SellableDataParser
 
         $si = $item->getMainPhoto();
         if ($si instanceof StorageItem) {
-            $si->enableExternalURL(true);
-            $product->set("image", fullURL($si->hrefFull()));
+            $si->setName($item->getTitle());
+            $product->set("image", $si->hrefFull()->fullURL());
         }
 
         $offer = new LinkedData("Offer");
