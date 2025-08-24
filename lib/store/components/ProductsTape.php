@@ -33,6 +33,8 @@ class ProductsTape extends Container
         parent::__construct();
 
         $this->setTagName("section");
+        $this->setAttribute("itemscope", "");
+        $this->setAttribute("itemtype", "https://schema.org/ItemList");
 
         $this->list_item = ProductsTape::GetDefaultItemRenderer();
 

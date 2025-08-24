@@ -112,7 +112,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->setAttribute("itemprop","itemListElement");
         $this->setAttribute("itemscope", "");
-        $this->setAttribute("itemtype", "http://schema.org/ListItem");
+        $this->setAttribute("itemtype", "https://schema.org/Product");
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
