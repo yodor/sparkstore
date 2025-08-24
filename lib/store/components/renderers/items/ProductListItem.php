@@ -21,9 +21,9 @@ class PriceLabel extends Container {
         parent::__construct(false);
         $this->setComponentClass("price_info");
 
-        $this->setAttribute("itemscope");
+        $this->setAttribute("itemscope","");
         $this->setAttribute("itemprop", "offers");
-        $this->setAttribute("itemtype", "http://schema.org/Offer");
+        $this->setAttribute("itemtype", "https://schema.org/Offer");
 
         $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
         $metaValidUntil = new Meta();
@@ -125,16 +125,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected function initPriceLabel() : void
     {
         $this->priceLabel = new PriceLabel();
-        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
 
-        }
-        else {
-            $this->priceLabel->removeAttribute("itemscope");
-            $this->priceLabel->removeAttribute("itemprop");
-            $this->priceLabel->removeAttribute("itemtype");
-            $this->priceLabel->availability()->setRenderEnabled(false);
-            $this->priceLabel->currency()->setRenderEnabled(false);
-        }
 
     }
 
@@ -211,12 +202,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $wrap = new ClosureComponent($closure,true, false);
         $wrap->setComponentClass("wrap");
-
-        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
-            $wrap->setAttribute("itemscope", "");
-            $wrap->setAttribute("itemtype", "http://schema.org/Product");
-        }
-
         $wrap->render();
 
 
@@ -226,14 +211,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     {
         $details_url = $this->getDetailsURL()->toString();
 
-        if ($this->product_linked_data_enabled && LINKED_DATA_ENABLED) {
-            echo "<meta itemprop='sku' content='" .$this->data["prodID"]."'>";
-            echo "<meta itemprop='url' content='" . attributeValue(fullURL($details_url)) . "'>";
-            echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
-            $description_content = $this->data["product_name"];
+        echo "<meta itemprop='sku' content='" .$this->data["prodID"]."'>";
+        echo "<meta itemprop='url' content='" . attributeValue(fullURL($details_url)) . "'>";
+        echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
 
-            echo "<meta itemprop='description' content='" . attributeValue($description_content) . "'>";
-        }
     }
 
     protected function renderPhoto()
