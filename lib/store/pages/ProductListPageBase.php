@@ -408,7 +408,8 @@ class ProductListPageBase extends ProductPageBase
             $page_params = $pageURL->getParameterNames();
             //cleanup non supported names
             foreach ($page_params as $idx=>$name) {
-                if (!in_array($name, $supported_params)) {
+                $param = $pageURL->get($name);
+                if (!in_array($name, $supported_params) || !$param->value()) {
                     $pageURL->remove($name);
                 }
             }
