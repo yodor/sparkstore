@@ -8,6 +8,86 @@ include_once("store/utils/url/ProductURL.php");
 include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
+class ProductPhoto extends Action
+{
+    protected Image $image;
+    protected Component $discountLabel;
+    protected Component $blend;
+    protected ProductListItem $item;
+
+    public function __construct(ProductListItem $item)
+    {
+        parent::__construct();
+        $this->item = $item;
+
+        $this->setComponentClass("photo");
+
+        $this->setAttribute("itemprop", "url");
+
+        $this->image = new Image();
+        $this->image->setAttribute("loading", "lazy");
+        $this->image->setAttribute("itemprop", "image");
+        $this->image->setStorageItem(new StorageItem());
+
+        $this->image->setPhotoSize(275,275);
+
+        $this->items()->append($this->image);
+
+        $this->discountLabel = new Component(false);
+        $this->discountLabel->setComponentClass("discount_label");
+        $this->discountLabel->setRenderEnabled(false);
+        $this->items()->append($this->discountLabel);
+
+        $this->blend = new Component(false);
+        $this->blend->setComponentClass("blend");
+        $this->blend->setRenderEnabled(false);
+        $this->items()->append($this->blend);
+    }
+
+    public function getDiscountLabel() : Component
+    {
+        return $this->discountLabel;
+    }
+
+    public function getBlend() : Component
+    {
+        return $this->blend;
+    }
+
+    public function getImage() : Image
+    {
+        return $this->image;
+    }
+
+    public function setData(array $data) : void
+    {
+        parent::setData($data);
+        $this->image->getStorageItem()->setData($data);
+
+        $this->setAttribute("title", $this->data["product_name"]);
+        $this->image->setTitle($this->data["product_name"]);
+
+        $this->discountLabel->setContents("");
+        $this->discountLabel->setRenderEnabled(false);
+        $this->blend->setRenderEnabled(false);
+
+        if ($this->data["discount_percent"]>0) {
+            $this->discountLabel->setContents(" -".$this->data["discount_percent"]."%");
+        }
+        else if ($this->item->isPromo()) {
+            $this->discountLabel->setContents("Промо");
+        }
+        if ($this->data["stock_amount"]<1) {
+            $this->discountLabel->setContents("Изчерпан");
+            $this->blend->setRenderEnabled(true);
+        }
+        if ($this->discountLabel->getContents()) {
+            $this->discountLabel->setRenderEnabled(true);
+        }
+
+    }
+
+}
 class PriceLabel extends Container {
 
     protected ?Link $availabilityLink = null;
@@ -77,26 +157,12 @@ class PriceLabel extends Container {
 class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
 {
 
-    /**
-     * To render the main inventory photo
-     * @var StorageItem
-     */
-    protected StorageItem $photo;
-
-    /**
-     * To render the color chip
-     * @var StorageItem
-     */
-    protected StorageItem $chip;
 
     /**
      * Details page of this inventory
-     * @var URL
+     * @var ProductURL
      */
-    protected URL $detailsURL;
-
-    protected int $width = 275;
-    protected int $height = 275;
+    protected ProductURL $detailsURL;
 
     protected bool $product_linked_data_enabled = true;
 
@@ -105,11 +171,11 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected ClosureComponent $wrap;
     protected Meta $positionMeta;
 
+    protected ProductPhoto $productPhoto;
+
     public function __construct()
     {
         parent::__construct();
-
-        $this->photo = new StorageItem();
 
         $this->detailsURL = new ProductURL();
 
@@ -117,7 +183,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->setAttribute("itemscope", "");
         $this->setAttribute("itemtype", "https://schema.org/ListItem");
 
-        //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
         $this->setTagName("li");
 
@@ -129,7 +194,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $closure = function() {
             $this->renderMeta();
-            $this->renderPhoto();
+            $this->productPhoto->render();
             $this->renderDetails();
         };
 
@@ -139,17 +204,17 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->wrap->setAttribute("itemscope");
         $this->wrap->setAttribute("itemtype", "https://schema.org/Product");
         $this->wrap->setTagName("article");
-
-
         $this->items()->append($this->wrap);
 
+        $this->productPhoto = new ProductPhoto($this);
+        $this->productPhoto->setURL($this->detailsURL);
+        $this->productPhoto->getImage()->getStorageItem()->className = ProductPhotosBean::class;
+        $this->productPhoto->getImage()->getStorageItem()->setValueKey("ppID");
     }
 
     protected function initPriceLabel() : void
     {
         $this->priceLabel = new PriceLabel();
-
-
     }
 
     public function setProductLinkedDataEnabled(bool $mode) : void
@@ -163,11 +228,6 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         return $this->detailsURL;
     }
 
-    public function getPhoto(): StorageItem
-    {
-        return $this->photo;
-    }
-
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
@@ -177,18 +237,17 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     public function setPhotoSize(int $width, int $height): void
     {
-        $this->width = $width;
-        $this->height = $height;
+        $this->productPhoto->getImage()->setPhotoSize($width, $height);
     }
 
     public function getPhotoWidth(): int
     {
-        return $this->width;
+        return $this->productPhoto->getImage()->getPhotoWidth();
     }
 
     public function getPhotoHeight(): int
     {
-        return $this->height;
+        return $this->productPhoto->getImage()->getPhotoHeight();
     }
 
     public function setData(array $data) : void
@@ -196,18 +255,10 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         parent::setData($data);
         $this->setAttribute("prodID", $this->data["prodID"]);
 
-        if (isset($data["ppID"]) && $data["ppID"] > 0) {
-
-            $this->photo->id = (int)$data["ppID"];
-            $this->photo->className = "ProductPhotosBean";//ProductPhotosBean::class;
-
-        }
-
         $this->detailsURL->setData($data);
+        $this->productPhoto->setData($data);
         $this->positionMeta->setContent($this->position);
-
     }
-
 
     protected function renderMeta()
     {
@@ -215,44 +266,18 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
     }
 
-    protected function renderPhoto()
-    {
-        $title_alt = attributeValue($this->data["product_name"]);
-        $details_url = $this->getDetailsURL()->toString();
-
-        echo "<a class='photo' title='{$title_alt}' href='{$details_url}' >";
-
-            $this->photo->setName($title_alt);
-            $img_href = $this->photo->hrefImage($this->width, $this->height);
-
-            $lazy = "";
-            if ($this->position>3) $lazy="loading='lazy'";
-
-            echo "<img $lazy itemprop='image' src='$img_href' alt='$title_alt'>";
-
-
-            if ($this->data["discount_percent"]>0) {
-                echo "<div class='discount_label'> -".$this->data["discount_percent"]."%</div>";
-            }
-            else if ($this->isPromo()) {
-                echo "<div class='discount_label'>Промо</div>";
-            }
-            if ($this->data["stock_amount"]<1) {
-                echo "<div class='discount_label'>Изчерпан</div>";
-                echo "<div class='blend'></div>";
-            }
-        echo "</a>";
-    }
-
-    public function isPromo()
+    public function isPromo() : bool
     {
         return ((float)$this->data["price"] != (float)$this->data["sell_price"] && (float)$this->data["price"]>0);
     }
 
-    protected function renderDetails()
+    /**
+     * @return void
+     */
+    protected function renderDetails() : void
     {
 
-        echo "<a class='details' href='{$this->getDetailsURL()}' itemprop='url'>";
+        echo "<a class='details' href='{$this->getDetailsURL()}' >";
 
             echo "<h3 itemprop='name' class='product_name'>" . $this->data["product_name"] . "</h3>";
 
