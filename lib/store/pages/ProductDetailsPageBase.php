@@ -52,8 +52,6 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->item = $this->createDetailsItem();
 
-        //$this->head()->addOGTag("url", fullURL($this->currentURL()));
-
     }
 
     protected function applyTitleDescription(): void
@@ -92,16 +90,19 @@ class ProductDetailsPageBase extends ProductPageBase
         if ($main_photo instanceof StorageItem) {
             $main_photo->setName($this->sellable->getTitle());
 
-            $this->head()->addOGTag("image", fullURL($main_photo->hrefImage(600, 0)));
+            $imageURL = $main_photo->hrefImage(600, 600)->fullURL();
+            $this->head()->addOGTag("image", $imageURL);
 
             $this->head()->addOGTag("image:height", "600");
             $this->head()->addOGTag("image:width", "600");
 
             $this->head()->addOGTag("image:alt", $this->sellable->getTitle());
+
+            $this->head()->addMeta("twitter:card", "summary_large_image");
+            $this->head()->addMeta("twitter:image", $imageURL);
         }
 
-        $this->head()->addMeta("twitter:card", "summary_large_image");
-        $this->head()->addMeta("twitter:image", fullURL($main_photo->hrefImage(600, 0)));
+
 
     }
 

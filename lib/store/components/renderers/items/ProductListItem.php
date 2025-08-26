@@ -81,22 +81,22 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
      * To render the main inventory photo
      * @var StorageItem
      */
-    protected $photo;
+    protected StorageItem $photo;
 
     /**
      * To render the color chip
      * @var StorageItem
      */
-    protected $chip;
+    protected StorageItem $chip;
 
     /**
      * Details page of this inventory
      * @var URL
      */
-    protected $detailsURL;
+    protected URL $detailsURL;
 
-    protected $width = 275;
-    protected $height = 275;
+    protected int $width = 275;
+    protected int $height = 275;
 
     protected bool $product_linked_data_enabled = true;
 
@@ -119,12 +119,13 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         //chainloading is disabled set component class
         $this->setComponentClass("ProductListItem");
-        $this->setTagName("article");
+        $this->setTagName("li");
 
         $this->initPriceLabel();
 
         $this->positionMeta = new Meta();
         $this->positionMeta->setAttribute("itemprop","position");
+        $this->items()->append($this->positionMeta);
 
         $closure = function() {
             $this->renderMeta();
@@ -137,8 +138,9 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->wrap->setAttribute("itemprop", "item");
         $this->wrap->setAttribute("itemscope");
         $this->wrap->setAttribute("itemtype", "https://schema.org/Product");
+        $this->wrap->setTagName("article");
 
-        $this->items()->append($this->positionMeta);
+
         $this->items()->append($this->wrap);
 
     }
@@ -209,12 +211,8 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected function renderMeta()
     {
-        $details_url = $this->getDetailsURL()->toString();
-
         echo "<meta itemprop='sku' content='" .$this->data["prodID"]."'>";
-        echo "<meta itemprop='url' content='" . attributeValue(fullURL($details_url)) . "'>";
         echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
-
     }
 
     protected function renderPhoto()
@@ -222,7 +220,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $title_alt = attributeValue($this->data["product_name"]);
         $details_url = $this->getDetailsURL()->toString();
 
-        echo "<a class='photo' title='{$title_alt}' href='{$details_url}'>";
+        echo "<a class='photo' title='{$title_alt}' href='{$details_url}' >";
 
             $this->photo->setName($title_alt);
             $img_href = $this->photo->hrefImage($this->width, $this->height);
@@ -254,7 +252,7 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
     protected function renderDetails()
     {
 
-        echo "<a class='details' href='{$this->getDetailsURL()->toString()}'>";
+        echo "<a class='details' href='{$this->getDetailsURL()}' itemprop='url'>";
 
             echo "<h3 itemprop='name' class='product_name'>" . $this->data["product_name"] . "</h3>";
 

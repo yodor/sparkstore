@@ -115,7 +115,8 @@ class ProductListPageBase extends ProductPageBase
         $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
         //enable canonical link tag
-        $this->head()->addCanonicalParameter($this->category_filter->getName(),"category_name", Paginator::KEY_PAGE);
+        $this->head()->addCanonicalParameter($this->category_filter->getName(),"category_name");//
+        //, Paginator::KEY_PAGE);
 
     }
 
@@ -127,7 +128,7 @@ class ProductListPageBase extends ProductPageBase
         $currentPage = $paginator->currentPage();
         if ($paginator->hasPrevPage()) {
             $page = $currentPage - 1;
-            $url = URL::Current();
+            $url = $this->currentURL();
             $link = new Link();
             $link->setRelation("prev");
             $url->add(new URLParameter("page", $page));
@@ -139,7 +140,7 @@ class ProductListPageBase extends ProductPageBase
         }
         if ($paginator->hasNextPage()) {
             $page = $currentPage + 1;
-            $url = URL::Current();
+            $url = $this->currentURL();
             $link = new Link();
             $link->setRelation("next");
             $url->add(new URLParameter("page", $page));
@@ -271,9 +272,16 @@ class ProductListPageBase extends ProductPageBase
         }
 
 
+        $this->view->setName(tr("All Products"));
+
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID > 0) {
             $this->loadCategoryPath($nodeID);
+            $length = count($this->category_path);
+            if ($length>0) {
+                $this->view->setName($this->category_path[$length-1]["category_name"]);
+            }
+
         }
 
         //clone the main products select here to keep the tree siblings visible
@@ -502,17 +510,6 @@ class ProductListPageBase extends ProductPageBase
     {
         $this->view->render();
     }
-
-    protected function loadCategoryPath(int $nodeID) : void
-    {
-        parent::loadCategoryPath($nodeID);
-        $length = count($this->category_path);
-        if ($length>0) {
-            $this->view->setName($this->category_path[$length-1]["category_name"]);
-        }
-
-    }
-
 
 
     /**
