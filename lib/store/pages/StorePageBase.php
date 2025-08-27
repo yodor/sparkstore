@@ -261,10 +261,15 @@ class StorePageBase extends SparkPage
 
         //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is posted there
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
+        $ksc->getForm()->getInput("keyword")->setID("search-keyword");
+
         $ksc->getForm()->getRenderer()->setAttribute("method", "get");
         $ksc->getForm()->getRenderer()->setAttribute("action", new ProductListURL());
+        $ksc->getForm()->getRenderer()->setAttribute("aria-label", "Product Search Form");
+
         $ksc->getButton("search")->setComponentClass("");
         $ksc->getButton("search")->setContents("");
+        $ksc->getButton("search")->setAttribute("aria-label", "Search Products");
 
         $ksc->getButton("clear")->setRenderEnabled(false);
         $ksc->setMethod(FormRenderer::METHOD_GET);
@@ -289,7 +294,11 @@ class StorePageBase extends SparkPage
 
         $this->_cookies = new PageSection();
         $this->_cookies->addClassName("cookies");
-        $this->_cookies->content()->setTagName("aside");
+        $this->_cookies->setTagName("aside");
+        $this->_cookies->setAttribute("aria-label","Cookie Consent Notification");
+        $this->_cookies->setAttribute("role", "dialog");
+        $this->_cookies->setAttribute("tabindex", "0");
+
 //        $this->_cookies->setAttribute("accepted", 0);
 
         $this->_footer = new PageSection();
