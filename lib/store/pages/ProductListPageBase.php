@@ -604,8 +604,6 @@ class ProductListPageBase extends ProductPageBase
         $cmp->setContents($this->getTitle());
         $cmp->render();
 
-
-
         if ($this->description) {
             echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
         }
@@ -623,9 +621,9 @@ class ProductListPageBase extends ProductPageBase
         }
 
         if ($category_description) {
-            echo "<h2 class='category_description'>";
+            echo "<section class='category_description'>";
             echo $category_description;
-            echo "</h2>";
+            echo "</section>";
         }
 
         echo "</main>";
