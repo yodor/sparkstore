@@ -289,6 +289,7 @@ class StorePageBase extends SparkPage
 
         $this->_cookies = new PageSection();
         $this->_cookies->addClassName("cookies");
+        $this->_cookies->content()->setTagName("aside");
 //        $this->_cookies->setAttribute("accepted", 0);
 
         $this->_footer = new PageSection();
