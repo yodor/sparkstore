@@ -66,11 +66,19 @@ body {
     grid-template-columns: auto 1200px auto;
 }
 
-.section .ProductsTape {
+.ProductsTape {
     margin-top:1em;
     text-align: center;
+    display:block;
 }
-
+.ProductsTape UL {
+    list-style-type:none;
+    padding:0;
+    margin:0;
+}
+.home .ProductsTape {
+    font-size:80%;
+}
 .home .section A {
     text-decoration: none;
 }

@@ -45,7 +45,9 @@ class ProductsTape extends Container
         //create caption_component
         $this->getCaptionComponent()->setContents("");
 
-        $this->items()->append(new ClosureComponent($this->renderItems(...), false));
+        $ul = new ClosureComponent($this->renderItems(...), true, false);
+        $ul->setTagName("ul");
+        $this->items()->append($ul);
     }
 
     protected function CreateCaption(): Container
