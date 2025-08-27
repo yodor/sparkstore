@@ -59,8 +59,9 @@ class NavigationListItem extends DataIteratorItem
         $this->image->setTitle($this->label);
 
         $imagesKey = $this->si->getValueKey();
-        if ($imagesKey) {
-            $images = $data[$imagesKey];
+        $images = $data[$imagesKey];
+        if ($imagesKey && $images) {
+
             $images = explode(",", $images);
 
             if (count($images) > 0) {
