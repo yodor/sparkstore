@@ -70,8 +70,6 @@ class ProductsTape extends Container
     public function setIterator(SQLQuery $query): void
     {
         $this->query = $query;
-        $num = $this->query->exec();
-        if ($num<1)$this->setRenderEnabled(false);
     }
 
     public function setCaption(string $caption): void
@@ -99,7 +97,10 @@ class ProductsTape extends Container
     {
         if (!$this->query instanceof SQLQuery) return;
 
-
+        $numResults = 0;
+        if (!$this->query->isActive()) {
+            $numResults = $this->query->exec();
+        }
 
         $position = 0;
         while ($row = $this->query->next()) {
