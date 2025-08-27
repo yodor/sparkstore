@@ -105,6 +105,11 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->setCacheable(true);
     }
 
+    public function getGallery() : SellableImageGallery
+    {
+        return $this->gallery;
+    }
+
     public function getURL() : URL
     {
         return $this->url;
