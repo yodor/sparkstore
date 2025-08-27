@@ -1,5 +1,5 @@
 <?php
-include_once("components/renderers/items/DataIteratorItem.php");
+include_once("components/renderers/items/ListItem.php");
 include_once("components/renderers/IHeadContents.php");
 include_once("components/renderers/IPhotoRenderer.php");
 include_once("storage/StorageItem.php");
@@ -8,6 +8,99 @@ include_once("store/utils/url/ProductURL.php");
 include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
+class ProductDetails extends Action
+{
+    protected ProductListItem $item;
+
+    protected Component $title;
+    protected Container $info;
+    protected Container $price;
+
+    public function __construct(ProductListItem $item)
+    {
+        parent::__construct();
+        $this->setComponentClass("details");
+        $this->item = $item;
+
+        $this->title = new Component(false);
+        $this->title->setComponentClass("product_name");
+        $this->title->setAttribute("itemprop", "name");
+        $this->title->setTagName("h3");
+        $this->title->setContents($item->getTitle());
+        $this->items()->append($this->title);
+
+        //additional info like brand, author, publisher etc - disabled by default
+        $this->info = new Container(false);
+        $this->info->setComponentClass("info");
+        $this->info->setRenderEnabled(false);
+        $this->items()->append($this->info);
+
+        $this->price = new Container(false);
+        $this->price->setComponentClass("price_label");
+        $this->items()->append($this->price);
+
+        if (DOUBLE_PRICE_ENABLED) {
+            $priceLabelEUR = new PriceLabel();
+            $priceLabelEUR->addClassName("left");
+            $priceLabelEUR->currency()->setContent("EUR");
+            $this->price->items()->append($priceLabelEUR);
+        }
+
+        $priceLabel = new PriceLabel();
+        $priceLabel->currency()->setContent(DEFAULT_CURRENCY);
+        $this->price->items()->append($priceLabel);
+    }
+
+    public function setData(array $data) : void
+    {
+        parent::setData($data);
+        $this->title->setContents($this->data["product_name"]);
+
+        if ($this->data["sell_price"] < 1) {
+            $this->price->setRenderEnabled(false);
+            return;
+        }
+
+        $availability = "https://schema.org/OutOfStock";
+        if ($this->data["stock_amount"]>0) {
+            $availability = "https://schema.org/InStock";
+        }
+
+        if (DOUBLE_PRICE_ENABLED) {
+            $eurPriceLabel = $this->price->items()->get(0);
+            if ($eurPriceLabel instanceof PriceLabel) {
+                $priceOld = "<BR>";
+                if ($this->item->isPromo()) {
+                    $priceOld = formatPrice( $this->data["price"] / DOUBLE_PRICE_RATE,"&euro;", true);
+                }
+                $eurPriceLabel->priceOld()->setContents($priceOld);
+
+                $priceSell = formatPrice($this->data["sell_price"] / DOUBLE_PRICE_RATE, "", true);
+                $priceSell = "<span class='currency'>&euro;&nbsp;</span><span itemprop='price'>$priceSell</span>";
+                $eurPriceLabel->priceSell()->setContents($priceSell);
+
+                $eurPriceLabel->availability()->setHref($availability);
+            }
+        }
+
+        $priceLabel = $this->price->items()->get(1);
+        if ($priceLabel instanceof PriceLabel) {
+            $priceOld = "<BR>";
+            if ($this->item->isPromo()) {
+                $priceOld = formatPrice($this->data["price"], "лв", false);
+            }
+            $priceLabel->priceOld()->setContents($priceOld);
+
+            $priceSell = formatPrice($this->data["sell_price"], "", false);
+            $priceSell = "<span itemprop='price'>$priceSell</span><span class='currency'>&nbsp;лв.</span>";
+
+            $priceLabel->priceSell()->setContents($priceSell);
+
+            $priceLabel->availability()->setHref($availability);
+        }
+    }
+}
+
 class ProductPhoto extends Action
 {
     protected Image $image;
@@ -154,9 +247,9 @@ class PriceLabel extends Container {
         return $this->priceSell;
     }
 }
-class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoRenderer
-{
 
+class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
+{
 
     /**
      * Details page of this inventory
@@ -166,12 +259,15 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
     protected bool $product_linked_data_enabled = true;
 
-    protected PriceLabel $priceLabel;
 
-    protected ClosureComponent $wrap;
-    protected Meta $positionMeta;
+
+    protected Container $wrap;
+
+    protected Meta $skuMeta;
+    protected Meta $categoryMeta;
 
     protected ProductPhoto $productPhoto;
+    protected ProductDetails $productDetails;
 
     public function __construct()
     {
@@ -179,48 +275,45 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
 
         $this->detailsURL = new ProductURL();
 
-        $this->setAttribute("itemprop","itemListElement");
-        $this->setAttribute("itemscope", "");
-        $this->setAttribute("itemtype", "https://schema.org/ListItem");
-
         $this->setComponentClass("ProductListItem");
         $this->setTagName("li");
 
-        $this->initPriceLabel();
-
-        $this->positionMeta = new Meta();
-        $this->positionMeta->setAttribute("itemprop","position");
-        $this->items()->append($this->positionMeta);
-
-        $closure = function() {
-            $this->renderMeta();
-            $this->productPhoto->render();
-            $this->renderDetails();
-        };
-
-        $this->wrap = new ClosureComponent($closure,true, false);
+        //actial product itemtype
+        $this->wrap = new Container(false);
         $this->wrap->setComponentClass("wrap");
         $this->wrap->setAttribute("itemprop", "item");
         $this->wrap->setAttribute("itemscope");
         $this->wrap->setAttribute("itemtype", "https://schema.org/Product");
         $this->wrap->setTagName("article");
-        $this->items()->append($this->wrap);
 
-        $this->productPhoto = new ProductPhoto($this);
+        $this->skuMeta = new Meta();
+        $this->skuMeta->setAttribute("itemprop", "sku");
+        $this->wrap->items()->append($this->skuMeta);
+
+        $this->categoryMeta = new Meta();
+        $this->categoryMeta->setAttribute("itemprop", "category");
+        $this->wrap->items()->append($this->categoryMeta);
+
+        $this->productPhoto = $this->CreatePhoto();
         $this->productPhoto->setURL($this->detailsURL);
         $this->productPhoto->getImage()->getStorageItem()->className = ProductPhotosBean::class;
         $this->productPhoto->getImage()->getStorageItem()->setValueKey("ppID");
+        $this->wrap->items()->append($this->productPhoto);
+
+        $this->productDetails = $this->CreateDetails();
+        $this->productDetails->setURL($this->detailsURL);
+        $this->wrap->items()->append($this->productDetails);
+
+        $this->items()->append($this->wrap);
     }
 
-    protected function initPriceLabel() : void
+    protected function CreatePhoto() : ProductPhoto
     {
-        $this->priceLabel = new PriceLabel();
+        return new ProductPhoto($this);
     }
-
-    public function setProductLinkedDataEnabled(bool $mode) : void
+    protected function CreateDetails() : ProductDetails
     {
-        $this->product_linked_data_enabled = $mode;
-        $this->initPriceLabel();
+        return new ProductDetails($this);
     }
 
     public function getDetailsURL(): URL
@@ -256,102 +349,18 @@ class ProductListItem extends DataIteratorItem implements IHeadContents, IPhotoR
         $this->setAttribute("prodID", $this->data["prodID"]);
 
         $this->detailsURL->setData($data);
-        $this->productPhoto->setData($data);
-        $this->positionMeta->setContent($this->position);
-    }
 
-    protected function renderMeta()
-    {
-        echo "<meta itemprop='sku' content='" .$this->data["prodID"]."'>";
-        echo "<meta itemprop='category' content='" . attributeValue($this->data["category_name"]) . "'>";
+        $this->productPhoto->setData($data);
+        $this->productDetails->setData($data);
+
+        $this->skuMeta->setContent($this->data["prodID"]);
+        $this->categoryMeta->setContent($this->data["category_name"]);
     }
 
     public function isPromo() : bool
     {
         return ((float)$this->data["price"] != (float)$this->data["sell_price"] && (float)$this->data["price"]>0);
     }
-
-    /**
-     * @return void
-     */
-    protected function renderDetails() : void
-    {
-
-        echo "<a class='details' href='{$this->getDetailsURL()}' >";
-
-            echo "<h3 itemprop='name' class='product_name'>" . $this->data["product_name"] . "</h3>";
-
-            $this->renderBrand();
-
-            $this->renderPrice();
-
-        echo "</a>";
-
-    }
-
-    protected function renderBrand()
-    {
-//        $brand_name = $this->data["brand_name"];
-//
-//        echo "<div class='brand_name'>";
-//        if ($brand_name) {
-//            echo "<label>".tr("Марка") . ": $brand_name</label>";
-//        }
-//        else {
-//            echo "<BR>";
-//        }
-//        echo "</div>";
-    }
-
-    protected function renderPrice()
-    {
-        if ($this->data["sell_price"] < 1) return;
-
-        if ($this->data["stock_amount"]>0) {
-            $this->priceLabel->availability()->setHref("https://schema.org/InStock");
-        }
-        else {
-            $this->priceLabel->availability()->setHref("https://schema.org/OutOfStock");
-        }
-
-        echo "<div class='price_label'>";
-
-        if (DOUBLE_PRICE_ENABLED) {
-            $this->priceLabel->addClassName("left");
-            $this->priceLabel->currency()->setContent("EUR");
-            $priceOld = "<BR>";
-            if ($this->isPromo()) {
-                $priceOld = formatPrice( $this->data["price"] / DOUBLE_PRICE_RATE,"&euro;", true);
-            }
-            $this->priceLabel->priceOld()->setContents($priceOld);
-
-            $priceSell = formatPrice($this->data["sell_price"] / DOUBLE_PRICE_RATE, "", true);
-            $priceSell = "<span class='currency'>&euro;&nbsp;</span><span itemprop='price'>$priceSell</span>";
-            $this->priceLabel->priceSell()->setContents($priceSell);
-
-            $this->priceLabel->render();
-        }
-
-        $this->priceLabel->removeClassName("left");
-        $this->priceLabel->currency()->setContent(DEFAULT_CURRENCY);
-
-        $priceOld = "<BR>";
-        if ($this->isPromo()) {
-            $priceOld = formatPrice($this->data["price"],"лв", false);
-        }
-        $this->priceLabel->priceOld()->setContents($priceOld);
-
-        $priceSell = formatPrice($this->data["sell_price"], "", false);
-        $priceSell = "<span itemprop='price'>$priceSell</span><span class='currency'>&nbsp;лв.</span>";
-        $this->priceLabel->priceSell()->setContents($priceSell);
-
-        $this->priceLabel->render();
-
-        echo "</div>";
-
-
-    }
-
 
 }
 

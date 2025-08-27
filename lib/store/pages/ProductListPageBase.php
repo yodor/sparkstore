@@ -526,7 +526,7 @@ class ProductListPageBase extends ProductPageBase
     {
         $this->renderCategoryPath();
 
-        echo "<div class='column left' section='{$this->section}'>";
+        echo "<aside class='column left' section='{$this->section}'>";
 
             echo "<div class='categories panel'>";
 
@@ -589,9 +589,9 @@ class ProductListPageBase extends ProductPageBase
 
 
 
-        echo "</div>"; //column left
+        echo "</aside>"; //column left
 
-        echo "<div class='column product_list'>";
+        echo "<main class='column product_list'>";
 
         $this->renderChildCategories();
 
@@ -628,7 +628,7 @@ class ProductListPageBase extends ProductPageBase
             echo "</h2>";
         }
 
-        echo "</div>";
+        echo "</main>";
 
         Session::set("shopping.list", $this->currentURL());
 

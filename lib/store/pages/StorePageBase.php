@@ -277,6 +277,7 @@ class StorePageBase extends SparkPage
 
         $this->_header = new PageSection();
         $this->_header->addClassName("header");
+        $this->_header->content()->setTagName("header");
         $this->_header->setAttribute("itemscope", "");
         $this->_header->setAttribute("itemtype", "http://schema.org/WPHeader");
 
@@ -295,7 +296,7 @@ class StorePageBase extends SparkPage
 
         $this->_page_footer = new PageSection();
         $this->_page_footer->addClassName("pageFooter");
-
+        $this->_page_footer->content()->setTagName("footer");
 
         $this->initHeaderSection($this->_header->content());
 

@@ -92,6 +92,22 @@
     padding:0.5em;
     font-size:inherit;
 }
+.ProductListItem .info {
+    display:block;
+    padding-bottom:1.5em;
+}
+.ProductListItem .info .brand_name {
+    color:#999999;
+    /*margin-bottom:1em;*/
+    display:block;
+
+}
+.ProductListItem .info .brand_name .label {
+    /*color:inherit;*/
+}
+.ProductListItem .info .brand_name .value {
+    /*color:inherit;*/
+}
 .ProductListItem .price_info {
     text-align:right;
     font-size:1.3em;

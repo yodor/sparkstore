@@ -221,7 +221,6 @@ class ProductDetailsPageBase extends ProductPageBase
         $qry->select->limit = "$limit";
 
         $tape = new ProductsTape();
-        $tape->getListItem()->setProductLinkedDataEnabled(false);
         $tape->setCaption($title);
         $tape->setIterator($qry);
 
