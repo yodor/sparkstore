@@ -41,6 +41,7 @@ class ProductDetails extends Action
 
         if (DOUBLE_PRICE_ENABLED) {
             $priceLabelEUR = new PriceLabel();
+            $priceLabelEUR->setName("EUR");
             $priceLabelEUR->addClassName("left");
             $priceLabelEUR->currency()->setContent("EUR");
             $this->price->items()->append($priceLabelEUR);
@@ -48,6 +49,7 @@ class ProductDetails extends Action
 
         $priceLabel = new PriceLabel();
         $priceLabel->currency()->setContent(DEFAULT_CURRENCY);
+        $priceLabel->setName(DEFAULT_CURRENCY);
         $this->price->items()->append($priceLabel);
     }
 
@@ -67,7 +69,7 @@ class ProductDetails extends Action
         }
 
         if (DOUBLE_PRICE_ENABLED) {
-            $eurPriceLabel = $this->price->items()->get(0);
+            $eurPriceLabel = $this->price->items()->getByName("EUR");
             if ($eurPriceLabel instanceof PriceLabel) {
                 $priceOld = "<BR>";
                 if ($this->item->isPromo()) {
@@ -83,7 +85,7 @@ class ProductDetails extends Action
             }
         }
 
-        $priceLabel = $this->price->items()->get(1);
+        $priceLabel = $this->price->items()->getByName(DEFAULT_CURRENCY);
         if ($priceLabel instanceof PriceLabel) {
             $priceOld = "<BR>";
             if ($this->item->isPromo()) {

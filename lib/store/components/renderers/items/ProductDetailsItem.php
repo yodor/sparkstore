@@ -124,13 +124,11 @@ class ProductDetailsItem extends Container implements IHeadContents
         //init buttons first
         $this->side_pane->initialize();
 
-        if (LINKED_DATA_ENABLED) {
-            $linkedData = $this->initializeLinkedData();
-            if ($linkedData instanceof LinkedData) {
-                $script = new LDJsonScript();
-                $script->setLinkedData($linkedData);
-                SparkPage::Instance()->head()->addScript($script);
-            }
+        $linkedData = $this->initializeLinkedData();
+        if ($linkedData instanceof LinkedData) {
+            $script = new LDJsonScript();
+            $script->setLinkedData($linkedData);
+            SparkPage::Instance()->head()->addScript($script);
         }
 
     }
