@@ -41,6 +41,7 @@ class NavigationListItem extends DataIteratorItem
         $this->action->items()->append($this->banners);
 
         $this->tape = new ProductsTape();
+        $this->tape->setCacheable(true);
         $this->tape->getCaptionComponent()->setRenderEnabled(false);
         $this->items()->append($this->tape);
 
