@@ -46,6 +46,7 @@ class ProductsTape extends Container
         $this->getCaptionComponent()->setContents("");
 
         $ul = new ClosureComponent($this->renderItems(...), true, false);
+        $ul->setComponentClass("");
         $ul->setTagName("ul");
         $this->items()->append($ul);
     }
