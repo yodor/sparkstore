@@ -50,6 +50,7 @@ class NavigationListItem extends DataIteratorItem
         $this->tape->getCaptionComponent()->setRenderEnabled(false);
         $this->items()->append($this->tape);
 
+        $this->setCacheable(true);
     }
 
     public function setData(array $data) : void

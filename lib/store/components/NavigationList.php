@@ -58,6 +58,7 @@ abstract class NavigationList extends Container
         $this->createImagesColumn = function(SQLSelect $select) {
             $this->createImagesColumn($select);
         };
+        $this->setCacheable(true);
     }
 
     public function initialize() : void
