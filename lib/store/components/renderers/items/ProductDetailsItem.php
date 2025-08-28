@@ -117,7 +117,19 @@ class ProductDetailsItem extends Container implements IHeadContents
 
     public function getCacheName(): string
     {
-        return parent::getCacheName()."-".$this->sellable->getProductID();
+        $result = parent::getCacheName()."-".$this->sellable->getProductID();
+        return $result;
+    }
+
+    public static function CleanCacheEntry(int $prodID) : void
+    {
+
+        $componentEntryName = basename(ProductURL::$urlProduct)."-".ProductDetailsItem::class."--".$prodID;
+        $entryName = ProductDetailsItem::class . "-" . sparkHash($componentEntryName);
+
+        $cacheEntry = CacheFactory::PageCacheEntry($entryName);
+        $cacheEntry->remove();
+
     }
 
     /**

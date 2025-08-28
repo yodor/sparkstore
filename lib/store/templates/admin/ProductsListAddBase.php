@@ -46,6 +46,15 @@ abstract class ProductsListAddBase extends BeanEditorPage
                     $stock_amount = $transactor->getValue("stock_amount");
                     $proc = new CheckStockState($prodID, $transactor->getValue("product_name"));
                     $proc->process($stock_amount, $old_stock_amount);
+
+                    //remove cached version
+                    try {
+                        include_once("store/components/renderers/items/ProductDetailsItem.php");
+                        ProductDetailsItem::CleanCacheEntry($prodID);
+                    }
+                    catch (Exception $e) {
+                        debug("Exception during CleanCacheEntry: ".$e->getMessage());
+                    }
                 }
             };
             SparkEventManager::register(BeanTransactorEvent::class, new SparkObserver($closure_transactor));
