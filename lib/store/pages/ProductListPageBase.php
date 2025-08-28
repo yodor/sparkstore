@@ -124,35 +124,7 @@ class ProductListPageBase extends ProductPageBase
     {
         parent::headFinalize();
 
-        $paginator = $this->view->getPaginator();
-        $currentPage = $paginator->currentPage();
-        if ($paginator->hasPrevPage()) {
-            $page = $currentPage - 1;
-            $url = $this->currentURL();
-            $link = new Link();
-            $link->setRelation("prev");
-            $url->add(new URLParameter("page", $page));
-            if ($page < 1) {
-                $url->remove("page");
-            }
-            $link->setHref($url);
-            $this->head()->items()->append($link);
-        }
-        if ($paginator->hasNextPage()) {
-            $page = $currentPage + 1;
-            $url = $this->currentURL();
-            $link = new Link();
-            $link->setRelation("next");
-            $url->add(new URLParameter("page", $page));
-            $link->setHref($url);
-            $this->head()->items()->append($link);
-        }
-
-        if ($paginator->totalPages() > 1) {
-            //apply page number to the title
-            $headTitle = $this->head()->getTitle();
-            $this->head()->setTitle($headTitle . " | " . tr("Page") . " " . ($currentPage + 1));
-        }
+        AbstractResultView::AppendHeadLinks($this->view, $this);
     }
 
     protected function applyTitleDescription(): void
