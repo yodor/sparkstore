@@ -58,6 +58,7 @@ class ProductDetails extends Action
         parent::setData($data);
         $this->title->setContents($this->data["product_name"]);
 
+        $this->price->setRenderEnabled(true);
         if ($this->data["sell_price"] < 1) {
             $this->price->setRenderEnabled(false);
             return;
