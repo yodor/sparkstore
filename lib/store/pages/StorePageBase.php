@@ -35,6 +35,7 @@ include_once("objects/data/LinkedData.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
+include_once("store/components/ProductsTape.php");
 
 class StorePageBase extends SparkPage
 {
