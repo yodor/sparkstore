@@ -127,13 +127,6 @@ class ProductListPageBase extends ProductPageBase
         AbstractResultView::AppendHeadLinks($this->view, $this);
     }
 
-    protected function applyTitleDescription(): void
-    {
-        parent::applyTitleDescription();
-        //execute pagination query
-        $this->view->paginate();
-    }
-
     protected function createSellableProducts() : SellableProducts
     {
         return new SellableProducts();
