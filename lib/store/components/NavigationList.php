@@ -1,6 +1,11 @@
 <?php
 include_once("components/Container.php");
+include_once("components/ClosureComponent.php");
+include_once("sql/SQLSelect.php");
+include_once("iterators/SQLQuery.php");
+
 include_once("store/components/renderers/items/NavigationListItem.php");
+include_once("store/beans/SellableProducts.php");
 
 abstract class NavigationList extends Container
 {
@@ -15,6 +20,8 @@ abstract class NavigationList extends Container
     public Closure $createTapeIterator;
     public Closure $createTapeProducts;
 
+    public Closure $createImagesColumn;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -26,11 +33,9 @@ abstract class NavigationList extends Container
 
         $this->setAttribute("role", "navigation");
 
-        $this->list = new Container(false);
+        $this->list = new ClosureComponent($this->renderItems(...), true, false);
         $this->list->setTagName("UL");
         $this->list->setComponentClass("");
-
-        $this->list->items()->append(new ClosureComponent($this->renderItems(...), false, false));
 
         $this->items()->append($this->list);
 
@@ -47,17 +52,25 @@ abstract class NavigationList extends Container
         $this->createTapeProducts = function() {
             return $this->createTapeProducts();
         };
+
+        $this->createImagesColumn = function(SQLSelect $select) {
+            $this->createImagesColumn($select);
+        };
     }
 
     public function initialize() : void
     {
         $this->iterator = ($this->createListIterator)();
+        ($this->createImagesColumn)($this->iterator->select);
+
         $this->tapeProducts = ($this->createTapeProducts)();
     }
 
     abstract protected function createListIterator() : SQLQuery;
 
     abstract protected function createTapeIterator() : ?SQLQuery;
+
+    abstract protected function createImagesColumn(SQLSelect $select) : void;
 
     protected function createTapeProducts() : SQLSelect
     {
@@ -121,3 +134,5 @@ abstract class NavigationList extends Container
         }
     }
 }
+
+?>

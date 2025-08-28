@@ -544,7 +544,7 @@ A.Caption:active {
 }
 
 
-.StorePage.home .main .content .banner {
+.main .content .banners {
     display: block;
     margin-bottom: 2em;
     /*height:378px;*/
@@ -560,21 +560,19 @@ A.Caption:active {
     to   { opacity: 1; }
 }
 
-.StorePage.home .main .content .banner IMG {
+.main .content .banners IMG {
     width:100%;
     position:absolute;
     left:0;
     top:0;
 
 }
-.StorePage.home .main .content .banner IMG:last-child {
+.main .content .banners IMG:last-child {
     position:relative;
     vertical-align:top;
     animation: fadein 1s;
 }
-.StorePage.home .main .content .products {
-    font-size:80%;
-}
+
 
 /* DynamicPages - content/index.php */
 .DynamicPagesBean {

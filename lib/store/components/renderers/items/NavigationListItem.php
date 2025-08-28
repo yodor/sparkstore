@@ -1,5 +1,9 @@
 <?php
 include_once("components/renderers/items/DataIteratorItem.php");
+include_once("components/Action.php");
+include_once("components/Image.php");
+include_once("storage/StorageItem.php");
+include_once("store/components/ProductsTape.php");
 
 class NavigationListItem extends DataIteratorItem
 {
@@ -60,11 +64,12 @@ class NavigationListItem extends DataIteratorItem
         $this->image->setTitle($this->label);
 
         $imagesKey = $this->si->getValueKey();
+
         $images = $data[$imagesKey];
+
         if ($imagesKey && $images) {
 
             $images = explode(",", $images);
-
             if (count($images) > 0) {
                 foreach ($images as $idx => $imageID) {
                     $this->si->id = $imageID;
@@ -101,4 +106,3 @@ class NavigationListItem extends DataIteratorItem
 }
 
 ?>
-

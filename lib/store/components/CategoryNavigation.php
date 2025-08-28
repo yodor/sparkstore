@@ -4,18 +4,10 @@ include_once("store/components/NavigationList.php");
 class CategoryNavigation extends NavigationList
 {
 
-    /**
-     * @var Closure Parameters SQLSelect $select, NavigationListItem $item
-     */
-    public Closure $createImagesColumn;
-
     public function __construct()
     {
-        parent::__construct(false);
+        parent::__construct();
         $this->setAttribute("aria-label", "Product Categories");
-        $this->createImagesColumn = function(SQLSelect $select){
-            $this->createImagesColumn($select);
-        };
     }
 
 
@@ -48,8 +40,6 @@ class CategoryNavigation extends NavigationList
         $select->where()->add("pc.parentID", 0);
         $select->order_by = " pc.lft ";
 
-        ($this->createImagesColumn)($select, $this->item);
-
         $this->item->setValueKey($bean->key());
         $this->item->setLabelKey("category_name");
 
@@ -67,3 +57,4 @@ class CategoryNavigation extends NavigationList
     }
 
 }
+?>
