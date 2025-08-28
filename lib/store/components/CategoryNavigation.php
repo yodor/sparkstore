@@ -17,20 +17,23 @@ class CategoryNavigation extends NavigationList
      * @return string
      * @throws Exception
      */
-    protected function createImagesColumn(SQLSelect $select) : void
+    public function createImagesColumn(SQLSelect $select) : void
     {
         $select->fields()->setExpression(
             "(SELECT 
             GROUP_CONCAT(pcp.pcpID SEPARATOR ',') 
             FROM product_category_photos pcp 
-            WHERE pcp.catID = pc.catID ORDER BY position ASC)",
+            WHERE pcp.catID = pc.catID 
+            ORDER BY position ASC 
+            LIMIT {$this->imagesLimit}
+            )",
             "category_photos");
 
         $this->item->getStorageItem()->className=ProductCategoryPhotosBean::class;
         $this->item->getStorageItem()->setValueKey("category_photos");
     }
 
-    protected function createListIterator() : SQLQuery
+    public function createListIterator() : SQLQuery
     {
         $bean = new ProductCategoriesBean();
 
@@ -50,7 +53,7 @@ class CategoryNavigation extends NavigationList
         return $query;
     }
 
-    protected function createTapeIterator() : ?SQLQuery
+    public function createTapeIterator() : ?SQLQuery
     {
         $tape_select = $this->iterator->bean()->selectChildNodesWith($this->tapeProducts, "sellable_products", $this->item->getValue(), array($this->item->getValueKey(), $this->item->getLabelKey()));
         return new SQLQuery($tape_select, "prodID");

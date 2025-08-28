@@ -11,21 +11,23 @@ class SectionNavigation extends NavigationList
         $this->setAttribute("aria-label", "Product Sections");
     }
 
-    protected function createImagesColumn(SQLSelect $select): void
+    public function createImagesColumn(SQLSelect $select): void
     {
         $select->fields()->setExpression(
             "(SELECT 
             GROUP_CONCAT(sb.sbID SEPARATOR ',')  
             FROM section_banners sb 
             WHERE sb.secID = s.secID 
-            ORDER BY sb.position ASC LIMIT 4)",
+            ORDER BY sb.position ASC 
+            LIMIT {$this->imagesLimit}
+            )",
             "section_photos");
 
         $this->item->getStorageItem()->className=SectionBannersBean::class;
         $this->item->getStorageItem()->setValueKey("section_photos");
     }
 
-    protected function createListIterator() : SQLQuery
+    public function createListIterator() : SQLQuery
     {
         $select = new SQLSelect();
         $select->fields()->set("s.secID, s.section_title");
@@ -43,10 +45,10 @@ class SectionNavigation extends NavigationList
         return $query;
     }
 
-    protected function createTapeIterator(): ?SQLQuery
+    public function createTapeIterator(): ?SQLQuery
     {
         $sectionName = $this->item->getLabel();
-        $this->tapeProducts->where()->clear();
+        $this->tapeProducts->where()->removeExpression("product_sections");
         $this->tapeProducts->where()->add("product_sections", "'$sectionName'", " LIKE ");
 
         return new SQLQuery($this->tapeProducts, "prodID");

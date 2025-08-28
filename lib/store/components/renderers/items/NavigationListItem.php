@@ -40,6 +40,7 @@ class NavigationListItem extends DataIteratorItem
 
         $this->si = new StorageItem();
         $this->image = new Image();
+        $this->image->setAttribute("loading", "lazy");
         $this->image->setStorageItem($this->si);
 
         $this->action->items()->append($this->banners);

@@ -22,6 +22,8 @@ abstract class NavigationList extends Container
 
     public Closure $createImagesColumn;
 
+    public int $imagesLimit = 4;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -66,13 +68,13 @@ abstract class NavigationList extends Container
         $this->tapeProducts = ($this->createTapeProducts)();
     }
 
-    abstract protected function createListIterator() : SQLQuery;
+    abstract public function createListIterator() : SQLQuery;
 
-    abstract protected function createTapeIterator() : ?SQLQuery;
+    abstract public function createTapeIterator() : ?SQLQuery;
 
-    abstract protected function createImagesColumn(SQLSelect $select) : void;
+    abstract public function createImagesColumn(SQLSelect $select) : void;
 
-    protected function createTapeProducts() : SQLSelect
+    public function createTapeProducts() : SQLSelect
     {
         $sellable = new SellableProducts();
         $select = $sellable->query(...$sellable->columnNames())->select;
