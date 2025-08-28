@@ -384,7 +384,7 @@ class ProductListPageBase extends ProductPageBase
         }
 
         //keyword search
-        if ($this->keyword_search) {
+        if ($this->keyword_search && $this->keyword_search->isProcessed()) {
             foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
                 $supported_params[] = $name;
             }
