@@ -1,6 +1,7 @@
 .SellableImageGallery {
     display: inline-block;
     vertical-align: top;
+    margin:0;
 }
 
 .SellableImageGallery .preview {

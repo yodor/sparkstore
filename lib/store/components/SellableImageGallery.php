@@ -22,7 +22,11 @@ class SellableImageGallery extends Container {
 
         $this->sellable = $item;
 
+        $this->setTagName("figure");
         $this->setComponentClass("SellableImageGallery");
+
+        $this->setAttribute("role","region");
+        $this->setAttribute("aria-label", "Product image gallery");
 
         $image_preview = new Container(false);
         $image_preview->setComponentClass("preview");
@@ -71,12 +75,14 @@ class SellableImageGallery extends Container {
             $action_prev->getURL()->setScriptName("javascript:document.imageGallery.prev()");
             $action_prev->setComponentClass("arrow");
             $action_prev->setClassName("prev");
+            $action_prev->setAttribute("aria-label","Previous image");
             $image_preview->items()->append($action_prev);
 
             $action_next = new Action();
             $action_next->getURL()->setScriptName("javascript:document.imageGallery.next()");
             $action_next->setComponentClass("arrow");
             $action_next->setClassName("next");
+            $action_prev->setAttribute("aria-label","Next image");
             $image_preview->items()->append($action_next);
         }
 

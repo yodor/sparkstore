@@ -77,6 +77,7 @@ class ProductsTape extends Container
 
     public function setCaption(string $caption): void
     {
+        $this->setAttribute("aria-label", $caption);
         $this->action->setAttribute("title", $caption);
         $this->action->setContents($caption);
     }
