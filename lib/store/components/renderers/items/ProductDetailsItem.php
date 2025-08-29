@@ -25,10 +25,12 @@ class DetailsTab extends Container
     public function __construct()
     {
         parent::__construct();
+        $this->setTagName("section");
         $this->setComponentClass("item");
         $this->content = new Container(false);
         $this->content->setComponentClass("contents");
         $this->items()->append($this->content);
+        $this->getCaptionComponent()->setTagName("h3");
     }
 
     public function getContent() : Container
@@ -226,7 +228,7 @@ class ProductDetailsItem extends Container implements IHeadContents
             $tab = new DetailsTab();
             $tab->setCaption(tr("Описание"));
             $tab->addClassName("description");
-            $tab->getContent()->setTagName("H2");
+
             $tab->getContent()->addClassName("long_description");
             $tab->getContent()->setContents($this->sellable->getDescription());
             $tabs->items()->append($tab);
