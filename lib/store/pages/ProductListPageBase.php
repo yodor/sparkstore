@@ -312,7 +312,6 @@ class ProductListPageBase extends ProductPageBase
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
-        //echo $aggregateSelect->getSQL();
 
         if ($this->treeViewAggregateSelect) {
             $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
