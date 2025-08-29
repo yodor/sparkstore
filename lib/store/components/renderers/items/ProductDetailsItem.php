@@ -78,6 +78,8 @@ class ProductDetailsItem extends Container implements IHeadContents
     {
         parent::__construct();
 
+        $this->setTagName("section");
+
         $this->sellable = $item;
 
         $this->url = new ProductURL();

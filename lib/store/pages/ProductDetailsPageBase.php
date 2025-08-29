@@ -53,6 +53,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->item = $this->createDetailsItem();
 
         $this->_main->content()->setTagName("main");
+        $this->_main->content()->setRole("main");
     }
 
     protected function applyTitleDescription(): void
