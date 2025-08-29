@@ -323,14 +323,8 @@ class ProductListPageBase extends ProductPageBase
 
     }
 
-    /**
-     * Set clean URL for tree view items
-     * Only transfer parameters that affect the query of the treeview
-     * @return void
-     */
-    protected function processTreeViewURL() : void
+    public function getParameterNames() : array
     {
-
         $supported_params = array();
         $supported_params[] = $this->category_filter->getName();
 
@@ -362,22 +356,24 @@ class ProductListPageBase extends ProductPageBase
 //            if (str_contains($name, Paginator::KEY_PAGE))continue;
 //            $supported_params[] = $name;
 //        }
+        return $supported_params;
+    }
+    /**
+     * Set clean URL for tree view items
+     * Only transfer parameters that affect the query of the treeview
+     * @return void
+     */
+    protected function processTreeViewURL() : void
+    {
 
+        $supported_params = $this->getParameterNames();
 
         $item = $this->treeView->getItemRenderer();
         if ($item instanceof TextTreeItem) {
 
             $pageURL = URL::Current();
 
-            //static url parameter names from the current page
-            $page_params = $pageURL->getParameterNames();
-            //cleanup non supported names
-            foreach ($page_params as $idx=>$name) {
-                $param = $pageURL->get($name);
-                if (!in_array($name, $supported_params) || !$param->value()) {
-                    $pageURL->remove($name);
-                }
-            }
+            URL::Clean($pageURL, $supported_params);
 
             $itemURL = new CategoryURL($pageURL);
             $item->getTextAction()->setURL($itemURL);
@@ -596,6 +592,8 @@ class ProductListPageBase extends ProductPageBase
         Session::set("shopping.list", $this->currentURL());
 
     }
+
+
 }
 
 ?>
