@@ -295,7 +295,7 @@ class ProductListPageBase extends ProductPageBase
 
         //setup grouping for the list item view
 //        $this->select->group_by = SellableProducts::DefaultGrouping();
-
+//        echo $this->select->getSQL();
         //primary key is prodID as we group by prodID(Products) not piID(ProductInventory)
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
 
