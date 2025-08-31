@@ -115,8 +115,11 @@ class ProductListPageBase extends ProductPageBase
         $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
         //enable canonical link tag
-        $this->head()->addCanonicalParameter($this->category_filter->getName(),"category_name");//
-        //, Paginator::KEY_PAGE);
+        $categoryURL = new CategoryURL();
+        $categoryParameters = $categoryURL->getParameterNames();
+        foreach ($categoryParameters as $name) {
+            $this->head()->addCanonicalParameter($name);
+        }
 
     }
 
@@ -325,7 +328,12 @@ class ProductListPageBase extends ProductPageBase
     public function getParameterNames() : array
     {
         $supported_params = array();
-        $supported_params[] = $this->category_filter->getName();
+
+        $categoryURL = new CategoryURL();
+        $categoryParameters = $categoryURL->getParameterNames();
+        foreach ($categoryParameters as $name) {
+            $supported_params[] = $name;
+        }
 
         //append property filter names
         $iterator = $this->property_filter->iterator();
