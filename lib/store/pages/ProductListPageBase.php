@@ -115,7 +115,9 @@ class ProductListPageBase extends ProductPageBase
         $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
         //enable canonical link tag
-        $this->head()->addCanonicalParameter(...new CategoryURL()->getParameterNames());
+        $categoryURL = new CategoryURL();
+        $categoryParameters = $categoryURL->getParameterNames();
+        $this->head()->addCanonicalParameter(...$categoryParameters);
     }
 
     protected function headFinalize() : void
