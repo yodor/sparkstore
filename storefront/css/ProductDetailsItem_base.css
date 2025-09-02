@@ -126,7 +126,7 @@
 }
 
 .side_pane .group.attributes .viewport .item {
-    display: table-row;
+    display: contents;
 }
 
 .side_pane .group.attributes .viewport .name {
