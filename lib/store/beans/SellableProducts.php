@@ -62,18 +62,26 @@ class SellableProducts extends DBViewBean
         return $attr_all;
     }
 
-    public static function AttributesWalker(array $attributes, array $supported, Closure $function) : void
+    public static function AttributesWalker(array $attributes, array $supported, Closure $function_supported, ?Closure $function_unsupported=null) : void
     {
+        $unsupported = array();
         foreach ($attributes as $name => $value) {
+
             if ($name && $value) {
                 $attributeName = mb_strtolower($name);
                 $attributeValue = mb_strtolower($value);
                 foreach ($supported as $itemProp=>$matches) {
                     if (in_array($attributeName, $matches)) {
-                        $function($itemProp, $attributeValue);
+                        $function_supported($itemProp, $attributeValue);
+                    }
+                    else {
+                        $unsupported[$attributeName] = $attributeValue;
                     }
                 }
             }
+        }
+        if (count($unsupported)>0 && ($function_unsupported instanceof Closure)) {
+            $function_unsupported($unsupported);
         }
     }
 

@@ -6,6 +6,7 @@ class SidePaneGroup extends Container
     {
         parent::__construct(false);
         $this->setComponentClass("group");
+        $this->setTagName("section");
 
     }
 }
@@ -18,13 +19,16 @@ class NameValueItem extends Container
     {
         parent::__construct(false);
         $this->setComponentClass("item");
+        $this->wrapper_enabled = false;
 
         $this->_name = new Component(false);
         $this->_name->setComponentClass("name");
+        $this->_name->setTagName("dt");
         $this->items()->append($this->_name);
 
         $this->_value = new Component(false);
         $this->_value->setComponentClass("value");
+        $this->_value->setTagName("dd");
         $this->items()->append($this->_value);
     }
     public function setNameValue(string $name, string $value) : void
@@ -38,6 +42,7 @@ class NameValueList extends Container
     public function __construct()
     {
         parent::__construct(false);
+        $this->setTagName("dl");
         $this->setComponentClass("NameValueList");
         $this->setClassName("viewport");
     }
