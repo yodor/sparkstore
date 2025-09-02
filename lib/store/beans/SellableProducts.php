@@ -70,13 +70,16 @@ class SellableProducts extends DBViewBean
             if ($name && $value) {
                 $attributeName = mb_strtolower($name);
                 $attributeValue = mb_strtolower($value);
+                $found = false;
                 foreach ($supported as $itemProp=>$matches) {
                     if (in_array($attributeName, $matches)) {
+                        $found = true;
                         $function_supported($itemProp, $attributeValue);
+                        break;
                     }
-                    else {
-                        $unsupported[$attributeName] = $attributeValue;
-                    }
+                }
+                if (!$found) {
+                    $unsupported[$attributeName] = $attributeValue;
                 }
             }
         }
