@@ -72,18 +72,16 @@ class SellableImageGallery extends Container {
         $image_preview->setAttribute("max_pos",$max_pos);
 
         if ($max_pos>1) {
-            $action_prev = new Action();
-            $action_prev->getURL()->setScriptName("javascript:document.imageGallery.prev()");
+            $action_prev = new Button();
             $action_prev->setComponentClass("arrow");
             $action_prev->setClassName("prev");
             $action_prev->setAttribute("aria-label","Previous image");
             $image_preview->items()->append($action_prev);
 
-            $action_next = new Action();
-            $action_next->getURL()->setScriptName("javascript:document.imageGallery.next()");
+            $action_next = new Button();
             $action_next->setComponentClass("arrow");
             $action_next->setClassName("next");
-            $action_prev->setAttribute("aria-label","Next image");
+            $action_next->setAttribute("aria-label","Next image");
             $image_preview->items()->append($action_next);
         }
 
@@ -137,8 +135,6 @@ class SellableImageGallery extends Container {
             $button->setRelation("ProductGallery");
             $button->setPosition($pos);
 
-            $button->setAttribute("onClick", "javascript:document.imageGallery.itemClicked(this)");
-
             if ($pos == 0) {
                 $button->setAttribute("active", "1");
             }
@@ -151,6 +147,7 @@ class SellableImageGallery extends Container {
             $image->setUseSizeAttributes(true);
 
             $cmp = new Container(false);
+            $cmp->addClassName("thumbnail");
             $cmp->setTagName("li");
             $cmp->items()->append($button);
 

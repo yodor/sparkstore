@@ -94,6 +94,7 @@
     background-repeat:no-repeat;
     background-size:50%;
     z-index:3;
+    cursor:pointer;
 
     /*filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));*/
 }
@@ -126,7 +127,12 @@
     padding:0;
 }
 
-
+.SellableImageGallery button {
+    padding:0;
+    margin:0;
+    background-color:transparent;
+    border:0;
+}
 
 .SellableImageGallery .list .item {
     display: inline-block;
