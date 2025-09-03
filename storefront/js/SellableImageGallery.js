@@ -12,9 +12,9 @@ class SellableImageGallery extends Component
 
 
         this.preview = this.element.querySelector(".preview");
-        this.gallery = this.element.querySelector(".gallery");
+        this.list = this.element.querySelector(".list");
 
-        this.gallery.itemsTotal = parseInt(this.preview.getAttribute("max_pos"));
+        this.list.itemsTotal = parseInt(this.preview.getAttribute("max_pos"));
 
         /**
          * @type {HTMLImageElement}
@@ -59,11 +59,11 @@ class SellableImageGallery extends Component
     updateImage() {
 
         //deselect all
-        this.gallery.querySelectorAll(".item").forEach((item)=>{
+        this.list.querySelectorAll(".item").forEach((item)=>{
             item.removeAttribute("active");
         });
 
-        const current_item = this.gallery.querySelector(".item[pos='" + this.pos + "']");
+        const current_item = this.list.querySelector(".item[pos='" + this.pos + "']");
         current_item.setAttribute("active", 1);
 
         const itemID = current_item.getAttribute("itemID");
@@ -91,7 +91,7 @@ class SellableImageGallery extends Component
 
         this.pos++;
 
-        if (this.pos >= this.gallery.itemsTotal) {
+        if (this.pos >= this.list.itemsTotal) {
             this.pos = 0;
         }
 
@@ -104,7 +104,7 @@ class SellableImageGallery extends Component
         this.pos--;
 
         if (this.pos < 0) {
-            this.pos = this.gallery.itemsTotal-1;
+            this.pos = this.list.itemsTotal-1;
         }
 
         this.updateImage();

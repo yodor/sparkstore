@@ -63,6 +63,7 @@ class SellableImageGallery extends Container {
         $image = $this->image_popup->image();
         $image->setUseSizeAttributes(true);
         $image->setAttribute("fetchpriority","high");
+        $image->setAttribute("alt", tr("Main view of"." ".$this->sellable->getTitle()));
         //$image->setAttribute("loading","lazy");
 
         $image_preview->items()->append($this->image_popup);
@@ -90,15 +91,15 @@ class SellableImageGallery extends Container {
         $blend_pane->setComponentClass("blend");
         $this->items()->append($blend_pane);
 
-        $thumbnails = new Container();
-        $thumbnails->setComponentClass("gallery");
+//        $thumbnails = new Container();
+//        $thumbnails->setComponentClass("gallery");
         $list = $this->thumbnailsList();
         if ($max_pos<2) {
             $list->addClassName("single");
         }
-        $thumbnails->items()->append($list);
+        //$thumbnails->items()->append($list);
 
-        $this->items()->append($thumbnails);
+        $this->items()->append($list);
     }
 
     public function requiredScript(): array
@@ -120,6 +121,7 @@ class SellableImageGallery extends Container {
 
         $list = new Container(false);
         $list->setComponentClass("list");
+        $list->setTagName("ul");
 
         $product_name = $this->sellable->getTitle();
         $gallery_items = $this->sellable->galleryItems();
@@ -128,25 +130,31 @@ class SellableImageGallery extends Container {
         foreach ($gallery_items as $storageItem) {
             if (! ($storageItem instanceof StorageItem)) continue;
 
-            $item = new ImageStorage($storageItem);
-            $item->addClassName("item");
+            $button = new ImageStorage($storageItem);
+            $button->addClassName("item");
+            $button->setTagName("button");
 
-            $item->setRelation("ProductGallery");
-            $item->setPosition($pos);
+            $button->setRelation("ProductGallery");
+            $button->setPosition($pos);
 
-            $item->setAttribute("onClick", "javascript:document.imageGallery.itemClicked(this)");
+            $button->setAttribute("onClick", "javascript:document.imageGallery.itemClicked(this)");
 
             if ($pos == 0) {
-                $item->setAttribute("active", "1");
+                $button->setAttribute("active", "1");
             }
 
-            $image = $item->image();
-            $image->setAttribute("alt", $product_name);
+            $button->setAttribute("aria-label", tr("Another view of"." ".$product_name));
+            $image = $button->image();
+            $image->setAttribute("alt", tr("View")." ".($pos+1)." ".tr("of")." ".$product_name);
             $image->setAttribute("loading", "lazy");
             $image->setPhotoSize(64, 64);
             $image->setUseSizeAttributes(true);
 
-            $list->items()->append($item);
+            $cmp = new Container(false);
+            $cmp->setTagName("li");
+            $cmp->items()->append($button);
+
+            $list->items()->append($cmp);
             $pos++;
         }
         return $list;
