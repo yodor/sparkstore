@@ -11,23 +11,16 @@ class SellableImageGallery extends Component
         super.initialize();
 
         this.element.querySelector('.arrow.prev').addEventListener('click', () => {
-            // Logic for previous image
             this.prev();
         });
 
         this.element.querySelector('.arrow.next').addEventListener('click', () => {
-            // Logic for next image
             this.next();
         });
 
         this.element.querySelectorAll('.thumbnail .item').forEach(button => {
             button.addEventListener('click', () => {
-                // const mainImage = document.querySelector('.main-image');
-                // const thumbnail = button.querySelector('img');
-                // mainImage.src = thumbnail.src.replace('/64/64/', '/640/640/');
-                // mainImage.alt = thumbnail.alt.replace('Thumbnail of', 'Main view of');
                 this.itemClicked(button);
-                console.log('click');
             });
         });
 
