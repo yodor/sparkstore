@@ -10,25 +10,11 @@
     margin-top: 1em;
 }
 
-/*other products from this category*/
-.product_group {
-    display: block;
-    text-align:center;
-}
 .Caption {
-    text-align:left;
+    text-align: left;
     background-color: #fafafa;
-    padding-left:2em;
+    padding-left: 2em;
 }
-.Caption H2 {
-    margin:0;
-    font-size:inherit;
-    font-weight:inherit;
-}
-/*.tabs .contents {*/
-/*    background-color: #eaeaea;*/
-/*}*/
-
 .JSONFormDialog[responder='QueryProductFormResponder'] input {
     font-size:120%;
 }

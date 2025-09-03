@@ -30,7 +30,8 @@ class ProductsTape extends Container
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(false);
+        $this->setComponentClass("ProductsTape");
 
         $this->setTagName("section");
         $this->setAttribute("itemscope", "");

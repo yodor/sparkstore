@@ -148,12 +148,12 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected function renderProductTapes() : void
     {
-        $cmp = $this->createTapeContainer("same_category");
-        $cmp->items()->append($this->tapeSameCategory());
+        $cmp = $this->tapeSameCategory();
+        $this->initTapeContainer("same_category", $cmp);
         $cmp->render();
 
-//        $cmp = $this->createTapeContainer("other_products");
-//        $cmp->items()->append($this->tapeOtherProducts());
+//        $cmp = $this->tapeOtherProducts()
+//        $this->initTapeContainer("other_products", $cmp);
 //        $cmp->render();
     }
 
@@ -182,7 +182,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
     public function tapeSameCategory(int $limit = 4) : ProductsTape
     {
-        $catID = (int)$this->sellable->getCategoryID();
+        $catID = $this->sellable->getCategoryID();
 
         $title = tr("Още продукти от тази категория");
 
@@ -233,12 +233,10 @@ class ProductDetailsPageBase extends ProductPageBase
         return $tape;
     }
 
-    public function createTapeContainer(string $name) : Container
+    public function initTapeContainer(string $name, Container $cmp) : void
     {
-        $cmp = new Container(false);
-        $cmp->setComponentClass("product_group");
-        $cmp->setClassName($name);
-        return $cmp;
+        //$cmp->setClassName("product_group");
+        $cmp->addClassName($name);
     }
 
     protected static function UpdateViewCounter(int $prodID) : void

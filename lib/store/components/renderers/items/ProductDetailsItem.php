@@ -31,7 +31,7 @@ class DetailsTab extends Container
         $this->content = new Container(false);
         $this->content->setComponentClass("contents");
         $this->items()->append($this->content);
-        $this->getCaptionComponent()->setTagName("h3");
+        $this->getCaptionComponent()->setTagName("h2");
     }
 
     public function getContent() : Container
