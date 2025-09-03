@@ -344,7 +344,7 @@ class DetailsSidePane extends Container
         $item->setClassName("price_info");
 
         $labelOld = new LabelSpan();
-        $labelOld->label()->setTagName("SPAN");
+        $labelOld->label()->setTagName("span");
         $labelOld->setComponentClass("old");
         if (!$this->sellable->isPromotion()) {
             $labelOld->setClassName("disabled");
@@ -356,7 +356,7 @@ class DetailsSidePane extends Container
         $item->items()->append($labelOld);
 
         $labelSell = new LabelSpan();
-        $labelSell->label()->setTagName("SPAN");
+        $labelSell->label()->setTagName("span");
         $labelSell->setComponentClass("sell");
         $labelSell->label()->setAttribute("itemprop", "price");
         $labelSell->label()->setComponentClass("value");
@@ -379,7 +379,7 @@ class DetailsSidePane extends Container
                 $labelOld = new LabelSpan();
                 $labelOld->setComponentClass("old");
 
-                $labelOld->label()->setTagName("SPAN");
+                $labelOld->label()->setTagName("span");
                 $labelOld->label()->setComponentClass("value");
                 $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice() / DOUBLE_PRICE_RATE));
 
@@ -392,7 +392,7 @@ class DetailsSidePane extends Container
             $labelSell = new LabelSpan();
             $labelSell->setComponentClass("sell");
 
-            $labelSell->label()->setTagName("SPAN");
+            $labelSell->label()->setTagName("span");
             $labelSell->label()->setComponentClass("value");
             $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()/DOUBLE_PRICE_RATE));
 

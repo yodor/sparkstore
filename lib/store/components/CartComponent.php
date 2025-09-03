@@ -53,7 +53,7 @@ class CartComponent extends Component implements IHeadContents
         $this->image_popup->image()->getStorageItem()->enableExternalURL(TRUE);
 
         $this->table = new Component();
-        $this->table->setTagName("TABLE");
+        $this->table->setTagName("table");
         $this->table->setClassName("cart_view");
 
 

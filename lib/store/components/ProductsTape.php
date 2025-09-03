@@ -54,7 +54,7 @@ class ProductsTape extends Container
     protected function CreateCaption(): Container
     {
         $container = parent::CreateCaption();
-        $container->setTagName("H2");
+        $container->setTagName("h2");
         $container->setAttribute("itemprop", "name");
         $container->items()->append($this->action);
         return $container;

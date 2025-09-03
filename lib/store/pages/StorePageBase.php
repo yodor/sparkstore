@@ -443,7 +443,7 @@ class StorePageBase extends SparkPage
     protected function createLogo(string $href = LOCAL . "/home.php") : Component
     {
         $link = new Action();
-        $link->setTagName("A");
+        $link->setTagName("a");
 
         $link->setURL(new URL($href));
         $link->setComponentClass("logo");

@@ -36,7 +36,7 @@ abstract class NavigationList extends Container
         $this->setAttribute("role", "navigation");
 
         $this->list = new ClosureComponent($this->renderItems(...), true, false);
-        $this->list->setTagName("UL");
+        $this->list->setTagName("ul");
         $this->list->setComponentClass("");
 
         $this->items()->append($this->list);

@@ -19,7 +19,7 @@ class NavigationListItem extends DataIteratorItem
     public function __construct()
     {
         parent::__construct();
-        $this->setTagName("LI");
+        $this->setTagName("li");
         $this->setComponentClass("");
 
         $this->action = new Action();
@@ -28,7 +28,7 @@ class NavigationListItem extends DataIteratorItem
         $this->items()->append($this->action);
 
         $this->span = new Component();
-        $this->span->setTagName("SPAN");
+        $this->span->setTagName("span");
         $this->span->setComponentClass("Caption");
         $this->span->setAttribute("itemprop", "name");
         $this->action->items()->append($this->span);

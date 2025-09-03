@@ -563,7 +563,7 @@ class ProductListPageBase extends ProductPageBase
         $catID = $this->treeView->getSelectedID();
 
         $cmp = new Component();
-        $cmp->setTagName("H1");
+        $cmp->setTagName("h1");
         $cmp->setComponentClass("Caption");
         $cmp->setClassName("category_name");
         $cmp->setContents($this->getTitle());
