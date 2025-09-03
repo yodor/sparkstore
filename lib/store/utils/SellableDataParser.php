@@ -132,11 +132,11 @@ class SellableDataParser
             $sitem = new StorageItem($row["ppID"], get_class($this->product_photos));
             $item->addGalleryItem($sitem);
 
-            if ($main_photo == null) {
+            if (is_null($main_photo)) {
                 $main_photo = $sitem;
             }
         }
-        if ($main_photo != null) {
+        if ($main_photo instanceof StorageItem) {
             $item->setMainPhoto($main_photo);
         }
 
@@ -160,11 +160,15 @@ class SellableDataParser
 
         $product->set("brand", $item->getBrandName());
 
-        $si = $item->getMainPhoto();
-        if ($si instanceof StorageItem) {
-            $si->setName($item->getTitle());
-            $product->set("image", $si->hrefFull()->fullURL());
+        $photos = $item->galleryItems();
+        $urls = array();
+        foreach ($photos as $si) {
+            if ($si instanceof StorageItem) {
+                $si->setName($item->getTitle());
+                $urls[] = $si->hrefFull()->fullURL()->toString();
+            }
         }
+        $product->set("image", $urls);
 
         $offer = new LinkedData("Offer");
         if ($item->getStockAmount()>0) {
