@@ -252,11 +252,12 @@ class ProductListPageBase extends ProductPageBase
         //clone the main products select here to keep the tree siblings visible
         $products_tree = clone $this->select;
 
-        //unset - will use catID and category name from selectChildNodesWith
-        $this->select->fields()->unset("catID");
-        $this->select->fields()->unset("category_name");
-
-        $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
+        if ($nodeID>0) {
+            //unset - will use catID and category name from selectChildNodesWith
+            $this->select->fields()->unset("catID");
+            $this->select->fields()->unset("category_name");
+            $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
+        }
 
         if ($this->filters instanceof ProductListFilter) {
 
