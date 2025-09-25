@@ -1,19 +1,73 @@
 <?php
-include_once("store/templates/admin/ProductsListAddBase.php");
-include_once("store/forms/ProductInputForm.php");
+include_once("templates/admin/BeanEditorPage.php");
+include_once("store/forms/ProductInputFormBase.php");
 include_once("store/beans/ProductsBean.php");
+include_once("store/utils/CheckStockState.php");
+include_once("objects/events/BeanFormEditorEvent.php");
+include_once("objects/events/BeanTransactorEvent.php");
 
-class ProductsListAdd extends ProductsListAddBase
+class ProductsListAdd extends BeanEditorPage
 {
 
-    protected function init() : void
+    public function __construct()
     {
+        parent::__construct();
+        $this->setForm(new ProductInputFormBase());
         $this->setBean(new ProductsBean());
-        $this->setForm(new ProductInputForm());
     }
 
 }
 
 $template = new ProductsListAdd();
+
+$closure = function(BeanFormEditorEvent $event) {
+    if ($event->isEvent(BeanFormEditorEvent::EDITOR_CREATED)) {
+        debug("Processing BeanFormEditorEvent::EDITOR_CREATED ...");
+        $editor = $event->getSource();
+        if (!($editor instanceof BeanFormEditor)) throw new Exception("Event source is not BeanFormEditor");
+
+        $transactor = $editor->getTransactor();
+        $transactor->assignInsertValue("insert_date", DBConnections::Open()->dateTime());
+    }
+};
+SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closure));
+
+$old_stock_amount = -1;
+$closure_editor = function(BeanFormEditorEvent $event) use (&$old_stock_amount) {
+    if ($event->isEvent(BeanFormEditorEvent::FORM_BEAN_LOADED)) {
+        debug("Processing BeanFormEditorEvent::FORM_BEAN_LOADED ...");
+        $editor = $event->getSource();
+        if ($editor instanceof BeanFormEditor) {
+            $old_stock_amount = $editor->getForm()->getInput("stock_amount")->getValue();
+            debug("Current stock_amount: $old_stock_amount");
+        }
+    }
+};
+SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closure_editor));
+
+$closure_transactor = function(BeanTransactorEvent $event) use(&$old_stock_amount) {
+    if ($event->isEvent(BeanTransactorEvent::AFTER_COMMIT)) {
+        debug("Processing BeanTransactorEvent::AFTER_COMMIT ...");
+        $transactor = $event->getSource();
+        if (!($transactor instanceof BeanTransactor)) return;
+        $prodID = $transactor->getEditID();
+        if ($prodID<1) return;
+
+        $stock_amount = $transactor->getValue("stock_amount");
+        $proc = new CheckStockState($prodID, $transactor->getValue("product_name"));
+        $proc->process($stock_amount, $old_stock_amount);
+
+        //remove cached version
+        try {
+            include_once("store/components/renderers/items/ProductDetailsItem.php");
+            ProductDetailsItem::CleanCacheEntry($prodID);
+        }
+        catch (Exception $e) {
+            debug("Exception during CleanCacheEntry: ".$e->getMessage());
+        }
+    }
+};
+SparkEventManager::register(BeanTransactorEvent::class, new SparkObserver($closure_transactor));
+
 
 ?>
