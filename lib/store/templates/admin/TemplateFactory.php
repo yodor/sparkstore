@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/TemplateFactoryEvent.php");
 
 class TemplateFactory
 {
@@ -15,7 +16,7 @@ class TemplateFactory
      * @return void
      * @throws Exception
      */
-    public static function RenderPage(string $templateClass, ?Closure $callble = null): void
+    public static function RenderPage(string $templateClass): void
     {
 
         $local_file = TemplateFactory::$LocalPages."/".$templateClass.".php";
@@ -27,10 +28,9 @@ class TemplateFactory
             include_once($store_file);
         }
         if (isset($template) && $template instanceof PageTemplate) {
-            if ($callble instanceof Closure) {
-                $callble($template);
-            }
+            SparkEventManager::emit(new TemplateFactoryEvent(TemplateFactoryEvent::TEMPLATE_CREATED, $template));
             $template->render();
+            SparkEventManager::emit(new TemplateFactoryEvent(TemplateFactoryEvent::TEMPLATE_RENDERED, $template));
         }
         else {
             throw new Exception("Unable to load template or template variable is not defined correctly");
@@ -48,7 +48,9 @@ class TemplateFactory
             include_once($store_file);
         }
 
-        if (isset($menu) && is_array($menu)) return $menu;
+        if (isset($menu) && is_array($menu)) {
+            return $menu;
+        }
         debug("Menu can not be loaded for this path returning empty menu");
         return array();
     }
