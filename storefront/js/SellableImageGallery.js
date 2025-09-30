@@ -10,11 +10,11 @@ class SellableImageGallery extends Component
     initialize() {
         super.initialize();
 
-        this.element.querySelector('.arrow.prev').addEventListener('click', () => {
+        this.element.querySelector('.arrow.prev')?.addEventListener('click', () => {
             this.prev();
         });
 
-        this.element.querySelector('.arrow.next').addEventListener('click', () => {
+        this.element.querySelector('.arrow.next')?.addEventListener('click', () => {
             this.next();
         });
 
