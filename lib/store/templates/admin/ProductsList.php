@@ -222,6 +222,11 @@ class ProductsList extends BeanListPage
 
         $this->getPage()->getPageFilters()->items()->append($frend);
 
+        foreach ($this->filtersForm->inputNames() as $name) {
+            $this->getPage()->addParameterName($name);
+            $this->getPage()->addParameterName(FormRenderer::SUBMIT_NAME);
+        }
+
 
         $qry->select->fields()->set(
                 "p.prodID",
