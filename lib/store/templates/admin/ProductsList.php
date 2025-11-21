@@ -226,6 +226,10 @@ class ProductsList extends BeanListPage
             $this->getPage()->addParameterName($name);
             $this->getPage()->addParameterName(FormRenderer::SUBMIT_NAME);
         }
+        foreach ($this->keyword_search->getForm()->inputNames() as $name) {
+            $this->getPage()->addParameterName($name);
+            $this->getPage()->addParameterName(KeywordSearch::SUBMIT_KEY);
+        }
 
 
         $qry->select->fields()->set(
