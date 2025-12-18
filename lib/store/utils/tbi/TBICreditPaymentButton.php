@@ -45,7 +45,7 @@ class TBICreditPaymentButton extends CreditPaymentButton
         curl_setopt($ch, CURLOPT_TIMEOUT, 6);
         curl_setopt($ch, CURLOPT_URL, $url);
         $paramstbi = json_decode(curl_exec($ch), true);
-        curl_close($ch);
+        $ch = null;
 
         if (is_null($paramstbi)) throw new Exception("paramstbi JSON Decode failed.");
 
@@ -1015,7 +1015,7 @@ class TBICreditPaymentButton extends CreditPaymentButton
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, 'https://tbibank.support/function/getparameters.php?cid=' . $unicid);
             $paramstbi = json_decode(curl_exec($ch), true);
-            curl_close($ch);
+            $ch = null;
 
             //detect mobile
             $useragent = $_SERVER['HTTP_USER_AGENT'] ?? "";
