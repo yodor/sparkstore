@@ -45,6 +45,10 @@ $act->append(Action::RowSeparator());
 
 $act->append(new Action("Options", "../options/list.php", array(new DataParameter("pclsID"))));
 
+$act->append(Action::RowSeparator());
+
+$act->append(new Action("Attributes", "attributes/list.php", array(new DataParameter("pclsID"))));
+
 
 $cmp->getPage()->navigation()->clear();
 //за изграждане на варианти на продукта от съответния клас
@@ -55,7 +59,9 @@ $text->buffer()->start();
 echo "Тук може да добавяте класове за назначаване към продуктите.<BR>";
 echo "Всеки клас групира набор от входни етикети и опции.<BR>";
 echo "Входните етикети позволяват изграждане на допълнителни филтри, освен вградените - по марка и категория, в основния листинг на продуктите.<BR>";
+echo "Например за клас 'Книги' подходящи входни етикети биха били Автор и Издател<br>";
 echo "Опциите на класа служат за изграждане на варианти на продуктите, които също се използват за филтриране на продуктите.<BR>";
+echo "Например опция 'Цвят' или 'Размер'<br>";
 $text->buffer()->end();
 
 $cmp->items()->insert($text, 0);
