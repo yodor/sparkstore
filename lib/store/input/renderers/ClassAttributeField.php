@@ -9,7 +9,7 @@ class ClassAttributeItem extends DataIteratorItem
 
     protected Component $attributeName;
     protected Input $attributeValue;
-    protected Input $foreginKey;
+    protected Input $foreignKey;
 
     public function __construct() {
         parent::__construct();
@@ -27,11 +27,11 @@ class ClassAttributeItem extends DataIteratorItem
         $this->attributeValue->setAttribute("placeholder", tr("input value ..."));
         $this->items()->append($this->attributeValue);
 
-        $this->foreginKey = new Input();
-        $this->foreginKey->setType("hidden");
-        $this->foreginKey->setAttribute("data", "foreign_key");
+        $this->foreignKey = new Input();
+        $this->foreignKey->setType("hidden");
+        $this->foreignKey->setAttribute("data", "foreign_key");
 
-        $this->items()->append($this->foreginKey);
+        $this->items()->append($this->foreignKey);
 
     }
 
@@ -73,10 +73,10 @@ class ClassAttributeItem extends DataIteratorItem
             }
 
             //follow main input name and prefix with fk_
-            $this->foreginKey->setName("fk_" . $this->attributeValue->getName());
+            $this->foreignKey->setName("fk_" . $this->attributeValue->getName());
             //already set in id ?
             $prKey = $this->parent->getIterator()->key();
-            $this->foreginKey->setValue($prKey . ":" . $this->getID());
+            $this->foreignKey->setValue($prKey . ":" . $this->getID());
 
         }
     }
