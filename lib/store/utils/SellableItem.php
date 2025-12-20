@@ -11,6 +11,8 @@ class SellableItem extends SparkObject
     protected string $category_name = "";
     protected array $category_path = array();
 
+    protected string $class_name = "";
+
     protected string $title = "";
     protected string $caption = "";
     protected string $brand_name = "";
@@ -39,22 +41,22 @@ class SellableItem extends SparkObject
 
     protected array $data = array();
 
-    protected static $defaultDataParser=null;
+    protected static $defaultDataParser = null;
 
     public static function SetDefaultDataParser(SellableDataParser $parser): void
     {
         SellableItem::$defaultDataParser = $parser;
     }
 
-    public static function GetDefaultDataParser() : SellableDataParser
+    public static function GetDefaultDataParser(): SellableDataParser
     {
-        if (is_null(SellableItem::$defaultDataParser)){
+        if (is_null(SellableItem::$defaultDataParser)) {
             SellableItem::$defaultDataParser = new SellableDataParser();
         }
         return SellableItem::$defaultDataParser;
     }
 
-    public static function Load(int $prodID) : SellableItem
+    public static function Load(int $prodID): SellableItem
     {
         $bean = new SellableProducts();
 
@@ -75,7 +77,7 @@ class SellableItem extends SparkObject
     public function __construct()
     {
         parent::__construct();
-        $this->priceInfo = new PriceInfo(0,0,0);
+        $this->priceInfo = new PriceInfo(0, 0, 0);
     }
 
     public function setData(string $key, string $value): void
@@ -83,7 +85,7 @@ class SellableItem extends SparkObject
         $this->data[$key] = $value;
     }
 
-    public function getData(string $key) : string
+    public function getData(string $key): string
     {
         return $this->data[$key];
     }
@@ -92,7 +94,8 @@ class SellableItem extends SparkObject
     {
         $this->brand_name = $brand_name;
     }
-    public function getBrandName() : string
+
+    public function getBrandName(): string
     {
         return $this->brand_name;
     }
@@ -101,9 +104,25 @@ class SellableItem extends SparkObject
     {
         $this->category_name = $category_name;
     }
-    public function getCategoryName() : string
+
+    public function getCategoryName(): string
     {
         return $this->category_name;
+    }
+
+    public function getClassName(): string
+    {
+        return $this->class_name;
+    }
+
+    public function setClassName(string $class_name): void
+    {
+        $this->class_name = $class_name;
+    }
+
+    public function isClass(string $class_name): bool
+    {
+        return (strcmp($this->class_name, $class_name) === 0);
     }
 
     public function setCategoryPath(array $path_array) : void
@@ -232,6 +251,20 @@ class SellableItem extends SparkObject
         return $this->attributes;
     }
 
+    /**
+     * Check presence and non-empty value of attribute with key '$name'
+     * @param string $name
+     * @return bool
+     */
+    public function hasAttribute(string $name) : bool
+    {
+        return isset($this->attributes[$name]) && $this->attributes[$name];
+    }
+
+    public function getAttribute(string $name) : ?string
+    {
+        return $this->attributes[$name] ?? null;
+    }
     /**
      * Product photo gallery
      * @return array Array of StorageItems

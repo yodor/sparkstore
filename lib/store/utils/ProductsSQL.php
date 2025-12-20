@@ -18,6 +18,10 @@ class ProductsSQL extends SQLSelect
         );
 
         $this->fields()->setExpression("(
+        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
+        )", "class_name");
+
+        $this->fields()->setExpression("(
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 

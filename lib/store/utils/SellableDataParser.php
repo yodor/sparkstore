@@ -38,8 +38,8 @@ class SellableDataParser
         $catID = $result->get("catID");
         $item->setCategoryID($catID);
 
-        $category_result = $this->product_categories->getByID($catID, "category_name");
-        $item->setCategoryName($category_result["category_name"]);
+        //$category_result = $this->product_categories->getByID($catID, "category_name");
+        $item->setCategoryName($result->get("category_name"));
 
         $parent_categories = $this->product_categories->getParentNodes($catID, array("category_name"));
         $categories = array();
@@ -59,6 +59,10 @@ class SellableDataParser
 
         if ($result->isSet("model")) {
             $item->setModel($result->get("model"));
+        }
+
+        if ($result->isSet("class_name")) {
+            $item->setClassName($result->get("class_name"));
         }
 
         if ($result->isSet("product_description")) {
