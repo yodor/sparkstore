@@ -8,16 +8,21 @@ include_once("input/ArrayDataInput.php");
 include_once("input/validators/SimpleTextValidator.php");
 include_once("components/TextComponent.php");
 
-class ProductClassInputForm extends InputForm
+class ProductClassAttributeInputForm extends InputForm
 {
 
     public function __construct()
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "class_name", "Class Name", 1);
+        $field = DataInputFactory::Create(DataInputFactory::SELECT, "attrID", "Достъпни входни етикети", 1);
         $this->addInput($field);
-        $field->enableTranslator(FALSE);
+
+//
+//        $rend = $field->getRenderer();
+//        if ($rend instanceof SelectField) {
+//
+//        }
 
 //        $field1 = new ArrayDataInput("attrID", "Attributes", 0);
 //
@@ -53,6 +58,26 @@ class ProductClassInputForm extends InputForm
 //        $arend->getAddonContainer()->items()->append($info);
     }
 
+    public function setProductClassID(int $pclsID) : void
+    {
+        $input = $this->getInput("attrID");
+
+        $select = new SQLSelect();
+        $select->fields()->set("attrID", "name");
+        $select->from = " attributes ";
+        $select->where()->addExpression("attrID not in (SELECT attrID FROM product_class_attributes WHERE pclsID = $pclsID)");
+
+        $rend = $input->getRenderer();
+
+        if ($rend instanceof SelectField) {
+
+            $rend->setIterator(new SQLQuery($select, "attrID", "attributes"));
+
+            $rend->getItemRenderer()->setValueKey("attrID");
+            $rend->getItemRenderer()->setLabelKey("name");
+        }
+
+    }
 }
 
 ?>
