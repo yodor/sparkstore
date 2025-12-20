@@ -97,5 +97,9 @@ class SellableProducts extends DBViewBean
         SellableProducts::AttributesWalker($attributes, $supported, $meta);
 
     }
+    public static function HasAttribute(array $attributes, string $name) : bool
+    {
+        return isset($attributes[$name]) && $attributes[$name];
+    }
 }
 ?>
