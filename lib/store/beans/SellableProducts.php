@@ -53,9 +53,11 @@ class SellableProducts extends DBViewBean
 
         if (is_array($attr_list)) {
             foreach ($attr_list as $idx => $pair) {
-                list($name, $value) = explode(":", $pair);
-                if ($name && $value) {
-                    $attr_all[$name] = $value;
+                if ($pair) {
+                    list($name, $value) = explode(":", $pair);
+                    if ($name && $value) {
+                        $attr_all[$name] = $value;
+                    }
                 }
             }
         }

@@ -85,10 +85,12 @@ class SellableDataParser
             $attributes_text = $result->get("product_attributes");
             $pairs = explode("|", $attributes_text);
             foreach ($pairs as $pair) {
-                list($name, $value) = explode(":", $pair);
-                $name = trim($name);
-                $value = trim($value);
-                $item->setAttribute($name, $value);
+                if ($pair) {
+                    list($name, $value) = explode(":", $pair);
+                    $name = trim($name);
+                    $value = trim($value);
+                    $item->setAttribute($name, $value);
+                }
             }
         }
 
