@@ -271,6 +271,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
 
     protected ProductPhoto $productPhoto;
     protected ProductDetails $productDetails;
+    protected string $defaultItemType = "https://schema.org/Product";
 
     public function __construct()
     {
@@ -286,7 +287,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
         $this->wrap->setComponentClass("wrap");
         $this->wrap->setAttribute("itemprop", "item");
         $this->wrap->setAttribute("itemscope");
-        $this->wrap->setAttribute("itemtype", "https://schema.org/Product");
+        $this->wrap->setAttribute("itemtype", $this->defaultItemType);
         $this->wrap->setTagName("article");
 
         $this->skuMeta = new Meta();
