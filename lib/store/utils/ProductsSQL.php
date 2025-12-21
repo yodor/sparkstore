@@ -31,7 +31,7 @@ class ProductsSQL extends SQLSelect
 
         //this item attributes
         $this->fields()->setExpression("(SELECT 
-        CONCAT(GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|'),'|') 
+        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|')
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID=pca.attrID 
@@ -39,7 +39,7 @@ class ProductsSQL extends SQLSelect
 
         //this item variants
         $this->fields()->setExpression("(SELECT 
-        group_concat( CONCAT(vo.option_name,':', vo.option_value) ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR '|') as variants
+        GROUP_CONCAT( CONCAT(vo.option_name,':', vo.option_value) ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR '|') as variants
         FROM product_variants pv 
         LEFT JOIN variant_options vo ON vo.voID=pv.voID
         WHERE pv.prodID=p.prodID )", "product_variants");
