@@ -144,14 +144,12 @@ class ProductsList extends BeanListPage
         $qry->select->fields()->set(
                 "p.prodID",
                         "p.product_name",
-                        "pcls.class_name",
                         "p.brand_name",
-                        "pc.category_name",
                         "p.visible",
                         "p.price",
                         "p.promo_price",
                         "p.stock_amount",
-                        "p.importID");
+                        );
 
         $qry->select->fields()->setExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
         $qry->select->fields()->setExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
@@ -174,12 +172,28 @@ class ProductsList extends BeanListPage
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->select->from = " products p 
-        JOIN product_categories pc ON pc.catID=p.catID 
-        LEFT JOIN product_classes pcls ON pcls.pclsID=p.pclsID
-        LEFT JOIN product_view_log pvl ON pvl.prodID=p.prodID";
+        $qry->select->fields()->setExpression("(
+        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
+        )", "class_name");
 
-        $qry->select->group_by = "  p.prodID ";
+        $qry->select->fields()->setExpression("(
+        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
+        )", "category_name");
+
+        $qry->select->fields()->setExpression("(
+        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
+        )", "category_name");
+
+        $qry->select->fields()->setExpression("(
+        SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
+        )", "view_counter");
+
+        $qry->select->fields()->setExpression("(
+        SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
+        )", "order_counter");
+
+        $qry->select->from = " products p ";
+
 
         $this->setIterator($qry);
     }
