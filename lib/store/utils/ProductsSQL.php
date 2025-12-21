@@ -12,9 +12,7 @@ class ProductsSQL extends SQLSelect
             "p.prodID", "p.catID", "p.brand_name", "p.model",
              "p.product_name", "p.product_description", "p.seo_description",
             "p.visible", "p.pclsID", "p.promo_price", "p.price",
-            "p.insert_date", "p.update_date", "p.stock_amount",
-            "pvl.order_counter", "pvl.view_counter"
-
+            "p.insert_date", "p.update_date", "p.stock_amount"
         );
 
         $this->fields()->setExpression("(
@@ -60,14 +58,18 @@ class ProductsSQL extends SQLSelect
 
         $this->fields()->setExpression("coalesce(sp.discount_percent,0)", "discount_percent");
 
+        $this->fields()->setExpression("(
+        SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
+        )", "view_counter");
+
+        $this->fields()->setExpression("(
+        SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
+        )", "order_counter");
 
         $this->from = " products p  
 
 LEFT JOIN store_promos sp 
 ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) ) 
-
-LEFT JOIN product_view_log pvl ON pvl.prodID = p.prodID
-
 
 ";
 
