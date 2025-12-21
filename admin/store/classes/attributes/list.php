@@ -30,6 +30,10 @@ $view = $cmp->initView();
 $act = $cmp->viewItemActions();
 $act->removeByAction("Edit");
 
+//responders already initialized
+$responder = RequestController::Get("DeleteItemResponder");
+$responder->setConfirmDialogText("Всички продукти от този клас ще загубят съдържанието на етикета. Потвърдете?");
+
 $text = new TextComponent();
 $text->addClassName("help summary");
 $text->buffer()->start();
