@@ -12,83 +12,6 @@ include_once("store/utils/DownloadCSVProducts.php");
 include_once("components/PageScript.php");
 include_once("store/beans/ProductViewLogBean.php");
 
-class ProductFilterInputForm extends InputForm {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "filter_catID", "Category", 0);
-        $bean1 = new ProductCategoriesBean();
-        $rend = $field->getRenderer();
-
-        $rend->setIterator(new SQLQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
-        $rend->getItemRenderer()->setValueKey("catID");
-        $rend->getItemRenderer()->setLabelKey("category_name");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
-        }
-
-        $rend->input()?->setAttribute("onChange", "this.form.submit()");
-
-
-        $this->addInput($field);
-
-
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_brand", "Brand", 0);
-        $bean1 = new BrandsBean();
-        $rend = $field->getRenderer();
-
-        $rend->setIterator($bean1->query($bean1->key(), "brand_name"));
-        $rend->getItemRenderer()->setValueKey("brand_name");
-        $rend->getItemRenderer()->setLabelKey("brand_name");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
-        }
-
-        $rend->input()?->setAttribute("onChange", "this.form.submit()");
-
-
-        $this->addInput($field);
-
-
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_section", "Section", 0);
-        $rend = $field->getRenderer();
-        $sb = new SectionsBean();
-
-        $rend->setIterator($sb->query($sb->key(),"section_title"));
-        $rend->getItemRenderer()->setValueKey("section_title");
-        $rend->getItemRenderer()->setLabelKey("section_title");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
-        }
-
-        $rend->input()?->setAttribute("onChange", "this.form.submit()");
-
-        $this->addInput($field);
-
-
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_class", "Product Class", 0);
-        $rend = $field->getRenderer();
-        $sb = new ProductClassesBean();
-
-        $rend->setIterator($sb->query($sb->key(),"class_name"));
-        $rend->getItemRenderer()->setValueKey("class_name");
-        $rend->getItemRenderer()->setLabelKey("class_name");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
-        }
-
-        $rend->input()?->setAttribute("onChange", "this.form.submit()");
-
-        $this->addInput($field);
-    }
-
-}
-
 class ScrollTopCookiesScript extends PageScript
 {
     public function code() : string
@@ -145,7 +68,6 @@ JS;
 
 class ProductsList extends BeanListPage
 {
-    protected $filtersForm;
 
     public function __construct()
     {
@@ -186,7 +108,7 @@ class ProductsList extends BeanListPage
 
             "sections"=>"Sections",
             "class_name"=>"Class",
-            "class_attributes"=>"Attributes",
+            "product_attributes"=>"Attributes",
             "product_variants"=>"Variants",
             "price"=>"Price",
             "promo_price"=>"Promo Price",
@@ -203,7 +125,7 @@ class ProductsList extends BeanListPage
             "p.prodID",
             "p.importID",
             "sections",
-            "class_attributes",
+            "product_attributes",
             "product_variants",
             "p.price"
             );
@@ -211,27 +133,14 @@ class ProductsList extends BeanListPage
         $this->keyword_search->getForm()->setColumns($search_fields);
         $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
 
-        $qry = $this->bean->query();
+        $this->initializeSearchForm();
 
-
-        $this->filtersForm = new ProductFilterInputForm();
-        $frend = new FormRenderer($this->filtersForm);
-        $frend->getSubmitLine()->setRenderEnabled(false);
-        $frend->setMethod(FormRenderer::METHOD_GET);
-        $frend->setAttribute("autocomplete", "off");
-
-        $this->getPage()->getPageFilters()->items()->append($frend);
-
-        foreach ($this->filtersForm->inputNames() as $name) {
-            $this->getPage()->addParameterName($name);
-            $this->getPage()->addParameterName(FormRenderer::SUBMIT_NAME);
-        }
         foreach ($this->keyword_search->getForm()->inputNames() as $name) {
             $this->getPage()->addParameterName($name);
             $this->getPage()->addParameterName(KeywordSearch::SUBMIT_KEY);
         }
 
-
+        $qry = $this->bean->query();
         $qry->select->fields()->set(
                 "p.prodID",
                         "p.product_name",
@@ -252,7 +161,7 @@ class ProductsList extends BeanListPage
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID = pca.attrID
-        WHERE pcav.prodID = p.prodID )", "class_attributes");
+        WHERE pcav.prodID = p.prodID )", "product_attributes");
 
         $qry->select->fields()->setExpression("(SELECT 
     GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
@@ -275,21 +184,99 @@ class ProductsList extends BeanListPage
         $this->setIterator($qry);
     }
 
-    public function getFilterForm() : ProductFilterInputForm
+    protected function initializeSearchForm() : void
     {
-        return $this->filtersForm;
+        $this->keyword_search->setLayout(FormRenderer::LAYOUT_VBOX);
+        $form = $this->keyword_search->getForm();
+
+        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "filter_catID", "Category", 0);
+        $field->skip_search_filter_processing = true;
+
+        $bean1 = new ProductCategoriesBean();
+        $rend = $field->getRenderer();
+
+        $rend->setIterator(new SQLQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
+        $rend->getItemRenderer()->setValueKey("catID");
+        $rend->getItemRenderer()->setLabelKey("category_name");
+
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
+
+        //$rend->input()?->setAttribute("onChange", "this.form.requestSubmit()");
+
+
+        $form->insertInputBefore($field, "keyword");
+
+
+        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_brand", "Brand", 0);
+        $field->skip_search_filter_processing = true;
+
+        $bean1 = new BrandsBean();
+        $rend = $field->getRenderer();
+
+        $rend->setIterator($bean1->query($bean1->key(), "brand_name"));
+        $rend->getItemRenderer()->setValueKey("brand_name");
+        $rend->getItemRenderer()->setLabelKey("brand_name");
+
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
+
+        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+
+
+        $form->insertInputBefore($field, "keyword");
+
+
+        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_section", "Section", 0);
+        $field->skip_search_filter_processing = true;
+
+        $rend = $field->getRenderer();
+        $sb = new SectionsBean();
+
+        $rend->setIterator($sb->query($sb->key(),"section_title"));
+        $rend->getItemRenderer()->setValueKey("section_title");
+        $rend->getItemRenderer()->setLabelKey("section_title");
+
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
+
+        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+
+        $form->insertInputBefore($field, "keyword");
+
+
+        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_class", "Product Class", 0);
+        $field->skip_search_filter_processing = true;
+
+        $rend = $field->getRenderer();
+        $sb = new ProductClassesBean();
+
+        $rend->setIterator($sb->query($sb->key(),"class_name"));
+        $rend->getItemRenderer()->setValueKey("class_name");
+        $rend->getItemRenderer()->setLabelKey("class_name");
+
+        if ($rend instanceof SelectField) {
+            $rend->setDefaultOption("--- Всички ---");
+        }
+
+        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+
+        $form->insertInputBefore($field, "keyword");
     }
 
     public function processInput()
     {
-        parent::processInput();
+        //parent::processInput();
 
-        $proc = new FormProcessor();
-        $form = $this->filtersForm;
+        $this->keyword_search->processInput();
 
-        $proc->process($form);
+        if ($this->keyword_search->isProcessed()) {
 
-        if ($proc->getStatus() === IFormProcessor::STATUS_OK) {
+            $form = $this->keyword_search->getForm();
+
             if ($form->haveInput("filter_brand")) {
                 $filter_brand = $form->getInput("filter_brand")->getValue();
                 if ($filter_brand) {
@@ -316,6 +303,11 @@ class ProductsList extends BeanListPage
                 if ($filter_class) {
                     $this->query->select->where()->add("pcls.class_name", "'" . $filter_class . "'");
                 }
+            }
+
+            if ($form->getInput("keyword")->getValue()) {
+                $clauses = $form->prepareClauseCollection("OR");
+                $this->query->select->having = $clauses->getSQL("");
             }
         }
 
