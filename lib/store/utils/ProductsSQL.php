@@ -58,14 +58,6 @@ class ProductsSQL extends SQLSelect
 
         $this->fields()->setExpression("coalesce(sp.discount_percent,0)", "discount_percent");
 
-        $this->fields()->setExpression("(
-        SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
-        )", "view_counter");
-
-        $this->fields()->setExpression("(
-        SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
-        )", "order_counter");
-
         $this->from = " products p  
 
 LEFT JOIN store_promos sp 
