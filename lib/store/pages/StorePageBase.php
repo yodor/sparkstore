@@ -260,7 +260,7 @@ class StorePageBase extends SparkPage
 
         $ksc = new KeywordSearch();
 
-        //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is posted there
+        //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is submitted there
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getInput("keyword")->setID("search-keyword");
 
