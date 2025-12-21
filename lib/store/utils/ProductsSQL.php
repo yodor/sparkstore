@@ -33,7 +33,7 @@ class ProductsSQL extends SQLSelect
 
         //this item attributes
         $this->fields()->setExpression("(SELECT 
-        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|') 
+        CONCAT(GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|'),'|') 
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID=pca.attrID 
