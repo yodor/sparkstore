@@ -18,6 +18,9 @@ class CopyProductRequestResponder extends RequestResponder
         $this->bean = new ProductsBean();
 
         $this->need_confirm = TRUE;
+
+        $this->confirm_dialog_title = "Потвърдете копиране";
+        $this->confirm_dialog_text = "Потвърдете копиране на този продукт включително атрибути и снимки?";
     }
 
     public function getItemID() : int
@@ -50,11 +53,6 @@ class CopyProductRequestResponder extends RequestResponder
         $action = parent::createAction($title);
         $action->getURL()->add(new DataParameter("item_id", $this->bean->key()));
         return $action;
-    }
-
-    protected function processConfirmation() : void
-    {
-        $this->setupConfirmDialog("Потвърдете копиране", "Потвърдете копиране на този продукт включително атрибути и снимки?");
     }
 
     protected function processImpl() : void
