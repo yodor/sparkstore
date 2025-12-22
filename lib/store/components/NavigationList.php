@@ -24,6 +24,9 @@ abstract class NavigationList extends Container
 
     public int $imagesLimit = 4;
 
+    //do not render banner or text if tape iterator is empty
+    public bool $emptyTapeDisableItem = true;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -132,7 +135,9 @@ abstract class NavigationList extends Container
                 }
                 else {
                     //do not render item
-                    $this->item->setRenderEnabled(false);
+                    if ($this->emptyTapeDisableItem) {
+                        $this->item->setRenderEnabled(false);
+                    }
                 }
             }
             else {
