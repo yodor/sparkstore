@@ -303,9 +303,11 @@ class ProductListPageBase extends ProductPageBase
         //construct category tree for the products that will be listed
         //keep same grouping as the products list
         $products_tree->group_by = $this->select->group_by;
+
+        //do not clear the fields here as filters might have appended dynamic columns
         //select only fields needed in the treeView iterator
-        $products_tree->fields()->reset();
-        $products_tree->fields()->set("prodID", "catID");
+        //$products_tree->fields()->reset();
+        //$products_tree->fields()->set("prodID", "catID");
         //echo $products_tree->getSQL();
 
         $products_tree = $products_tree->getAsDerived();
