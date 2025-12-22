@@ -168,6 +168,8 @@ class ProductListPageBase extends ProductPageBase
             throw new Exception("List bean is not set");
         }
         $this->select = clone $this->bean->select();
+        $this->select->fields()->setPrefix("sellable_products");
+
 
         $search_fields = array("product_name");
         $this->keyword_search->getForm()->setColumns($search_fields);
@@ -315,8 +317,8 @@ class ProductListPageBase extends ProductPageBase
         foreach ($columnsCopy->names() as $name) {
             $products_tree->fields()->unset($name);
         }
-        $products_tree->fields()->set("prodID");
-        $products_tree->fields()->set("catID");
+        $products_tree->fields()->set("sellable_products.prodID");
+        $products_tree->fields()->set("sellable_products.catID");
 
         //echo $products_tree->getSQL();
 
