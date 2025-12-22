@@ -208,6 +208,8 @@ class ProductListPageBase extends ProductPageBase
         // 3 keyword search
         // 5 attribute filters
 
+        $columnsCopy = clone $this->select->fields();
+
         $iterator = $this->property_filter->iterator();
         while ($filter = $iterator->next()) {
             if (!($filter instanceof GETProcessor)) continue;
@@ -307,7 +309,15 @@ class ProductListPageBase extends ProductPageBase
         //do not clear the fields here as filters might have appended dynamic columns
         //select only fields needed in the treeView iterator
         //$products_tree->fields()->reset();
-        //$products_tree->fields()->set("prodID", "catID");
+
+        //Remove non-needed columns.
+        //Filters append having clause too so let dynamic columns in
+        foreach ($columnsCopy->names() as $name) {
+            $products_tree->fields()->unset($name);
+        }
+        $products_tree->fields()->set("prodID");
+        $products_tree->fields()->set("catID");
+
         //echo $products_tree->getSQL();
 
         $products_tree = $products_tree->getAsDerived();
