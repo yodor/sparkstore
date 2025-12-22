@@ -101,7 +101,7 @@ class SellableProducts extends DBViewBean
     }
     public static function HasAttribute(array $attributes, string $name) : bool
     {
-        return isset($attributes[$name]) && $attributes[$name];
+        return isset($attributes[$name]) && strlen((string)$attributes[$name])>0;
     }
 }
 ?>
