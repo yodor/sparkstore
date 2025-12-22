@@ -22,7 +22,7 @@ $cmp->viewItemActions()->append(
     new Action("Products", ADMIN_LOCAL."/store/products/list.php",
         array(
            new DataParameter("filter_section", "section_title"),
-           new URLParameter("SubmitForm", "ProductFilterInputForm"),
+           new URLParameter("filter", "search"),
         )
     )
 );

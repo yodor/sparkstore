@@ -4,12 +4,22 @@ include_once("store/components/NavigationList.php");
 class CategoryNavigation extends NavigationList
 {
 
+    protected int $parentID = 0;
+
     public function __construct()
     {
         parent::__construct();
         $this->setAttribute("aria-label", "Product Categories");
     }
 
+    public function setParentID(int $parentID) : void
+    {
+        $this->parentID = $parentID;
+    }
+    public function getParentID() : int
+    {
+        return $this->parentID;
+    }
 
     /**
      * Add group_concat column containing the image IDs and return the column name
@@ -40,7 +50,7 @@ class CategoryNavigation extends NavigationList
         $select = new SQLSelect();
         $select->fields()->set("pc.catID, pc.category_name");
         $select->from = " product_categories pc ";
-        $select->where()->add("pc.parentID", 0);
+        $select->where()->add("pc.parentID", $this->parentID);
         $select->order_by = " pc.lft ";
 
         $this->item->setValueKey($bean->key());
