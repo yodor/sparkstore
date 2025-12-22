@@ -130,6 +130,7 @@ class ProductsList extends BeanListPage
             "p.price"
             );
 
+        $this->keyword_search->getForm()->getInput("keyword")->getRenderer()->input()->setAttribute("placeholder", "Търси продукт");
         $this->keyword_search->getForm()->setColumns($search_fields);
         $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
 
@@ -180,9 +181,6 @@ class ProductsList extends BeanListPage
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 
-        $qry->select->fields()->setExpression("(
-        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
-        )", "category_name");
 
         $qry->select->fields()->setExpression("(
         SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
@@ -315,7 +313,7 @@ class ProductsList extends BeanListPage
             if ($form->haveInput("filter_class")) {
                 $filter_class = $form->getInput("filter_class")->getValue();
                 if ($filter_class) {
-                    $this->query->select->where()->add("pcls.class_name", "'" . $filter_class . "'");
+                    $this->query->select->having = " class_name = '$filter_class'";
                 }
             }
 
