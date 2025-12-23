@@ -370,11 +370,11 @@ class ProductListPageBase extends ProductPageBase
         }
 
         //remove key page
-        $view_params = $this->view->getPaginator()->getParameterNames();
-        foreach ($view_params as $idx=>$name) {
-            if (str_contains($name, Paginator::KEY_PAGE))continue;
-            $supported_params[] = $name;
-        }
+//        $view_params = $this->view->getPaginator()->getParameterNames();
+//        foreach ($view_params as $idx=>$name) {
+//            if (str_contains($name, Paginator::KEY_PAGE))continue;
+//            $supported_params[] = $name;
+//        }
         return $supported_params;
     }
     /**
