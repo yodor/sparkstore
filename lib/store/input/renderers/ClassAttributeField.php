@@ -227,31 +227,46 @@ class ClassAttributeField extends DataIteratorField
         parent::render();
         ?>
         <script type='text/javascript'>
+            function changeClass(pclsID)
+            {
+                let req = new JSONRequest();
+                req.setResponder("ClassAttributeFieldResponder");
+                req.setFunction("render");
+                req.setParameter("classID", pclsID);
+                req.setParameter("prodID", <?php echo $this->prodID;?>);
+
+                req.onSuccess = function(result) {
+
+                    const field = document.querySelector(".InputComponent[field='<?php echo $this->dataInput->getName();?>'] .ClassAttributeField");
+                    //no scripts will be parsed or added
+                    field.innerHTML = result.response.contents;
+
+                    const event = new SparkEvent(SparkEvent.DOM_UPDATED);
+                    event.source = field;
+                    document.dispatchEvent(event);
+                };
+
+                req.start();
+            }
+
             onPageLoad(function () {
                 console.log("Adding class changed handler");
 
-                let input = document.querySelector("[name='pclsID']");
-                input.addEventListener("change", (event)=>{
+                document.querySelectorAll("[name='pclsID']").forEach((input) => {
+                    input.addEventListener('change', (event) => {
+                        const target = event.target;
+                        let handleEvent = false;
+                        if (target instanceof HTMLSelectElement) {
+                            handleEvent = true;
+                        }
+                        else if (target instanceof HTMLInputElement && target.type === 'radio' && target.checked) {
+                            handleEvent = true;
+                        }
 
-                    let req = new JSONRequest();
-                    req.setResponder("ClassAttributeFieldResponder");
-                    req.setFunction("render");
-                    req.setParameter("classID", input.value);
-                    req.setParameter("prodID", <?php echo $this->prodID;?>);
-
-                    req.onSuccess = function(result) {
-
-                        const field = document.querySelector(".InputComponent[field='<?php echo $this->dataInput->getName();?>'] .ClassAttributeField");
-                        //no scripts will be parsed or added
-                        field.innerHTML = result.response.contents;
-
-                        const event = new SparkEvent(SparkEvent.DOM_UPDATED);
-                        event.source = field;
-                        document.dispatchEvent(event);
-                    };
-
-                    req.start();
-
+                        if (handleEvent) {
+                            changeClass(target.value);
+                        }
+                    });
                 });
 
             });

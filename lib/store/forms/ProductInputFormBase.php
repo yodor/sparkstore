@@ -104,7 +104,7 @@ class ProductInputFormBase extends InputForm
         $field->getProcessor()->setTransactBean($product_sections);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "pclsID", "Product Class", 0);
+        $field = DataInputFactory::Create(DataInputFactory::RADIO, "pclsID", "Product Class", 0);
         $rend = $field->getRenderer();
         $pcb = new ProductClassesBean();
 
