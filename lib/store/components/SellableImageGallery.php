@@ -63,7 +63,7 @@ class SellableImageGallery extends Container {
         $image = $this->image_popup->image();
         $image->setUseSizeAttributes(true);
         $image->setAttribute("fetchpriority","high");
-        $image->setAttribute("alt", tr("Main view of"." ".$this->sellable->getTitle()));
+        $image->setAttribute("alt", "Main view of"." ".$this->sellable->getTitle());
         //$image->setAttribute("loading","lazy");
 
         $image_preview->items()->append($this->image_popup);
@@ -139,9 +139,9 @@ class SellableImageGallery extends Container {
                 $button->setAttribute("active", "1");
             }
 
-            $button->setAttribute("aria-label", tr("Another view of"." ".$product_name));
+            $button->setAttribute("aria-label", "Another view of"." ".$product_name);
             $image = $button->image();
-            $image->setAttribute("alt", tr("View")." ".($pos+1)." ".tr("of")." ".$product_name);
+            $image->setAttribute("alt", "View"." ".($pos+1)." "."of"." ".$product_name);
             $image->setAttribute("loading", "lazy");
             $image->setPhotoSize(64, 64);
             $image->setUseSizeAttributes(true);
