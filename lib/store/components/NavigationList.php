@@ -13,7 +13,7 @@ abstract class NavigationList extends Container
     protected Container $list;
     protected NavigationListItem $item;
 
-    protected SQLQuery $iterator;
+    protected IDataIterator $iterator;
     protected SQLSelect $tapeProducts;
 
     public Closure $createListIterator;
@@ -87,12 +87,25 @@ abstract class NavigationList extends Container
         $this->item->setCacheable($mode);
     }
 
-    abstract public function createListIterator() : SQLQuery;
+    /**
+     * Return SQLQuery for all items in this list
+     * @return SQLQuery|null
+     */
+    abstract public function createListIterator() : ?SQLQuery;
 
+    /**
+     * Return SQLQuery with all the products to be shown in 'this' item of the list,
+     * implementors modify the select returned from createTapeProducts
+     * @return SQLQuery|null
+     */
     abstract public function createTapeIterator() : ?SQLQuery;
 
     abstract public function createImagesColumn(SQLSelect $select) : void;
 
+    /**
+     * Return SQLSelect with all the products that will be used for display in this NavigationList
+     * @return SQLSelect
+     */
     public function createTapeProducts() : SQLSelect
     {
         $sellable = new SellableProducts();
@@ -114,7 +127,7 @@ abstract class NavigationList extends Container
         return $this->item;
     }
 
-    public function getIterator() : SQLQuery
+    public function getIterator() : IDataIterator
     {
         return $this->iterator;
     }

@@ -70,16 +70,17 @@ class NavigationListItem extends DataIteratorItem
         $this->image->setTitle($this->label);
 
         $imagesKey = $this->si->getValueKey();
+        if ($imagesKey) {
+            $images = $data[$imagesKey];
 
-        $images = $data[$imagesKey];
+            if ($imagesKey && $images) {
 
-        if ($imagesKey && $images) {
-
-            $images = explode(",", $images);
-            if (count($images) > 0) {
-                foreach ($images as $idx => $imageID) {
-                    $this->si->id = $imageID;
-                    $this->banners->items()->append(clone $this->image);
+                $images = explode(",", $images);
+                if (count($images) > 0) {
+                    foreach ($images as $idx => $imageID) {
+                        $this->si->id = $imageID;
+                        $this->banners->items()->append(clone $this->image);
+                    }
                 }
             }
         }
