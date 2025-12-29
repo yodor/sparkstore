@@ -38,7 +38,9 @@ class SectionNavigation extends NavigationList
         $this->item->setValueKey("secID");
         $this->item->setLabelKey("section_title");
 
-        $this->item->getAction()->setURL(new ProductListURL());
+        $section_url = new ProductListURL();
+        $section_url->add(new DataParameter("section","section_title"));
+        $this->item->getAction()->setURL($section_url);
 
         $query = new SQLQuery($select, "secID");
         $query->setBean(new SectionsBean());
