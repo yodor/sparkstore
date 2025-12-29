@@ -25,7 +25,7 @@ class ProductInputFormBase extends InputForm
         parent::__construct();
 
 
-        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "catID", "Category", 1);
+        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "catID", tr("Category"), 1);
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
 
@@ -35,7 +35,7 @@ class ProductInputFormBase extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "brand_name", "Brand", 1);
+        $field = DataInputFactory::Create(DataInputFactory::SELECT, "brand_name", tr("Brand"), 1);
         $rend = $field->getRenderer();
         $brands = new BrandsBean();
 
@@ -86,7 +86,7 @@ class ProductInputFormBase extends InputForm
 
 
         //
-        $field = new ArrayDataInput("secID", "Section", 0);
+        $field = new ArrayDataInput("secID", tr("Section"), 0);
         $proc = new InputProcessor($field);
         $proc->transact_bean_skip_empty_values = true;
         $proc->merge_with_target_loaded = false;
@@ -104,7 +104,7 @@ class ProductInputFormBase extends InputForm
         $field->getProcessor()->setTransactBean($product_sections);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::RADIO, "pclsID", "Product Class", 0);
+        $field = DataInputFactory::Create(DataInputFactory::RADIO, "pclsID", tr("Product Class"), 0);
         $rend = $field->getRenderer();
         $pcb = new ProductClassesBean();
 
