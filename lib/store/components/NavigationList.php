@@ -81,6 +81,12 @@ abstract class NavigationList extends Container
         $this->tapeProducts = ($this->createTapeProducts)();
     }
 
+    public function setCacheable(bool $mode): void
+    {
+        parent::setCacheable($mode);
+        $this->item->setCacheable($mode);
+    }
+
     abstract public function createListIterator() : SQLQuery;
 
     abstract public function createTapeIterator() : ?SQLQuery;

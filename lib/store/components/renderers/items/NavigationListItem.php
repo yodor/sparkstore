@@ -51,6 +51,11 @@ class NavigationListItem extends DataIteratorItem
         $this->items()->append($this->tape);
 
     }
+    public function setCacheable(bool $mode): void
+    {
+        parent::setCacheable($mode);
+        $this->tape->setCacheable($mode);
+    }
 
     public function setData(array $data) : void
     {
