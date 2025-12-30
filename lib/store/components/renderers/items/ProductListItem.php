@@ -376,7 +376,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
             return $discountPercent;
         }
         if ($this->isPromo()) {
-            $discountPercent = ((float)$this->data["sell_price"] / (float)$this->data["price"]) * 100.0;
+            $discountPercent = 100.0 - (((float)$this->data["sell_price"] / (float)$this->data["price"]) * 100.0);
         }
         return $discountPercent;
     }
