@@ -170,7 +170,7 @@ class ProductPhoto extends Action
         if ($this->item->isPromo()) {
             $discountPercent = $this->item->getDiscountPercent();
             if ($discountPercent>0) {
-                $this->discountLabel->setContents(" -".(int)$discountPercent."%");
+                $this->discountLabel->setContents(" -".round($discountPercent,1)."%");
             }
             else {
                 $this->discountLabel->setContents("Промо");
@@ -376,7 +376,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
             return $discountPercent;
         }
         if ($this->isPromo()) {
-            $discountPercent = 100.0 - (((float)$this->data["sell_price"] / (float)$this->data["price"]) * 100.0);
+            $discountPercent = 100.00 - ((float)($this->data["sell_price"] / $this->data["price"]) * 100.00);
         }
         return $discountPercent;
     }
