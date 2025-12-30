@@ -52,7 +52,7 @@ class ProductsSQL extends SQLSelect
         ORDER BY position ASC LIMIT 1)", "ppID");
 
         $this->fields()->setExpression("(      
-                if ( p.promo_price>0, p.promo_price, p.price - (coalesce(sp.discount_percent, 0) / 100.0)  )
+                if ( p.promo_price>0, p.promo_price, p.price - (p.price * (coalesce(sp.discount_percent, 0) / 100.0))  )
         )",
         "sell_price");
 
