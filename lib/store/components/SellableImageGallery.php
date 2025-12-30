@@ -43,7 +43,8 @@ class SellableImageGallery extends Container {
                 $discountPercent = 100.00 - ((float)($this->sellable->getPriceInfo()->getSellPrice() / $this->sellable->getPriceInfo()->getOldPrice()) * 100.00);
             }
             if ($discountPercent>0) {
-                $label->setContents(" -" . round($discountPercent,1) . "%");
+                $discountPercent = round($discountPercent,2);
+                $label->setContents(" -" . $discountPercent . "%");
             }
             else {
                 $label->setContents("Промо");
