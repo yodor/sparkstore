@@ -37,9 +37,21 @@ class SellableImageGallery extends Container {
         $image_preview->items()->append($label);
 
         if ($this->sellable->isPromotion()) {
-            $label->setContents("Промо");
+
+            $discountPercent = $this->sellable->getPriceInfo()->getDiscountPercent();
+            if ($discountPercent==0) {
+                $discountPercent = ($this->sellable->getPriceInfo()->getSellPrice() / $this->sellable->getPriceInfo()->getOldPrice()) * 100.0;
+            }
+            if ($discountPercent>0) {
+                $label->setContents(" -" . (int)$discountPercent . "%");
+            }
+            else {
+                $label->setContents("Промо");
+            }
+
             $image_preview->addClassName("promo");
         }
+
 
         $stock_amount = $this->sellable->getStockAmount();
         if ($stock_amount<1) {

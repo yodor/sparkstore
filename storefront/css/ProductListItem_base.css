@@ -48,6 +48,8 @@
     /*display:block;*/
     /*min-width:275px;*/
     /*min-height:120px;*/
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 .ProductListItem .photo .discount_label {

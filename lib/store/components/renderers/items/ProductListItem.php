@@ -167,12 +167,16 @@ class ProductPhoto extends Action
         $this->discountLabel->setRenderEnabled(false);
         $this->blend->setRenderEnabled(false);
 
-        if ($this->data["discount_percent"]>0) {
-            $this->discountLabel->setContents(" -".$this->data["discount_percent"]."%");
+        if ($this->item->isPromo()) {
+            $discountPercent = $this->item->getDiscountPercent();
+            if ($discountPercent>0) {
+                $this->discountLabel->setContents(" -".(int)$discountPercent."%");
+            }
+            else {
+                $this->discountLabel->setContents("Промо");
+            }
         }
-        else if ($this->item->isPromo()) {
-            $this->discountLabel->setContents("Промо");
-        }
+
         if ($this->data["stock_amount"]<1) {
             $this->discountLabel->setContents("Изчерпан");
             $this->blend->setRenderEnabled(true);
@@ -364,6 +368,17 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     public function isPromo() : bool
     {
         return ((float)$this->data["price"] != (float)$this->data["sell_price"] && (float)$this->data["price"]>0);
+    }
+    public function getDiscountPercent(): float
+    {
+        $discountPercent = $this->data["discount_percent"];
+        if ($discountPercent>0) {
+            return $discountPercent;
+        }
+        if ($this->isPromo()) {
+            $discountPercent = ((float)$this->data["sell_price"] / (float)$this->data["price"]) * 100.0;
+        }
+        return $discountPercent;
     }
 
 }
