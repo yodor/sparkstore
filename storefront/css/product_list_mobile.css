@@ -9,7 +9,8 @@
         display:block;
     }
     .section.main .content .column.left {
-        width: calc(100vw);
+        width: 100%;
+        padding-right:0;
     }
 
     .section.main .content .category_path {
