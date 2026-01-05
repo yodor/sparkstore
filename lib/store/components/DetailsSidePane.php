@@ -365,6 +365,7 @@ class DetailsSidePane extends Container
             $labelSell->setComponentClass("sell");
 
             $labelSell->label()->setTagName("span");
+            $labelSell->label()->setAttribute("itemprop", "price");
             $labelSell->label()->setComponentClass("value");
             $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()/DOUBLE_PRICE_RATE));
 
@@ -398,7 +399,7 @@ class DetailsSidePane extends Container
         $labelSell = new LabelSpan();
         $labelSell->label()->setTagName("span");
         $labelSell->setComponentClass("sell");
-        $labelSell->label()->setAttribute("itemprop", "price");
+
         $labelSell->label()->setComponentClass("value");
         $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()));
         $labelSell->span()->setComponentClass("currency");
