@@ -339,37 +339,10 @@ class DetailsSidePane extends Container
             $grp->setAttribute("no_stock", "");
         }
 
-        $item = new Container(false);
-        $item->setComponentClass("item");
-        $item->setClassName("price_info");
 
-        $labelOld = new LabelSpan();
-        $labelOld->label()->setTagName("span");
-        $labelOld->setComponentClass("old");
-        if (!$this->sellable->isPromotion()) {
-            $labelOld->setClassName("disabled");
-        }
-        $labelOld->label()->setComponentClass("value");
-        $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice()));
-        $labelOld->span()->setComponentClass("currency");
-        $labelOld->span()->setContents("&nbsp лв.");
-        $item->items()->append($labelOld);
-
-        $labelSell = new LabelSpan();
-        $labelSell->label()->setTagName("span");
-        $labelSell->setComponentClass("sell");
-        $labelSell->label()->setAttribute("itemprop", "price");
-        $labelSell->label()->setComponentClass("value");
-        $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()));
-        $labelSell->span()->setComponentClass("currency");
-        $labelSell->span()->setContents("&nbsp лв.");
-
-        $item->items()->append($labelSell);
-
-        $grp->items()->append($item);
 
         if (DOUBLE_PRICE_ENABLED) {
-            $grp->items()->append(new TextComponent("<BR>"));
+
 
             $item = new Container(false);
             $item->setComponentClass("item");
@@ -403,8 +376,37 @@ class DetailsSidePane extends Container
 
             $grp->items()->append($item);
 
+            $grp->items()->append(new TextComponent("<BR>"));
         }
 
+        $item = new Container(false);
+        $item->setComponentClass("item");
+        $item->setClassName("price_info");
+
+        $labelOld = new LabelSpan();
+        $labelOld->label()->setTagName("span");
+        $labelOld->setComponentClass("old");
+        if (!$this->sellable->isPromotion()) {
+            $labelOld->setClassName("disabled");
+        }
+        $labelOld->label()->setComponentClass("value");
+        $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice()));
+        $labelOld->span()->setComponentClass("currency");
+        $labelOld->span()->setContents("&nbsp лв.");
+        $item->items()->append($labelOld);
+
+        $labelSell = new LabelSpan();
+        $labelSell->label()->setTagName("span");
+        $labelSell->setComponentClass("sell");
+        $labelSell->label()->setAttribute("itemprop", "price");
+        $labelSell->label()->setComponentClass("value");
+        $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()));
+        $labelSell->span()->setComponentClass("currency");
+        $labelSell->span()->setContents("&nbsp лв.");
+
+        $item->items()->append($labelSell);
+
+        $grp->items()->append($item);
 
 
         $this->items()->append($grp);
