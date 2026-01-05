@@ -5,35 +5,29 @@ include_once("utils/IRequestProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 include_once("components/TextComponent.php");
 
-include_once("store/forms/ProductListFilterInputForm.php");
 
 class ProductListFilter extends FormRenderer implements IRequestProcessor
 {
 
-    public function __construct()
+    public function __construct(InputForm $form)
     {
-        $this->form = new ProductListFilterInputForm();
-
-        parent::__construct($this->form);
+        parent::__construct($form);
 
         $this->addClassName("filters");
         $this->setAttribute("autocomplete", "off");
         $this->setMethod(FormRenderer::METHOD_GET);
-        $this->getSubmitLine()->setRenderEnabled(false);
+        $this->getSubmitLine()->items()->append(Button::ActionButton("Изчисти", "clearFilters()"));
+
     }
-    public function resetForm()
-    {
-        $this->form = new ProductListFilterInputForm();
-    }
+
     public function processInput()
     {
-
         $this->form->loadPostData($_GET);
         $this->form->validate();
-
     }
 
     /**
+     *
      * Return true if request data has loaded into this processor
      * @return bool
      */
@@ -42,7 +36,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor
         return true;
     }
 
-    public function getForm(): ProductListFilterInputForm
+    public function getForm(): InputForm
     {
         return $this->form;
     }
@@ -53,7 +47,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor
 
         $filter_inputs = $this->form->inputs();
         foreach ($filter_inputs as $name=>$input) {
-            if ($input instanceof FilterDataInput) {
+            if ($input instanceof DataInput) {
 
                 $value = $input->getValue();
 

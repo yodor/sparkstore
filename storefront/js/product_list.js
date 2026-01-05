@@ -19,7 +19,7 @@ function clearFilters() {
 
     let params = url.searchParams;
 
-    let form = document.forms["ProductListFilterInputForm"];
+    let form = document.querySelector(".FormRenderer.filters");//document.forms["ProductListFilterInputForm"];
     let elements = form.elements;
     for (let a = 0; a < elements.length; a++) {
 

@@ -13,7 +13,7 @@ include_once("objects/SparkMap.php");
 include_once("utils/GETProcessor.php");
 
 include_once("store/components/ProductListFilter.php");
-
+include_once("store/forms/ProductListFilterInputForm.php");
 
 class ProductListPageBase extends ProductPageBase
 {
@@ -99,7 +99,7 @@ class ProductListPageBase extends ProductPageBase
 
 
         //empty filters - renderer iterators are not set yet
-        $this->filters = new ProductListFilter();
+        $this->filters = $this->createProductFilters();
 
 
         $this->view = new ItemView();
@@ -118,6 +118,13 @@ class ProductListPageBase extends ProductPageBase
         $categoryURL = new CategoryURL();
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
+    }
+
+    protected function createProductFilters() : ?ProductListFilter
+    {
+        $filters = new ProductListFilter(new ProductListFilterInputForm());
+        //$filters->getSubmitButton()->setRenderEnabled(false);
+        return $filters;
     }
 
     protected function headFinalize() : void
@@ -220,6 +227,8 @@ class ProductListPageBase extends ProductPageBase
             $filter->setSQLSelect($this->select);
             $filter->processInput();
         }
+        //
+        $this->processFilters();
 
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
@@ -265,38 +274,42 @@ class ProductListPageBase extends ProductPageBase
 
         if ($this->filters instanceof ProductListFilter) {
 
-            //set initial products select. create attribute filters need to append the data inputs only.
-            $this->filters->getForm()->setSQLSelect($this->select);
-            $this->filters->getForm()->createAttributeFilters();
-            $this->filters->getForm()->createVariantFilters();
-            //update here if all filter values needs to be visible
-            $this->filters->getForm()->updateIterators(true);
+            $filtersForm = $this->filters->getForm();
+            if ($filtersForm instanceof ProductListFilterInputForm) {
+                //set initial products select. create attribute filters need to append the data inputs only.
+                $this->filters->getForm()->setSQLSelect($this->select);
+                $this->filters->getForm()->createAttributeFilters();
+                $this->filters->getForm()->createVariantFilters();
+                //update here if all filter values needs to be visible
+                $this->filters->getForm()->updateIterators(true);
 
-            //assign values from the query string to the data inputs
-            $this->filters->processInput();
+                //assign values from the query string to the data inputs
+                $this->filters->processInput();
 
-            $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
-            //echo $filters_where->getSQL();
-            //products list filtered
-            $filters_where->copyTo($this->select->where());
+                $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
+                //echo $filters_where->getSQL();
+                //products list filtered
+                $filters_where->copyTo($this->select->where());
 
-            //tree view filtered
-            $filters_where->copyTo($products_tree->where());
+                //tree view filtered
+                $filters_where->copyTo($products_tree->where());
 
 
-            //filter values will be limited to the selection only
-            //set again - rendering will use this final select
-            $this->filters->getForm()->setSQLSelect($this->select);
-            $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
-            $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
-            //create again to hide empty filters
-            $this->filters->getForm()->createAttributeFilters();
-            $this->filters->getForm()->createVariantFilters();
-            $this->filters->getForm()->updateIterators(false);
+                //filter values will be limited to the selection only
+                //set again - rendering will use this final select
+                $this->filters->getForm()->setSQLSelect($this->select);
+                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
+                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
+                //create again to hide empty filters
+                $this->filters->getForm()->createAttributeFilters();
+                $this->filters->getForm()->createVariantFilters();
+                $this->filters->getForm()->updateIterators(false);
 
-            //assign values from the query string to the data inputs
-            $this->filters->processInput();
+                //assign values from the query string to the data inputs
+                $this->filters->processInput();
+            }
         }
+
 
         //setup grouping for the list item view
 //        $this->select->group_by = SellableProducts::DefaultGrouping();
@@ -334,6 +347,11 @@ class ProductListPageBase extends ProductPageBase
 
         $this->processTreeViewURL();
 
+
+    }
+
+    protected function processFilters() : void
+    {
 
     }
 
@@ -429,9 +447,44 @@ class ProductListPageBase extends ProductPageBase
     public function renderProductFilters(): void
     {
         if ($this->filters instanceof ProductListFilter) {
+            echo "<div class='filters panel'>";
+
+            echo "<div class='Caption' >";
+            echo "<div class='toggle' onclick='togglePanel(this)'>";
+            echo "<label>";
+            echo tr("Филтри");
+            echo "</label>";
+            echo "</div>";
+
+            echo "<span>";
+            echo tr("Филтри");
+            echo "</span>";
+            echo "</div>";
+
+            echo "<div class='viewport'>";
+
             $this->filters->render();
-            echo "<button class='ColorButton' onClick='clearFilters()'>" . tr("Изчисти филтрите") . "</button>";
+
+
+            echo "</div>";
+
+            echo "</div>";//filters
+
+            $active_filters = $this->filters->getActiveFilters();
+            if (count($active_filters)>0) {
+                echo "<div class='active_filters panel'>";
+
+                $viewCaption = "";
+                foreach ($active_filters as $flabel=>$fvalue) {
+                    $viewCaption.= tr($flabel).": ".$fvalue."; ";
+                }
+                echo "<div class='Caption'>".$viewCaption."</div>";
+
+                echo "</div>";
+            }
         }
+
+
     }
 
     /**
@@ -532,40 +585,7 @@ class ProductListPageBase extends ProductPageBase
             echo "</div>"; //categories panel
 
 
-            if ($this->filters instanceof ProductListFilter) {
-                echo "<div class='filters panel'>";
-
-                echo "<div class='Caption' >";
-                    echo "<div class='toggle' onclick='togglePanel(this)'>";
-                        echo "<label>";
-                        echo tr("Филтри");
-                        echo "</label>";
-                    echo "</div>";
-
-                    echo "<span>";
-                    echo tr("Филтри");
-                    echo "</span>";
-                echo "</div>";
-
-                echo "<div class='viewport'>";
-                $this->renderProductFilters();
-                echo "</div>";
-
-                echo "</div>";//filters
-
-                $active_filters = $this->filters->getActiveFilters();
-                if (count($active_filters)>0) {
-                    echo "<div class='active_filters panel'>";
-
-                    $viewCaption = "";
-                    foreach ($active_filters as $flabel=>$fvalue) {
-                        $viewCaption.= tr($flabel).": ".$fvalue."; ";
-                    }
-                    echo "<div class='Caption'>".$viewCaption."</div>";
-
-                    echo "</div>";
-                }
-            }
+            $this->renderProductFilters();
 
 
 
