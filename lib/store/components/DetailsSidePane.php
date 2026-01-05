@@ -358,7 +358,7 @@ class DetailsSidePane extends Container
 
                 $item->items()->append($labelOld);
 
-                $grp->items()->append(new TextComponent("<BR>"));
+
             }
 
             $labelSell = new LabelSpan();
@@ -374,6 +374,8 @@ class DetailsSidePane extends Container
             $item->items()->append($labelSell);
 
             $grp->items()->append($item);
+
+            $grp->items()->append(new TextComponent("<BR>"));
 
         }
 
