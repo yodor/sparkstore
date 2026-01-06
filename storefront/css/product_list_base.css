@@ -248,8 +248,8 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
     padding:0;
     color:inherit;
     font-weight:normal;
-    padding-left:1em;
-    padding-right:1em;
+    padding-top:1em;
+    padding-bottom:1em;
 }
 
 .section.main .BreadcrumbList {
