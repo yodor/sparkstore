@@ -470,21 +470,27 @@ class ProductListPageBase extends ProductPageBase
 
             echo "</div>";//filters
 
-            $active_filters = $this->filters->getActiveFilters();
-            if (count($active_filters)>0) {
-                echo "<div class='active_filters panel'>";
-
-                $viewCaption = "";
-                foreach ($active_filters as $flabel=>$fvalue) {
-                    $viewCaption.= tr($flabel).": ".$fvalue."; ";
-                }
-                echo "<div class='Caption'>".$viewCaption."</div>";
-
-                echo "</div>";
-            }
+            $this->renderActiveFilterValues();
         }
 
 
+    }
+
+    protected function renderActiveFilterValues() : void
+    {
+        $active_filters = $this->filters->getActiveFilters();
+        if (count($active_filters)>0) {
+            echo "<div class='active_filters panel'>";
+
+            $active_filters = $this->filters->getActiveFilters();
+            $viewCaption = "";
+            foreach ($active_filters as $flabel=>$fvalue) {
+                $viewCaption.= tr($flabel).": ".$fvalue."; ";
+            }
+            echo "<div class='Caption'>".$viewCaption."</div>";
+
+            echo "</div>";
+        }
     }
 
     /**
