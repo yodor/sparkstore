@@ -548,6 +548,9 @@ class ProductListPageBase extends ProductPageBase
 
     public function renderProductsView(): void
     {
+        if ($this->description) {
+            echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
+        }
         $this->view->render();
     }
 
@@ -610,9 +613,7 @@ class ProductListPageBase extends ProductPageBase
         $cmp->setContents($this->getTitle());
         $cmp->render();
 
-        if ($this->description) {
-            echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
-        }
+
         $this->renderProductsView();
 
         $category_description="";
