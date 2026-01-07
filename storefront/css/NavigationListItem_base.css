@@ -109,7 +109,7 @@
 
 .NavigationListItem .banners.fade .viewport .item:first-child {
     /*animation: fadein 1s;*/
-    animation: fadein 1s ease ; /* 'forwards' retains the final state */
+    animation: fadein 1s; /* 'forwards' retains the final state */
 }
 
 @keyframes fadeout {
