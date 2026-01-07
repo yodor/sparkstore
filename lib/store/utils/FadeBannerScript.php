@@ -28,15 +28,18 @@ class FadeBannerScript extends PageScript
         function fadeBanner(section)
         {
         
-            let first = section.childNodes.item(0);
+            let viewport = section.querySelector(".viewport");
+            
+            let first = viewport.childNodes.item(0);
             if (first instanceof HTMLElement) {
-                section.appendChild(section.removeChild(first));
+                viewport.appendChild(viewport.removeChild(first));
                 setTimeout(()=>fadeBanner(section),getTimeout());
             }
 
         }
         onPageLoad(function() {
             document.querySelectorAll("$this->cssSelector").forEach((section)=>{
+                section.classList.add("fade");
                 setTimeout(()=>fadeBanner(section), getTimeout());
             });
         });
