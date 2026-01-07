@@ -15,7 +15,7 @@ class SectionNavigation extends NavigationList
     {
         $select->fields()->setExpression(
             "(SELECT 
-            GROUP_CONCAT(sb.sbID SEPARATOR ',')  
+            GROUP_CONCAT( CONCAT(sb.sbID,'|',sb.link) SEPARATOR ',')  
             FROM section_banners sb 
             WHERE sb.secID = s.secID 
             ORDER BY sb.position ASC 
