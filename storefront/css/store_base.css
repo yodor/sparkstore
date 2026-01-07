@@ -85,20 +85,7 @@ NAV UL {
 .home .ProductsTape {
     font-size:80%;
 }
-.home .section A {
-    text-decoration: none;
-}
 
-.home .section A .Caption {
-    background-color:black;
-    display:block;
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-}
-
-.home .section A:hover .Caption {
-    color: var(--theme-accent);
-}
 
 A.Caption {
     text-decoration:none;
@@ -544,35 +531,15 @@ A.Caption:active {
     /*padding-top:4em;*/
 }
 
-
-.main .content .banners {
-    display: block;
-    margin-bottom: 2em;
-    /*height:378px;*/
-
-    position:relative;
-    max-height:381px;
-    box-sizing:border-box;
-    overflow:hidden;
+.main .content .NavigationListItem {
+    margin-bottom: 1em;
 }
 
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+.main .content .NavigationListItem .banners.fade {
+    max-height:380px;
 }
 
-.main .content .banners IMG {
-    width:100%;
-    position:absolute;
-    left:0;
-    top:0;
 
-}
-.main .content .banners IMG:last-child {
-    position:relative;
-    vertical-align:top;
-    animation: fadein 1s;
-}
 
 
 /* DynamicPages - content/index.php */
