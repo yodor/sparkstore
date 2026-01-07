@@ -86,28 +86,47 @@
 }
 
 /*fading banners*/
-.NavigationListItem .banners.fade {
-    overflow: inherit;
+/*.NavigationListItem .banners.fade {*/
+/*    overflow: inherit;*/
+/*}*/
+
+/*.NavigationListItem .banners.fade .viewport {*/
+/*    display: block;*/
+
+/*}*/
+
+/*.NavigationListItem .banners.fade .viewport .item {*/
+/*    */
+/*    display:block;*/
+
+/*}*/
+/*.NavigationListItem .banners.fade .viewport .item img {*/
+/*    object-fit: initial ;*/
+/*    height: auto;*/
+/*    width: 100%;*/
+/*}*/
+
+
+.NavigationListItem .banners.fade .viewport .item:first-child {
+    /*animation: fadein 1s;*/
+    animation: fadein 1s ease ; /* 'forwards' retains the final state */
 }
 
-.NavigationListItem .banners.fade .viewport {
-    display: block;
-    height: 380px;
+@keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
 }
-
-.NavigationListItem .banners.fade .viewport .item {
-    position: absolute;
-    left:0;
-    top:0;
-    display:block;
-    height:100%;
-}
-
-.NavigationListItem .banners.fade .viewport .item:last-child {
-    animation: fadein 1s;
-}
-
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
