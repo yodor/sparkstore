@@ -32,13 +32,13 @@
     .section.main .content .column.left .panel .Caption .toggle {
         display:inline-block;
     }
-    .section.main .content .column.left .panel .Caption .toggle LABEL {
+    .section.main .content .column.left .panel .Caption .toggle SPAN {
         margin-left:3em;
         padding-top:0.5em;
         display:inline-block;
 
     }
-    .section.main .content .column.left .panel .Caption span {
+    .section.main .content .column.left .panel .Caption .toggle+span {
         display:none;
     }
 

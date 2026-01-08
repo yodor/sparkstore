@@ -15,6 +15,8 @@ include_once("utils/GETProcessor.php");
 include_once("store/components/ProductListFilter.php");
 include_once("store/forms/ProductListFilterInputForm.php");
 
+include_once("store/components/TogglePanel.php");
+
 class ProductListPageBase extends ProductPageBase
 {
 
@@ -51,6 +53,9 @@ class ProductListPageBase extends ProductPageBase
 
     protected bool $treeViewAggregateSelect = true;
     protected bool $treeViewAggregateSelectCount = true;
+
+    protected Container $aside;
+    protected Container $main;
 
     public function __construct()
     {
@@ -118,6 +123,8 @@ class ProductListPageBase extends ProductPageBase
         $categoryURL = new CategoryURL();
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
+
+
     }
 
     protected function createProductFilters() : ?ProductListFilter
@@ -170,6 +177,9 @@ class ProductListPageBase extends ProductPageBase
      */
     public function initialize() : void
     {
+
+        $this->initPrivate();
+
         //main products select - no grouping here as filters are not applied yet
         if (is_null($this->bean)) {
             throw new Exception("List bean is not set");
@@ -232,7 +242,7 @@ class ProductListPageBase extends ProductPageBase
 
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
-            $this->section = $section_filter->getValue();
+            $this->setSection($section_filter->getValue());
         }
 
         $this->category_filter->processInput();
@@ -349,7 +359,11 @@ class ProductListPageBase extends ProductPageBase
 
 
     }
-
+    public function setSection(string $section) : void
+    {
+        $this->section = $section;
+        $this->aside->setAttribute("section", $this->section);
+    }
     protected function processFilters() : void
     {
 
@@ -446,50 +460,27 @@ class ProductListPageBase extends ProductPageBase
 
     public function renderProductFilters(): void
     {
-        if ($this->filters instanceof ProductListFilter) {
-            echo "<div class='filters panel'>";
 
-            echo "<div class='Caption' >";
-            echo "<div class='toggle' onclick='togglePanel(this)'>";
-            echo "<label>";
-            echo tr("Филтри");
-            echo "</label>";
-            echo "</div>";
-
-            echo "<span>";
-            echo tr("Филтри");
-            echo "</span>";
-            echo "</div>";
-
-            echo "<div class='viewport'>";
-
-            $this->filters->render();
-
-
-            echo "</div>";
-
-            echo "</div>";//filters
-
-            $this->renderActiveFilterValues();
-        }
 
 
     }
 
     protected function renderActiveFilterValues() : void
     {
-        $active_filters = $this->filters->getActiveFilters();
-        if (count($active_filters)>0) {
-            echo "<div class='active_filters panel'>";
-
+        if ($this->filters instanceof ProductListFilter) {
             $active_filters = $this->filters->getActiveFilters();
-            $viewCaption = "";
-            foreach ($active_filters as $flabel=>$fvalue) {
-                $viewCaption.= tr($flabel).": ".$fvalue."; ";
-            }
-            echo "<div class='Caption'>".$viewCaption."</div>";
+            if (count($active_filters) > 0) {
+                echo "<div class='active_filters panel'>";
 
-            echo "</div>";
+                $active_filters = $this->filters->getActiveFilters();
+                $viewCaption = "";
+                foreach ($active_filters as $flabel => $fvalue) {
+                    $viewCaption .= tr($flabel) . ": " . $fvalue . "; ";
+                }
+                echo "<div class='Caption'>" . $viewCaption . "</div>";
+
+                echo "</div>";
+            }
         }
     }
 
@@ -546,11 +537,6 @@ class ProductListPageBase extends ProductPageBase
         
     }
 
-    public function renderProductsView(): void
-    {
-        $this->view->render();
-    }
-
 
     /**
      * Return the active selected section title
@@ -561,46 +547,10 @@ class ProductListPageBase extends ProductPageBase
         return $this->section;
     }
 
-    protected function renderImpl(): void
+
+
+    protected function renderListHeader() : void
     {
-        $this->renderCategoryPath();
-
-        echo "<aside class='column left' section='{$this->section}'>";
-
-            echo "<div class='categories panel'>";
-
-                echo "<div class='Caption' >";
-
-                    echo "<div class='toggle' onclick='togglePanel(this)'>";
-                        echo "<label>";
-                        echo tr("Категории");
-                        echo "</label>";
-                    echo "</div>";
-
-                    echo "<span>";
-                    echo tr("Категории");
-                    echo "</span>";
-
-                echo "</div>";
-
-
-                echo "<div class='viewport'>";
-                $this->renderCategoriesTree();
-                echo "</div>";
-
-            echo "</div>"; //categories panel
-
-
-            $this->renderProductFilters();
-
-
-
-        echo "</aside>"; //column left
-
-        echo "<main class='column product_list'>";
-
-        $this->renderChildCategories();
-
         $catID = $this->treeView->getSelectedID();
 
         $cmp = new Component();
@@ -614,7 +564,11 @@ class ProductListPageBase extends ProductPageBase
             echo "<h2 class='Caption category_description seo_description'>{$this->description}</h2>";
         }
 
-        $this->renderProductsView();
+    }
+
+    protected function renderListFooter() : void
+    {
+        $catID = $this->treeView->getSelectedID();
 
         $category_description="";
         if ($catID>0 && $this->product_categories->haveColumn("category_description")) {
@@ -632,13 +586,68 @@ class ProductListPageBase extends ProductPageBase
             echo $category_description;
             echo "</section>";
         }
+    }
 
-        echo "</main>";
+    /**
+     * Inner page layout initialization
+     * @return void
+     */
+    private function initPrivate(): void
+    {
+        $cmp = new ClosureComponent($this->renderCategoryPath(...), false, false);
+        $this->items()->append($cmp);
+
+        $aside = new Container(false);
+        $aside->setTagName("aside");
+        $aside->setAttribute("section", $this->section);
+        $aside->setComponentClass("column");
+        $aside->addClassName("left");
+
+        $panel = new TogglePanel();
+        $panel->addClassName("categories");
+        $panel->setTitle("Категории");
+        $panel->getViewport()->items()->append($this->treeView);
+        $aside->items()->append($panel);
+
+
+
+        if ($this->filters instanceof ProductListFilter) {
+            $panel = new TogglePanel();
+            $panel->addClassName("filters");
+            $panel->setTitle("Филтри");
+            $panel->getViewport()->items()->append($this->filters);
+            $addOn = new ClosureComponent($this->renderActiveFilterValues(...), false, false);
+            $panel->items()->append($addOn);
+            $aside->items()->append($panel);
+        }
+
+        $this->items()->append($aside);
+        $this->aside = $aside;
+
+        $main = new Container(false);
+        $main->setTagName("main");
+        $main->setComponentClass("column");
+        $main->addClassName("products_list");
+
+        $cmp = new ClosureComponent($this->renderListHeader(...), false, false);
+        $main->items()->append($cmp);
+
+        $cmp = new ClosureComponent($this->renderChildCategories(...), false, false);
+        $main->items()->append($cmp);
+
+        //view
+        $main->items()->append($this->view);
+
+        $cmp = new ClosureComponent($this->renderListFooter(...), false, false);
+        $main->items()->append($cmp);
+
+        $this->items()->append($main);
+        $this->main = $main;
+
 
         Session::set("shopping.list", $this->currentURL());
 
     }
-
 
 }
 
