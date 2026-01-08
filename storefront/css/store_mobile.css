@@ -88,3 +88,10 @@
 
 
 }
+
+/*products tape, category navigation*/
+@media screen and (max-width: 640px) {
+    .ProductsTape UL {
+        grid-template-columns: repeat(2, minmax(0, calc(100cqw)));
+    }
+}

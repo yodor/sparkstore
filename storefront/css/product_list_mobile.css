@@ -3,13 +3,19 @@
         flex-direction: column;
         gap:0.5em;
     }
+    .ItemView .viewport {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 @media (max-width: 570px) {
-    .section.main .content .column {
-        display:block;
+    .section.main .content  {
+        grid-template-columns: auto;
+        grid-template-rows: min-content min-content auto;
+    }
+    .section.main .content .BreadcrumbList {
+        grid-column: span 1;
     }
     .section.main .content .column.left {
-        width: 100%;
         padding-right:0;
     }
 
@@ -50,9 +56,5 @@
         padding-bottom:0.5em;
     }
 
-    .ItemView .viewport {
 
-        justify-content: space-around;
-
-    }
 }

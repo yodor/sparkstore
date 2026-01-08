@@ -2,10 +2,12 @@
     padding:1em;
     text-align:left;
     font-size:80%;
+    display: grid;
+    grid-template-columns: 270px auto;
+    grid-template-rows: auto 1fr;
+    gap:1.5em;
 }
 .section.main .content .column {
-    display: table-cell;
-    vertical-align: top;
     box-sizing: border-box;
     text-align:left;
 }
@@ -15,11 +17,7 @@
 /*}*/
 
 .section.main .content .column.left {
-    width:270px;
-    /*padding-left:20px;*/
-    padding-right:20px;
     margin-bottom:1em;
-
 }
 
 .section.main .content .column.left .panel {
@@ -28,7 +26,7 @@
 }
 
 .section.main .content .column.left .panel .viewport {
-    display:inline-block;
+    display:block;
 }
 
 .section.main .content .column.left .panel .viewport .TreeView {
@@ -229,16 +227,18 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
 }
 
 .ItemView .viewport {
-    /*margin-left: -5px;*/
-    /*margin-right: -5px;*/
     text-align:center;
-    display:flex;
-    flex-flow:row wrap;
+    display: grid;
+
     align-items:center;
     justify-content: space-evenly;
+
     margin:0;
     padding:0;
     list-style-type:none;
+    gap:1em;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
 }
 
 .section.main .Caption.category_description {
@@ -253,8 +253,10 @@ FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
 }
 
 .section.main .BreadcrumbList {
+    grid-column: span 2
 
 }
+
 .section.main .Caption.category_name {
     /*text-align:left;*/
     padding-top:0;

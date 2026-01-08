@@ -45,7 +45,6 @@ body {
     color: #aaaaaa;
     text-transform: uppercase;
     font-size: 1.2em;
-    padding-bottom: 1em;
 }
 .BreadcrumbList .Action {
     color: #aaaaaa;
@@ -81,6 +80,9 @@ NAV UL {
     list-style-type:none;
     padding:0;
     margin:0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, calc(100cqw)));
+    gap: 1em;
 }
 .home .ProductsTape {
     font-size:80%;
@@ -107,7 +109,6 @@ A.Caption:active {
 
 
 .section .space {
-    /*display:table-cell;*/
     grid-column-start:1;
     display:inherit;
 }

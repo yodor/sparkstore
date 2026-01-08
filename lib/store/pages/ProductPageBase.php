@@ -125,7 +125,7 @@ class ProductPageBase extends StorePage
             $actions[] = $search_action;
         }
         else {
-            $product_action = new Action(tr($this->products_title), $link->toString() , array());
+            $product_action = new Action("Начало", LOCAL."/home.php" , array());
             $product_action->translation_enabled = false;
             $actions[] = $product_action;
         }
