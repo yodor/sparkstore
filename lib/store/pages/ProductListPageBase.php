@@ -359,11 +359,21 @@ class ProductListPageBase extends ProductPageBase
 
 
     }
+
     public function setSection(string $section) : void
     {
         $this->section = $section;
         $this->aside->setAttribute("section", $this->section);
     }
+    /**
+     * Return the active selected section title
+     * @return string
+     */
+    public function getSection() : string
+    {
+        return $this->section;
+    }
+
     protected function processFilters() : void
     {
 
@@ -538,14 +548,7 @@ class ProductListPageBase extends ProductPageBase
     }
 
 
-    /**
-     * Return the active selected section title
-     * @return string
-     */
-    public function getSection() : string
-    {
-        return $this->section;
-    }
+
 
 
 
