@@ -244,6 +244,15 @@ class ProductListPageBase extends ProductPageBase
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
             $this->setSection($section_filter->getValue());
+            $colums = array();
+            if ($this->sections->haveColumn("section_seodescription")) {
+                $columns[] = "section_seodescription";
+            }
+            $result = $this->sections->getResult("section_title", $section_filter->getValue(), ...$columns);
+            if (isset($result["section_seodescription"]) && $result["section_seodescription"]) {
+                $this->setMetaDescription($result["section_seodescription"]);
+            }
+
         }
 
         $this->category_filter->processInput();
@@ -365,6 +374,7 @@ class ProductListPageBase extends ProductPageBase
     {
         $this->section = $section;
         $this->aside->setAttribute("section", $this->section);
+
     }
     /**
      * Return the active selected section title
