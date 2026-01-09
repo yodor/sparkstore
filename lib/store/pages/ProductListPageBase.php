@@ -124,6 +124,7 @@ class ProductListPageBase extends ProductPageBase
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
 
+        $this->initPrivate();
 
     }
 
@@ -177,8 +178,6 @@ class ProductListPageBase extends ProductPageBase
      */
     public function initialize() : void
     {
-
-        $this->initPrivate();
 
         //main products select - no grouping here as filters are not applied yet
         if (is_null($this->bean)) {
@@ -617,7 +616,7 @@ class ProductListPageBase extends ProductPageBase
         if ($this->filters instanceof ProductListFilter) {
             $panel = new TogglePanel();
             $panel->addClassName("filters");
-            $panel->setTitle("Филтри");
+            $panel->setTitle($this->filters->getTitle());
             $panel->getViewport()->items()->append($this->filters);
             $addOn = new ClosureComponent($this->renderActiveFilterValues(...), false, false);
             $panel->items()->append($addOn);

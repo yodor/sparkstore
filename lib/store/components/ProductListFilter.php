@@ -31,6 +31,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLS
         $this->getSubmitButton()->setContents("Search");
         $this->getSubmitLine()->items()->append(Button::ActionButton("Изчисти", "clearFilters()"));
 
+        $this->setTitle("Filters");
     }
 
     public function processInput()
