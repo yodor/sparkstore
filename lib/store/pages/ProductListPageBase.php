@@ -124,7 +124,7 @@ class ProductListPageBase extends ProductPageBase
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
 
-        $this->initPrivate();
+
 
     }
 
@@ -178,6 +178,8 @@ class ProductListPageBase extends ProductPageBase
      */
     public function initialize() : void
     {
+
+        $this->initPrivate();
 
         //main products select - no grouping here as filters are not applied yet
         if (is_null($this->bean)) {
