@@ -607,6 +607,7 @@ class ProductListPageBase extends ProductPageBase
 
         $panel = new TogglePanel();
         $panel->addClassName("categories");
+        $panel->setName("categories");
         $panel->setTitle("Категории");
         $panel->getViewport()->items()->append($this->treeView);
         $aside->items()->append($panel);
@@ -616,6 +617,7 @@ class ProductListPageBase extends ProductPageBase
         if ($this->filters instanceof ProductListFilter) {
             $panel = new TogglePanel();
             $panel->addClassName("filters");
+            $panel->setName("filters");
             $panel->setTitle($this->filters->getTitle());
             $panel->getViewport()->items()->append($this->filters);
             $addOn = new ClosureComponent($this->renderActiveFilterValues(...), false, false);
