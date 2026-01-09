@@ -31,6 +31,7 @@
     }
     .section.main .content .column.left .panel .Caption .toggle {
         display:inline-block;
+        width: 100%;
     }
     .section.main .content .column.left .panel .Caption .toggle SPAN {
         margin-left:3em;
