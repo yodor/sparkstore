@@ -1,6 +1,7 @@
 <?php
-include_once("store/utils/ProductsSQL.php");
 include_once("beans/DBViewBean.php");
+include_once("store/utils/ProductsSQL.php");
+include_once("store/beans/ProductAttributes.php");
 
 class SellableProducts extends DBViewBean
 {
@@ -23,6 +24,13 @@ class SellableProducts extends DBViewBean
     {
         if (is_null(SellableProducts::$Products)) {
             SellableProducts::$Products = new ProductsSQL();
+        }
+
+        try {
+            @new ProductAttributes();
+        }
+        catch (Exception $e) {
+
         }
 
         $this->createString = "CREATE VIEW IF NOT EXISTS $table_name AS (".SellableProducts::$Products->getSQL().")";
