@@ -112,6 +112,9 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setValueKey($pcb->key());
         $rend->getItemRenderer()->setLabelKey("class_name");
 
+        $rend->setDefaultOption("Без клас", "null");
+
+
         $this->addInput($field);
 
 
@@ -173,11 +176,13 @@ class ProductInputFormBase extends InputForm
 
         $renderer = $this->getInput("value")->getRenderer();
         if ($renderer instanceof ClassAttributeField) {
-            $renderer->setClassID((int)$data["pclsID"]);
-            debug("Setting PCLSID: ". (int)$data["pclsID"]);
-//            if (isset($arr["prodID"])) {
-//                $renderer->setProductID((int)$arr["prodID"]);
-//            }
+            if (isset($data["pclsID"])) {
+                $pclsID = (int)$data["pclsID"];
+                $renderer->setClassID($pclsID);
+                debug("Setting PCLSID: ". (int)$data["pclsID"]);
+            }
+
+
         }
     }
 }

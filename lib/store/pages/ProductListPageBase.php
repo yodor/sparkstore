@@ -292,43 +292,8 @@ class ProductListPageBase extends ProductPageBase
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
         }
 
-        if ($this->filters instanceof ProductListFilter) {
+//        $this->processFilters()
 
-            $filtersForm = $this->filters->getForm();
-            if ($filtersForm instanceof ProductListFilterInputForm) {
-                //set initial products select. create attribute filters need to append the data inputs only.
-                $this->filters->getForm()->setSQLSelect($this->select);
-                $this->filters->getForm()->createAttributeFilters();
-                $this->filters->getForm()->createVariantFilters();
-                //update here if all filter values needs to be visible
-                $this->filters->getForm()->updateIterators(true);
-
-                //assign values from the query string to the data inputs
-                $this->filters->processInput();
-
-                $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
-                //echo $filters_where->getSQL();
-                //products list filtered
-                $filters_where->copyTo($this->select->where());
-
-                //tree view filtered
-                $filters_where->copyTo($products_tree->where());
-
-
-                //filter values will be limited to the selection only
-                //set again - rendering will use this final select
-                $this->filters->getForm()->setSQLSelect($this->select);
-                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
-                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
-                //create again to hide empty filters
-                $this->filters->getForm()->createAttributeFilters();
-                $this->filters->getForm()->createVariantFilters();
-                $this->filters->getForm()->updateIterators(false);
-
-                //assign values from the query string to the data inputs
-                $this->filters->processInput();
-            }
-        }
 
 
         //setup grouping for the list item view
@@ -387,7 +352,43 @@ class ProductListPageBase extends ProductPageBase
 
     protected function processFilters() : void
     {
+        if ($this->filters instanceof ProductListFilter) {
 
+            $filtersForm = $this->filters->getForm();
+            if ($filtersForm instanceof ProductListFilterInputForm) {
+                //set initial products select. create attribute filters need to append the data inputs only.
+                $this->filters->getForm()->setSQLSelect($this->select);
+                $this->filters->getForm()->createAttributeFilters();
+                $this->filters->getForm()->createVariantFilters();
+                //update here if all filter values needs to be visible
+                $this->filters->getForm()->updateIterators(true);
+
+                //assign values from the query string to the data inputs
+                $this->filters->processInput();
+
+                $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
+                //echo $filters_where->getSQL();
+                //products list filtered
+                $filters_where->copyTo($this->select->where());
+
+                //tree view filtered already set because filters are processed before products_tree select clone is created
+                //$filters_where->copyTo($products_tree->where());
+
+
+                //filter values will be limited to the selection only
+                //set again - rendering will use this final select
+                $this->filters->getForm()->setSQLSelect($this->select);
+                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
+                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
+                //create again to hide empty filters
+                $this->filters->getForm()->createAttributeFilters();
+                $this->filters->getForm()->createVariantFilters();
+                $this->filters->getForm()->updateIterators(false);
+
+                //assign values from the query string to the data inputs
+                $this->filters->processInput();
+            }
+        }
     }
 
     public function getParameterNames() : array
@@ -472,11 +473,6 @@ class ProductListPageBase extends ProductPageBase
     public function isProcessed(): bool
     {
         return $this->keyword_search->isProcessed();
-    }
-
-    public function renderCategoriesTree(): void
-    {
-        $this->treeView->render();
     }
 
     public function renderProductFilters(): void
