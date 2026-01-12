@@ -69,7 +69,8 @@ class CartButton extends Action
         $this->items()->append($icon);
 
         $this->_title = new Component(false);
-        $this->_title->setTagName("LABEL");
+        $this->_title->setTagName("SPAN");
+        $icon->setComponentClass("label");
         $this->items()->append($this->_title);
     }
 
@@ -375,9 +376,6 @@ class DetailsSidePane extends Container
             $item->items()->append($labelSell);
 
             $grp->items()->append($item);
-
-            $grp->items()->append(new TextComponent("<BR>"));
-
         }
 
         $item = new Container(false);
