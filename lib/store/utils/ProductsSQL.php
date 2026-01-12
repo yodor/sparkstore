@@ -9,7 +9,7 @@ class ProductsSQL extends SQLSelect
 
         $this->fields()->set(
 
-            "p.prodID", "p.catID", "p.brand_name", "p.model",
+            "p.prodID", "p.catID", "p.brand_name",
              "p.product_name", "p.product_description", "p.seo_description",
             "p.visible", "p.pclsID", "p.promo_price", "p.price",
             "p.insert_date", "p.update_date", "p.stock_amount"
@@ -29,13 +29,16 @@ class ProductsSQL extends SQLSelect
         )", "product_sections");
 
 
-        //this item attributes
+//        //this item attributes
+//        $this->fields()->setExpression("(SELECT
+//        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|')
+//        FROM product_class_attribute_values pcav
+//        JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID
+//        JOIN attributes a ON a.attrID=pca.attrID
+//        WHERE pcav.prodID = p.prodID)", "product_attributes");
         $this->fields()->setExpression("(SELECT 
-        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|')
-        FROM product_class_attribute_values pcav 
-        JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
-        JOIN attributes a ON a.attrID=pca.attrID 
-        WHERE pcav.prodID = p.prodID)", "product_attributes");
+        GROUP_CONCAT(CONCAT(pa.attribute_name,':',CAST(pa.attribute_value AS CHAR)) SEPARATOR '|')
+        FROM product_attributes pa WHERE pa.prodID = p.prodID)", "product_attributes");
 
         //this item variants
         $this->fields()->setExpression("(SELECT 
