@@ -21,6 +21,8 @@
     width: 490px;
 
     gap:1em;
+
+    grid-auto-rows: min-content;
 }
 
 .side_pane .disabled {
