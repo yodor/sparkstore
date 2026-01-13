@@ -49,6 +49,7 @@ class BannerSlider extends Component {
             if (this.autoPlayInterval) clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = setInterval(() => this.nextSlide(), this.autoPlayDelay);
         }
+
     }
 
     stopAutoPlay() {
@@ -122,8 +123,11 @@ class BannerSlider extends Component {
         this.dots = this.element.querySelectorAll('.dot');
 
         // Pause auto-play when hovering over the banner (desktop)
-        this.banners.addEventListener('mouseenter', () => this.stopAutoPlay());
-        this.banners.addEventListener('mouseleave', () => this.startAutoPlay());
+        this.banners.addEventListener('mouseenter', (event) => this.stopAutoPlay());
+        this.banners.addEventListener('mouseleave', (event) => {
+            touchEndHandler(event);
+            this.startAutoPlay()
+        });
 
 
         // Touch support for mobile swipe gestures

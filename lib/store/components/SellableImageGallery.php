@@ -35,6 +35,10 @@ class SellableImageGallery extends Container {
 
         $this->items()->append($image_preview);
 
+        $blend_pane = new TextComponent();
+        $blend_pane->setComponentClass("blend");
+        $this->items()->append($blend_pane);
+
         $label = new TextComponent();
         $label->setComponentClass("discount_label");
         $this->items()->append($label);
@@ -93,9 +97,7 @@ class SellableImageGallery extends Container {
         $max_pos = count(array_keys($gallery_items));
         $image_preview->setAttribute("max_pos",$max_pos);
 
-        $blend_pane = new TextComponent();
-        $blend_pane->setComponentClass("blend");
-        $this->items()->append($blend_pane);
+
 
 
     }
