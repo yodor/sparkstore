@@ -133,7 +133,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
     {
         echo "<a class='button' onClick='javascript:showUniCreditDialog()'>";
         echo "<span class='icon'></span>";
-        echo "<label>"."Купи на кредит"."</label>";
+        echo "<span class='label'>"."Купи на кредит"."</span>";
         echo "</a>";
 
     } //renderButton
