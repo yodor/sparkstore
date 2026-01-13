@@ -472,7 +472,7 @@
     height:24px;
     width:100%;
 }
-.side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.label, LABEL {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.label {
     font-size:70%;
     display:block;
     width:100%;
