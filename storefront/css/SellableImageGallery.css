@@ -6,7 +6,7 @@
     width: 640px;
     overflow:hidden;
     position: relative;
-
+    container-type: inline-size;
 }
 
 .SellableImageGallery .preview {
@@ -14,11 +14,11 @@
     position:relative;
     box-sizing: border-box;
 
-
     display: flex;
     flex-direction: row;
     /*justify-content: center;*/
     container-type: inline-size;
+    transition: 0.5s ease-in-out;
 }
 
 .SellableImageGallery .preview A {
@@ -66,7 +66,7 @@
 /**/
 .SellableImageGallery .nav-arrow {
     position: absolute;
-    top: 50%;
+    top: calc(100cqw/2);
     transform: translateY(-50%);
     width: 50px;
     height: 50px;
