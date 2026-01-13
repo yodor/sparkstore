@@ -461,6 +461,7 @@
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button {
     border-color: red;
     padding:0.2em;
+    height:62px;
 }
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button .icon {
     background-image:url("../images/unicredit-logo.png");
