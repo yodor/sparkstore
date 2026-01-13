@@ -462,8 +462,9 @@
     border-color: red;
     padding:0.2em;
     height:62px;
+    flex-direction: column;
 }
-.side_pane .group.cart_link .module.UniCreditPaymentButton .button .icon {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.icon {
     background-image:url("../images/unicredit-logo.png");
     background-repeat:no-repeat;
     background-size:contain;
@@ -471,7 +472,7 @@
     height:24px;
     width:100%;
 }
-.side_pane .group.cart_link .module.UniCreditPaymentButton .button LABEL {
+.side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.lable, LABEL {
     font-size:70%;
     display:block;
     width:100%;
