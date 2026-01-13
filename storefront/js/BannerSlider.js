@@ -134,6 +134,9 @@ class BannerSlider extends Component {
             startX = e.touches ? e.touches[0].clientX : e.x;
             isDragging = true;
             this.viewport.style.transition = 'none';
+            if (document.imagePopup instanceof ImagePopup){
+                document.imagePopup.enabled = true;
+            }
             this.stopAutoPlay();
         };
 
@@ -145,6 +148,9 @@ class BannerSlider extends Component {
             let calc = "calc(-"+(this.currentIndex * 100) + "% + " + offsetPercentage + "%)";
             this.viewport.style.transform = "translateX(" + calc + ")";
             e.preventDefault();
+            if (document.imagePopup instanceof ImagePopup){
+                document.imagePopup.enabled = false;
+            }
         };
 
         const touchEndHandler = (e) => {
@@ -173,9 +179,9 @@ class BannerSlider extends Component {
         this.viewport.addEventListener('touchmove', touchMoveHandler, { passive: false });
         this.viewport.addEventListener('touchend', touchEndHandler);
 
-        // this.viewport.addEventListener('mousedown', touchStartHandler, { passive: false });
-        // this.viewport.addEventListener('mousemove', touchMoveHandler, { passive: false });
-        // this.viewport.addEventListener('mouseup', touchEndHandler);
+        this.viewport.addEventListener('mousedown', touchStartHandler, { passive: true });
+        this.viewport.addEventListener('mousemove', touchMoveHandler, { passive: false });
+        this.viewport.addEventListener('mouseup', touchEndHandler);
 
         // Initial setup
         this.updateSlider();
