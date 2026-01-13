@@ -131,7 +131,7 @@ class BannerSlider extends Component {
         let startX = 0;
 
         const touchStartHandler = (e) => {
-            startX = e.touches[0].clientX;
+            startX = e.touches ? e.touches[0].clientX : e.x;
             isDragging = true;
             this.viewport.style.transition = 'none';
             this.stopAutoPlay();
@@ -139,7 +139,7 @@ class BannerSlider extends Component {
 
         const touchMoveHandler = (e) => {
             if (!isDragging) return;
-            const currentX = e.touches[0].clientX;
+            const currentX = e.touches ? e.touches[0].clientX : e.x;
             const diff = currentX - startX;
             const offsetPercentage = (diff / this.banners.clientWidth) * 100;
             let calc = "calc(-"+(this.currentIndex * 100) + "% + " + offsetPercentage + "%)";
@@ -152,7 +152,7 @@ class BannerSlider extends Component {
             isDragging = false;
             this.viewport.style.transition = 'transform 0.5s ease-in-out';
 
-            const endX = e.changedTouches[0].clientX;
+            const endX = e.changedTouches ? e.changedTouches[0].clientX : e.x;
             const diff = endX - startX;
             const threshold = this.banners.clientWidth * 0.2; // 20% of slider width
 
@@ -169,9 +169,13 @@ class BannerSlider extends Component {
             this.startAutoPlay();
         };
 
-        this.banners.addEventListener('touchstart', touchStartHandler, { passive: true });
-        this.banners.addEventListener('touchmove', touchMoveHandler, { passive: false });
-        this.banners.addEventListener('touchend', touchEndHandler);
+        this.viewport.addEventListener('touchstart', touchStartHandler, { passive: true });
+        this.viewport.addEventListener('touchmove', touchMoveHandler, { passive: false });
+        this.viewport.addEventListener('touchend', touchEndHandler);
+
+        // this.viewport.addEventListener('mousedown', touchStartHandler, { passive: false });
+        // this.viewport.addEventListener('mousemove', touchMoveHandler, { passive: false });
+        // this.viewport.addEventListener('mouseup', touchEndHandler);
 
         // Initial setup
         this.updateSlider();

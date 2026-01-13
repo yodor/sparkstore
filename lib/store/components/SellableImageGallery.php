@@ -27,9 +27,12 @@ class SellableImageGallery extends Container {
 
         $this->setAttribute("role","region");
         $this->setAttribute("aria-label", "Product image gallery");
+        $this->setAttribute("draggable", "false");
 
         $image_preview = new Container(false);
         $image_preview->setComponentClass("preview");
+        $image_preview->setAttribute("draggable", "false");
+
         $this->items()->append($image_preview);
 
         $label = new TextComponent();
@@ -69,6 +72,8 @@ class SellableImageGallery extends Container {
             if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
             $this->image_popup = new ImagePopup($storageItem);
+            $this->image_popup->addClassName("item");
+            $this->image_popup->setAttribute("draggable", "false");
 
             $this->image_popup->setTitle( $this->sellable->getTitle());
             //use list-relation targeting items in the image_gallery container
@@ -80,6 +85,7 @@ class SellableImageGallery extends Container {
             $image->setAttribute("alt", "Main view of"." ".$this->sellable->getTitle());
             //$image->setAttribute("loading","lazy");
 
+            $image->setAttribute("draggable", "false");
             $image_preview->items()->append($this->image_popup);
 
         }

@@ -19,21 +19,17 @@
     /*justify-content: center;*/
     container-type: inline-size;
     transition: 0.5s ease-in-out;
+
 }
 
-.SellableImageGallery .preview A {
-    vertical-align: top;
-    display: inline-block;
-}
-
-.SellableImageGallery .preview .ImagePopup {
+.SellableImageGallery .preview .item {
 
     display:grid;
     flex-shrink: 0;
 }
 
-.SellableImageGallery .preview IMG {
-    display: inline-block;
+.SellableImageGallery .preview .item IMG {
+    display: block;
 
     box-sizing: border-box;
     object-fit: contain;
