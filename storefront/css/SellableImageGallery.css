@@ -114,6 +114,8 @@
     aspect-ratio: 1/1;
     object-fit: contain;
     display:block;
+    width:100%;
+    height:100%;
 }
 .ImagePopupPane .Footer {
     display:none;
