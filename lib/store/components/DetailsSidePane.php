@@ -70,7 +70,7 @@ class CartButton extends Action
 
         $this->_title = new Component(false);
         $this->_title->setTagName("SPAN");
-        $icon->setComponentClass("label");
+        $this->_title->setComponentClass("label");
         $this->items()->append($this->_title);
     }
 
