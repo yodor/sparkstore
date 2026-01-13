@@ -1,5 +1,8 @@
 
 class BannerSlider extends Component {
+    static STYLE_SIMPLE = 0;
+    static STYLE_IMAGE = 1;
+
     constructor() {
         super();
         this.currentIndex = 0;
@@ -11,6 +14,10 @@ class BannerSlider extends Component {
         this.prevBtn = null;
         this.nextBtn = null;
         this.dots = null;
+        this.containerClass=".banners";
+        this.viewportClass=".viewport";
+        this.autoplayEnabled = true;
+        this.dotStyle=BannerSlider.STYLE_SIMPLE;
 
     }
     updateSlider() {
@@ -38,14 +45,18 @@ class BannerSlider extends Component {
     }
 
     startAutoPlay() {
-        if (this.autoPlayInterval) clearInterval(this.autoPlayInterval);
-        this.autoPlayInterval = setInterval(() => this.nextSlide(), this.autoPlayDelay);
+        if (this.autoplayEnabled) {
+            if (this.autoPlayInterval) clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = setInterval(() => this.nextSlide(), this.autoPlayDelay);
+        }
     }
 
     stopAutoPlay() {
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-            this.autoPlayInterval = null;
+        if (this.autoplayEnabled) {
+            if (this.autoPlayInterval) {
+                clearInterval(this.autoPlayInterval);
+                this.autoPlayInterval = null;
+            }
         }
     }
     // itemClicked(index) {
@@ -58,8 +69,8 @@ class BannerSlider extends Component {
 
         super.initialize();
 
-        this.banners = this.element.querySelector('.banners');
-        this.viewport = this.element.querySelector('.viewport');
+        this.banners = this.element.querySelector(this.containerClass);
+        this.viewport = this.element.querySelector(this.viewportClass);
 
 
         this.totalSlides = this.viewport.children.length;
@@ -82,31 +93,33 @@ class BannerSlider extends Component {
 
             this.nextBtn = this.element.querySelector('.next');
             this.nextBtn.addEventListener('click', () => this.nextSlide());
+
+            //dots
+            // Create navigation dots dynamically
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'dots';
+            for (let i = 0; i < this.totalSlides; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                dot.addEventListener('click', () => this.goToSlide(i));
+                if (this.dotStyle === BannerSlider.STYLE_IMAGE) {
+                    dot.classList.add('image');
+                    const img = document.createElement("img");
+                    const parentImage = this.viewport.children[i].querySelector('img');
+                    img.src = parentImage.src;
+                    dot.appendChild(img);
+
+                }
+                dotsContainer.appendChild(dot);
+
+                //append onClickHandler
+                //this.viewport.children[i].addEventListener('click', () => this.itemClicked(i));
+
+            }
+            this.banners.appendChild(dotsContainer);
         }
-
-
-
-
-        // Create navigation dots dynamically
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'dots';
-        for (let i = 0; i < this.totalSlides; i++) {
-            const dot = document.createElement('span');
-            dot.className = 'dot';
-            dot.addEventListener('click', () => this.goToSlide(i));
-            dotsContainer.appendChild(dot);
-
-            //append onClickHandler
-            //this.viewport.children[i].addEventListener('click', () => this.itemClicked(i));
-
-        }
-        this.banners.appendChild(dotsContainer);
-
 
         this.dots = this.element.querySelectorAll('.dot');
-
-
-
 
         // Pause auto-play when hovering over the banner (desktop)
         this.banners.addEventListener('mouseenter', () => this.stopAutoPlay());
