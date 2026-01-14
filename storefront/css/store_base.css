@@ -982,6 +982,7 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 
 .JSONFormDialog[responder='UniCreditProductFormResponder'] {
     /*border:1px dashed red;*/
+    text-align:left;
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] .notice .item SPAN {
     font-weight:bold;
@@ -989,6 +990,7 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 .JSONFormDialog[responder='UniCreditProductFormResponder'] .unilogo {
     text-align:center;
     display:block;
+    align-self: center;
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] FORM {
     width:100%;
