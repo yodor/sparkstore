@@ -65,7 +65,7 @@ class NavigationListItem extends DataIteratorItem
     public function requiredScript(): array
     {
         $arr = parent::requiredScript();
-        $arr[] = STORE_LOCAL . "/js/BannerSlider.js";
+        $arr[] = STORE_LOCAL . "/js/ImageSlider.js";
         return $arr;
     }
 
@@ -167,9 +167,11 @@ class NavigationListItem extends DataIteratorItem
                ?>
                     <script type="text/javascript">
                     onPageLoad(function () {
-                        let slider = new BannerSlider();
+                        let slider = new ImageSlider();
                         slider.setClass(".NavigationListItem");
                         slider.setName("<?php echo $this->getName();?>");
+                        slider.containerClass = ".banners";
+                        slider.viewportClass = ".viewport";
                         slider.initialize();
                     });
                     </script>

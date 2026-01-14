@@ -105,7 +105,8 @@ class SellableImageGallery extends Container {
     public function requiredScript(): array
     {
         $result =  parent::requiredScript();
-        $result[] = STORE_LOCAL."/js/BannerSlider.js";
+        $result[] = SPARK_LOCAL."/js/SwipeListener.js";
+        $result[] = STORE_LOCAL."/js/ImageSlider.js";
         $result[] = STORE_LOCAL."/js/SellableImageGallerySlider.js";
 
         return $result;
@@ -126,6 +127,19 @@ class SellableImageGallery extends Container {
     public function finishRender(): void
     {
         parent::finishRender();
+        ?>
+        <script type='text/javascript'>
+            onPageLoad(function() {
+                const imageSlider = new ImageSlider();
+                imageSlider.setClass(".ProductDetailsItem");
+                imageSlider.containerClass = ".SellableImageGallery";
+                imageSlider.viewportClass = ".preview";
+                imageSlider.autoplayEnabled = false;
+                imageSlider.dotStyle = ImageSlider.DOT_STYLE_IMAGE;
+                imageSlider.initialize();
+            });
+        </script>
+        <?php
 
     }
 }
