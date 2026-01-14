@@ -49,10 +49,12 @@ class NavigationListItem extends DataIteratorItem
         $this->bannerItem = new Container(false);
         $this->bannerItem->setTagName("A");
         $this->bannerItem->setComponentClass("item");
+        $this->bannerItem->setAttribute("draggable", "false");
 
         $this->si = new StorageItem();
         $this->image = new Image();
         $this->image->setAttribute("loading", "lazy");
+        $this->image->setAttribute("draggable", "false");
         $this->image->setStorageItem($this->si);
 
         $this->tape = new ProductsTape();
@@ -65,6 +67,7 @@ class NavigationListItem extends DataIteratorItem
     public function requiredScript(): array
     {
         $arr = parent::requiredScript();
+        $arr[] = SPARK_LOCAL . "/js/SwipeListener.js";
         $arr[] = STORE_LOCAL . "/js/ImageSlider.js";
         return $arr;
     }
@@ -172,6 +175,7 @@ class NavigationListItem extends DataIteratorItem
                         slider.setName("<?php echo $this->getName();?>");
                         slider.containerClass = ".banners";
                         slider.viewportClass = ".viewport";
+                        slider.autoplayEnabled = false;
                         slider.initialize();
                     });
                     </script>

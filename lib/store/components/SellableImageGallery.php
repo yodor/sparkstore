@@ -107,8 +107,6 @@ class SellableImageGallery extends Container {
         $result =  parent::requiredScript();
         $result[] = SPARK_LOCAL."/js/SwipeListener.js";
         $result[] = STORE_LOCAL."/js/ImageSlider.js";
-        $result[] = STORE_LOCAL."/js/SellableImageGallerySlider.js";
-
         return $result;
     }
 

@@ -17,9 +17,12 @@ class ImageSlider extends Component {
         this.viewportClass=".viewport";
         this.autoplayEnabled = true;
         this.dotStyle=ImageSlider.DOT_STYLE_SIMPLE;
-
+        this.imagePopup = null;
         this.swipeListener = null;
+        this.sliding = false;
+
     }
+
     updateSlider() {
         let translate = "-" + (this.currentIndex * 100) + "%";
         this.viewport.style.transform = "translateX(" + translate + ")";
@@ -63,25 +66,31 @@ class ImageSlider extends Component {
 
     /**
      *
+     * @param mode {boolean}
+     */
+    setSliding(mode) {
+        if (this.imagePopup) {
+            this.imagePopup.enabled = !mode;
+        }
+        this.sliding = mode;
+    }
+    /**
+     *
      * @param event {SparkEvent}
      */
     onEvent(event) {
 
         if (event.isEvent(SwipeListener.SWIPE_START)) {
             this.viewport.style.transition = 'none';
-            if (document.imagePopup instanceof ImagePopup){
-                document.imagePopup.enabled = true;
-            }
             this.stopAutoPlay();
+            this.setSliding(false);
         }
         else if (event.isEvent(SwipeListener.SWIPE_MOVE)) {
             const offsetPercentage = (event.source.diff / this.container.clientWidth) * 100;
             const calc = "calc(-"+(this.currentIndex * 100) + "% + " + offsetPercentage + "%)";
             this.viewport.style.transform = "translateX(" + calc + ")";
+            this.setSliding(true);
 
-            if (document.imagePopup instanceof ImagePopup){
-                document.imagePopup.enabled = false;
-            }
         }
         else if (event.isEvent(SwipeListener.SWIPE_LEFT)) {
             this.nextSlide();
@@ -103,12 +112,15 @@ class ImageSlider extends Component {
             this.startAutoPlay();
         }
     }
-    // itemClicked(index) {
-    //     const bannerItem = this.viewport.children[index];
-    //     if (bannerItem.hasAttribute('link')) {
-    //         document.location.href = bannerItem.getAttribute('link');
-    //     }
-    // }
+
+    itemClicked(event, index) {
+        if (this.sliding) {
+            event.stopPropagation();  // Or simply return early
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return false;
+        }
+    }
     initialize() {
 
         super.initialize();
@@ -120,8 +132,9 @@ class ImageSlider extends Component {
         this.swipeListener.threshold = this.container.clientWidth * 0.2;
 
         this.swipeListener.addObserver((event)=>this.onEvent(event));
-        if (document.imagePopup instanceof ImagePopup){
-            document.imagePopup.addObserver((event)=>this.onEvent(event));
+        if (document.imagePopup && (document.imagePopup instanceof ImagePopup)){
+            this.imagePopup = document.imagePopup;
+            this.imagePopup.addObserver((event)=>this.onEvent(event));
         }
 
         // Pause auto-play when hovering over the banner (desktop)
@@ -172,16 +185,13 @@ class ImageSlider extends Component {
                 dotsContainer.appendChild(dot);
 
                 //append onClickHandler
-                //this.viewport.children[i].addEventListener('click', () => this.itemClicked(i));
+                this.viewport.children[i].addEventListener('click', (event) => this.itemClicked(event,i));
 
             }
             this.container.appendChild(dotsContainer);
         }
 
         this.dots = this.element.querySelectorAll('.dot');
-
-
-
 
         // Initial setup
         this.updateSlider();
