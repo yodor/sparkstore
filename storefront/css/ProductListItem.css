@@ -1,8 +1,15 @@
 .ProductListItem {
     border:1px solid #eeeeee;
     container-type: inline-size;
+    box-sizing: border-box;
+    overflow: hidden;
 }
-
+.ProductListItem:hover {
+    /*z-index:1;*/
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
+}
 .ProductListItem A:any-link {
     text-decoration: none;
     color:black;
@@ -102,20 +109,5 @@
     text-decoration: line-through;
 }
 
-/**/
 
 
-.ProductListItem:hover {
-    overflow:visible;
-}
-.ProductListItem:hover .wrap IMG {
-    /*-webkit-transform: scale(1.1);*/
-    /*transform: scale(1.1);*/
-}
-
-.ProductListItem:hover .wrap {
-    z-index:1;
-    -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
-    -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
-    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.55);
-}
