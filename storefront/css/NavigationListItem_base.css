@@ -91,7 +91,7 @@
 .NavigationListItem .banners.fade .viewport {
     display: block;
     position:relative;
-    aspect-ratio: 3.15;
+    aspect-ratio: 3.14;
     overflow:hidden;
 }
 
