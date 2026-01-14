@@ -93,6 +93,7 @@
     position:relative;
     aspect-ratio: 3.14;
     overflow:hidden;
+    width:100%;
 }
 
 .NavigationListItem .banners.fade .viewport .item {
