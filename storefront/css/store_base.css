@@ -335,6 +335,9 @@ A.Caption:active {
     flex-grow:1;
     min-width:0;
 }
+.section.menu .menu_groups:empty {
+    display:none;
+}
 
 .section.menu .group {
     display:flex;
