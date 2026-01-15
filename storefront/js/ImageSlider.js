@@ -81,11 +81,13 @@ class ImageSlider extends Component {
     onEvent(event) {
 
         if (event.isEvent(SwipeListener.SWIPE_START)) {
-            this.viewport.style.transition = 'none';
+            //this.viewport.style.transition = 'none';
+            this.viewport.classList.add("sliding");
             this.stopAutoPlay();
             this.setSliding(false);
         }
         else if (event.isEvent(SwipeListener.SWIPE_MOVE)) {
+
             const offsetPercentage = (event.source.diff / this.container.clientWidth) * 100;
             const calc = "calc(-"+(this.currentIndex * 100) + "% + " + offsetPercentage + "%)";
             this.viewport.style.transform = "translateX(" + calc + ")";
@@ -99,7 +101,8 @@ class ImageSlider extends Component {
             this.prevSlide();
         }
         else if (event.isEvent(SwipeListener.SWIPE_END)) {
-            this.viewport.style.transition = 'transform 0.5s ease-in-out';
+            //this.viewport.style.transition = 'transform 0.5s ease-in-out';
+            this.viewport.classList.remove("sliding");
             this.updateSlider();
             this.startAutoPlay();
         }
