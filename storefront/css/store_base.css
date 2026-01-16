@@ -188,10 +188,10 @@ A.Caption:active {
 .section.footer {
     position: sticky;
     z-index:10;
-    height:36px;
-    max-height:36px;
 
     bottom:0;
+
+
 
 }
 
@@ -202,16 +202,19 @@ A.Caption:active {
     text-align:center;
     box-shadow:0px -2px 4px  rgba(0,0,0,0.5);
     position:relative;
+    padding:0.2em;
 }
 
 .section.footer .content .social {
-    display:inline-block;
 
     box-sizing:border-box;
     text-align:center;
 
-    height:36px;
-    max-height:36px;
+    display:flex;
+    flex-direction: row;
+    flex-wrap:nowrap;
+    gap:1em;
+    justify-content: center;
 }
 
 .section.footer .content .social A {
@@ -226,46 +229,41 @@ A.Caption:active {
 
 .section.footer .content .social .slot {
 
-    display:inline-block;
+
     background-position:center center;
     background-repeat:no-repeat;
-    vertical-align:top;
-    background-size:cover;
 
-    margin: 6px 10px;
+    background-size:cover;
+    width:44px;
+    height:44px;
+
 }
 
 .section.footer .content .social .slot.facebook {
     background-image:url("../images/facebook_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 
 .section.footer .content .social .slot.instagram {
     background-image:url("../images/instagram_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 
 .section.footer .content .social .slot.contacts {
     background-image:url("../images/mail_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 .section.footer .content .social .slot.youtube {
     background-image:url("../images/youtube_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 .section.footer .content .social .slot.phone {
     background-image:url("../images/phone_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 .section.footer .content .social .slot.terms {
     background-image:url("../images/document_icon.svg");
-    width:24px;
-    height:24px;
+
 }
 
 .section.cookies {
