@@ -27,6 +27,7 @@
 
 .section.main .content .column.left .panel .viewport {
     display:block;
+    margin-bottom:1em;
 }
 
 .section.main .content .column.left .panel .viewport .TreeView {
