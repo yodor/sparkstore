@@ -133,92 +133,9 @@
 
 
 
-
-FORM[name='ProductListFilterInputForm'] {
-    /*display: block !important;*/
-    /*text-align: center !important;*/
+.panel.filters FORM {
     width:100%;
 }
-
-FORM[name='ProductListFilterInputForm'] .InputComponent {
-    align-self:stretch;
-}
-
-FORM[name='ProductListFilterInputForm'] .InputGroupRenderer {
-    border:0;
-    padding:0;
-    margin:0;
-    margin-bottom:0.5em;
-    align-self:stretch;
-
-}
-FORM[name='ProductListFilterInputForm'] .InputGroupRenderer LEGEND {
-    /*display:none;*/
-    border:0;
-    padding:0;
-    margin:0;
-    text-align:left;
-    font-weight:bold;
-}
-
-.filters  {
-    display: block;
-}
-
-
-.filters .InputComponent {
-    margin-top: 10px;
-    text-align: left;
-}
-
-.filters .InputField {
-    display: block;
-}
-
-.filters .InputField .FieldElements {
-    display: block;
-}
-
-.filters .InputField.SelectField SELECT {
-    width: 100%;
-    text-align: center;
-    font-size: 1.1em;
-}
-
-.filters .label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 1.2em;
-
-    color: black;
-    /*   font-family: 'Roboto Condensed', sans-serif; */
-
-}
-
-.filters .InputComponent.Slider .label {
-    display: inline-block;
-}
-
-.filters .InputComponent.Slider .value {
-    display: inline-block;
-    margin-left: 5px;
-}
-
-.filters .InputComponent.Slider .InputField {
-    display: block;
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
-.filters.panel  {
-    text-align:center;
-}
-.filters.panel BUTTON {
-    margin-top: 20px;
-
-}
-
-
 
 
 .ItemView {
