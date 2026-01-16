@@ -346,7 +346,9 @@ A.Caption:active {
 }
 
 .section.menu .group.search_pane {
-    min-width:0;
+    flex-grow:1;
+    container-type: inline-size;
+    min-width:180px;
 }
 
 .section.menu .group.search_pane .KeywordSearch {
@@ -361,8 +363,7 @@ A.Caption:active {
     display:inline-flex;
     align-items: center;
     justify-content: left;
-    flex-grow:1;
-    min-width:0;
+
 }
 
 .section.menu .group.search_pane .KeywordSearch .InputLabel {
@@ -374,6 +375,7 @@ A.Caption:active {
 
 .section.menu .group.search_pane .KeywordSearch .InputField INPUT {
     border:none;
+    width:calc(100cqw);
 
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine {
