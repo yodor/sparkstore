@@ -92,8 +92,8 @@ class ProductDetailsPageBase extends ProductPageBase
         if ($main_photo instanceof StorageItem) {
             $main_photo->setName($this->sellable->getTitle());
 
-            $width = $this->item->getGallery()->getImagePopup()->image()->getPhotoWidth();
-            $height = $this->item->getGallery()->getImagePopup()->image()->getPhotoHeight();
+            $width = $this->item->getGallery()->getPhotoWidth();
+            $height = $this->item->getGallery()->getPhotoHeight();
             $imageURL = $main_photo->hrefImage($width, $height)->fullURL();
             $this->head()->addOGTag("image", $imageURL);
 

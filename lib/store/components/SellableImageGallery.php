@@ -9,12 +9,13 @@ include_once("storage/StorageItem.php");
 include_once("store/utils/SellableItem.php");
 
 
-class SellableImageGallery extends Container {
+class SellableImageGallery extends Container implements IPhotoRenderer {
 
     protected SellableItem $sellable;
+    protected Container $image_preview;
 
-    protected ImagePopup $image_popup;
-
+    protected int $width = 0;
+    protected int $height = 0;
 
     public function __construct(SellableItem $item, bool $chained_component_class = true)
     {
@@ -29,11 +30,11 @@ class SellableImageGallery extends Container {
         $this->setAttribute("aria-label", "Product image gallery");
         $this->setAttribute("draggable", "false");
 
-        $image_preview = new Container(false);
-        $image_preview->setComponentClass("preview");
-        $image_preview->setAttribute("draggable", "false");
+        $this->image_preview = new Container(false);
+        $this->image_preview->setComponentClass("preview");
+        $this->image_preview->setAttribute("draggable", "false");
 
-        $this->items()->append($image_preview);
+        $this->items()->append($this->image_preview);
 
         $blend_pane = new TextComponent();
         $blend_pane->setComponentClass("blend");
@@ -67,35 +68,37 @@ class SellableImageGallery extends Container {
             $this->addClassName("nostock");
         }
 
-
         $gallery_items = $this->sellable->galleryItems();
 
-//        $storageItem = $gallery_items[0];
-
         foreach($gallery_items as $pos=>$storageItem) {
+
             if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
-            $this->image_popup = new ImagePopup($storageItem);
-            $this->image_popup->addClassName("item");
-            $this->image_popup->setAttribute("draggable", "false");
+            $image_popup = new ImagePopup($storageItem);
+            $image_popup->addClassName("item");
+            $image_popup->setAttribute("draggable", "false");
 
-            $this->image_popup->setTitle( $this->sellable->getTitle());
+            $image_popup->setTitle($this->sellable->getTitle());
             //use list-relation targeting items in the image_gallery container
 //            $this->image_popup->setListRelation("ProductGallery");
 
-            $image = $this->image_popup->image();
+            $image = $image_popup->image();
+            $image->setPhotoSize($this->width, $this->height);
             $image->setUseSizeAttributes(true);
             $image->setAttribute("fetchpriority","high");
             $image->setAttribute("alt", "Main view of"." ".$this->sellable->getTitle());
-            //$image->setAttribute("loading","lazy");
+
+            if ($pos>0) {
+                $image->setAttribute("loading", "lazy");
+            }
 
             $image->setAttribute("draggable", "false");
-            $image_preview->items()->append($this->image_popup);
+            $this->image_preview->items()->append($image_popup);
 
         }
 
         $max_pos = count(array_keys($gallery_items));
-        $image_preview->setAttribute("max_pos",$max_pos);
+        $this->image_preview->setAttribute("max_pos",$max_pos);
 
 
 
@@ -117,11 +120,6 @@ class SellableImageGallery extends Container {
         return $result;
     }
 
-    public function getImagePopup() : ImagePopup
-    {
-        return $this->image_popup;
-    }
-
     public function finishRender(): void
     {
         parent::finishRender();
@@ -139,6 +137,28 @@ class SellableImageGallery extends Container {
         </script>
         <?php
 
+    }
+
+    public function setPhotoSize(int $width, int $height): void
+    {
+        $this->width = $width;
+        $this->height = $height;
+        $iterator = $this->image_preview->items()->iterator();
+        while ($popup = $iterator->next()) {
+            if ($popup instanceof ImagePopup) {
+                $popup->image()->setPhotoSize($width, $height);
+            }
+        }
+    }
+
+    public function getPhotoWidth(): int
+    {
+        return $this->width;
+    }
+
+    public function getPhotoHeight(): int
+    {
+        return $this->height;
     }
 }
 ?>

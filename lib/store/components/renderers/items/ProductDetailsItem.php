@@ -88,7 +88,7 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->setAttribute("productID", $this->sellable->getProductID());
 
         $this->gallery = new SellableImageGallery($this->sellable);
-        $this->gallery->getImagePopup()->image()->setPhotoSize(640,640);
+        $this->gallery->setPhotoSize(640,640);
         $this->items()->append($this->gallery);
 
         $this->side_pane = new DetailsSidePane($this->sellable);
