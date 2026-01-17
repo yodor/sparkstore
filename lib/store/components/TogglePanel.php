@@ -12,18 +12,23 @@ class TogglePanel extends Container {
         parent::__construct(false);
         $this->setComponentClass("panel");
 
-        $this->toggleTitle = new Component(false);
-        $this->toggleTitle->setTagName("span");
-        $this->toggleTitle->setComponentClass("");
-        $this->toggleTitle->setContents("");
-
         $caption = new Container(false);
         $caption->setComponentClass("Caption");
         $this->items()->append($caption);
 
-        $toggle = new Container("false");
+        $this->toggleTitle = new Component(false);
+        $this->toggleTitle->setTagName("span");
+        $this->toggleTitle->setComponentClass("label");
+        $this->toggleTitle->setContents("");
+
+        $icon = new Component(false);
+        $icon->setTagName("span");
+        $icon->setComponentClass("icon");
+
+        $toggle = new Container(false);
         $toggle->setComponentClass("toggle");
         $toggle->setAttribute("onClick", "togglePanel(this)");
+        $toggle->items()->append($icon);
         $toggle->items()->append($this->toggleTitle);
         $caption->items()->append($toggle);
 

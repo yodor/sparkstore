@@ -28,17 +28,15 @@
     }
     .section.main .content .column.left .panel .Caption {
         color:inherit;
+        padding-top:0.5em;
+        padding-bottom:0.5em;
     }
     .section.main .content .column.left .panel .Caption .toggle {
-        display:inline-block;
+        display:flex;
         width: 100%;
+        height: auto;
     }
-    .section.main .content .column.left .panel .Caption .toggle SPAN {
-        margin-left:3em;
-        padding-top:0.5em;
-        display:inline-block;
 
-    }
     .section.main .content .column.left .panel .Caption .toggle+span {
         display:none;
     }
@@ -52,10 +50,7 @@
     .section.main .content .column.left .panel:last-of-type {
         border-bottom:1px solid var(--theme-accent);
     }
-    .section.main .content .column.left .panel .Caption {
-        padding-top:0.5em;
-        padding-bottom:0.5em;
-    }
+
 
 
 }
