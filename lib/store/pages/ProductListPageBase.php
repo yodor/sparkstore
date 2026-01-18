@@ -56,6 +56,7 @@ class ProductListPageBase extends ProductPageBase
 
     protected Container $aside;
     protected Container $main;
+    protected ActiveFilterComponent $filtersList;
 
     public function __construct()
     {
@@ -116,6 +117,10 @@ class ProductListPageBase extends ProductPageBase
         //disable list/grid
         $this->view->getHeader()->getViewMode()->setRenderEnabled(false);
 
+        $this->filtersList = new ActiveFilterComponent();
+        $this->filtersList->setRenderEnabled(false);
+        $this->view->items()->insert($this->filtersList,0);
+
         $this->head()->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
@@ -124,15 +129,14 @@ class ProductListPageBase extends ProductPageBase
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
 
-
-
     }
 
     protected function createProductFilters() : ?ProductListFilter
     {
-        $filters = new ProductListFilter(new ProductListFilterInputForm());
-        //$filters->getSubmitButton()->setRenderEnabled(false);
-        return $filters;
+//        $filters = new ProductListFilter(new ProductListFilterInputForm());
+//        //$filters->getSubmitButton()->setRenderEnabled(false);
+//        return $filters;
+        return null;
     }
 
     protected function headFinalize() : void
@@ -141,14 +145,20 @@ class ProductListPageBase extends ProductPageBase
         if ($this->keyword_search->isProcessed()) {
             $viewCaption = tr("Search results")." - ".$this->keyword_search->getForm()->getInput("keyword")->getValue();
         }
-
-        if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
+        else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
             $viewCaption = tr("Search results");
+        }
+        else if ($this->section) {
+            $viewCaption = $this->section;
+        }
+
+
+        if ($viewCaption) {
             if (count($this->category_path)>0) {
                 $viewCaption.=" - ".array_reverse($this->category_path)[0]["category_name"];
             }
+            $this->setTitle($viewCaption);
         }
-        if ($viewCaption) $this->setTitle($viewCaption);
 
         parent::headFinalize();
 
@@ -238,8 +248,9 @@ class ProductListPageBase extends ProductPageBase
 
         //filter precedence
         // 0 property filters
+        // 1 attributes
+        // 2 category
         // 3 keyword search
-        // 5 attribute filters
 
         $columnsCopy = clone $this->select->fields();
 
@@ -257,7 +268,7 @@ class ProductListPageBase extends ProductPageBase
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
             $this->setSection($section_filter->getValue());
-            $colums = array();
+            $columns = array();
             if ($this->sections->haveColumn("section_seodescription")) {
                 $columns[] = "section_seodescription";
             }
@@ -265,7 +276,9 @@ class ProductListPageBase extends ProductPageBase
             if (isset($result["section_seodescription"]) && $result["section_seodescription"]) {
                 $this->setMetaDescription($result["section_seodescription"]);
             }
-
+            //filter
+            $filter = new ActiveFilterItem(array($section_filter->getName()), tr("Section"), $section_filter->getValue());
+            $this->filtersList->filter()->items()->append($filter);
         }
 
         $this->category_filter->processInput();
@@ -280,6 +293,9 @@ class ProductListPageBase extends ProductPageBase
         if ($this->keyword_search->isProcessed()) {
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("AND");
             $cc->copyTo($this->select->where());
+            //filter
+            $filter = new ActiveFilterItem(array("filter", "keyword"), tr("Search for"), $this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $this->filtersList->filter()->items()->append($filter);
         }
 
 
@@ -345,15 +361,19 @@ class ProductListPageBase extends ProductPageBase
 
         $this->processTreeViewURL();
 
-
+        if ($this->filters instanceof ProductListFilter) {
+            if ($this->filtersList->filter()->items()->count() > 0) {
+                $this->filtersList->setRenderEnabled(true);
+            }
+        }
     }
 
     public function setSection(string $section) : void
     {
         $this->section = $section;
         $this->aside->setAttribute("section", $this->section);
-
     }
+
     /**
      * Return the active selected section title
      * @return string
@@ -367,39 +387,12 @@ class ProductListPageBase extends ProductPageBase
     {
         if ($this->filters instanceof ProductListFilter) {
 
-            $filtersForm = $this->filters->getForm();
-            if ($filtersForm instanceof ProductListFilterInputForm) {
-                //set initial products select. create attribute filters need to append the data inputs only.
-                $this->filters->getForm()->setSQLSelect($this->select);
-                $this->filters->getForm()->createAttributeFilters();
-                $this->filters->getForm()->createVariantFilters();
-                //update here if all filter values needs to be visible
-                $this->filters->getForm()->updateIterators(true);
+            $this->filters->setSQLSelect($this->select);
+            $this->filters->processInput();
 
-                //assign values from the query string to the data inputs
-                $this->filters->processInput();
-
-                $filters_where = $this->filters->getForm()->prepareClauseCollection(" AND ");
-                //echo $filters_where->getSQL();
-                //products list filtered
-                $filters_where->copyTo($this->select->where());
-
-                //tree view filtered already set because filters are processed before products_tree select clone is created
-                //$filters_where->copyTo($products_tree->where());
-
-
-                //filter values will be limited to the selection only
-                //set again - rendering will use this final select
-                $this->filters->getForm()->setSQLSelect($this->select);
-                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_VARIANTS)->removeAll();
-                $this->filters->getForm()->getGroup(ProductListFilterInputForm::GROUP_ATTRIBUTES)->removeAll();
-                //create again to hide empty filters
-                $this->filters->getForm()->createAttributeFilters();
-                $this->filters->getForm()->createVariantFilters();
-                $this->filters->getForm()->updateIterators(false);
-
-                //assign values from the query string to the data inputs
-                $this->filters->processInput();
+            $filters = $this->filters->getActiveFilters();
+            foreach ($filters as $pos => $filter) {
+                $this->filtersList->filter()->items()->append($filter);
             }
         }
     }
@@ -421,9 +414,10 @@ class ProductListPageBase extends ProductPageBase
             $supported_params[] = $filter->getName();
         }
 
-        //append dynamic filter names
-        if ($this->filters) {
-            foreach ($this->filters->getForm()->inputNames() as $idx => $name) {
+        //append attribute filter names
+        if ($this->filters instanceof ProductListFilter) {
+            $filterNames = $this->filters->getFilters()->keys();
+            foreach ($filterNames as $idx=>$name) {
                 $supported_params[] = $name;
             }
         }
@@ -488,32 +482,6 @@ class ProductListPageBase extends ProductPageBase
         return $this->keyword_search->isProcessed();
     }
 
-    public function renderProductFilters(): void
-    {
-
-
-
-    }
-
-    protected function renderActiveFilterValues() : void
-    {
-        if ($this->filters instanceof ProductListFilter) {
-            $active_filters = $this->filters->getActiveFilters();
-            if (count($active_filters) > 0) {
-                echo "<div class='active_filters panel'>";
-
-                $active_filters = $this->filters->getActiveFilters();
-                $viewCaption = "";
-                foreach ($active_filters as $flabel => $fvalue) {
-                    $viewCaption .= tr($flabel) . ": " . $fvalue . "; ";
-                }
-                echo "<div class='Caption'>" . $viewCaption . "</div>";
-
-                echo "</div>";
-            }
-        }
-    }
-
     /**
      * Renders list of sub-categories with image or all categories if no category is selected
      * @return void
@@ -566,11 +534,6 @@ class ProductListPageBase extends ProductPageBase
 
         
     }
-
-
-
-
-
 
     protected function renderListHeader() : void
     {
@@ -629,20 +592,16 @@ class ProductListPageBase extends ProductPageBase
         $panel = new TogglePanel();
         $panel->addClassName("categories");
         $panel->setName("categories");
-        $panel->setTitle("Категории");
+        $panel->setTitle(tr("Categories"));
         $panel->getViewport()->items()->append($this->treeView);
         $aside->items()->append($panel);
-
-
 
         if ($this->filters instanceof ProductListFilter) {
             $panel = new TogglePanel();
             $panel->addClassName("filters");
             $panel->setName("filters");
-            $panel->setTitle($this->filters->getTitle());
+            $panel->setTitle(tr("Filters"));
             $panel->getViewport()->items()->append($this->filters);
-            $addOn = new ClosureComponent($this->renderActiveFilterValues(...), false, false);
-            $panel->items()->append($addOn);
             $aside->items()->append($panel);
         }
 
