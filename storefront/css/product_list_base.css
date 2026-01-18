@@ -177,3 +177,48 @@
 .section.main .category_description A:any-link {
     color:var(--theme-accent);
 }
+
+.ActiveFilters {
+    display: flex;
+    font-size: 1.2em;
+    gap: 0.5em;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    color: #aaaaaa;
+    font-weight:bold;
+}
+.ActiveFilters .title {
+
+}
+.ActiveFilters .item {
+    display: flex;
+    gap:0.5em;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+    color:black;
+    font-weight:normal;
+}
+
+.ActiveFilters .item .label {
+
+}
+.ActiveFilters .item .label:after {
+    content:":";
+}
+.ActiveFilters .item .clear {
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    /*width:1em;*/
+    /*height:1em;*/
+    padding: 0.5em;
+    border-radius: 1em;
+    border: 1px solid #cccccc;
+    display:inline-block;
+}
+.ActiveFilters button {
+    /*margin-left:1em;*/
+}

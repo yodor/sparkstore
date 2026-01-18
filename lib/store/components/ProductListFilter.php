@@ -9,6 +9,12 @@ include_once("objects/SparkMap.php");
 include_once("objects/sql/ClosureFilter.php");
 include_once("sql/SQLSelect.php");
 
+class ActiveFilter {
+    public string $label = "";
+    public string $value = "";
+    public array $clearParams = array();
+}
+
 class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLSelectProcessor
 {
 
@@ -118,7 +124,11 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLS
                             }
                         }
                     }
-                    $result[$label] = $value;
+                    $activeFilter = new ActiveFilter();
+                    $activeFilter->label = $label;
+                    $activeFilter->value = $value;
+                    $activeFilter->clearParams = array($name);
+                    $result[] = $activeFilter;
 
                 }
             }

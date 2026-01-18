@@ -294,7 +294,7 @@ class ProductListPageBase extends ProductPageBase
 
 //        $this->processFilters()
 
-
+//echo $this->select->getSQL();
 
         //setup grouping for the list item view
 //        $this->select->group_by = SellableProducts::DefaultGrouping();
