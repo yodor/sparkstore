@@ -40,6 +40,18 @@ class ProductPageBase extends StorePage
 
     protected ?BreadcrumbList $breadcrumb = null;
 
+    /**
+     * Filters form component
+     * @var ProductListFilter|null
+     */
+    protected ?ProductListFilter $filters = NULL;
+
+    /**
+     * Other get variable filters
+     * @var SparkMap
+     */
+    protected ?SparkMap $property_filter = NULL;
+
     public function __construct()
     {
         parent::__construct();
@@ -135,15 +147,17 @@ class ProductPageBase extends StorePage
             $actions[] = $product_action;
         }
 
-        $iterator = $this->property_filter->iterator();
-        while ($filter = $iterator->next()) {
-            if ($filter instanceof GETProcessor && $filter->isProcessed()) {
-                $result = $filter->getTitle();
+        if ($this->property_filter instanceof SparkMap) {
+            $iterator = $this->property_filter->iterator();
+            while ($filter = $iterator->next()) {
+                if ($filter instanceof GETProcessor && $filter->isProcessed()) {
+                    $result = $filter->getTitle();
 
-                $link->add(new DataParameter($filter->getName(), urlencode($filter->getValue())));
-                $property_action = new Action($result, $link->toString(), array());
-                $property_action->translation_enabled = false;
-                $actions[] = $property_action;
+                    $link->add(new DataParameter($filter->getName(), urlencode($filter->getValue())));
+                    $property_action = new Action($result, $link->toString(), array());
+                    $property_action->translation_enabled = false;
+                    $actions[] = $property_action;
+                }
             }
         }
 

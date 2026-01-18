@@ -31,11 +31,7 @@ class ProductListPageBase extends ProductPageBase
      */
     protected ?SQLSelect $select = NULL;
 
-    /**
-     * Filters form component
-     * @var ProductListFilter|null
-     */
-    protected ?ProductListFilter $filters = NULL;
+
 
     /**
      * Products list component
@@ -43,11 +39,7 @@ class ProductListPageBase extends ProductPageBase
      */
     protected ?ItemView $view = NULL;
 
-    /**
-     * Other get variable filters
-     * @var SparkMap
-     */
-    protected SparkMap $property_filter;
+
 
     protected GETProcessor $category_filter;
 
