@@ -254,6 +254,9 @@ class ProductListPageBase extends ProductPageBase
 
         $columnsCopy = clone $this->select->fields();
 
+
+
+
         $iterator = $this->property_filter->iterator();
         while ($filter = $iterator->next()) {
             if (!($filter instanceof GETProcessor)) continue;
@@ -267,7 +270,11 @@ class ProductListPageBase extends ProductPageBase
 
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
+            $section_filter->setTitle($section_filter->getValue());
+
             $this->setSection($section_filter->getValue());
+
+            //fetch section data
             $columns = array();
             if ($this->sections->haveColumn("section_seodescription")) {
                 $columns[] = "section_seodescription";
@@ -279,6 +286,7 @@ class ProductListPageBase extends ProductPageBase
             //filter
             $filter = new ActiveFilterItem(array($section_filter->getName()), tr("Section"), $section_filter->getValue());
             $this->filtersList->filter()->items()->append($filter);
+
         }
 
         $this->category_filter->processInput();
@@ -286,7 +294,6 @@ class ProductListPageBase extends ProductPageBase
         if ($this->category_filter->isProcessed()) {
             $this->treeView->setSelectedID(intval($this->category_filter->getValue()));
         }
-
 
         $this->keyword_search->processInput();
 
@@ -366,6 +373,8 @@ class ProductListPageBase extends ProductPageBase
                 $this->filtersList->setRenderEnabled(true);
             }
         }
+
+        $this->fillBreadCrumb();
     }
 
     public function setSection(string $section) : void
@@ -580,8 +589,8 @@ class ProductListPageBase extends ProductPageBase
      */
     private function initPrivate(): void
     {
-        $cmp = new ClosureComponent($this->renderCategoryPath(...), false, false);
-        $this->items()->append($cmp);
+
+        $this->items()->append($this->breadcrumb);
 
         $aside = new Container(false);
         $aside->setTagName("aside");

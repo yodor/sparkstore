@@ -93,7 +93,7 @@ class ProductPageBase extends StorePage
         $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 
-    public function renderCategoryPath() : void
+    protected function fillBreadCrumb() : void
     {
         $actions = $this->constructPathActions();
 
@@ -102,7 +102,6 @@ class ProductPageBase extends StorePage
             $this->breadcrumb->items()->append($cmp);
         }
 
-        $this->breadcrumb->render();
     }
 
     protected function constructPathActions() : array
@@ -110,41 +109,51 @@ class ProductPageBase extends StorePage
         $actions = array();
 
         $link = new ProductListURL();
-        $current = URL::Current();
-
 
         if ($this->keyword_search->isProcessed()) {
+            $current = URL::Current();
             foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
                 $link->add($current->get($name));
             }
             $link->add($current->get(KeywordSearch::SUBMIT_KEY));
 
-            $search_title = tr("Резултати от търсене").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $search_title = tr("Search results").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $search_action = new Action($search_title,  $link, array());
             $search_action->translation_enabled = false;
             $actions[] = $search_action;
         }
+        else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
+            $link = URL::Current();
+            $link->remove("catID");
+            $search_action = new Action(tr("Search results"), $link->toString(), array());
+            $search_action->translation_enabled = false;
+            $actions[] = $search_action;
+        }
         else {
-            $product_action = new Action("Начало", LOCAL."/home.php" , array());
+            $product_action = new Action("Начало", LOCAL . "/home.php", array());
             $product_action->translation_enabled = false;
             $actions[] = $product_action;
         }
 
-        if ($this->section) {
-            $link->add(new URLParameter("section", $this->section));
-            $section_action = new Action(tr($this->section), $link->toString(), array());
-            $section_action->translation_enabled = false;
-            $actions[] = $section_action;
+        $iterator = $this->property_filter->iterator();
+        while ($filter = $iterator->next()) {
+            if ($filter instanceof GETProcessor && $filter->isProcessed()) {
+                $result = $filter->getTitle();
+
+                $link->add(new DataParameter($filter->getName(), urlencode($filter->getValue())));
+                $property_action = new Action($result, $link->toString(), array());
+                $property_action->translation_enabled = false;
+                $actions[] = $property_action;
+            }
         }
 
         foreach ($this->category_path as $idx => $category) {
-            $catLink = new CategoryURL($link);
-            $catLink->setData($category);
+            $link = new CategoryURL($link);
+            $link->setData($category);
 
-            $category_action = new Action($category["category_name"], $catLink->toString(), array());
+            $category_action = new Action($category["category_name"], $link->toString(), array());
             $category_action->translation_enabled = false;
             $actions[] = $category_action;
-
         }
 
         return $actions;

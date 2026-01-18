@@ -124,11 +124,12 @@ class ProductDetailsPageBase extends ProductPageBase
     {
         $this->item->setCategories($this->getCategoryPath());
         $this->item->initialize();
+        $this->fillBreadCrumb();
     }
 
     protected function renderImpl() : void
     {
-        $this->renderCategoryPath();
+        $this->breadcrumb->render();
 
         $this->item->render();
 
