@@ -17,7 +17,7 @@ function clearFilters() {
 
     let url = new URL(window.location);
 
-    const values = document.querySelectorAll(".ActiveFilters .value");//document.forms["ProductListFilterInputForm"];
+    const values = document.querySelectorAll(".ActiveFilters [data-filter]");//document.forms["ProductListFilterInputForm"];
     for (let a = 0; a < values.length; a++) {
         const element = values.item(a);
         clearParameter(element, url);

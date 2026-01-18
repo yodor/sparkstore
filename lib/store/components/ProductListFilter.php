@@ -9,10 +9,65 @@ include_once("objects/SparkMap.php");
 include_once("objects/sql/ClosureFilter.php");
 include_once("sql/SQLSelect.php");
 
-class ActiveFilter {
-    public string $label = "";
-    public string $value = "";
-    public array $clearParams = array();
+
+class ActiveFilterItem extends Container
+{
+    protected Component $label;
+    protected Component $value;
+    protected Component $clear;
+
+    public function __construct(array $name, string $label, string $value)
+    {
+        parent::__construct(false);
+        $this->setComponentClass("item");
+
+        $this->label = new Component(false);
+        $this->label->setTagName("span");
+        $this->label->setComponentClass("label");
+        $this->label->setContents($label);
+        $this->items()->append($this->label);
+
+        $this->value = new Component(false);
+        $this->value->setTagName("span");
+        $this->value->setComponentClass("value");
+        $this->value->setContents($value);
+        $this->items()->append($this->value);
+
+        $this->clear = new Component(false);
+        $this->clear->setTagName("span");
+        $this->clear->setComponentClass("clear");
+        $this->clear->setContents("X");
+        $this->clear->setAttribute("data-filter", implode(";", $name));
+        $this->clear->setAttribute("onClick", "clearFilter(this)");
+        $this->items()->append($this->clear);
+    }
+}
+
+class ActiveFilterComponent extends Container {
+
+    protected Button $clearAll;
+    protected Component $label;
+    protected Container $filter;
+
+    public function __construct()
+    {
+        parent::__construct(false);
+        $this->setComponentClass("ActiveFilters");
+
+        $this->label = new TextComponent(tr("Filters"));
+        $this->label->setComponentClass("title");
+        $this->items()->append($this->label);
+
+        $this->filter = new Container(false);
+        $this->filter->wrapper_enabled = false;
+        $this->items()->append($this->filter);
+
+        $this->clearAll = Button::ActionButton(tr("Clear All"), "clearFilters()");
+        $this->items()->append($this->clearAll);
+    }
+    public function filter() : Container {
+        return $this->filter;
+    }
 }
 
 class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLSelectProcessor
@@ -124,10 +179,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLS
                             }
                         }
                     }
-                    $activeFilter = new ActiveFilter();
-                    $activeFilter->label = $label;
-                    $activeFilter->value = $value;
-                    $activeFilter->clearParams = array($name);
+                    $activeFilter = new ActiveFilterItem(array($name), $label, $value);
                     $result[] = $activeFilter;
 
                 }

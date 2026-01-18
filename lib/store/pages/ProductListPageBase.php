@@ -137,6 +137,19 @@ class ProductListPageBase extends ProductPageBase
 
     protected function headFinalize() : void
     {
+        $viewCaption = "";
+        if ($this->keyword_search->isProcessed()) {
+            $viewCaption = tr("Search results")." - ".$this->keyword_search->getForm()->getInput("keyword")->getValue();
+        }
+
+        if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
+            $viewCaption = tr("Search results");
+            if (count($this->category_path)>0) {
+                $viewCaption.=" - ".array_reverse($this->category_path)[0]["category_name"];
+            }
+        }
+        if ($viewCaption) $this->setTitle($viewCaption);
+
         parent::headFinalize();
 
         AbstractResultView::AppendHeadLinks($this->view, $this);
