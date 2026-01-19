@@ -75,6 +75,7 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
             if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
             $image_popup = new ImagePopup($storageItem);
+            $image_popup->setTagName("span");
             $image_popup->addClassName("item");
             $image_popup->setAttribute("draggable", "false");
 
