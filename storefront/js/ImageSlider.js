@@ -182,6 +182,7 @@ class ImageSlider extends Component {
                     const img = document.createElement("img");
                     const parentImage = this.viewport.children[i].querySelector('img');
                     img.src = parentImage.src;
+                    img.alt = parentImage.alt;
                     dot.appendChild(img);
 
                 }
