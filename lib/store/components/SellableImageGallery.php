@@ -85,11 +85,15 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
             $image = $image_popup->image();
             $image->setPhotoSize($this->width, $this->height);
             $image->setUseSizeAttributes(true);
-            $image->setAttribute("fetchpriority","high");
+
             $image->setAttribute("alt", "Main view of"." ".$this->sellable->getTitle());
+
 
             if ($pos>0) {
                 $image->setAttribute("loading", "lazy");
+            }
+            else {
+                $image->setAttribute("fetchpriority","high");
             }
 
             $image->setAttribute("draggable", "false");
