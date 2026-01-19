@@ -127,6 +127,14 @@ class NavigationListItem extends DataIteratorItem
                         if (!$link) {
                             $link = $this->action->getURL();
                         }
+                        $this->image->removeAttribute("fetchpriority");
+                        $this->image->removeAttribute("loading");
+                        if ($idx>0) {
+                            $this->image->setAttribute("loading", "lazy");
+                        }
+                        else {
+                            $this->image->setAttribute("fetchpriority", "high");
+                        }
                         $this->bannerItem->setAttribute("href", $link);
                         $this->bannerItem->items()->clear();
                         $this->bannerItem->items()->append(clone $this->image);
