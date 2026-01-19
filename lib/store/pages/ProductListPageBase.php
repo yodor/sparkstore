@@ -50,9 +50,14 @@ class ProductListPageBase extends ProductPageBase
     protected Container $main;
     protected ActiveFilterComponent $filtersList;
 
+    protected array $remapGetParameters = array();
+
+
     public function __construct()
     {
         parent::__construct();
+
+
 
         $this->setSellableProducts($this->createSellableProducts());
 
@@ -60,22 +65,15 @@ class ProductListPageBase extends ProductPageBase
 
         $section_filter = new GETProcessor("section", "section");
         $closure = function(GETProcessor $filter) {
+            $filter->setTitle($filter->getValue());
             $clause = new SQLClause();
             $value = $filter->getValue();
-            $clause->setExpression("product_sections LIKE '%$value%'", "", "");
+            $clause->setExpression("product_sections LIKE '%$value%'", "","");
             $filter->getClauseCollection()->append($clause);
         };
         $section_filter->setClosure($closure);
         $this->property_filter->set($section_filter->getName(), $section_filter);
 
-//        $clause = new SQLClause();
-//        $clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");
-//
-//        $filter = new GETProcessor("Промо", "promo");
-//        $filter->setClosure(null);
-//        $filter->getClauseCollection()->append($clause);
-//
-//        $this->property_filter->append($filter);
 
         $this->category_filter = new GETProcessor("catID", "catID");
 
@@ -105,6 +103,7 @@ class ProductListPageBase extends ProductPageBase
         
         $this->view->setItemRenderer(new ProductListItem());
         $this->view->setItemsPerPage(12);
+        $this->view->setName(tr("All Products"));
 
         //disable list/grid
         $this->view->getHeader()->getViewMode()->setRenderEnabled(false);
@@ -120,7 +119,6 @@ class ProductListPageBase extends ProductPageBase
         $categoryURL = new CategoryURL();
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
-
     }
 
     protected function createProductFilters() : ?ProductListFilter
@@ -133,25 +131,6 @@ class ProductListPageBase extends ProductPageBase
 
     protected function headFinalize() : void
     {
-        $viewCaption = "";
-        if ($this->keyword_search->isProcessed()) {
-            $viewCaption = tr("Search results")." - ".$this->keyword_search->getForm()->getInput("keyword")->getValue();
-        }
-        else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
-            $viewCaption = tr("Search results");
-        }
-        else if ($this->section) {
-            $viewCaption = $this->section;
-        }
-
-
-        if ($viewCaption) {
-            if (count($this->category_path)>0) {
-                $viewCaption.=" - ".array_reverse($this->category_path)[0]["category_name"];
-            }
-            $this->setTitle($viewCaption);
-        }
-
         parent::headFinalize();
 
         AbstractResultView::AppendHeadLinks($this->view, $this);
@@ -244,10 +223,15 @@ class ProductListPageBase extends ProductPageBase
         // 2 category
         // 3 keyword search
 
+        //support old parameters if present in remapGetParameters
+        foreach ($this->remapGetParameters as $key => $value) {
+            if (isset($_GET[$key])) {
+                $_GET[$value] = $_GET[$key];
+                unset($_GET[$key]);
+            }
+        }
+
         $columnsCopy = clone $this->select->fields();
-
-
-
 
         $iterator = $this->property_filter->iterator();
         while ($filter = $iterator->next()) {
@@ -262,23 +246,10 @@ class ProductListPageBase extends ProductPageBase
 
         $section_filter = $this->property_filter->get("section");
         if ($section_filter instanceof GETProcessor && $section_filter->isProcessed()) {
-            $section_filter->setTitle($section_filter->getValue());
-
             $this->setSection($section_filter->getValue());
-
-            //fetch section data
-            $columns = array();
-            if ($this->sections->haveColumn("section_seodescription")) {
-                $columns[] = "section_seodescription";
-            }
-            $result = $this->sections->getResult("section_title", $section_filter->getValue(), ...$columns);
-            if (isset($result["section_seodescription"]) && $result["section_seodescription"]) {
-                $this->setMetaDescription($result["section_seodescription"]);
-            }
             //filter
             $filter = new ActiveFilterItem(array($section_filter->getName()), tr("Section"), $section_filter->getValue());
             $this->filtersList->filter()->items()->append($filter);
-
         }
 
         $this->category_filter->processInput();
@@ -298,7 +269,7 @@ class ProductListPageBase extends ProductPageBase
         }
 
 
-        $this->view->setName(tr("All Products"));
+
 
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID > 0) {
@@ -463,7 +434,10 @@ class ProductListPageBase extends ProductPageBase
 
     }
 
-    //return current selected category page url or the main products list
+    /**
+     * Return current selected category page url or the main products list
+     * @return URL
+     */
     public function currentURL() : URL
     {
 

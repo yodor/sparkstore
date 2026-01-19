@@ -41,14 +41,13 @@ class ProductPageBase extends StorePage
     protected ?BreadcrumbList $breadcrumb = null;
 
     /**
-     * Filters form component
      * @var ProductListFilter|null
      */
     protected ?ProductListFilter $filters = NULL;
 
     /**
      * Other get variable filters
-     * @var SparkMap
+     * @var SparkMap|null
      */
     protected ?SparkMap $property_filter = NULL;
 
@@ -173,6 +172,10 @@ class ProductPageBase extends StorePage
         return $actions;
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
     protected function applyTitleDescription() : void
     {
 
@@ -180,6 +183,7 @@ class ProductPageBase extends StorePage
         $description = "";
 
         //use the title or seotitle of the selected category
+        //go from top to bottom so to use description of parent category if child is empty
         foreach ($this->category_path as $idx => $element) {
             if (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"]) > 0) {
                 $title = $element["category_seotitle"];
@@ -194,9 +198,27 @@ class ProductPageBase extends StorePage
             }
         }
 
+        //prefer section seo description if present - fetch additional section data
+        if ($this->section) {
+            $columns = array();
+            if ($this->sections->haveColumn("section_seodescription")) {
+                $columns[] = "section_seodescription";
+            }
+            $result = $this->sections->getResult("section_title", $this->section, ...$columns);
+
+            if (isset($result["section_seodescription"]) && $result["section_seodescription"]) {
+                $description = $result["section_seodescription"];
+            }
+
+            $title = $this->section.($title?" - ".$title:"");
+        }
+
         if ($this->keyword_search->isProcessed()) {
             $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
-            $title = tr("Резултати от търсене").": ".mysql_real_unescape_string($search_value);
+            $title = tr("Search results")." - ".mysql_real_unescape_string($search_value).($title?" - ".$title:"");
+        }
+        else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
+            $title = tr("Search results").($title?" - ".$title:"");
         }
 
         if (mb_strlen($title)>0) {
