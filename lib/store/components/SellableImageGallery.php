@@ -87,7 +87,7 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
             $image->setPhotoSize($this->width, $this->height);
             $image->setUseSizeAttributes(true);
 
-            $image->setAttribute("alt", "Main view $pos of"." ".$this->sellable->getTitle());
+            $image->setAttribute("alt", "Main view ".($pos+1)." of"." ".$this->sellable->getTitle());
 
 
             if ($pos>0) {
