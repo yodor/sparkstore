@@ -5,6 +5,7 @@ include_once("store/components/ProductsTape.php");
 include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/components/renderers/items/ProductDetailsItem.php");
+include_once("store/components/TapeSameCategory.php");
 
 class ProductDetailsPageBase extends ProductPageBase
 {
@@ -54,6 +55,17 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->_main->content()->setTagName("main");
         $this->_main->content()->setRole("main");
+    }
+
+    /**
+     * Inner page layout initialization
+     * @return void
+     */
+    private function initPrivate(): void
+    {
+        $this->items()->append($this->breadcrumb);
+        $this->items()->append($this->item);
+        $this->initProductTapes();
     }
 
     protected function applyTitleDescription(): void
@@ -122,18 +134,12 @@ class ProductDetailsPageBase extends ProductPageBase
 
     public function initialize() : void
     {
+
+        $this->initPrivate();
+
         $this->item->setCategories($this->getCategoryPath());
         $this->item->initialize();
         $this->fillBreadCrumb();
-    }
-
-    protected function renderImpl() : void
-    {
-        $this->breadcrumb->render();
-
-        $this->item->render();
-
-        $this->renderProductTapes();
     }
 
     protected function constructPathActions(): array
@@ -147,97 +153,16 @@ class ProductDetailsPageBase extends ProductPageBase
         return $actions;
     }
 
-    protected function renderProductTapes() : void
+    protected function initProductTapes() : void
     {
-        $cmp = $this->tapeSameCategory();
-        $this->initTapeContainer("same_category", $cmp);
-        $cmp->render();
+        $cmp = new TapeSameCategory($this->sellable);
+        $this->items()->append($cmp);
 
-//        $cmp = $this->tapeOtherProducts()
-//        $this->initTapeContainer("other_products", $cmp);
-//        $cmp->render();
     }
 
     public function getSellable(): SellableItem
     {
         return $this->sellable;
-    }
-
-    protected function selectActiveMenu(): void
-    {
-        parent::selectActiveMenu();
-
-        $main_menu = $this->menu_bar->getMenu();
-
-        $iterator = $main_menu->iterator();
-        while ($item = $iterator->next()) {
-            if (!($item instanceof MenuItem))continue;
-            if (strcmp($item->getName(), $this->section) == 0) {
-                $main_menu->deselect();
-                $item->setSelected(true);
-                break;
-            }
-        }
-
-    }
-
-    public function tapeSameCategory(int $limit = 4) : ProductsTape
-    {
-        $catID = $this->sellable->getCategoryID();
-
-        $title = tr("Още продукти от тази категория");
-
-        $select = clone $this->bean->select();
-        $select->fields()->setPrefix("sellable_products");
-        $select = $this->product_categories->selectChildNodesWith($select, "sellable_products", $catID, array());
-
-//        echo $select->getSQL();
-        $qry = new SQLQuery($select, "prodID");
-
-//        $qry = $this->bean->queryFull();
-//        $qry->select->where()->add("catID", $catID);
-        $qry->select->where()->add("stock_amount" , "0", " > ");
-        $qry->select->order_by = " rand() ";
-        $qry->select->group_by = " prodID ";
-        $qry->select->limit = "$limit";
-
-        $tape = new ProductsTape();
-
-        $tape->setCaption($title);
-        $tape->setIterator($qry);
-
-        $categoryURL = new CategoryURL();
-        $categoryURL->setCategoryID($catID);
-        $categoryURL->setCategoryName($this->sellable->getCategoryName());
-
-        $tape->getAction()->setURL($categoryURL);
-
-        return $tape;
-    }
-
-    public function tapeOtherProducts(int $limit = 4) : ProductsTape
-    {
-        $title = tr("Други продукти");
-
-        $qry = $this->bean->queryFull();
-        $qry->select->order_by = " rand() ";
-        $qry->select->group_by = " prodID ";
-        $qry->select->where()->add("stock_amount" , "0", " > ");
-        $qry->select->limit = "$limit";
-
-        $tape = new ProductsTape();
-        $tape->setCaption($title);
-        $tape->setIterator($qry);
-
-        $tape->getAction()->setURL(new ProductListURL());
-
-        return $tape;
-    }
-
-    public function initTapeContainer(string $name, Container $cmp) : void
-    {
-        //$cmp->setClassName("product_group");
-        $cmp->addClassName($name);
     }
 
     protected static function UpdateViewCounter(int $prodID) : void
