@@ -79,7 +79,7 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
             $image_popup->addClassName("item");
             $image_popup->setAttribute("draggable", "false");
 
-            $image_popup->setTitle($this->sellable->getTitle());
+            //$image_popup->setTitle($this->sellable->getTitle());
             //use list-relation targeting items in the image_gallery container
 //            $this->image_popup->setListRelation("ProductGallery");
 
