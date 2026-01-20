@@ -119,6 +119,8 @@ class ProductListPageBase extends ProductPageBase
         $categoryURL = new CategoryURL();
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
+
+        $this->setTitle(tr("All Products"));
     }
 
     protected function createProductFilters() : ?ProductListFilter
