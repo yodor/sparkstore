@@ -137,27 +137,24 @@ class ProductListPageBase extends ProductPageBase
 
         $currentURL = $this->currentURL()->fullURL();
         $title = $this->head()->getTitle();
+        $description = $this->head()->getMeta("description");
 
-        $this->view->setSchemaDescription($this->head()->getTitle());
+        $this->view->setSchemaDescription($title);
         $this->view->setAttribute("itemid", $currentURL);
         $this->view->setSchemaURL($currentURL);
 
         $pageData = new LinkedData("CollectionPage");
         $pageData->set("name", $title);
-        $pageData->set("description", $title);
+        $pageData->set("description", $description);
         $pageData->set("url", $currentURL);
-
 
         $mainEntity = new LinkedData();
         $mainEntity->setID($currentURL);
-
         $pageData->set("mainEntity", $mainEntity->toArray());
-
 
         $pageScript = new LDJsonScript();
         $pageScript->setLinkedData($pageData);
         $this->head()->addScript($pageScript);
-
     }
 
     protected function createSellableProducts() : SellableProducts
