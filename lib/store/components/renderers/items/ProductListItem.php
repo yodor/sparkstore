@@ -363,8 +363,6 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
 
         $this->skuMeta->setContent($this->data["prodID"]);
         $this->categoryMeta->setContent($this->data["category_name"]);
-
-        $this->wrap->setAttribute("itemid", $this->detailsURL->fullURL());
     }
 
     public function isPromo() : bool
