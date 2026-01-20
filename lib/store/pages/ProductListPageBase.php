@@ -134,6 +134,30 @@ class ProductListPageBase extends ProductPageBase
         parent::headFinalize();
 
         AbstractResultView::AppendHeadLinks($this->view, $this);
+
+        $currentURL = $this->currentURL()->fullURL();
+        $title = $this->head()->getTitle();
+
+        $this->view->setSchemaDescription($this->head()->getTitle());
+        $this->view->setAttribute("itemid", $currentURL);
+        $this->view->setSchemaURL($currentURL);
+
+        $pageData = new LinkedData("CollectionPage", "WebPage");
+        $pageData->set("name", $title);
+        $pageData->set("description", $title);
+        $pageData->set("url", $currentURL);
+
+
+        $mainEntity = new LinkedData();
+        $mainEntity->setID($currentURL);
+
+        $pageData->set("mainEntity", $mainEntity->toArray());
+
+
+        $pageScript = new LDJsonScript();
+        $pageScript->setLinkedData($pageData);
+        $this->head()->addScript($pageScript);
+
     }
 
     protected function createSellableProducts() : SellableProducts
@@ -274,9 +298,8 @@ class ProductListPageBase extends ProductPageBase
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID > 0) {
             $this->loadCategoryPath($nodeID);
-            $length = count($this->category_path);
-            if ($length>0) {
-                $this->view->setName($this->category_path[$length-1]["category_name"]);
+            if (count($this->category_path)>0) {
+                $this->view->setName(array_reverse($this->category_path)[0]["category_name"]);
             }
 
         }
