@@ -152,10 +152,10 @@ class StorePageBase extends SparkPage
         $entryPoint = new LinkedData("EntryPoint");
         $entryURL = new ProductListURL();
         $entryURL->add(new URLParameter("filter","search"));
-        $entryURL->add(new URLParameter("keyword", "{keyword}"));
+        $entryURL->add(new URLParameter("keyword", "{search_term_string}"));
         $entryPoint->set("urlTemplate", $entryURL->fullURL()->toString());
         $potentialAction->set("target", $entryPoint->toArray());
-        $potentialAction->set("query-input", "required name=keyword");
+        $potentialAction->set("query-input", "required name=search_term_string");
 
         $website->set("potentialAction", $potentialAction->toArray());
 
