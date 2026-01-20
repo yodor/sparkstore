@@ -120,7 +120,15 @@ class ProductListPageBase extends ProductPageBase
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
 
-        $this->setTitle(tr("All Products"));
+
+    }
+
+    protected function applyTitleDescription(): void
+    {
+        parent::applyTitleDescription();
+        if (!$this->preferred_title) {
+            $this->setTitle(tr("All Products"));
+        }
     }
 
     protected function createProductFilters() : ?ProductListFilter
