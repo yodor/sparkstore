@@ -142,7 +142,7 @@ class ProductListPageBase extends ProductPageBase
         $this->view->setAttribute("itemid", $currentURL);
         $this->view->setSchemaURL($currentURL);
 
-        $pageData = new LinkedData("CollectionPage", "WebPage");
+        $pageData = new LinkedData("CollectionPage");
         $pageData->set("name", $title);
         $pageData->set("description", $title);
         $pageData->set("url", $currentURL);
