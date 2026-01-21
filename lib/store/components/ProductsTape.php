@@ -7,6 +7,9 @@ include_once("store/components/renderers/items/ProductListItem.php");
 class ProductsTape extends Container
 {
 
+    protected Meta $schemaDescription;
+    protected Meta $schemaItemCount;
+
     protected ?Action $action = null;
 
     protected ?ProductListItem $list_item = null;
@@ -50,6 +53,23 @@ class ProductsTape extends Container
         $ul->setComponentClass("");
         $ul->setTagName("ul");
         $this->items()->append($ul);
+
+        $this->schemaDescription = new Meta();
+        $this->schemaDescription->setAttribute("itemprop", "description");
+        $this->items()->append($this->schemaDescription);
+
+        $this->schemaItemCount = new Meta();
+        $this->schemaItemCount->setAttribute("itemprop", "numberOfItems");
+        $this->items()->append($this->schemaItemCount);
+    }
+
+    public function setSchemaDescription(string $description) : void
+    {
+        $this->schemaDescription->setContent($description);
+    }
+    public function getSchemaDescription() : string
+    {
+        return $this->schemaDescription->getContent();
     }
 
     protected function CreateCaption(): Container
@@ -81,6 +101,7 @@ class ProductsTape extends Container
         $this->setAttribute("aria-label", $caption);
         $this->action->setAttribute("title", $caption);
         $this->action->setContents($caption);
+        $this->setSchemaDescription($caption);
     }
 
     public function getAction() : Action
@@ -107,12 +128,14 @@ class ProductsTape extends Container
             $numResults = $this->query->exec();
         }
 
+        $this->schemaItemCount->setContent($numResults);
+
         $position = 0;
         while ($row = $this->query->next()) {
-            $position++;
             $this->list_item->setPosition($position);
             $this->list_item->setData($row);
             $this->list_item->render();
+            $position++;
         }
     }
 }

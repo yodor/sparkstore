@@ -272,6 +272,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
 
     protected Meta $skuMeta;
     protected Meta $categoryMeta;
+    protected Meta $urlMeta;
 
     protected ProductPhoto $productPhoto;
     protected ProductDetails $productDetails;
@@ -301,6 +302,10 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
         $this->categoryMeta = new Meta();
         $this->categoryMeta->setAttribute("itemprop", "category");
         $this->wrap->items()->append($this->categoryMeta);
+
+        $this->urlMeta = new Meta();
+        $this->urlMeta->setAttribute("itemprop", "url");
+        $this->wrap->items()->append($this->urlMeta);
 
         $this->productPhoto = $this->CreatePhoto();
         $this->productPhoto->setURL($this->detailsURL);
@@ -363,6 +368,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
 
         $this->skuMeta->setContent($this->data["prodID"]);
         $this->categoryMeta->setContent($this->data["category_name"]);
+        $this->urlMeta->setContent($this->detailsURL->fullURL());
     }
 
     public function isPromo() : bool

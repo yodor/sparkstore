@@ -112,6 +112,8 @@ class ProductListPageBase extends ProductPageBase
         $this->filtersList->setRenderEnabled(false);
         $this->view->items()->insert($this->filtersList,0);
 
+        $this->view->setSchemaType($this->view->getSchemaType()." https://schema.org/OfferCatalog");
+
         $this->head()->addCSS(STORE_LOCAL . "/css/product_list.css");
         $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
 
