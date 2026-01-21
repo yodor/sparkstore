@@ -127,6 +127,9 @@ class ProductsTape extends Container
         if (!$this->query->isActive()) {
             $numResults = $this->query->exec();
         }
+        else {
+            $numResults = $this->query->count();
+        }
 
         $this->schemaItemCount->setContent($numResults);
 

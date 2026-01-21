@@ -147,6 +147,7 @@ class NavigationListItem extends DataIteratorItem
         }
 
         $this->tape->setClassName("item {$this->label}");
+        $this->tape->setSchemaDescription($this->label);
 
     }
 
