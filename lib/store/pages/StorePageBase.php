@@ -445,6 +445,8 @@ class StorePageBase extends SparkPage
     {
         $link = new Action();
         $link->setTagName("a");
+        $link->setAttribute("aria-label", "logo");
+        $link->setAttribute("title", "logo");
 
         $link->setURL(new URL($href));
         $link->setComponentClass("logo");
