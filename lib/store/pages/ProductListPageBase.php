@@ -216,7 +216,7 @@ class ProductListPageBase extends ProductPageBase
         $this->select->fields()->setPrefix("sellable_products");
 
 
-        $search_fields = array("product_name", "product_attributes", "product_description");
+        $search_fields = array("product_name", "product_attributes");
         $this->keyword_search->getForm()->setColumns($search_fields);
 
         //default - all categories not filtered or aggregated
