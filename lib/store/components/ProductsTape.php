@@ -43,7 +43,6 @@ class ProductsTape extends Container
         $this->list_item = ProductsTape::GetDefaultItemRenderer();
 
         $this->action = new Action();
-        $this->action->translation_enabled = false;
         $this->action->setAttribute("itemprop", "url");
 
         //create caption_component

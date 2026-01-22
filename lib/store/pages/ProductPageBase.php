@@ -130,19 +130,16 @@ class ProductPageBase extends StorePage
 
             $search_title = tr("Search results").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $search_action = new Action($search_title,  $link, array());
-            $search_action->translation_enabled = false;
             $actions[] = $search_action;
         }
         else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
             $link = URL::Current();
             $link->remove("catID");
             $search_action = new Action(tr("Search results"), $link->toString(), array());
-            $search_action->translation_enabled = false;
             $actions[] = $search_action;
         }
         else {
             $product_action = new Action("Начало", LOCAL . "/home.php", array());
-            $product_action->translation_enabled = false;
             $actions[] = $product_action;
         }
 
@@ -154,7 +151,6 @@ class ProductPageBase extends StorePage
 
                     $link->add(new DataParameter($filter->getName(), urlencode($filter->getValue())));
                     $property_action = new Action($result, $link->toString(), array());
-                    $property_action->translation_enabled = false;
                     $actions[] = $property_action;
                 }
             }
@@ -165,7 +161,6 @@ class ProductPageBase extends StorePage
             $link->setData($category);
 
             $category_action = new Action($category["category_name"], $link->toString(), array());
-            $category_action->translation_enabled = false;
             $actions[] = $category_action;
         }
 

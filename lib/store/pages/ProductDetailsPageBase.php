@@ -147,8 +147,6 @@ class ProductDetailsPageBase extends ProductPageBase
         $actions = parent::constructPathActions();
 
         $action = new Action($this->sellable->getTitle(), $this->currentURL(), array());
-        $action->translation_enabled = false;
-
         $actions[] = $action;
         return $actions;
     }
