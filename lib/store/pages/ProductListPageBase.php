@@ -216,7 +216,7 @@ class ProductListPageBase extends ProductPageBase
         $this->select->fields()->setPrefix("sellable_products");
 
 
-        $search_fields = array("product_name", "product_attributes");
+        $search_fields = array("product_name", "attribute_value");
         $this->keyword_search->getForm()->setColumns($search_fields);
 
         //default - all categories not filtered or aggregated
@@ -294,10 +294,14 @@ class ProductListPageBase extends ProductPageBase
         $this->keyword_search->processInput();
 
         if ($this->keyword_search->isProcessed()) {
+            $keyword = $this->keyword_search->getForm()->getInput("keyword")->getValue();
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("AND");
             $cc->copyTo($this->select->where());
+            $this->select->from.=" JOIN product_attributes pa ON pa.prodID = sellable_products.prodID ";
+            $this->select->group_by = " prodID ";
+            //echo $this->select->getSQL();
             //filter
-            $filter = new ActiveFilterItem(array("filter", "keyword"), tr("Search for"), $this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $filter = new ActiveFilterItem(array("filter", "keyword"), tr("Search for"), $keyword);
             $this->filtersList->filter()->items()->append($filter);
         }
 
