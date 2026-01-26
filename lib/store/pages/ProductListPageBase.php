@@ -286,7 +286,6 @@ class ProductListPageBase extends ProductPageBase
         }
 
         $this->category_filter->processInput();
-
         if ($this->category_filter->isProcessed()) {
             $this->treeView->setSelectedID(intval($this->category_filter->getValue()));
         }
@@ -305,54 +304,32 @@ class ProductListPageBase extends ProductPageBase
             $this->filtersList->filter()->items()->append($filter);
         }
 
-
-
-
-        $nodeID = $this->treeView->getSelectedID();
-        if ($nodeID > 0) {
-            $this->loadCategoryPath($nodeID);
-            if (count($this->category_path)>0) {
-                $this->view->setName(array_reverse($this->category_path)[0]["category_name"]);
-            }
-
-        }
+        //filters end
 
         //clone the main products select here to keep the tree siblings visible
         $products_tree = clone $this->select;
 
+        $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
             //unset - will use catID and category name from selectChildNodesWith
             $this->select->fields()->unset("catID");
             $this->select->fields()->unset("category_name");
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
         }
-
-//        $this->processFilters()
-
-//echo $this->select->getSQL();
-
-        //setup grouping for the list item view
-//        $this->select->group_by = SellableProducts::DefaultGrouping();
-//        echo $this->select->getSQL();
-        //primary key is prodID as we group by prodID(Products) not piID(ProductInventory)
+        //echo $this->select->getSQL();
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
 
         //construct category tree for the products that will be listed
         //keep same grouping as the products list
         $products_tree->group_by = $this->select->group_by;
 
-        //do not clear the fields here as filters might have appended dynamic columns
-        //select only fields needed in the treeView iterator
-        //$products_tree->fields()->reset();
-
-        //Remove non-needed columns.
-        //Filters append having clause too so let dynamic columns in
+        //do not clear all fields here as filters might have appended dynamic columns for using in having clause
+        //select only fields needed in the treeView iterator and remove non-needed columns
         foreach ($columnsCopy->names() as $name) {
             $products_tree->fields()->unset($name);
         }
         $products_tree->fields()->set("sellable_products.prodID");
         $products_tree->fields()->set("sellable_products.catID");
-
         //echo $products_tree->getSQL();
 
         $products_tree = $products_tree->getAsDerived();
@@ -360,9 +337,16 @@ class ProductListPageBase extends ProductPageBase
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
-
         if ($this->treeViewAggregateSelect) {
             $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
+        }
+
+        ////
+        if ($nodeID>0) {
+            $this->loadCategoryPath($nodeID);
+            if (count($this->category_path) > 0) {
+                $this->view->setName(array_reverse($this->category_path)[0]["category_name"]);
+            }
         }
 
         $this->processTreeViewURL();
