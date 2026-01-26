@@ -197,8 +197,9 @@ class CurrencyLabel extends LabelSpan {
     public function __construct()
     {
         parent::__construct();
-        $this->label()->setTagName("span");
         $this->setComponentClass("price");
+
+        $this->label()->setTagName("span");
         $this->label()->setComponentClass("currency");
     }
 
@@ -269,6 +270,7 @@ class PriceLabel extends Container {
 
         $this->priceSell = new CurrencyLabel();
         $this->priceSell->addClassName("sell");
+        $this->priceSell->span()->setAttribute("itemprop", "price");
         $this->items()->append($this->priceSell);
 
     }
@@ -281,9 +283,9 @@ class PriceLabel extends Container {
         $this->availability()->setRenderEnabled(false);
         $this->validUntil()->setRenderEnabled(false);
         $this->currency()->setRenderEnabled(false);
-        $this->priceSell()->removeAttribute("itemprop");
-        $this->priceOld()->removeAttribute("itemprop");
+        $this->priceSell()->span()->removeAttribute("itemprop");
     }
+
     public function setCurrencyLabels(string $iso3, string $symbol) : void
     {
         $this->currency()->setContent($iso3);
