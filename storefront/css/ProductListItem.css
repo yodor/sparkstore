@@ -96,14 +96,17 @@
     white-space: nowrap;
     flex-grow:1;
 }
+.ProductListItem .details .price_label .price_info[name="BGN"] .price {
+    flex-direction: row-reverse;
+}
 
 .ProductListItem .details .price_label .price_info.left {
     text-align:left;
 }
 
 .ProductListItem .details .price_label .price_info .price {
-    vertical-align:bottom;
-    display:block;
+    display:flex;
+    min-height:1em;
 }
 
 .ProductListItem .details .price_label .price_info .price.old {

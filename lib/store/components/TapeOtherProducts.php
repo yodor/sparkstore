@@ -22,6 +22,7 @@ class TapeOtherProducts extends ProductsTape
 
         $this->addClassName("other_products");
 
+        $this->list_item->disableProductLinkedData();
     }
 
 }

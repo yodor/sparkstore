@@ -36,6 +36,8 @@ class TapeSameCategory extends ProductsTape
 
         $this->addClassName("same_category");
         $this->setCaption(tr("Още продукти от тази категория"));
+
+        $this->list_item->disableProductLinkedData();
     }
 
 }
