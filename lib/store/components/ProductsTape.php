@@ -38,7 +38,7 @@ class ProductsTape extends Container
 
         $this->setTagName("section");
         $this->setAttribute("itemscope", "");
-        $this->setAttribute("itemtype", "https://schema.org/ItemList");
+        $this->setAttribute("itemtype", "https://schema.org/ItemList https://schema.org/OfferCatalog");
 
         $this->list_item = ProductsTape::GetDefaultItemRenderer();
 
