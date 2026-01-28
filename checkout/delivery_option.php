@@ -90,38 +90,26 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 
 }
 
+$frend->getSubmitLine()->setRenderEnabled(false);
+
 $page->setTitle(tr("Начин на доставка"));
 
-$page->startRender();
+$page->base()->addClassName("delivery_address");
+$page->base()->items()->append($frend);
 
-// echo "UserID: ".$page->getUserID();
-
-$page->drawCartItems();
-
-// $page->showShippingInfo();
-
-echo "<div class='delivery_address'>";
-
-echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
-
-$frend->getSubmitLine()->setRenderEnabled(false);
-$frend->render();
-
-echo "</div>";
+$page->initialize();
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Продължи"));
+$action->setContents(tr("Продължи"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.DeliveryAddress.submit();");
 
-$page->renderNavigation();
-
-$page->finishRender();
+$page->render();
 ?>

@@ -66,40 +66,30 @@ else if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
 
 }
 
+$frend->getSubmitLine()->setRenderEnabled(false);
+
 $page->setTitle(tr("Избор на куриер"));
 
-$page->startRender();
+$page->base()->addClassName("delivery_courier");
+$page->base()->items()->append($frend);
 
-// echo "UserID: ".$page->getUserID();
-
-$page->drawCartItems();
-
-// $page->showShippingInfo();
-
-echo "<div class='delivery_courier'>";
-
-echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
-
-$frend->getSubmitLine()->setRenderEnabled(false);
-$frend->render();
-
-echo "</div>";
+$page->initialize();
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Продължи"));
+$action->setContents(tr("Продължи"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.DeliveryCourier.submit();");
 
-$page->renderNavigation();
+$page->render();
 
 Session::set("checkout.navigation.back",  URL::Current()->toString());
 
-$page->finishRender();
+
 ?>

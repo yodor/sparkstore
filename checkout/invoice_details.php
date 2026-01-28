@@ -45,36 +45,24 @@ else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
 $page->setTitle(tr("Детайли за фактуриране"));
 
 
-$page->startRender();
+$page->base()->addClassName("invoice_details");
+$page->base()->items()->append($frend);
 
-
-$page->drawCartItems();
-
-echo "<div class='item invoice_details'>";
-
-echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
-
-$frend->render();
-
-echo "</div>"; //invoice_details
-
+$page->initialize();
 
 
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Продължи"));
+$action->setContents(tr("Продължи"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.InvoiceDetails.submit()");
 
-$page->renderNavigation();
-
-
-$page->finishRender();
+$page->render();
 ?>

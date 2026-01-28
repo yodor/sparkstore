@@ -69,20 +69,7 @@
     font-weight: bold;
 }
 
-.side_pane .group.pricing {
-    grid-column: span 1;
-}
 
-.side_pane .group.pricing .price_info {
-
-    font-size: 2em;
-    font-weight:bold;
-
-}
-
-.side_pane .group.pricing .price_info .old {
-    text-decoration: line-through;
-}
 
 
 
@@ -525,19 +512,36 @@
     flex-wrap: wrap;
     flex-direction: column;
     gap:0.5em;
+    grid-column: span 1;
 }
 
 .side_pane .group.pricing .price_info {
-    display:inline-block;
+    display:flex;
+    font-size: 2em;
+    font-weight:bold;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-self: flex-start;
 }
-
-.side_pane .group.pricing .price_info.left .currency {
-    float:left;
-
+.side_pane .group.pricing .price_info .price {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
-.side_pane .group.pricing .price_info.left .old .currency {
+/*.side_pane .group.pricing .price_info .price .currency::after {*/
+/*    content: "\00a0";*/
+/*}*/
+.side_pane .group.pricing .price_info[name="BGN"] .price {
+    flex-direction: row-reverse;
+}
+/*.side_pane .group.pricing .price_info[name="BGN"] .price .currency::before {*/
+/*    content: "\00a0";*/
+/*}*/
+
+.side_pane .group.pricing .price_info .old {
     text-decoration: line-through;
 }
+
 
 @media screen and (max-width: 640px) {
     .tabs .item.description OBJECT {

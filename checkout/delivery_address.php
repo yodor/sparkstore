@@ -43,33 +43,23 @@ else if ($proc->getStatus() == FormProcessor::STATUS_ERROR) {
 }
 $page->setTitle(tr("Адрес за доставка"));
 
-$page->startRender();
+$page->base()->addClassName("delivery_details");
+$page->base()->items()->append($frend);
 
-
-$page->drawCartItems();
-
-echo "<div class='delivery_details'>";
-
-echo "<h1 class='Caption'>" . tr("Адрес за доставка") . "</h1>";
-
-$frend->render();
+$page->initialize();
 
 $back_url = Session::get("checkout.navigation.back",  URL::Current()->toString());
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Продължи"));
+$action->setContents(tr("Продължи"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.ClientAddressInputForm.submit();");
 
+$page->render();
 
-$page->renderNavigation();
-
-echo "</div>"; //delivery_details
-
-$page->finishRender();
 ?>

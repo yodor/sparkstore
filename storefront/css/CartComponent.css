@@ -1,2 +1,211 @@
-@import url("CartComponent_base.css");
-@import url("CartComponent_mobile.css");
+
+.CartComponent {
+    display: grid;
+    grid-template-columns: min-content auto min-content min-content min-content;
+    position: relative;
+    /*grid-row-gap: 0.5em;*/
+    margin-bottom:2em;
+}
+
+.CartComponent .heading {
+    display: contents;
+    font-weight: bold;
+}
+.CartComponent .heading * {
+    padding: 10px;
+    padding-bottom: 5px;
+    text-align:center;
+}
+.CartComponent .heading [field='product'] {
+    text-align: left;
+}
+
+.CartComponent .item > * {
+    /*border-bottom: 1px solid #000; !* Customize as needed *!*/
+    border-top: 1px solid #000; /* Customize as needed */
+}
+
+
+
+
+.CartComponent .item {
+    display: contents;
+    font-size: 1.5em;
+}
+.CartComponent .item .mobile-label {
+    display: none;
+}
+.CartComponent .item .mobile-label:after {
+    content: ":";
+}
+.CartComponent .label:after {
+    content: ":";
+}
+
+.CartComponent .item [action] {
+    text-decoration: none;
+    text-align: center;
+    font-size: 2.2em;
+    color: var(--theme-accent);
+}
+.CartComponent .item span[action] {
+    color: black;
+    font-size: 1em;
+}
+.CartComponent .item [field='position'] A[action] {
+    color: red;
+}
+
+.CartComponent .item [field] {
+    padding: 10px;
+    align-items: center;
+    align-content: center;
+}
+.CartComponent .item .ImageStorage {
+    display:contents;
+}
+.CartComponent .item .ImageStorage IMG {
+    object-fit: contain;
+    max-width: 100px;
+    max-height: 100px;
+    min-width:100px;
+    min-height: 100px;
+}
+.CartComponent .item [field='product'] {
+    display:flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+.CartComponent .item .TextComponent {
+    white-space: break-spaces;
+    font-size: 90%;
+}
+
+.CartComponent .item [field='qty'] {
+    display:flex;
+    flex-direction: row;
+    gap:0.5em;
+    justify-content: center;
+}
+
+.CartComponent .item [field='price'] {
+    text-align: right;
+}
+.CartComponent .price_info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+}
+.CartComponent .price_info .price {
+    display: flex;
+    flex-direction: row;
+}
+.CartComponent .price_info .price.old {
+    text-decoration: line-through;
+}
+.CartComponent .price_info[name='BGN'] .price {
+    flex-direction: row-reverse;
+}
+
+
+
+
+.CartComponent .summary {
+    display: contents;
+    font-size: 1.1em;
+}
+
+.CartComponent .summary .label {
+    grid-column: span 4;
+    text-align: right;
+    padding: 10px;
+    align-content: center;
+}
+.CartComponent .summary .value {
+    padding: 10px;
+    align-content: center;
+    align-items: center;
+}
+
+
+.CartComponent .summary.items_total > * {
+    /*border-bottom: 1px solid #000; !* Customize as needed *!*/
+    border-top: 1px solid #000; /* Customize as needed */
+}
+.CartComponent .summary.order_total > * {
+    /*border-bottom: 1px solid #000; !* Customize as needed *!*/
+    border-bottom: 1px solid #000; /* Customize as needed */
+}
+.CartComponent .summary.order_total {
+    font-weight: bold;
+}
+
+.CartComponent .CartListEmpty {
+    grid-column: span 5;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+@media screen and (max-width: 680px) {
+    .CartComponent  {
+        grid-template-columns: auto;
+    }
+
+    .CartComponent .heading {
+        display: none;
+    }
+    .CartComponent .summary .label {
+        grid-column: span 1;
+        font-size:1.5em;
+    }
+
+    .CartComponent .item .mobile-label {
+        display: initial;
+    }
+    .CartComponent .item > * {
+        border:0;
+    }
+    .CartComponent .item > *:first-child {
+        border-top:1px solid black;
+    }
+    .CartComponent .item > *:last-child {
+         border-bottom:1px solid black;
+    }
+
+    .CartComponent .summary.items_total > * {
+
+        border: 0;
+    }
+    .CartComponent .summary.order_total > * {
+
+        border: 0;
+    }
+
+    .CartComponent .item [field] {
+        text-align: center;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .CartComponent .item [field='product'] {
+        /*flex-direction: column;*/
+        text-align: left;
+    }
+    .CartComponent .item [field='product'] IMG {
+        /*max-width:100%;*/
+        /*max-height:initial;*/
+        /*width:auto;*/
+    }
+    /*.CartComponent .item [field='price'] {*/
+    /*    text-align: right;*/
+    /*    justify-items: flex-end;*/
+    /*}*/
+    /*.CartComponent .item [field='line-total'] {*/
+    /*    text-align: right;*/
+    /*    justify-items: flex-end;*/
+    /*}*/
+}

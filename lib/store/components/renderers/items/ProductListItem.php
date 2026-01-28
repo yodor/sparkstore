@@ -8,13 +8,17 @@ include_once("store/utils/url/ProductURL.php");
 include_once("utils/url/DataParameter.php");
 
 include_once("store/beans/ProductPhotosBean.php");
+
+include_once("store/components/PriceLabel.php");
+include_once("store/components/CurrencyLabel.php");
+
 class ProductDetails extends Action
 {
     protected ProductListItem $item;
 
     protected Component $title;
     protected Container $info;
-    protected Container $price;
+    protected Container $priceLabel;
 
     public function __construct(ProductListItem $item)
     {
@@ -35,22 +39,22 @@ class ProductDetails extends Action
         $this->info->setRenderEnabled(false);
         $this->items()->append($this->info);
 
-        $this->price = new Container(false);
-        $this->price->setComponentClass("price_label");
-        $this->items()->append($this->price);
+        $this->priceLabel = new Container(false);
+        $this->priceLabel->setComponentClass("price_label");
+        $this->items()->append($this->priceLabel);
 
         if (DOUBLE_PRICE_ENABLED) {
-            $priceLabelEUR = new PriceLabel();
-            $priceLabelEUR->setName("EUR");
-            $priceLabelEUR->addClassName("left");
-            $priceLabelEUR->setCurrencyLabels("EUR", "&euro;");
-            $this->price->items()->append($priceLabelEUR);
+            $eurLabel = new PriceLabel();
+            $eurLabel->addClassName("left");
+            $eurLabel->setName("EUR");
+            $eurLabel->setCurrencyLabels("EUR", "&euro;");
+            $this->priceLabel->items()->append($eurLabel);
         }
 
-        $priceLabel = new PriceLabel();
-        $priceLabel->setName(DEFAULT_CURRENCY);
-        $priceLabel->setCurrencyLabels(DEFAULT_CURRENCY, "лв.");
-        $this->price->items()->append($priceLabel);
+        $curLabel = new PriceLabel();
+        $curLabel->setName(DEFAULT_CURRENCY);
+        $curLabel->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->priceLabel->items()->append($curLabel);
     }
 
     public function setData(array $data) : void
@@ -58,9 +62,9 @@ class ProductDetails extends Action
         parent::setData($data);
         $this->title->setContents($this->data["product_name"]);
 
-        $this->price->setRenderEnabled(true);
+        $this->priceLabel->setRenderEnabled(true);
         if ($this->data["sell_price"] < 1) {
-            $this->price->setRenderEnabled(false);
+            $this->priceLabel->setRenderEnabled(false);
             return;
         }
 
@@ -70,37 +74,37 @@ class ProductDetails extends Action
         }
 
         if (DOUBLE_PRICE_ENABLED) {
-            $eurPriceLabel = $this->price->items()->getByName("EUR");
-            if ($eurPriceLabel instanceof PriceLabel) {
-                $eurPriceLabel->availability()->setHref($availability);
+            $eurLabel = $this->priceLabel->items()->getByName("EUR");
+            if ($eurLabel instanceof PriceLabel) {
+                $eurLabel->availability()->setHref($availability);
 
-                $eurPriceLabel->priceOld()->setAmount(null);
+                $eurLabel->priceOld()->setAmount(null);
                 if ($this->item->isPromo()) {
-                    $eurPriceLabel->priceOld()->setAmount(($this->data["price"] / DOUBLE_PRICE_RATE));
+                    $eurLabel->priceOld()->setAmount(($this->data["price"] / DOUBLE_PRICE_RATE));
                 }
 
-                $eurPriceLabel->priceSell()->setAmount(($this->data["sell_price"] / DOUBLE_PRICE_RATE));
+                $eurLabel->priceSell()->setAmount(($this->data["sell_price"] / DOUBLE_PRICE_RATE));
 
                 if (!$this->item->isProductLinkedDataEnabled()) {
-                    $eurPriceLabel->disableLinkedData();
+                    $eurLabel->disableLinkedData();
                 }
             }
 
         }
 
-        $priceLabel = $this->price->items()->getByName(DEFAULT_CURRENCY);
-        if ($priceLabel instanceof PriceLabel) {
-            $priceLabel->availability()->setHref($availability);
+        $defLabel = $this->priceLabel->items()->getByName(DEFAULT_CURRENCY);
+        if ($defLabel instanceof PriceLabel) {
+            $defLabel->availability()->setHref($availability);
 
-            $priceLabel->priceOld()->setAmount(null);
+            $defLabel->priceOld()->setAmount(null);
             if ($this->item->isPromo()) {
-                $priceLabel->priceOld()->setAmount($this->data["price"]);
+                $defLabel->priceOld()->setAmount($this->data["price"]);
             }
 
-            $priceLabel->priceSell()->setAmount($this->data["sell_price"]);
+            $defLabel->priceSell()->setAmount($this->data["sell_price"]);
 
             if (!$this->item->isProductLinkedDataEnabled()) {
-                $priceLabel->disableLinkedData();
+                $defLabel->disableLinkedData();
             }
         }
 
@@ -189,134 +193,8 @@ class ProductPhoto extends Action
     }
 
 }
-class CurrencyLabel extends LabelSpan {
 
-    protected string $symbol = "";
-    protected ?float $value = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setComponentClass("price");
-
-        $this->label()->setTagName("span");
-        $this->label()->setComponentClass("currency");
-    }
-
-    public function setAmount(?float $amount) : void
-    {
-        $this->value = $amount;
-
-        if ($amount==null) {
-            $this->label()->setContents("");
-            $this->span()->setContents("");
-            return;
-        }
-        $this->span()->setContents(sprintf("%0.2f", $amount));
-        $this->label()->setContents($this->symbol);
-    }
-
-    public function getAmount() : ?float
-    {
-        return $this->value;
-    }
-
-    public function setSymbol(string $currency) : void
-    {
-        $this->symbol = $currency;
-    }
-    public function getSymbol() : string
-    {
-        return $this->symbol;
-    }
-}
-class PriceLabel extends Container {
-
-    protected ?Link $availabilityLink = null;
-    protected ?Meta $validUntilMeta = null;
-    protected ?Meta $currencyMeta = null;
-
-    protected ?CurrencyLabel $priceOld = null;
-    protected ?CurrencyLabel $priceSell = null;
-
-    public function __construct()
-    {
-        parent::__construct(false);
-        $this->setComponentClass("price_info");
-
-        $this->setAttribute("itemscope","");
-        $this->setAttribute("itemprop", "offers");
-        $this->setAttribute("itemtype", "https://schema.org/Offer");
-
-        $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
-        $this->validUntilMeta = new Meta();
-        $this->validUntilMeta->setAttribute("itemprop", "priceValidUntil");
-        $this->validUntilMeta->setContent($priceValidUntil);
-        $this->items()->append($this->validUntilMeta);
-
-        $this->availabilityLink = new Link();
-        $this->availabilityLink->removeAttribute("rel");
-        $this->availabilityLink->setAttribute("itemprop", "availability");
-        $this->items()->append($this->availabilityLink);
-
-        $this->currencyMeta = new Meta();
-        $this->currencyMeta->setAttribute("itemprop", "priceCurrency");
-        $this->currencyMeta->setContent(DEFAULT_CURRENCY);
-        $this->items()->append($this->currencyMeta);
-
-        $this->priceOld = new CurrencyLabel();
-        $this->priceOld->addClassName("old");
-        $this->items()->append($this->priceOld);
-
-        $this->priceSell = new CurrencyLabel();
-        $this->priceSell->addClassName("sell");
-        $this->priceSell->span()->setAttribute("itemprop", "price");
-        $this->items()->append($this->priceSell);
-
-    }
-
-    public function disableLinkedData() : void
-    {
-        $this->removeAttribute("itemprop");
-        $this->removeAttribute("itemscope");
-        $this->removeAttribute("itemtype");
-        $this->availability()->setRenderEnabled(false);
-        $this->validUntil()->setRenderEnabled(false);
-        $this->currency()->setRenderEnabled(false);
-        $this->priceSell()->span()->removeAttribute("itemprop");
-    }
-
-    public function setCurrencyLabels(string $iso3, string $symbol) : void
-    {
-        $this->currency()->setContent($iso3);
-        $this->priceOld()->setSymbol($symbol);
-        $this->priceSell()->setSymbol($symbol);
-    }
-
-    public function validUntil() : Meta
-    {
-        return $this->validUntilMeta;
-    }
-
-    public function availability() : Link
-    {
-        return $this->availabilityLink;
-    }
-
-    public function currency() : Meta
-    {
-        return $this->currencyMeta;
-    }
-
-    public function priceOld() : CurrencyLabel
-    {
-        return $this->priceOld;
-    }
-    public function priceSell() : CurrencyLabel
-    {
-        return $this->priceSell;
-    }
-}
 
 class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
 {
@@ -328,8 +206,6 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     protected ProductURL $detailsURL;
 
     protected bool $productLinkedDataEnabled = true;
-
-
 
     protected Container $wrap;
 
@@ -388,6 +264,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     {
         return new ProductPhoto($this);
     }
+
     protected function CreateDetails() : ProductDetails
     {
         return new ProductDetails($this);
@@ -439,6 +316,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     {
         return ((float)$this->data["price"] != (float)$this->data["sell_price"] && (float)$this->data["price"]>0);
     }
+
     public function getDiscountPercent(): float
     {
         $discountPercent = $this->data["discount_percent"];
@@ -454,6 +332,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     {
         return $this->productLinkedDataEnabled;
     }
+
     public function disableProductLinkedData() : void
     {
         $this->productLinkedDataEnabled = false;

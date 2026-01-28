@@ -60,40 +60,25 @@ $proc->process($form);
 
 $page->setTitle(tr("Избор на офис на куриер за доставка"));
 
-$page->startRender();
+$frend->getSubmitLine()->setRenderEnabled(false);
+$page->base()->items()->append($frend);
 
+$page->base()->setClassName("item ekont_office $empty");
 
-$page->drawCartItems();
-
-echo "<div class='item ekont_office $empty'>";
-
-    echo "<div class='Caption'>" . tr("Офис на куриер за доставка") . "</div>";
-
-//    echo "<div class='selected_office'>";
-//    echo str_replace("\r", "<br>", (string)$form->getInput("office")->getValue());
-//    echo "</div>";
-
-    $frend->getSubmitLine()->setRenderEnabled(false);
-    $frend->render();
-
-echo "</div>";
-
-
+$page->initialize();
 
 $back_url = Session::get("checkout.navigation.back", "delivery.php");
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString($back_url);
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Продължи"));
+$action->setContents(tr("Продължи"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.CourierOffice.submit()");
 
-$page->renderNavigation();
+$page->render();
 
-
-$page->finishRender();
 ?>

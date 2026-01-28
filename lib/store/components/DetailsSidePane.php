@@ -10,31 +10,26 @@ class SidePaneGroup extends Container
 
     }
 }
-class NameValueItem extends Container
+class NameValueItem extends LabelSpan
 {
-    protected Component $_name;
-    protected Component $_value;
 
     public function __construct()
     {
-        parent::__construct(false);
+        parent::__construct();
         $this->setComponentClass("item");
         $this->wrapper_enabled = false;
 
-        $this->_name = new Component(false);
-        $this->_name->setComponentClass("name");
-        $this->_name->setTagName("dt");
-        $this->items()->append($this->_name);
+        $this->label->setComponentClass("name");
+        $this->label->setTagName("dt");
 
-        $this->_value = new Component(false);
-        $this->_value->setComponentClass("value");
-        $this->_value->setTagName("dd");
-        $this->items()->append($this->_value);
+        $this->span->setComponentClass("value");
+        $this->span->setTagName("dd");
+
     }
     public function setNameValue(string $name, string $value) : void
     {
-        $this->_name->setContents($name);
-        $this->_value->setContents($value);
+        $this->label->setContents($name);
+        $this->span->setContents($value);
     }
 }
 class NameValueList extends Container
@@ -342,69 +337,35 @@ class DetailsSidePane extends Container
 
         if (DOUBLE_PRICE_ENABLED) {
 
-            $item = new Container(false);
-            $item->setComponentClass("item");
-            $item->setClassName("price_info left");
+            $item = new PriceLabel();
+            $item->addClassName("item");
+            $item->setCurrencyLabels("EUR", "&euro;");
+            $item->disableLinkedData();
 
+            $item->priceOld()->setAmount(null);
             if ($this->sellable->isPromotion()) {
-                $labelOld = new LabelSpan();
-                $labelOld->setComponentClass("old");
-
-                $labelOld->label()->setTagName("span");
-                $labelOld->label()->setComponentClass("value");
-                $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice() / DOUBLE_PRICE_RATE));
-
-                $labelOld->span()->setComponentClass("currency");
-                $labelOld->span()->setContents("&euro;&nbsp");
-
-                $item->items()->append($labelOld);
-
-
+                $item->priceOld()->setAmount($priceInfo->getOldPrice() / DOUBLE_PRICE_RATE);
             }
-
-            $labelSell = new LabelSpan();
-            $labelSell->setComponentClass("sell");
-
-            $labelSell->label()->setTagName("span");
-            $labelSell->label()->setAttribute("itemprop", "price");
-            $labelSell->label()->setComponentClass("value");
-            $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()/DOUBLE_PRICE_RATE));
-
-            $labelSell->span()->setComponentClass("currency");
-            $labelSell->span()->setContents("&euro;&nbsp");
-
-            $item->items()->append($labelSell);
-
+            $item->priceSell()->setAmount(null);
+            if ($priceInfo->getSellPrice() > 0) {
+                $item->priceSell()->setAmount($priceInfo->getSellPrice()/DOUBLE_PRICE_RATE);
+            }
             $grp->items()->append($item);
         }
 
-        $item = new Container(false);
-        $item->setComponentClass("item");
-        $item->setClassName("price_info");
+        $item = new PriceLabel();
+        $item->addClassName("item");
+        $item->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $item->disableLinkedData();
 
-        $labelOld = new LabelSpan();
-        $labelOld->label()->setTagName("span");
-        $labelOld->setComponentClass("old");
-        if (!$this->sellable->isPromotion()) {
-            $labelOld->setClassName("disabled");
+        $item->priceOld()->setAmount(null);
+        if ($this->sellable->isPromotion()) {
+            $item->priceOld()->setAmount($priceInfo->getOldPrice());
         }
-        $labelOld->label()->setComponentClass("value");
-        $labelOld->label()->setContents(sprintf("%0.2f", $priceInfo->getOldPrice()));
-        $labelOld->span()->setComponentClass("currency");
-        $labelOld->span()->setContents("&nbsp лв.");
-        $item->items()->append($labelOld);
-
-        $labelSell = new LabelSpan();
-        $labelSell->label()->setTagName("span");
-        $labelSell->setComponentClass("sell");
-
-        $labelSell->label()->setComponentClass("value");
-        $labelSell->label()->setContents(sprintf("%0.2f", $priceInfo->getSellPrice()));
-        $labelSell->span()->setComponentClass("currency");
-        $labelSell->span()->setContents("&nbsp лв.");
-
-        $item->items()->append($labelSell);
-
+        $item->priceSell()->setAmount(null);
+        if ($priceInfo->getSellPrice() > 0) {
+            $item->priceSell()->setAmount($priceInfo->getSellPrice());
+        }
         $grp->items()->append($item);
 
 

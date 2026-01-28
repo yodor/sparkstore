@@ -12,7 +12,34 @@ include_once("store/beans/CourierAddressesBean.php");
 include_once("store/utils/OrderProcessor.php");
 include_once("store/mailers/OrderConfirmationMailer.php");
 include_once("store/mailers/OrderConfirmationAdminMailer.php");
+class OrderSection extends Container
+{
+    protected Container $value;
+    protected Button $button;
+    public function __construct(string $title, string $className)
+    {
+        parent::__construct(false);
+        $this->setComponentClass("item");
+        $this->addClassName($className);
 
+        $this->setCaption($title);
+
+        $this->value = new Container(false);
+        $this->value->setComponentClass("value");
+        $this->items()->append($this->value);
+
+        $this->button = Button::Action( tr("Промени"), "", "ColorButton");
+        $this->items()->append($this->button);
+    }
+    public function value() : Container
+    {
+        return $this->value;
+    }
+    public function button() : Button
+    {
+        return $this->button;
+    }
+}
 class RequireInvoiceInputForm extends InputForm
 {
     public function __construct()
@@ -30,7 +57,6 @@ class RequireInvoiceFormProcessor extends FormProcessor
 
     public function processImpl(InputForm $form) : void
     {
-
         parent::processImpl($form);
 
         if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
@@ -46,12 +72,7 @@ class RequireInvoiceFormProcessor extends FormProcessor
             header("Location: invoice_details.php");
             exit;
         }
-
-
-
-
     }
-
 }
 
 class OrderNoteInputForm extends InputForm
@@ -133,47 +154,29 @@ $nfrend->getSubmitLine()->setRenderEnabled(false);
 $noteproc = new OrderNoteFormProcessor();
 $noteproc->process($noteform);
 
+
 $page->setTitle(tr("Потвърди поръчка"));
 
-$page->startRender();
+///
+/// OrderSections
+///
 
 
-$page->drawCartItems();
+//delivery_courier
+$section = new OrderSection(tr("Куриер за доставка"), "delivery_courier");
+$section->value()->setContents($cart->getDelivery()->getSelectedCourier()->getTitle());
+$section->button()->setAttribute("href", "delivery.php");
+$page->base()->items()->append($section);
 
-echo "<div class='item delivery_courier'>";
+//delivery_type
+$section = new OrderSection(tr("Начин на доставка"), "delivery_type");
+$section->value()->setContents($cart->getDelivery()->getSelectedCourier()->getSelectedOption()->getTitle());
+$section->button()->setAttribute("href", "delivery_option.php");
+$page->base()->items()->append($section);
 
-echo "<h1 class='Caption'>" . tr("Куриер за доставка") . "</h1>";
+//address
+$section = new OrderSection(tr("Адрес за доставка"), "address");
 
-echo "<div class='value'>";
-echo tr($cart->getDelivery()->getSelectedCourier()->getTitle());
-echo "</div>";
-
-echo "<a class='ColorButton' href='delivery.php'>";
-echo tr("Промени");
-echo "</a>";
-
-echo "</div>"; //item delivery_type
-
-
-echo "<div class='item delivery_type'>";
-
-echo "<h1 class='Caption'>" . tr("Начин на доставка") . "</h1>";
-
-echo "<div class='value'>";
-echo tr($cart->getDelivery()->getSelectedCourier()->getSelectedOption()->getTitle());
-echo "</div>";
-
-echo "<a class='ColorButton' href='delivery_option.php'>";
-echo tr("Промени");
-echo "</a>";
-
-echo "</div>"; //item delivery_type
-
-echo "<div class='item address'>";
-
-echo "<h1 class='Caption'>" . tr("Адрес за доставка") . "</h1>";
-
-echo "<div class='value'>";
 $option = $cart->getDelivery()->getSelectedCourier()->getSelectedOption();
 if ($option->getID() == DeliveryOption::USER_ADDRESS) {
     $form = new ClientAddressInputForm();
@@ -183,14 +186,10 @@ if ($option->getID() == DeliveryOption::USER_ADDRESS) {
         header("Location: delivery_address.php");
         exit;
     }
-
     $form->loadBeanData($row[$bean->key()], $bean);
-    $form->renderPlain();
 
-    echo "<a class='ColorButton' href='delivery_address.php'>";
-    echo tr("Промени");
-    echo "</a>";
-
+    $section->value()->items()->append($form->CreatePlainRenderer());
+    $section->button()->setAttribute("href", "delivery_address.php");
 }
 else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
     $form = new CourierOfficeInputForm();
@@ -201,70 +200,57 @@ else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
         header("Location: delivery_courier.php");
         exit;
     }
-
     $form->loadBeanData($row[$bean->key()], $bean);
-    $form->renderPlain();
 
-    echo "<a class='ColorButton' href='delivery_courier.php'>";
-    echo tr("Промени");
-    echo "</a>";
+    $section->value()->items()->append($form->CreatePlainRenderer());
+    $section->button()->setAttribute("href", "delivery_courier.php");
 }
-echo "</div>";//value
+$page->base()->items()->append($section);
 
-echo "</div>";// item address
+//invoicing
+$section = new OrderSection(tr("Фактуриране"), "invoicing");
+$section->value()->items()->append($frend);
 
-echo "<div class='item invoicing'>";
-
-echo "<h1 class='Caption'>" . tr("Фактуриране") . "</h1>";
-
-$frend->render();
-
-echo "<div class='value'>";
 if ($idbrow && $cart->getRequireInvoice()) {
     $idform = new InvoiceDetailsInputForm();
     $idform->loadBeanData($idbrow[$idb->key()], $idb);
-    $idform->renderPlain();
-
-    echo "<a class='ColorButton' href='invoice_details.php'>";
-    echo tr("Промени");
-    echo "</a>";
+    $section->value()->items()->append($idform->CreatePlainRenderer());
 }
-echo "</div>";
+$section->button()->setAttribute("href", "invoice_details.php");
+$page->base()->items()->append($section);
 
-echo "</div>";
+//order note
+$section = new OrderSection(tr("Бележка към поръчката"), "note");
+$section->value()->items()->append($nfrend);
+$section->button()->setRenderEnabled(false);
+$page->base()->items()->append($section);
 
-echo "<div class='item note'>";
-echo "<h1 class='Caption'>" . tr("Бележка към поръчката") . "</h1>";
-$nfrend->render();
-echo "</div>";
 
+$note = new Component(false);
+$note->setComponentClass("acceptNote");
+$note->setContents("<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='" . LOCAL . "/pages/index.php?class=terms'>" . tr("Условия за ползване") . "</a></i>");
+$page->base()->items()->append($note);
+
+
+$page->initialize();
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
-$action->setTitle(tr("Назад"));
+$action->setContents(tr("Назад"));
 $action->setClassName("edit");
 $action->getURL()->fromString("cart.php");
 
-$cmp = $page->getNavigation()->items()->getByName(CheckoutPage::NAV_CENTER);
-if ($cmp instanceof ClosureComponent) {
-    $render = function (ClosureComponent $cmp) {
-        echo "<div class='note'>";
-        echo "<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='" . LOCAL . "/pages/index.php?class=terms'>" . tr("Условия за ползване") . "</a></i>";
-        echo "</div>";
-    };
-    $cmp->setClosure($render);
-}
+
+$action = $page->getAction(CheckoutPage::NAV_CENTER);
+$action->setClassName("disabled");
 
 $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-$action->setTitle(tr("Потвърди поръчка"));
+$action->setContents(tr("Потвърди поръчка"));
 $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.OrderNoteInputForm.submit()");
 
 
-$page->renderNavigation();
-
-
 Session::set("checkout.navigation.back",  URL::Current()->toString());
 
-$page->finishRender();
+$page->render();
 
 ?>

@@ -4,8 +4,17 @@ include_once("class/pages/CheckoutPage.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/beans/SellableProducts.php");
 
+/**
+ * 1. cart.php
+ * 2. customer.php
+ * 3. chooser courier
+ * 4. choose destination address option (personal, office)
+ * 5. confirm
+ */
+
 $page = new CheckoutPage();
-$page->modify_enabled = TRUE;
+$page->getCartComponent()->setModifyEnabled(TRUE);
+
 
 $cart = Cart::Instance();
 
@@ -97,46 +106,32 @@ catch (Exception $e) {
 
 $page->setTitle(tr("Съдържание на кошницата"));
 
+$page->initialize();
 
-$page->startRender();
-
-
-/**
- * 1. cart.php
- * 2. customer.php
- * 3. chooser courier
- * 4. choose destination address option (personal, office)
- * 5. confirm
- */
-
-echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
-
-$page->drawCartItems();
-
-if ($page->total) {
+if ($cart->itemsCount()>0) {
     $action = $page->getAction(CheckoutPage::NAV_LEFT);
-    $action->setTitle(tr("Изпразни кошницата"));
+    $action->setContents(tr("Изпразни кошницата"));
     $action->setClassName("empty");
     $action->getURL()->fromString("cart.php?clear");
 }
 
 $action = $page->getAction(CheckoutPage::NAV_CENTER);
-$action->setTitle(tr("Продължи пазаруването"));
+$action->setContents(tr("Продължи пазаруването"));
 $action->setClassName("continue_shopping");
 $href = Session::Get("shopping.list", new ProductListURL());
 $action->getURL()->fromString($href);
 
-if ($page->total) {
+if ($cart->itemsCount()>0) {
     $action = $page->getAction(CheckoutPage::NAV_RIGHT);
-    $action->setTitle(tr("Каса"));
+    $action->setContents(tr("Каса"));
     $action->setClassName("checkout");
     $action->getURL()->fromString("customer.php");
 }
 
-$page->renderNavigation();
+$page->render();
+
 
 Session::set("checkout.navigation.back", URL::Current()->toString());
 
-$page->finishRender();
 
 ?>

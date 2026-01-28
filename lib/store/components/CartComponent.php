@@ -1,73 +1,343 @@
 <?php
 include_once("components/Component.php");
-include_once("store/utils/cart/Cart.php");
+include_once("components/renderers/cells/TableCell.php");
+
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductsBean.php");
+
 include_once("store/utils/SellableItem.php");
+include_once("store/utils/cart/Cart.php");
 
-class CartComponent extends Component implements IHeadContents
+include_once("store/components/PriceLabel.php");
+
+class SummaryItem extends Container
 {
-
-    protected $heading_text = "";
-    protected $modify_enabled = TRUE;
-
-    protected $total = 0.0;
-    protected $order_total = 0.0;
-    protected $delivery_price = 0.0;
-    protected $discount_amount = 0.0;
-
-    /**
-     * Products
-     * @var ProductsBean
-     */
-    protected $products;
-
-
-    //
-    /**
-     * product gallery photos (for non color serires)
-     * @var ProductPhotosBean
-     */
-    protected $product_photos;
-
-    /**
-     * @var ImagePopup
-     */
-    protected $image_popup;
-
-    /**
-     * Main table holding the cart items
-     * @var Component
-     */
-    protected $table;
+    protected Container $label;
+    protected Container $value;
+    protected PriceLabel $price;
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(false);
 
+        $this->setComponentClass("summary");
 
-        $this->products = new ProductsBean();
-        $this->product_photos = new ProductPhotosBean();
-        $this->image_popup = new ImagePopup();
-        $this->image_popup->image()->setPhotoSize(-1, 100);
-        $this->image_popup->image()->getStorageItem()->enableExternalURL(TRUE);
+        $this->label = new Container(false);
+        $this->label->setComponentClass("label");
+        $this->items()->append($this->label);
 
-        $this->table = new Component();
-        $this->table->setTagName("table");
-        $this->table->setClassName("cart_view");
+        $this->value = new Container(false);
+        $this->value->setComponentClass("value");
 
+        if (DOUBLE_PRICE_ENABLED) {
+            $eurPrice = new PriceLabel();
+            $eurPrice->setCurrencyLabels("EUR", "&euro;");
+            $eurPrice->disableLinkedData();
 
+            $this->value->items()->append($eurPrice);
+        }
+
+        $this->price = new PriceLabel();
+        $this->price->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->price->disableLinkedData();
+
+        $this->value->items()->append($this->price);
+
+        $this->items()->append($this->value);
     }
-
-    public function getTable(): Component
+    protected function processAttributes(): void
     {
-        return $this->table;
+        parent::processAttributes();
+        if (DOUBLE_PRICE_ENABLED) {
+            $priceLabel = $this->value->items()->getByName("EUR");
+            if ($priceLabel instanceof PriceLabel) {
+                $priceLabel->priceSell()->setAmount($this->price->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+            }
+        }
+
     }
 
-    public function getImagePopup() : ImagePopup
+    public function label(): Container
     {
-        return $this->image_popup;
+        return $this->label;
     }
+    public function value(): Container
+    {
+        return $this->value;
+    }
+    public function price() : PriceLabel
+    {
+        return $this->price;
+    }
+}
+
+class CartListEmpty extends Container {
+    public function __construct()
+    {
+        parent::__construct(false);
+        $this->addClassName("empty");
+
+        $h = new Component(false);
+        $h->setContents(tr("Your shopping cart is empty."));
+        $h->setAttribute("field", "cart_empty");
+        $this->items()->append($h);
+    }
+}
+
+class CartListHeading extends Container {
+    public function __construct() {
+        parent::__construct(false);
+        $this->setComponentClass("heading");
+
+        $h = new Component(false);
+        $h->setComponentClass("");
+        $h->setContents("#");
+        $h->setAttribute("field", "position");
+        $this->items()->append($h);
+
+        $h = new Component(false);
+        $h->setComponentClass("");
+        $h->setContents(tr("Product"));
+        $h->setAttribute("field", "product");
+        $this->items()->append($h);
+
+        $h = new Component(false);
+        $h->setComponentClass("");
+        $h->setContents(tr("Quantity"));
+        $h->setAttribute("field", "qty");
+        $this->items()->append($h);
+
+        $h = new Component(false);
+        $h->setComponentClass("");
+        $h->setContents(tr("Price"));
+        $h->setAttribute("field", "price");
+        $this->items()->append($h);
+
+        $h = new Component(false);
+        $h->setComponentClass("");
+        $h->setContents(tr("Total"));
+        $h->setAttribute("field", "line-total");
+        $this->items()->append($h);
+
+    }
+}
+class CartListItem extends Container {
+
+    protected CartComponent $cartComponent;
+
+
+    protected Action $actIncrement;
+    protected Action $actDecrement;
+    protected Action $actRemove;
+
+    protected int $position = -1;
+
+    protected TextComponent $qty;
+
+    protected ImageStorage $image;
+    protected TextComponent $label;
+
+    protected PriceLabel $price;
+    protected PriceLabel $lineTotal;
+
+    public function __construct(CartComponent $parent)
+    {
+        parent::__construct(false);
+        $this->setComponentClass("item");
+
+        $this->cartComponent = $parent;
+
+        $this->actRemove = new Action();
+        $this->actRemove->setComponentClass("");
+        $this->actRemove->setAttribute("action", "remove");
+        $this->actRemove->setContents("&#8855;");
+        $this->actRemove->setTitle("Remove");
+        $removeURL = new URL("cart.php");
+        $removeURL->add(new URLParameter("remove"));
+        $removeURL->add(new DataParameter("item"));
+        $this->actRemove->setURL($removeURL);
+
+        $tdPosition = new Container(false);
+        $tdPosition->setComponentClass("");
+        $tdPosition->setAttribute("field", "position");
+        $tdPosition->items()->append($this->actRemove);
+        $this->items()->append($tdPosition);
+
+        $tdProduct = new Container(false);
+        $tdProduct->setComponentClass("");
+        $tdProduct->setAttribute("field", "product");
+
+        $this->image = new ImageStorage();
+        $this->image->setTagName("a");
+        $this->image->setURL(new ProductURL());
+        $this->image->image()->setPhotoSize(0,275);
+        $tdProduct->items()->append($this->image);
+
+        $this->label = new TextComponent();
+        $tdProduct->items()->append($this->label);
+
+        $this->items()->append($tdProduct);
+
+
+        $tdQty = new Container(false);
+        $tdQty->setComponentClass("");
+        $tdQty->setAttribute("field", "qty");
+
+        $tdQty->items()->append(new TextComponent(tr("Quantity"), "mobile-label"));
+
+        $this->actDecrement = new Action();
+        $this->actDecrement->setComponentClass("");
+        $this->actDecrement->setAttribute("action", "decrement");
+        $this->actDecrement->setContents("&#8854;");
+        $this->actDecrement->setTitle(tr("Decrease quantity"));
+        $decURL = new URL("cart.php");
+        $decURL->add(new URLParameter("decrement"));
+        $decURL->add(new DataParameter("item"));
+        $this->actDecrement->setURL($decURL);
+        $tdQty->items()->append($this->actDecrement);
+
+        $this->qty = new TextComponent();
+        $this->qty->setComponentClass("cart_qty");
+        $tdQty->items()->append($this->qty);
+
+        $this->actIncrement = new Action();
+        $this->actIncrement->setComponentClass("");
+        $this->actIncrement->setAttribute("action", "increment");
+        $this->actIncrement->setContents("&#8853;");
+        $this->actIncrement->setTitle(tr("Increase quantity"));
+        $incURL = new URL("cart.php");
+        $incURL->add(new URLParameter("increment"));
+        $incURL->add(new DataParameter("item"));
+        $this->actIncrement->setURL($incURL);
+        $tdQty->items()->append($this->actIncrement);
+
+        $this->items()->append($tdQty);
+
+        $tdPrice = new Container(false);
+        $tdPrice->setComponentClass("");
+        $tdPrice->setAttribute("field", "price");
+        $tdPrice->items()->append(new TextComponent(tr("Price"), "mobile-label"));
+        if (DOUBLE_PRICE_ENABLED) {
+            $eurPrice = new PriceLabel();
+            $eurPrice->setCurrencyLabels("EUR", "&euro;");
+            $eurPrice->disableLinkedData();
+            $tdPrice->items()->append($eurPrice);
+        }
+        $this->price = new PriceLabel();
+        $this->price->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->price->disableLinkedData();
+        $tdPrice->items()->append($this->price);
+        $this->items()->append($tdPrice);
+
+        $tdLineTotal = new Container(false);
+        $tdLineTotal->setComponentClass("");
+        $tdLineTotal->setAttribute("field", "line-total");
+        $tdLineTotal->items()->append(new TextComponent(tr("Total"),"mobile-label"));
+
+        if (DOUBLE_PRICE_ENABLED) {
+            $eurLine = new PriceLabel();
+            $eurLine->setCurrencyLabels("EUR", "&euro;");
+            $eurLine->disableLinkedData();
+            $tdLineTotal->items()->append($eurLine);
+        }
+
+        $this->lineTotal = new PriceLabel();
+        $this->lineTotal->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->lineTotal->disableLinkedData();
+        $tdLineTotal->items()->append($this->lineTotal);
+        $this->items()->append($tdLineTotal);
+
+    }
+    protected function processAttributes(): void
+    {
+        parent::processAttributes();
+        if (!$this->cartComponent->isModifyEnabled()) {
+            $this->actRemove->setContents(($this->position+1));
+            $this->actRemove->setTagName("span");
+            $this->actRemove->removeAttribute("href");
+
+            $this->actIncrement->setRenderEnabled(false);
+            $this->actDecrement->setRenderEnabled(false);
+        }
+        if (DOUBLE_PRICE_ENABLED) {
+            $tdPrice = $this->items()->getByAttribute("price", "field");
+            $eurPrice = $tdPrice->items()->getByName("EUR");
+            if ($eurPrice instanceof PriceLabel) {
+                if ($this->price->priceOld()->getAmount()) {
+                    $eurPrice->priceOld()->setAmount($this->price->priceOld()->getAmount() / DOUBLE_PRICE_RATE);
+                }
+                $eurPrice->priceSell()->setAmount($this->price->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+            }
+
+            $tdLine = $this->items()->getByAttribute("line-total", "field");
+            $eurPrice = $tdLine->items()->getByName("EUR");
+            if ($eurPrice instanceof PriceLabel) {
+                $eurPrice->priceSell()->setAmount($this->lineTotal->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+            }
+        }
+    }
+
+    public function setEntry(CartEntry $cartEntry, int $position) : void
+    {
+        $item = $cartEntry->getItem();
+
+        $this->position = $position;
+
+        //position/remove
+        $data = array("item"=>$item->hash());
+        $this->actRemove->getURL()->setData($data);
+        $this->actIncrement->getURL()->setData($data);
+        $this->actDecrement->getURL()->setData($data);
+
+        //image
+        $url = $this->image->getURL();
+        if ($url instanceof ProductURL) {
+            $url->setProductID($item->getProductID());
+            $url->setProductName($item->getTitle());
+        }
+        $this->image->image()->setStorageItem($item->getMainPhoto());
+
+
+
+        //title
+        $title = $item->getTitle() . "<BR>";
+        $variants = $item->getVariantNames();
+        foreach ($variants as $idx=>$variantName) {
+            $variantItem = $item->getVariant($variantName);
+
+            if ($variantItem instanceof VariantItem) {
+                $title.= $variantName.": ".$variantItem->getSelected()."<BR>";
+            }
+        }
+        $this->label->setContents($title);
+
+        $this->qty->setContents($cartEntry->getQuantity());
+
+        $this->price->priceOld()->setAmount(null);
+        if ($item->isPromotion()) {
+            $this->price->priceOld()->setAmount($item->getPriceInfo()->getOldPrice());
+        }
+        $this->price->priceSell()->setAmount($item->getPriceInfo()->getSellPrice());
+
+        $this->lineTotal->priceOld()->setAmount(null);
+        $this->lineTotal->priceSell()->setAmount($cartEntry->getLineTotal());
+    }
+}
+class CartComponent extends Container implements IHeadContents
+{
+
+    protected bool $modify_enabled = false;
+
+    protected float $total = 0.0;
+    protected float $order_total = 0.0;
+    protected float $delivery_price = 0.0;
+    protected float $discount_amount = 0.0;
+
+    public function __construct()
+    {
+        parent::__construct(false);
+    }
+
 
     public function requiredStyle(): array
     {
@@ -76,178 +346,28 @@ class CartComponent extends Component implements IHeadContents
         return $arr;
     }
 
-//    public function setCart(Cart $cart)
-//    {
-//        $this->cart = $cart;
-//    }
-
-    public function setHeadingText(string $heading_text)
-    {
-        $this->heading_text = $heading_text;
-    }
-
-    public function setModifyEnabled(bool $mode)
+    public function setModifyEnabled(bool $mode) : void
     {
         $this->modify_enabled = $mode;
     }
 
-    public function getTotal() : float
+    public function isModifyEnabled() : bool
     {
-        return $this->total;
+        return $this->modify_enabled;
     }
 
-    public function getOrderTotal() : float
-    {
-        return $this->order_total;
-    }
-
-    public function getDeliveryPrice() : float
-    {
-        return $this->delivery_price;
-    }
-
-    protected function renderCartItem(int $position, CartEntry $cartEntry)
-    {
-
-
-        $item = $cartEntry->getItem();
-
-        $itemHash = $item->hash();
-
-        $prodID = $item->getProductID();
-
-        //product inventory ID
-        echo "<td field='position'>";
-        if ($this->modify_enabled) {
-            echo "<a class='item_remove' href='cart.php?remove&item=$itemHash'>&#8855;</a>";
-        }
-        else {
-            echo ($position+1);
-        }
-        echo "</td>";
-
-        //only one photo here
-        echo "<td field='product_photo'>";
-
-        $product_url = LOCAL . "/products/details.php?prodID=$prodID";
-        $this->image_popup->setAttribute("href",  fullURL($product_url));
-
-        $sitem = $item->getMainPhoto();
-
-        $this->image_popup->image()->setStorageItem($sitem);
-
-        $this->image_popup->render();
-
-        echo "</td>";
-
-        echo "<td field='product_model'>";
-        //         trbean($prodID, "product_name", $product, $this->products);
-
-        echo $item->getTitle() . "<BR>";
-
-        $variants = $item->getVariantNames();
-        foreach ($variants as $idx=>$variantName) {
-            $variantItem = $item->getVariant($variantName);
-
-            if ($variantItem instanceof VariantItem) {
-                echo $variantName.": ".$variantItem->getSelected()."<BR>";
-            }
-        }
-
-
-        //echo tr("Код") . ": " . $item->get . "-" . $prodID;
-
-        echo "</td>";
-
-        echo "<td field='qty'>";
-        echo "<label>" . tr("Количество") . ": </label>";
-        //             echo "<div class='qty'>";
-        if ($this->modify_enabled) {
-            echo "<a class='qty_adjust minus' href='cart.php?decrement&item=$itemHash'>&#8854;</a>";
-        }
-        echo "<span class='cart_qty'>" . $cartEntry->getQuantity() . "</span>";
-        if ($this->modify_enabled) {
-            echo "<a class='qty_adjust plus' href='cart.php?increment&item=$itemHash'>&#8853;</a>";
-        }
-        //             echo "</div>";
-        echo "</td>";
-
-
-        echo "<td field='price'>";
-        echo "<label>" . tr("Цена") . ":&nbsp;</label>";
-        //                 $price = $currency_rates->getPrice($item["sell_price"]);
-        //                 echo sprintf("%0.2f ".$price["symbol"] , $price["price_value"]);
-
-
-        if (DOUBLE_PRICE_ENABLED) {
-            echo "<div class='addon_price'>" . formatPrice($cartEntry->getPrice() / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
-        }
-        echo "<span>" . formatPrice($cartEntry->getPrice()) . "</span>";
-
-        echo "</td>";
-
-        echo "<td field='line-total'>";
-        echo "<label>" . tr("Общо") . ":&nbsp;</label>";
-        //                 $line_total = ($qty * (float)$price["price_value"]);
-        //                 echo sprintf("%0.2f ".$price["symbol"], $line_total );
-
-        if (DOUBLE_PRICE_ENABLED) {
-            echo "<div class='addon_price'>" . formatPrice($cartEntry->getLineTotal() / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
-        }
-        echo "<span>" . formatPrice($cartEntry->getLineTotal()) . "</span>";
-
-        echo "</td>";
-
-        //         echo "<td field='actions'>";
-
-        //         echo "</td>";
-
-    }
-
-    public function startRender(): void
-    {
-        parent::startRender();
-
-        if ($this->heading_text) {
-            echo "<div class='heading'>";
-            echo $this->heading_text;
-            echo "</div>";
-        }
-
-        $this->table->startRender();
-    }
-
-    public function finishRender(): void
-    {
-        $this->table->finishRender();
-        parent::finishRender();
-    }
-
-    protected function renderImpl(): void
+    public function initialize(): void
     {
 
         $cart = Cart::Instance();
 
-        echo "<tr label='heading'>";
-        echo "
-        <th>#</th>
-        <th colspan=2 field='product'>" . tr("Продукт") . "</th>
-        <th field='qty'>" . tr("Количество") . "</th>
-        <th field='price'>" . tr("Ед. цена") . "</th>
-        <th field='line_total'>" . tr("Общо") . "</th>
-        ";
-        echo "</tr>";
-
-        //global $products, $photos, $currency_rates;
+        $this->items()->clear();
+        $this->items()->append(new CartListHeading());
 
         $total = 0;
 
         if ($cart->itemsCount() == 0) {
-            echo "<tr>";
-            echo "<td colspan=6 field='cart_empty'>";
-            echo tr("Вашата кошница е празна");
-            echo "</td>";
-            echo "</tr>";
+            $this->items()->append(new CartListEmpty());
         }
         else {
 
@@ -257,26 +377,16 @@ class CartComponent extends Component implements IHeadContents
             $itemsAll = $cart->items();
 
             foreach ($itemsAll as $itemHash => $cartEntry) {
-
                 if (!($cartEntry instanceof CartEntry)) continue;
 
-                echo "<tr label='item'>";
-
-                $this->renderCartItem($items_listed, $cartEntry);
+                $item = new CartListItem($this);
+                $item->setEntry($cartEntry, $items_listed);
+                $this->items()->append($item);
 
                 $total += $cartEntry->getLineTotal();
-
                 $num_items_total += ($cartEntry->getQuantity());
-
-                echo "</tr>";
-
                 $items_listed++;
-
-
             }
-
-
-
         }
 
         $order_total = $total;
@@ -284,25 +394,12 @@ class CartComponent extends Component implements IHeadContents
         if ($total > 0) {
             $this->total = $total;
 
-            echo "<tr class='summary items_total' label='items_total'>";
-            //             echo "<td colspan=4 rowspan=3 field='items_total'>";
-            //             echo $num_items_total." ";
-            //             echo ($num_items_total>1)? tr("Продукта") : tr("Продукт");
-            //             echo "</td>";
+            $summaryItem = new SummaryItem();
+            $summaryItem->addClassName("items_total");
+            $summaryItem->label()->setContents(tr("Products Total"));
+            $summaryItem->price()->priceSell()->setAmount($total);
+            $this->items()->append($summaryItem);
 
-            echo "<td colspan=5 class='label'>";
-            echo tr("Продукти общо") . ": ";
-            echo "</td>";
-
-            echo "<td class='value'>";
-
-            if (DOUBLE_PRICE_ENABLED) {
-                echo "<div class='addon_price'>" . formatPrice($total / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
-            }
-            echo formatPrice($total);
-            echo "</td>";
-
-            echo "</tr>";
 
             $discount = $cart->getDiscount();
             $this->discount_amount = $discount->amount();
@@ -310,17 +407,11 @@ class CartComponent extends Component implements IHeadContents
             $order_total = (float)$order_total - (float)$this->discount_amount;
 
             if ($discount->amount()) {
-                echo "<tr class='summary discount' label='discount'>";
-
-                echo "<td colspan=5 class='label'>";
-                echo tr("Отстъпки") . ": ";
-                echo "</td>";
-
-                echo "<td class='value'>";
-                echo $discount->label();
-                echo "</td>";
-
-                echo "</tr>";
+                $discountItem = new SummaryItem();
+                $discountItem->addClassName("discount");
+                $discountItem->label()->setContents(tr("Discount"));
+                $discountItem->price()->priceSell()->setAmount($discount->amount());
+                $this->items()->append($discountItem);
             }
 
             $selected_courier = $cart->getDelivery()->getSelectedCourier();
@@ -331,64 +422,37 @@ class CartComponent extends Component implements IHeadContents
 
             if ($selected_option != NULL) {
 
-                echo "<tr class='summary delivery' label='delivery'>";
-
-                echo "<td colspan=5 class='label' >";
-                echo tr("Доставка") . ": ";
-                echo "</td>";
-
-                echo "<td class='value'>";
-
+                $deliveryItem = new SummaryItem();
+                $deliveryItem->addClassName("delivery");
+                $deliveryItem->label()->setContents(tr("Delivery"));
+                $this->items()->append($deliveryItem);
 
                 $delivery_price = $selected_option->getPrice();
 
-                //              $price = $currency_rates->getPrice($delivery_price);
-
                 if ($delivery_price>0) {
-                    if (DOUBLE_PRICE_ENABLED) {
-                        echo "<div class='addon_price'>" . formatPrice($delivery_price / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
-                    }
-                    echo formatPrice($delivery_price);
+                    $deliveryItem->price()->priceSell()->setAmount($delivery_price);
                 }
                 else {
-
+                    $deliveryItem->value()->items()->clear();
                     if ($delivery_price==0) {
-                        echo tr("Безплатна");
+                        $deliveryItem->value()->items()->append(new TextComponent(tr("Free")));
                     }
                     else {
-                        echo tr("Според тарифния план на куриера");
+                        $deliveryItem->value()->items()->append(new TextComponent(tr("Courier plan dependent")));
                     }
                     $delivery_price = 0;
                 }
 
                 $this->delivery_price = $delivery_price;
                 $order_total = $order_total + $this->delivery_price;
-                echo "</td>";
-
-                echo "</tr>";
-
             }
 
-            echo "<tr class='summary order_total' label='order_total'>";
-
-            echo "<td colspan=5 class='label'>";
-            echo tr("Поръчка общо") . ": ";
-            echo "</td>";
-
-            echo "<td class='value'>";
-            if (DOUBLE_PRICE_ENABLED) {
-                echo "<div class='addon_price'>" . formatPrice($order_total / DOUBLE_PRICE_RATE, "&euro;", true) . "</div>";
-            }
-            echo formatPrice($order_total);
-            echo "</td>";
-
-            echo "</tr>";
-
+            $orderTotal = new SummaryItem();
+            $orderTotal->addClassName("order_total");
+            $orderTotal->label()->setContents(tr("Order Total"));
+            $orderTotal->price()->priceSell()->setAmount($order_total);
+            $this->items()->append($orderTotal);
         }
-
-
-        $this->total = $total;
-        $this->order_total = $order_total;
 
     }
 
