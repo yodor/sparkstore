@@ -21,7 +21,7 @@ include_once("store/beans/SectionsBean.php");
 
 include_once("auth/UserAuthenticator.php");
 
-include_once("utils/CurrencyConverter.php");
+include_once("store/utils/CurrencyConverter.php");
 
 include_once("store/beans/ProductCategoriesBean.php");
 
