@@ -294,9 +294,9 @@ class ProductListPageBase extends ProductPageBase
 
         if ($this->keyword_search->isProcessed()) {
             $keyword = $this->keyword_search->getForm()->getInput("keyword")->getValue();
-            $cc = $this->keyword_search->getForm()->prepareClauseCollection("AND");
+            $cc = $this->keyword_search->getForm()->prepareClauseCollection("OR");
             $cc->copyTo($this->select->where());
-            $this->select->from.=" JOIN product_attributes pa ON pa.prodID = sellable_products.prodID ";
+            $this->select->from.=" LEFT JOIN product_attributes pa ON pa.prodID = sellable_products.prodID ";
             $this->select->group_by = " prodID ";
             //echo $this->select->getSQL();
             //filter
