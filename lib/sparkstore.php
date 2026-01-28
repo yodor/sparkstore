@@ -28,6 +28,14 @@ if (!defined("SKIP_DB")) {
     $globals->set("ORDER_EMAIL", $order_email);
 }
 
+//$globals->set("DEFAULT_CURRENCY", "EUR");
+//$globals->set("DEFAULT_CURRENCY_SYMBOL", "&euro;");
+
+//iso3 currency
+$globals->set("DEFAULT_CURRENCY", "BGN");
+//currency short name/symbol
+$globals->set("DEFAULT_CURRENCY_SYMBOL", "лв.");
+
 //show double prices - convert from default currency to EURO
 $globals->set("DOUBLE_PRICE_ENABLED", false);
 $globals->set("DOUBLE_PRICE_RATE", 1.95583);
