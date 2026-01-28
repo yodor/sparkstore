@@ -54,45 +54,23 @@ $frend = new FormRenderer($form);
 $proc = new FastOrderProcessor();
 $proc->process($form);
 
-$page->setTitle(tr("Бърза поръчка"));
+$page->setTitle(tr("Клиенти"));
+$page->getCartComponent()->setRenderEnabled(false);
 
-$page->startRender();
+$section = new OrderSection(tr("Бърза поръчка"), "fast_order");
+$section->value()->items()->append($frend);
+$section->button()->setRenderEnabled(false);
+$page->base()->items()->append($section);
 
-echo "<div class='columns'>";
+$section = new OrderSection(tr("Вече имате профил?"),"login");
+$section->button()->setContents(tr("Login"));
+$section->button()->setAttribute("href", LOCAL."/account/login.php");
+$page->base()->items()->append($section);
 
-echo "<div class='column fast_order'>";
+$section = new OrderSection(tr("Все още нямате профил ?"), "register");
+$section->button()->setContents(tr("Sign up"));
+$section->button()->setAttribute("href", LOCAL."/account/register.php");
+$page->base()->items()->append($section);
 
-    echo "<h1 class='Caption'>".tr("Бърза поръчка")."</h1>";
-
-    echo "<div class='panel'>";
-    $frend->render();
-    echo "</div>";
-
-echo "</div>"; //column
-
-
-echo "<div class='column login'>"; //register
-
-    echo "<h1 class='Caption'>".tr("Вече имате профил?")."</h1>";
-
-    echo "<div class='panel'>";
-    echo "<a class='ColorButton' href='".LOCAL."/account/login.php'>".tr("Login")."</a>";
-    echo "</div>";
-
-echo "</div>"; //column
-
-echo "<div class='column register'>"; //register
-
-    echo "<h1 class='Caption'>" . tr("Все още нямате профил ?") . "</h1>";
-
-    echo "<div class='panel'>";
-    echo "<a class='ColorButton' href='".LOCAL."/account/register.php'>".tr("Регистрация")."</a>";
-    echo "</div>"; //panel
-
-echo "</div>"; //column
-
-echo "</div>";//columns
-
-$page->finishRender();
-
+$page->render();
 ?>

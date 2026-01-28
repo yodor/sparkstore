@@ -11,31 +11,24 @@ if (isset($_GET["orderID"])) {
 
 $page->setTitle(tr("Завършена поръчка"));
 
-$page->startRender();
+$tickMark = new Component(false);
+$tickMark->setComponentClass("tick_mark");
+$page->base()->items()->append($tickMark);
 
+$caption = new Component(false);
+$caption->setComponentClass("caption");
+$caption->setContents(tr("Благодарим Ви че пазарувахте при нас!"));
+$page->base()->items()->append($caption);
 
+if ($orderID > 0) {
+    $orderNumber = new LabelSpan();
+    $orderNumber->addClassName("order_number");
+    $orderNumber->label()->setContents(tr("Номер на поръчката"));
+    $orderNumber->span()->setContents($orderID);
+    $page->base()->items()->append($orderNumber);
+}
 
-echo "<div class='column'>";
+$page->base()->items()->append(new TextComponent(tr("Ще се свържем с Вас относно детйали за Вашата поръчка")));
 
-    echo "<div class='Caption'>" . tr("Завършена поръчка") . "</div>";
-
-    echo "<div class='success_message'>";
-
-        echo "<div class='tick_mark'></div>";
-
-        echo "<div class='Caption'>".tr("Благодарим Ви че пазарувахте при нас!")."</div>";
-
-        if ($orderID>0) {
-            echo tr("Номер на поръчката") . ": " . $orderID;
-            echo "<BR><BR>";
-        }
-
-        echo tr("Ще се свържем с Вас относно детйали за Вашата поръчка");
-
-    echo "</div>"; // success_message
-
-echo "</div>"; //column
-
-
-$page->finishRender();
+$page->render();
 ?>

@@ -12,34 +12,7 @@ include_once("store/beans/CourierAddressesBean.php");
 include_once("store/utils/OrderProcessor.php");
 include_once("store/mailers/OrderConfirmationMailer.php");
 include_once("store/mailers/OrderConfirmationAdminMailer.php");
-class OrderSection extends Container
-{
-    protected Container $value;
-    protected Button $button;
-    public function __construct(string $title, string $className)
-    {
-        parent::__construct(false);
-        $this->setComponentClass("item");
-        $this->addClassName($className);
 
-        $this->setCaption($title);
-
-        $this->value = new Container(false);
-        $this->value->setComponentClass("value");
-        $this->items()->append($this->value);
-
-        $this->button = Button::Action( tr("Промени"), "", "ColorButton");
-        $this->items()->append($this->button);
-    }
-    public function value() : Container
-    {
-        return $this->value;
-    }
-    public function button() : Button
-    {
-        return $this->button;
-    }
-}
 class RequireInvoiceInputForm extends InputForm
 {
     public function __construct()
