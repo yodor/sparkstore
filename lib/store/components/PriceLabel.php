@@ -61,7 +61,8 @@ class PriceLabel extends Container {
         $this->availability()->setRenderEnabled(false);
         $this->validUntil()->setRenderEnabled(false);
         $this->currency()->setRenderEnabled(false);
-        $this->priceSell()->span()->removeAttribute("itemprop");
+
+//        $this->priceSell()->span()->removeAttribute("itemprop");
     }
 
     public function setCurrencyLabels(string $iso3, string $symbol) : void
