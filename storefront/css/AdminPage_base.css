@@ -1,11 +1,11 @@
 .AdminPage {
     font-family: sans-serif;
 }
-.group .item LABEL:after {
+.group .item .label:after {
     content: ": ";
 }
 
-.group .FormValueList .item LABEL:after {
+.group .FormValueList .item .label:after {
     content: "";
 }
 .orders .confirmed .TableView TD[column='order_date'] {

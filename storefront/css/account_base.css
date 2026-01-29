@@ -119,10 +119,10 @@
 
 }
 
-.group .item LABEL:after {
+.group .item .label:after {
     content: ": ";
 }
-.group .FormValueList .item LABEL:after {
+.group .FormValueList .item .label:after {
     content: "";
 }
 
@@ -181,7 +181,7 @@
     margin-top:10px;
     margin-bottom:10px;
 }
-.order_details .FormValueList label {
+.order_details .FormValueList .label {
     display:none;
 
 }

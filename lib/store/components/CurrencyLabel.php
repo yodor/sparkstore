@@ -13,8 +13,6 @@ class CurrencyLabel extends LabelSpan {
     {
         parent::__construct();
         $this->setComponentClass("price");
-
-        $this->label()->setTagName("span");
         $this->label()->setComponentClass("currency");
     }
 

@@ -351,19 +351,13 @@
 
 }
 
-.size_chooser LABEL {
+.size_chooser .label {
     display: block;
     margin-bottom: 0.5em;
 }
-.side_pane LABEL:after {
-    content: ": ";
-}
 
-.side_pane .group.stock_amount LABEL {
+.side_pane .group.stock_amount .label {
     text-transform: uppercase;
-}
-.side_pane .group.stock_amount LABEL:after {
-    content: "";
 }
 
 .size_chooser .product_size {

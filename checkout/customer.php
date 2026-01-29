@@ -68,7 +68,7 @@ $section->button()->setAttribute("href", LOCAL."/account/login.php");
 $page->base()->items()->append($section);
 
 $section = new OrderSection(tr("Все още нямате профил ?"), "register");
-$section->button()->setContents(tr("Sign up"));
+$section->button()->setContents(tr("Регистрация"));
 $section->button()->setAttribute("href", LOCAL."/account/register.php");
 $page->base()->items()->append($section);
 
