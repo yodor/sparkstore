@@ -35,7 +35,7 @@ class ClassAttributeItem extends DataIteratorItem
 
     }
 
-    protected function getInput() : Component
+    public function getInput() : Component
     {
         return $this->attributeValue;
     }

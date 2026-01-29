@@ -97,7 +97,7 @@ $page->setTitle(tr("Начин на доставка"));
 $page->base()->addClassName("delivery_address");
 $page->base()->items()->append($frend);
 
-$page->initialize();
+$page->getCartComponent()->setRenderEnabled(false);
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");
 

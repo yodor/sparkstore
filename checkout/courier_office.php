@@ -65,7 +65,8 @@ $page->base()->items()->append($frend);
 
 $page->base()->setClassName("item ekont_office $empty");
 
-$page->initialize();
+//$page->initialize();
+$page->getCartComponent()->setRenderEnabled(false);
 
 $back_url = Session::get("checkout.navigation.back", "delivery.php");
 

@@ -46,7 +46,8 @@ $page->setTitle(tr("Адрес за доставка"));
 $page->base()->addClassName("delivery_details");
 $page->base()->items()->append($frend);
 
-$page->initialize();
+//$page->initialize();
+$page->getCartComponent()->setRenderEnabled(false);
 
 $back_url = Session::get("checkout.navigation.back",  URL::Current()->toString());
 

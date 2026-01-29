@@ -338,7 +338,7 @@ class DetailsSidePane extends Container
 
             $item = new PriceLabel();
             $item->addClassName("item");
-            $item->setCurrencyLabels("EUR", "&euro;");
+            $item->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
             $item->disableLinkedData();
 
             $item->priceOld()->setAmount(null);
@@ -347,7 +347,7 @@ class DetailsSidePane extends Container
             }
             $item->priceSell()->setAmount(null);
             if ($priceInfo->getSellPrice() > 0) {
-                $item->priceSell()->setAmount($priceInfo->getSellPrice()/DOUBLE_PRICE_RATE);
+                $item->priceSell()->setAmount($priceInfo->getSellPrice() / DOUBLE_PRICE_RATE);
             }
             $grp->items()->append($item);
         }

@@ -21,6 +21,7 @@ class RequireInvoiceInputForm extends InputForm
         $input = DataInputFactory::Create(DataInputFactory::CHECKBOX, "require_invoice", "Да се издаде фактура", 0);
 
         $input->getRenderer()->getItemRenderer()->setAttribute("onClick", "javascript:document.forms.RequireInvoiceInputForm.submit()");
+        $input->getRenderer()->getItemRenderer()->getInput()->setAttribute("autocomplete", "off");
         $this->addInput($input);
     }
 }
@@ -205,7 +206,7 @@ $note->setContents("<i>" . tr("Натискайки бутона 'Потвърд
 $page->base()->items()->append($note);
 
 
-$page->initialize();
+$page->getCartComponent()->initialize();
 
 $action = $page->getAction(CheckoutPage::NAV_LEFT);
 $action->setContents(tr("Назад"));

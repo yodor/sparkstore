@@ -98,7 +98,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->head()->addOGTag("type", "product");
 
         $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
-        $this->head()->addOGTag("product:price:currency", "BGN");
+        $this->head()->addOGTag("product:price:currency", DEFAULT_CURRENCY);
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {

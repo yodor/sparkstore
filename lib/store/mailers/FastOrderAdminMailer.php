@@ -89,9 +89,9 @@ class FastOrderAdminMailer extends Mailer
 
         $result .= "Продукт: ".$item->getTitle();
         $result .= "\r\n";
-        $result .= "Цена: ".$item->getPriceInfo()->getSellPrice();
+        $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".DEFAULT_CURRENCY;
         if (DOUBLE_PRICE_ENABLED) {
-            $result .= "Цена: ".formatPrice($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE, " EUR");
+            $result .= "Цена: ".formatPrice($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE, DOUBLE_PRICE_CURRENCY);
         }
         $result .= "\r\n";
 

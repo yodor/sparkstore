@@ -48,8 +48,8 @@ $page->setTitle(tr("Детайли за фактуриране"));
 $page->base()->addClassName("invoice_details");
 $page->base()->items()->append($frend);
 
-$page->initialize();
-
+//$page->initialize();
+$page->getCartComponent()->setRenderEnabled(false);
 
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");

@@ -382,7 +382,7 @@ class GoogleMerchantCSVExporter extends CSVProductExporter
         $this->values["image_link"] = $image_link;
 
         $this->values["availability"] = "in_stock";
-        $this->values["price"] = formatPrice($item->getPriceInfo()->getSellPrice() / DOUBLE_PRICE_RATE, "EUR", true);
+        $this->values["price"] = formatPrice($item->getPriceInfo()->getSellPrice(), DEFAULT_CURRENCY, true);
 
     }
 }

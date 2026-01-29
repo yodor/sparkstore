@@ -140,3 +140,8 @@
 .CheckoutPage.customer .base .InputComponent {
     width:100%;
 }
+.CheckoutPage.customer .base .note {
+    text-align:left;
+    max-width:25em;
+    margin-bottom:1em;
+}

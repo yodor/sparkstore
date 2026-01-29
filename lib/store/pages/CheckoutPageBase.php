@@ -112,11 +112,6 @@ class CheckoutPageBase extends StorePage
         $this->heading->setContents($this->getTitle());
     }
 
-    public function initialize() : void
-    {
-        $this->ccmp->initialize();
-    }
-
     public function getCartComponent() : CartComponent
     {
         return $this->ccmp;

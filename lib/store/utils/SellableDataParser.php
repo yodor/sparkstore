@@ -177,28 +177,24 @@ class SellableDataParser
         $product->set("image", $urls);
 
         $offer = new LinkedData("Offer");
+        $availability = "https://schema.org/OutOfStock";
         if ($item->getStockAmount()>0) {
-            $offer->set("availability", "https://schema.org/InStock");
+            $availability = "https://schema.org/InStock";
         }
-        else {
-            $offer->set("availability", "https://schema.org/OutOfStock");
-        }
-        $offer->set("price", formatPrice($item->getPriceInfo()->getSellPrice(), ""));
+        $offer->set("availability", $availability);
+
+        $offer->set("price", sprintf("%0.2f", $item->getPriceInfo()->getSellPrice()));
         $offer->set("priceCurrency", DEFAULT_CURRENCY);
+
         $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
         $offer->set("priceValidUntil", $priceValidUntil);
 
         if (DOUBLE_PRICE_ENABLED) {
             $offerEUR = new LinkedData("Offer");
-            if ($item->getStockAmount()>0) {
-                $offerEUR->set("availability", "https://schema.org/InStock");
-            }
-            else {
-                $offerEUR->set("availability", "https://schema.org/OutOfStock");
-            }
-            $offerEUR->set("price", formatPrice($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE, ""));
-            $offerEUR->set("priceCurrency", "EUR");
-            $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
+            $offerEUR->set("availability", $availability);
+            $eurPrice = sprintf("%0.2f", ($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE));
+            $offerEUR->set("price", $eurPrice);
+            $offerEUR->set("priceCurrency", DOUBLE_PRICE_CURRENCY);
             $offerEUR->set("priceValidUntil", $priceValidUntil);
 
             $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());

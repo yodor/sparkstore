@@ -79,8 +79,9 @@ class OrderConfirmationAdminMailer extends Mailer
 //            $message .= "</td>";
 
             $message .= "<td>" . $item["qty"] . "</td>";
-            $message .= "<td>" . sprintf("%0.2f лв.", $item["price"]) . "</td>";
-            $message .= "<td>" . sprintf("%0.2f лв.", ((int)$item["qty"] * $item["price"])) . "</td>";
+            $message .= "<td>" . formatPrice($item["price"], DEFAULT_CURRENCY) . "</td>";
+            $lineTotal = ((int)$item["qty"] * $item["price"]);
+            $message .= "<td>" . formatPrice( $lineTotal , DEFAULT_CURRENCY ) . "</td>";
 
             $message .= "</tr>";
         }
@@ -91,10 +92,11 @@ class OrderConfirmationAdminMailer extends Mailer
         $message .= "\r\n";
         $message .= "\r\n";
 
-        $message .= "Продкти общо: " . sprintf("%0.2f лв.", ($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0))) . "\r\n";
+        $itemsTotal = ($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0));
+        $message .= "Продкти общо: " . formatPrice($itemsTotal, DEFAULT_CURRENCY) . "\r\n";
         $delivery_text = "";
         if ($order["delivery_price"]>0) {
-            $delivery_text = sprintf("%0.2f лв.", $order["delivery_price"]);
+            $delivery_text = formatPrice($order["delivery_price"], DEFAULT_CURRENCY);
         }
         else  if ($order["delivery_price"]==0) {
             $delivery_text = "Безплатна";
@@ -103,9 +105,9 @@ class OrderConfirmationAdminMailer extends Mailer
             $delivery_text = "Според тарифния план на куриера";
         }
         $message .= "Цена доставка: $delivery_text\r\n";
-        $message .= "Поръчка oбщо: " . sprintf("%0.2f лв.", $order["total"]) . "\r\n";
+        $message .= "Поръчка oбщо: " . formatPrice($order["total"], DEFAULT_CURRENCY) . "\r\n";
         if (DOUBLE_PRICE_ENABLED) {
-            $message .= "Поръчка oбщо: " . sprintf("%0.2f eur", $order["total"] / DOUBLE_PRICE_RATE) . "\r\n";
+            $message .= "Поръчка oбщо: " . formatPrice($order["total"] / DOUBLE_PRICE_RATE, DOUBLE_PRICE_CURRENCY) . "\r\n";
         }
 
         $message .= "\r\n";

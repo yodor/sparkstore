@@ -31,7 +31,7 @@ class SummaryItem extends Container
 
         if (DOUBLE_PRICE_ENABLED) {
             $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels("EUR", "&euro;");
+            $eurPrice->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
             $eurPrice->disableLinkedData();
 
             $this->value->items()->append($eurPrice);
@@ -49,7 +49,7 @@ class SummaryItem extends Container
     {
         parent::processAttributes();
         if (DOUBLE_PRICE_ENABLED) {
-            $priceLabel = $this->value->items()->getByName("EUR");
+            $priceLabel = $this->value->items()->getByName(DOUBLE_PRICE_CURRENCY);
             if ($priceLabel instanceof PriceLabel) {
                 $priceLabel->priceSell()->setAmount($this->price->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
             }
@@ -219,7 +219,7 @@ class CartListItem extends Container {
         $tdPrice->items()->append(new TextComponent(tr("Price"), "mobile-label"));
         if (DOUBLE_PRICE_ENABLED) {
             $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels("EUR", "&euro;");
+            $eurPrice->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
             $eurPrice->disableLinkedData();
             $tdPrice->items()->append($eurPrice);
         }
@@ -236,7 +236,7 @@ class CartListItem extends Container {
 
         if (DOUBLE_PRICE_ENABLED) {
             $eurLine = new PriceLabel();
-            $eurLine->setCurrencyLabels("EUR", "&euro;");
+            $eurLine->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
             $eurLine->disableLinkedData();
             $tdLineTotal->items()->append($eurLine);
         }
@@ -261,7 +261,7 @@ class CartListItem extends Container {
         }
         if (DOUBLE_PRICE_ENABLED) {
             $tdPrice = $this->items()->getByAttribute("price", "field");
-            $eurPrice = $tdPrice->items()->getByName("EUR");
+            $eurPrice = $tdPrice->items()->getByName(DOUBLE_PRICE_CURRENCY);
             if ($eurPrice instanceof PriceLabel) {
                 if ($this->price->priceOld()->getAmount()) {
                     $eurPrice->priceOld()->setAmount($this->price->priceOld()->getAmount() / DOUBLE_PRICE_RATE);
@@ -270,7 +270,7 @@ class CartListItem extends Container {
             }
 
             $tdLine = $this->items()->getByAttribute("line-total", "field");
-            $eurPrice = $tdLine->items()->getByName("EUR");
+            $eurPrice = $tdLine->items()->getByName(DOUBLE_PRICE_CURRENCY);
             if ($eurPrice instanceof PriceLabel) {
                 $eurPrice->priceSell()->setAmount($this->lineTotal->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
             }

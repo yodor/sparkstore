@@ -106,7 +106,7 @@ catch (Exception $e) {
 
 $page->setTitle(tr("Съдържание на кошницата"));
 
-$page->initialize();
+$page->getCartComponent()->initialize();
 
 if ($cart->itemsCount()>0) {
     $action = $page->getAction(CheckoutPage::NAV_LEFT);

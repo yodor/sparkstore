@@ -73,7 +73,8 @@ $page->setTitle(tr("Избор на куриер"));
 $page->base()->addClassName("delivery_courier");
 $page->base()->items()->append($frend);
 
-$page->initialize();
+
+$page->getCartComponent()->setRenderEnabled(false);
 
 $back_url = Session::get("checkout.navigation.back", "cart.php");
 

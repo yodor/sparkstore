@@ -46,13 +46,11 @@ class ProductDetails extends Action
         if (DOUBLE_PRICE_ENABLED) {
             $eurLabel = new PriceLabel();
             $eurLabel->addClassName("left");
-            $eurLabel->setName("EUR");
-            $eurLabel->setCurrencyLabels("EUR", "&euro;");
+            $eurLabel->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
             $this->priceLabel->items()->append($eurLabel);
         }
 
         $curLabel = new PriceLabel();
-        $curLabel->setName(DEFAULT_CURRENCY);
         $curLabel->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
         $this->priceLabel->items()->append($curLabel);
     }
@@ -72,12 +70,13 @@ class ProductDetails extends Action
         if ($this->data["stock_amount"]>0) {
             $availability = "https://schema.org/InStock";
         }
+        $validity = date("Y-m-d", strtotime("+1 year"));
 
         if (DOUBLE_PRICE_ENABLED) {
-            $eurLabel = $this->priceLabel->items()->getByName("EUR");
+            $eurLabel = $this->priceLabel->items()->getByName(DOUBLE_PRICE_CURRENCY);
             if ($eurLabel instanceof PriceLabel) {
                 $eurLabel->availability()->setHref($availability);
-
+                $eurLabel->validUntil()->setContent($validity);
                 $eurLabel->priceOld()->setAmount(null);
                 if ($this->item->isPromo()) {
                     $eurLabel->priceOld()->setAmount(($this->data["price"] / DOUBLE_PRICE_RATE));
@@ -95,6 +94,7 @@ class ProductDetails extends Action
         $defLabel = $this->priceLabel->items()->getByName(DEFAULT_CURRENCY);
         if ($defLabel instanceof PriceLabel) {
             $defLabel->availability()->setHref($availability);
+            $defLabel->validUntil()->setContent($validity);
 
             $defLabel->priceOld()->setAmount(null);
             if ($this->item->isPromo()) {
