@@ -334,6 +334,23 @@ class DetailsSidePane extends Container
             $grp->setAttribute("no_stock", "");
         }
 
+
+
+        $item = new PriceLabel();
+        $item->addClassName("item");
+        $item->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $item->disableLinkedData();
+
+        $item->priceOld()->setAmount(null);
+        if ($this->sellable->isPromotion()) {
+            $item->priceOld()->setAmount($priceInfo->getOldPrice());
+        }
+        $item->priceSell()->setAmount(null);
+        if ($priceInfo->getSellPrice() > 0) {
+            $item->priceSell()->setAmount($priceInfo->getSellPrice());
+        }
+        $grp->items()->append($item);
+
         if (DOUBLE_PRICE_ENABLED) {
 
             $item = new PriceLabel();
@@ -351,22 +368,6 @@ class DetailsSidePane extends Container
             }
             $grp->items()->append($item);
         }
-
-        $item = new PriceLabel();
-        $item->addClassName("item");
-        $item->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
-        $item->disableLinkedData();
-
-        $item->priceOld()->setAmount(null);
-        if ($this->sellable->isPromotion()) {
-            $item->priceOld()->setAmount($priceInfo->getOldPrice());
-        }
-        $item->priceSell()->setAmount(null);
-        if ($priceInfo->getSellPrice() > 0) {
-            $item->priceSell()->setAmount($priceInfo->getSellPrice());
-        }
-        $grp->items()->append($item);
-
 
         $this->items()->append($grp);
 
