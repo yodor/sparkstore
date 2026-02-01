@@ -61,11 +61,15 @@ class ProductInputFormBase extends InputForm
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
         $field->setValidator(new NumericValidator(false,false));
         $field->setValue(0.0);
+        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(DEFAULT_CURRENCY_SYMBOL, ""));
+
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "promo_price", "Промо цена", 1);
         $field->setValidator(new NumericValidator(true,false));
         $field->setValue(0.0);
+        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(DEFAULT_CURRENCY_SYMBOL, ""));
+
         $this->addInput($field);
 
         $field = DataInputFactory::Create(DataInputFactory::TEXT, "stock_amount", "Стокова наличност", 1);
