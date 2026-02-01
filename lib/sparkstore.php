@@ -48,7 +48,7 @@ $globals->set("CATEGORY_ITEM_SLUG", FALSE);
 
 $globals->export();
 
-function formatPrice($price, string $currency_symbol="лв", bool $symbol_front=false)
+function formatPrice($price, string $currency_symbol=DEFAULT_CURRENCY, bool $symbol_front=false)
 {
     $format = "%0.2f";
 
