@@ -108,6 +108,7 @@
     display:flex;
     min-height:1em;
     justify-content: right;
+    gap:0.2em;
 }
 
 .ProductListItem .details .price_label .price_info .price.old {
