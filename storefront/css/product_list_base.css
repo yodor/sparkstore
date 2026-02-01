@@ -119,7 +119,9 @@
 .panel.filters FORM {
     width:100%;
 }
-
+.panel.filters FORM input {
+    width:100%;
+}
 
 .ItemView {
     width:100%;
