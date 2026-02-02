@@ -122,6 +122,9 @@
 .panel.filters FORM input {
     width:100%;
 }
+.panel .Caption .label:after {
+    content:"";
+}
 
 .ItemView {
     width:100%;
