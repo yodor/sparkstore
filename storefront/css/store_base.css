@@ -989,6 +989,7 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 .JSONFormDialog[responder='UniCreditProductFormResponder'] {
     /*border:1px dashed red;*/
     text-align:left;
+    zoom:150%;
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] .notice .item SPAN {
     font-weight:bold;
@@ -1006,6 +1007,9 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] FORM [field='monthlyPayment']{
     display:none;
+}
+.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM .TextField input {
+    width:100%;
 }
 .contacts .section.main .content {
     min-height:800px;
