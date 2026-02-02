@@ -50,6 +50,7 @@
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] .notice .item SPAN {
     font-weight:bold;
+    white-space: nowrap;
 }
 .JSONFormDialog[responder='UniCreditProductFormResponder'] .unilogo {
     text-align:center;
