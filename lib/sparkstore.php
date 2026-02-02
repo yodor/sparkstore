@@ -28,27 +28,27 @@ if (!defined("SKIP_DB")) {
     $globals->set("ORDER_EMAIL", $order_email);
 }
 
-//$globals->set("DEFAULT_CURRENCY", "EUR");
-//$globals->set("DEFAULT_CURRENCY_SYMBOL", "&euro;");
+$globals->set("DEFAULT_CURRENCY", "EUR");
+$globals->set("DEFAULT_CURRENCY_SYMBOL", "&euro;");
 
 //iso3 currency
-$globals->set("DEFAULT_CURRENCY", "BGN");
+//$globals->set("DEFAULT_CURRENCY", "BGN");
 //currency short name/symbol
-$globals->set("DEFAULT_CURRENCY_SYMBOL", "лв.");
+//$globals->set("DEFAULT_CURRENCY_SYMBOL", "лв.");
 
 //show double prices - convert from default currency to EURO
 $globals->set("DOUBLE_PRICE_ENABLED", false);
-$globals->set("DOUBLE_PRICE_CURRENCY", "EUR");
-$globals->set("DOUBLE_PRICE_SYMBOL", "&euro;");
-$globals->set("DOUBLE_PRICE_RATE", 1.95583);
-//$globals->set("DOUBLE_PRICE_RATE", (1/1.95583));
+$globals->set("DOUBLE_PRICE_CURRENCY", "BGN");
+$globals->set("DOUBLE_PRICE_SYMBOL", "лв.");
+//$globals->set("DOUBLE_PRICE_RATE", 1.95583);
+$globals->set("DOUBLE_PRICE_RATE", (1/1.95583));
 
 $globals->set("PRODUCT_ITEM_SLUG", FALSE);
 $globals->set("CATEGORY_ITEM_SLUG", FALSE);
 
 $globals->export();
 
-function formatPrice($price, string $currency_symbol=DEFAULT_CURRENCY_SYMBOL, bool $symbol_front=false)
+function formatPrice($price, string $currency_symbol=DEFAULT_CURRENCY_SYMBOL, bool $symbol_front=false) : string
 {
     $format = "%0.2f";
 

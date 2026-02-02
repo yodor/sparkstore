@@ -25,16 +25,20 @@
     border:1px solid #eaeaea;
     padding:1.5em;
     text-align:left;
+    max-width:430px;
 }
 .account .panel .FormRenderer {
     width:100%;
     box-sizing: border-box;
 }
 
+
 .account .panel .FormRenderer .InputComponent {
     align-self:stretch;
 }
-
+.account .panel .FormRenderer .InputComponent input{
+    flex-basis:100%;
+}
 
 .account .login_component {
     border:0;
