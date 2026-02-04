@@ -124,9 +124,14 @@ class ProductPageBase extends StorePage
         if ($this->keyword_search->isProcessed()) {
             $current = URL::Current();
             foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
-                $link->add($current->get($name));
+                if ($current->contains($name)) {
+                    $link->add($current->get($name));
+                }
+
             }
-            $link->add($current->get(KeywordSearch::SUBMIT_KEY));
+            if ($current->contains(KeywordSearch::SUBMIT_KEY)) {
+                $link->add($current->get(KeywordSearch::SUBMIT_KEY));
+            }
 
             $search_title = tr("Search results").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $search_action = new Action($search_title,  $link, array());
