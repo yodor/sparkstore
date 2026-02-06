@@ -9,7 +9,7 @@ class EkontOfficeInputForm extends InputForm
 
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "office", "Избран офис", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "office", "Избран офис", 1);
         //$field->getRenderer()->input()?->setAttribute("readonly", "1");
         $this->addInput($field);
 

@@ -52,7 +52,7 @@ class CurrencyConverter
 
         $result->loadConversion();
 
-        debug("Conversion Currency ID: " . $result->dstID, " - Code: " . $result->code);
+        Debug::ErrorLog("Conversion Currency ID: " . $result->dstID, " - Code: " . $result->code);
 
         Session::Set("CurrencyConverter", serialize($result));
         return $result;
@@ -117,7 +117,7 @@ class CurrencyConverter
             $data = $qry->next();
             $this->srcID = $data[$currencies->key()];
             $this->setCurrency($data, 1.0);
-            debug("Default Currency ID: " . $this->srcID, " - Code: " . $this->code);
+            Debug::ErrorLog("Default Currency ID: " . $this->srcID, " - Code: " . $this->code);
         }
 
     }

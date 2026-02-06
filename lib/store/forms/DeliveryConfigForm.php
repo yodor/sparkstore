@@ -27,7 +27,7 @@ class DeliveryConfigForm extends InputForm
             $aw1 = new ArrayDataIterator(array(1=>"Разрешени", 0=>"Забранени"));
 
             $field = DataInputFactory::Create(
-                DataInputFactory::RADIO,
+                InputType::RADIO,
                 $delivery->configPrefix($courierID, "enabled"),
                 tr("Доставки"),
                 1);
@@ -43,13 +43,13 @@ class DeliveryConfigForm extends InputForm
                 if (!$option instanceof DeliveryOption) continue;
 
                 $field = DataInputFactory::Create(
-                    DataInputFactory::CHECKBOX, $courier->configPrefix($optionID, "enabled"),
+                    InputType::CHECKBOX, $courier->configPrefix($optionID, "enabled"),
                     tr("Опция")." - ".$option->getTitle(),
                     0);
                 $this->addInput($field, $group);
 
                 $field = DataInputFactory::Create(
-                    DataInputFactory::TEXT, $courier->configPrefix($optionID, "price"),
+                    InputType::TEXT, $courier->configPrefix($optionID, "price"),
                     tr("Цена"),
                     1);
 

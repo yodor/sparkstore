@@ -8,7 +8,7 @@ class OrderErrorAdminMailer extends Mailer
     {
         parent::__construct();
 
-        $this->to = ORDER_ERROR_EMAIL;
+        $this->to = Spark::Get(StoreConfig::ORDER_ERROR_EMAIL);
         $this->subject = "Order Error";
 
         // 	ob_start();
@@ -17,7 +17,7 @@ class OrderErrorAdminMailer extends Mailer
         // 	ob_end_clean();
 
         $message = "Hello, \r\n";
-        $message.= "There was an error during order finalization at ".SITE_URL;
+        $message.= "There was an error during order finalization at ".Spark::Get(Config::SITE_URL);
         $message.= "\r\n";
         $message.= $error_text;
 

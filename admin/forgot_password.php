@@ -30,7 +30,8 @@ class ForgotPasswordProcessor extends FormProcessor
         $users = new AdminUsersBean();
 
         $random_pass = Authenticator::RandomToken(8);
-        $fpm = new ForgotPasswordMailer($email, $random_pass, fullURL(ADMIN_LOCAL . "/login.php"));
+        $loginURL = new URL(Spark::Get(Config::ADMIN_LOCAL)."/login.php");
+        $fpm = new ForgotPasswordMailer($email, $random_pass, $loginURL->fullURL());
         $db = DBConnections::Open();
         try {
             $db->transaction();
@@ -55,10 +56,10 @@ class ForgotPasswordProcessor extends FormProcessor
 $page = new AdminLoginPage();
 $page->setTitle(tr("Forgot Password"));
 
-$page->head()->addCSS(SPARK_LOCAL . "/css/LoginForm.css");
+$page->head()->addCSS(Spark::Get(Config::SPARK_LOCAL) . "/css/LoginForm.css");
 
 $form = new InputForm();
-$form->addInput(DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Input your registered email", 1));
+$form->addInput(DataInputFactory::Create(InputType::EMAIL, "email", "Input your registered email", 1));
 
 $frend = new FormRenderer($form);
 
@@ -79,7 +80,7 @@ else {
 }
 $page->startRender();
 
-$frend->setCaption(SITE_TITLE . "<BR><small>" . tr("Administration") . "</small>");
+$frend->setCaption(Spark::Get(Config::SITE_TITLE) . "<BR><small>" . tr("Administration") . "</small>");
 
 $frend->render();
 

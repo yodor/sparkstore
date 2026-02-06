@@ -299,7 +299,7 @@ class DetailsSidePane extends Container
 
                 $parameters = $vitem->getParameters();
                 foreach ($parameters as $pos=>$option_value) {
-                    $value = attributeValue($option_value);
+                    $value = Spark::AttributeValue($option_value);
                     $parameter = new Component(false);
                     $parameter->setComponentClass("parameter");
                     $parameter->setAttribute("pos", $pos);
@@ -331,14 +331,14 @@ class DetailsSidePane extends Container
             $grp->setAttribute("in_stock", $stock_amount);
         }
         else {
-            $grp->setAttribute("no_stock", "");
+            $grp->setAttribute("no_stock");
         }
 
 
 
         $item = new PriceLabel();
         $item->addClassName("item");
-        $item->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $item->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
         $item->disableLinkedData();
 
         $item->priceOld()->setAmount(null);
@@ -351,20 +351,20 @@ class DetailsSidePane extends Container
         }
         $grp->items()->append($item);
 
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
 
             $item = new PriceLabel();
             $item->addClassName("item");
-            $item->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
+            $item->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
             $item->disableLinkedData();
 
             $item->priceOld()->setAmount(null);
             if ($this->sellable->isPromotion()) {
-                $item->priceOld()->setAmount($priceInfo->getOldPrice() / DOUBLE_PRICE_RATE);
+                $item->priceOld()->setAmount($priceInfo->getOldPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
             }
             $item->priceSell()->setAmount(null);
             if ($priceInfo->getSellPrice() > 0) {
-                $item->priceSell()->setAmount($priceInfo->getSellPrice() / DOUBLE_PRICE_RATE);
+                $item->priceSell()->setAmount($priceInfo->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
             }
             $grp->items()->append($item);
         }
@@ -384,7 +384,7 @@ class DetailsSidePane extends Container
             $grp->setAttribute("in_stock", $stock_amount);
         }
         else {
-            $grp->setAttribute("no_stock", "");
+            $grp->setAttribute("no_stock");
         }
 
         if ($stock_amount<1) {
@@ -418,7 +418,7 @@ class DetailsSidePane extends Container
 
         $config = ConfigBean::Factory();
         $config->setSection("store_config");
-        $phone = $config->get("phone_orders", "");
+        $phone = $config->get("phone_orders");
         if ($phone) {
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER)) {
                 $btnPhoneOrder = new CartButton();
@@ -465,7 +465,7 @@ class DetailsSidePane extends Container
             }
             catch (Exception $e) {
                 $buttonModule->buffer()->clear();
-                debug("Error rendering credit payment button '$class': ".$e->getMessage());
+                Debug::ErrorLog("Error rendering credit payment button '$class': ".$e->getMessage());
             }
 
             $buttonModule->buffer()->end();

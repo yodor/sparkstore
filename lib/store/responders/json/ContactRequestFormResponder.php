@@ -41,12 +41,12 @@ class ContactRequestFormResponder extends JSONFormResponder
             $mailer->setQueryText($query);
             $mailer->prepareMessage();
             $success = $mailer->send();
-            debug ("Mail accepted for delivery: ".(int)$success);
+            Debug::ErrorLog ("Mail accepted for delivery: ".(int)$success);
 
             $resp->message = tr("Заявката Ви беше приета успешно");
         }
         catch (Exception $e) {
-            debug("Unable to insert contact request");
+            Debug::ErrorLog("Unable to insert contact request");
             $db->rollback();
             throw $e;
         }

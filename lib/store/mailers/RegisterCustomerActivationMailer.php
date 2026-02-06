@@ -13,20 +13,22 @@ class RegisterCustomerActivationMailer extends Mailer
         $this->subject = "Успешна Регистрация";
 
         $message = "Здравейте, $fullname\r\n\r\n";
-        $message .= "Изпращаме Ви това съобщение за да Ви уведомим че, регистрацията Ви на " . SITE_DOMAIN . " е завършена успешно.";
+        $message .= "Изпращаме Ви това съобщение за да Ви уведомим че, регистрацията Ви на " . Spark::Get(Config::SITE_DOMAIN) . " е завършена успешно.";
         $message .= "\r\n\r\n";
 
         $message .= "За да активирате Вашият профил проследете връзката за активация по долу.";
         $message .= "\r\n\r\n";
 
-        $activation_url = SITE_URL.LOCAL."/account/activate.php?email=$email&confirm_code=$confirm_code&SubmitForm=ActivateProfileInputForm";
-
-        $message .= "<a href='$activation_url'>Активация на профил</a>";
+        $activationURL = new URL(Spark::Get(Config::LOCAL)."/account/activate.php");
+        $activationURL->add(new URLParameter("email", $email));
+        $activationURL->add(new URLParameter("confirm_code", $confirm_code));
+        $activationURL->add(new URLParameter("SubmitForm", "ActivateProfileInputForm"));
+        $message .= "<a href='{$activationURL->fullURL()}'>Активация на профил</a>";
 
         $message .= "\r\n\r\n";
         $message .= "\r\n\r\n";
 
-        $message .= $activation_url;
+        $message .= $activationURL->fullURL();
 
         $message .= "\r\n\r\n";
         $message .= "\r\n\r\n";
@@ -37,7 +39,7 @@ class RegisterCustomerActivationMailer extends Mailer
         $message .= "\r\n\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 

@@ -34,7 +34,9 @@ class QueryProductFormResponder extends JSONFormResponder
         $query_text = $this->form->getInput("query")->getValue();
 
         $this->mailer->setClient($phone, $email, $name);
-        $this->mailer->setProduct($this->sellable->getTitle(), fullURL(LOCAL."/products/details.php?prodID=$prodID"));
+        $productURL = new ProductURL();
+        $productURL->setProductID($prodID);
+        $this->mailer->setProduct($this->sellable->getTitle(), $productURL->fullURL());
         $this->mailer->setQueryText($query_text);
         $this->mailer->prepareMessage();
         $this->mailer->send();

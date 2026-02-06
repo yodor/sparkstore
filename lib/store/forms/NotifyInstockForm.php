@@ -8,7 +8,7 @@ class NotifyInstockForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Вашият E-mail<BR>(Ще ви известим при наличие на продукта)", 1);
+        $field = DataInputFactory::Create(InputType::EMAIL, "email", "Вашият E-mail<BR>(Ще ви известим при наличие на продукта)", 1);
         $this->addInput($field);
 
     }

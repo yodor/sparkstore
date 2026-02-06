@@ -19,13 +19,14 @@ class ProductsGalleryAdd extends BeanEditorPage
         $this->getBean()->select()->where()->addURLParameter($rc->getURLParameter());
     }
 
-    public function initView()
+    public function initView(): ?Component
     {
         parent::initView();
         $rc = $this->getRequestCondition();
         if ($rc instanceof BeanKeyCondition) {
             $this->getEditor()->getTransactor()->appendURLParameter($rc->getURLParameter());
         }
+        return $this->view;
     }
 
 }

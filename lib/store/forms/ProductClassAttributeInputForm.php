@@ -15,7 +15,7 @@ class ProductClassAttributeInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "attrID", "Достъпни входни етикети", 1);
+        $field = DataInputFactory::Create(InputType::SELECT, "attrID", "Достъпни входни етикети", 1);
         $this->addInput($field);
 
 //

@@ -10,7 +10,7 @@ class RegisterClientInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
 
         $label = new Component();
         $label->setContents(tr("Вашето пълно име"));
@@ -20,7 +20,7 @@ class RegisterClientInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 1);
+        $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
 
         $label = new Component();
         $label->setContents(tr("Ще Ви изпратим e-mail за потвърждение"));
@@ -30,7 +30,7 @@ class RegisterClientInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
 
         $label = new Component();
         $label->setContents(tr("За контакт при доставка"));
@@ -42,7 +42,7 @@ class RegisterClientInputForm extends InputForm
 
 
 
-        $field = DataInputFactory::Create(DataInputFactory::PASSWORD, "password", "Парола", 1);
+        $field = DataInputFactory::Create(InputType::PASSWORD, "password", "Парола", 1);
         $field->setValidator(new AnyValueValidator());
         $field->getRenderer()->setAttribute("autocomplete","off");
         $this->addInput($field);
@@ -53,12 +53,12 @@ class RegisterClientInputForm extends InputForm
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
 
-        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "pass", "Парола", 0);
+        $field = DataInputFactory::Create(InputType::HIDDEN, "pass", "Парола", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "accept_terms", "Прочетох и приемам <a href='".LOCAL."/pages/index.php?page_class=terms"."'>Общите условия</a>", 1);
+        $termsURL = new URL(Spark::Get(Config::LOCAL)."/pages/index.php?page_class=terms");
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Прочетох и приемам <a href='{$termsURL->fullURL()}'>Общите условия</a>", 1);
         $this->addInput($field);
-
 
     }
 

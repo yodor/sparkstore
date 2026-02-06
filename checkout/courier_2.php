@@ -84,12 +84,18 @@ echo "<div class='item ekont_locator'>";
     echo "<div class='Caption'>";
     echo tr("Изберете офис на Еконт за доставка");
     echo "</div>";
-?>
 
-    <iframe async id="ekont_frame" height=450 width="100%" border=0 frameborder="0" allowtransparency="true" src="https://www.bgmaps.com/templates/econt?office_type=all&shop_url=<?php
-    echo SITE_URL; ?>"></iframe>
+    $siteURL = new URL(Spark::Get(Config::SITE_URL));
 
-<?php
+    echo "<iframe async 
+    id='ekont_frame' 
+    height=450 
+    width='100%' 
+    border=0 
+    frameborder='0' 
+    allowtransparency='true' 
+    src='https://www.bgmaps.com/templates/econt?office_type=all&shop_url={$siteURL->fullURL()}'></iframe>";
+
 echo "</div>"; //ekont_locator
 
 $back_url = Session::get("checkout.navigation.back", "delivery.php");

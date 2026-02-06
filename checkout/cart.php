@@ -46,7 +46,7 @@ try {
 
             $variant = null;
             if (isset($_GET["variant"])) {
-                $variant = json_decode(base64_url_decode($_GET["variant"]));
+                $variant = json_decode(Spark::Base64URLDecode($_GET["variant"]));
                 foreach ($variant as $name => $value) {
                     if ($sellable->haveVariant($name)) {
                         $itemVariant = $sellable->getVariant($name);

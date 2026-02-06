@@ -22,7 +22,7 @@ class PriceLabel extends Container {
         parent::__construct(false);
         $this->setComponentClass("price_info");
 
-        $this->setAttribute("itemscope","");
+        $this->setAttribute("itemscope");
         $this->setAttribute("itemprop", "offers");
         $this->setAttribute("itemtype", "https://schema.org/Offer");
 
@@ -39,7 +39,7 @@ class PriceLabel extends Container {
 
         $this->currencyMeta = new Meta();
         $this->currencyMeta->setAttribute("itemprop", "priceCurrency");
-        $this->currencyMeta->setContent(DEFAULT_CURRENCY);
+        $this->currencyMeta->setContent(Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         $this->items()->append($this->currencyMeta);
 
         $this->priceOld = new CurrencyLabel();

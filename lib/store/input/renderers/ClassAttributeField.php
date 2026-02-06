@@ -60,7 +60,7 @@ class ClassAttributeItem extends DataIteratorItem
         if ($this->parent instanceof DataIteratorField) {
 
             if (!$this->value) {
-                //debug("Request Data: ",$_REQUEST);
+                //Debug::ErrorLog("Request Data: ",$_REQUEST);
                 $dataInput = $this->parent->getDataInput();
                 $inputValue = $dataInput->getValue();
                 //search post data for value
@@ -176,7 +176,7 @@ class ClassAttributeField extends DataIteratorField
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
-        $arr[] = STORE_LOCAL . "/css/ClassAttributeField.css";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/ClassAttributeField.css";
         return $arr;
     }
 

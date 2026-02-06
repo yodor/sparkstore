@@ -127,13 +127,14 @@ class OprSucfOnlineSessionStart extends UniCreditOperation
         $this->setData("initialPayment", $initialPayment);
     }
 }
+
 class UniCreditServiceStub {
-    const ENV_TEST = 'https://onlinetest.ucfin.bg/suos';
-    const ENV_PROD = 'https://online.ucfin.bg/suos';
+    const string ENV_TEST = 'https://onlinetest.ucfin.bg/suos';
+    const string ENV_PROD = 'https://online.ucfin.bg/suos';
 
-    const APP_TEST = 'https://onlinetest.ucfin.bg/sucf-online/Request/Create';
+    const string APP_TEST = 'https://onlinetest.ucfin.bg/sucf-online/Request/Create';
 
-    const APP_PROD = 'https://online.ucfin.bg/sucf-online/Request/Create';
+    const string APP_PROD = 'https://online.ucfin.bg/sucf-online/Request/Create';
 
     protected string $serviceURL;
     protected string $appURL;
@@ -182,13 +183,13 @@ class UniCreditServiceStub {
 
         if (!$this->test_mode) {
             // името на файл, съдържащ само личен SSL ключ в текстови формат (PEM)
-            curl_setopt($request, CURLOPT_SSLKEY, UNICREDIT_KEY_FILE);
+            curl_setopt($request, CURLOPT_SSLKEY, Spark::Get("UNICREDIT_KEY_FILE"));
 
             // Парола, която се използва за отключване на файла
             //curl_setopt($request, CURLOPT_SSLKEYPASSWD, "");
 
             // името на файл, съдържащ само клиентския сартификат в текстови формат (PEM)
-            curl_setopt($request, CURLOPT_SSLCERT, UNICREDIT_CERT_FILE);
+            curl_setopt($request, CURLOPT_SSLCERT, Spark::Get("UNICREDIT_CERT_FILE"));
         }
 
         // Парола, която се използва за отключване на файла
@@ -247,7 +248,7 @@ class UniCreditServiceStub {
             }
             return;
         }
-        //debug($this->getRequestInfo($request));
+        //Debug::ErrorLog($this->getRequestInfo($request));
 
         $opr->setError('cUrl Error ('.curl_errno($request).'): '.curl_error($request));
 
@@ -274,22 +275,22 @@ class UniCreditProductForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "firstName", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "firstName", "Име", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "lastName", "Фамилия", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "lastName", "Фамилия", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "installmentCount", "InstallmentCount", 0);
+        $field = DataInputFactory::Create(InputType::HIDDEN, "installmentCount", "InstallmentCount", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "initialPayment", "InitialPayment", 0);
+        $field = DataInputFactory::Create(InputType::HIDDEN, "initialPayment", "InitialPayment", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::HIDDEN, "monthlyPayment", "MonthlyPayment", 0);
+        $field = DataInputFactory::Create(InputType::HIDDEN, "monthlyPayment", "MonthlyPayment", 0);
         $this->addInput($field);
     }
 
@@ -342,12 +343,12 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
         $test_mode = $config->get("uncr_test", 0);
 
-        if (!defined("UNICREDIT_CERT_FILE")) {
+        if (!Spark::Get("UNICREDIT_CERT_FILE")) {
             if (!$test_mode) {
                 throw new Exception("Certificate not installed");
             }
         }
-        if (!defined("UNICREDIT_KEY_FILE")) {
+        if (!Spark::Get("UNICREDIT_KEY_FILE")) {
             if (!$test_mode) {
                 throw new Exception("Key not installed");
             }
@@ -362,7 +363,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         );
 
         $itr = new ArrayDataIterator($installments);
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "installmentCount", "Брой месеци", 1);
+        $field = DataInputFactory::Create(InputType::SELECT, "installmentCount", "Брой месеци", 1);
         $field->getRenderer()->setIterator($itr);
         $field->getRenderer()->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);
         $field->getRenderer()->getItemRenderer()->setLabelKey(ArrayDataIterator::KEY_VALUE);
@@ -370,7 +371,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         $field->setValue(12);
         $this->fldInstallment = $field;
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "initialPayment", "Първоначална вноска", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "initialPayment", "Първоначална вноска", 1);
         $field->setValidator(new NumericValidator(true));
         $this->fldInitial = $field;
     }
@@ -480,7 +481,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
     public function _render(JSONResponse $resp)
     {
 
-        echo "<div class='unilogo'><img src='".STORE_LOCAL."/images/unicredit-logo.png'></div>";
+        echo "<div class='unilogo'><img src='".Spark::Get(StoreConfig::STORE_LOCAL)."/images/unicredit-logo.png'></div>";
 
         $installmentCount = (int)$this->fldInstallment->getValue();
         $initialPayment = (int)$this->fldInitial->getValue();
@@ -532,7 +533,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
         $opr->setKOP($this->kop);
 
         $opr->setMonthlyPayment($monthlyPayment, $installmentCount, $initialPayment);
-        debug("UNI=> monthlyPayment: $monthlyPayment | installmentCount: $installmentCount");
+        Debug::ErrorLog("UNI=> monthlyPayment: $monthlyPayment | installmentCount: $installmentCount");
 
         $opr->setProductData($this->sellable);
 

@@ -10,7 +10,7 @@ class VariantOptionInputForm extends InputForm
 
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "option_name", "Option Name", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "option_name", "Option Name", 1);
         $this->addInput($field);
         $field->enableTranslator(TRUE);
 

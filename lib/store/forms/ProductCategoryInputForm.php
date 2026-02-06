@@ -27,7 +27,7 @@ class ProductCategoryInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
         $this->addInput($field);
 
         $field = new DataInput("category_seotitle", "SEO Заглавие (опция)", 0);
@@ -39,7 +39,7 @@ class ProductCategoryInputForm extends InputForm
         $rend->input()?->setAttribute("maxLength", 150);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимка", 0);
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимка", 0);
         $field->getProcessor()->setTransactBean(new ProductCategoryPhotosBean());
         $field->getProcessor()->setTransactBeanItemLimit(1);
 

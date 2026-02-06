@@ -8,9 +8,9 @@ include_once("store/forms/processors/RegisterClientFormProcessor.php");
 $page = new AccountPage(FALSE);
 $page->setTitle(tr("Регистрация"));
 
-$page->head()->addJS(SPARK_LOCAL."/js/md5.js");
-$page->head()->addJS(SPARK_LOCAL."/js/LoginForm.js");
-$page->head()->addJS(STORE_LOCAL."/js/RegisterForm.js");
+$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/md5.js");
+$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/LoginForm.js");
+$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/RegisterForm.js");
 
 
 $form = new RegisterClientInputForm();

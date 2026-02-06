@@ -95,7 +95,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLS
         $this->setTitle("Filters");
     }
 
-    public function processInput()
+    public function processInput(): void
     {
         $this->form->loadPostData($_GET);
         $this->form->validate();

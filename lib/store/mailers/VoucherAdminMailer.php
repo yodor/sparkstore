@@ -12,13 +12,13 @@ class VoucherAdminMailer extends Mailer
         parent::__construct();
 
 
-        debug ("Preparing message ...");
+        Debug::ErrorLog ("Preparing message ...");
 
-        $this->to = ORDER_EMAIL;
-        $this->subject = "Поръчка на ваучер на ".SITE_DOMAIN;
+        $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
+        $this->subject = "Поръчка на ваучер на ". Spark::Get(Config::SITE_DOMAIN);
 
         $message = "Здравейте, \r\n\r\n";
-        $message .= "Беше направена заявка за ваучер на ". SITE_DOMAIN;
+        $message .= "Беше направена заявка за ваучер на ". Spark::Get(Config::SITE_DOMAIN);
         $message .= "\r\n\r\n";
 
         $message .= "Име на получателя: ".$form->getInput("rcpt_name")->getValue();
@@ -37,7 +37,7 @@ class VoucherAdminMailer extends Mailer
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
 
     }
 

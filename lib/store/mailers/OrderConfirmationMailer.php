@@ -13,31 +13,32 @@ class OrderConfirmationMailer extends Mailer
 
         parent::__construct();
 
-        debug ("Accessing OrderBean with orderID: $orderID");
+        Debug::ErrorLog ("Accessing OrderBean with orderID: $orderID");
         $orders = new OrdersBean();
         $order = $orders->getByID($orderID);
 
         $userID = (int)$order["userID"];
 
 
-        debug ("Accessing UsersBean with order userID: $userID");
+        Debug::ErrorLog ("Accessing UsersBean with order userID: $userID");
 
         $users = new UsersBean();
         $user = $users->getByID($userID, "userID", "fullname", "email", "phone");
 
-        debug ("Preparing message ...");
+        Debug::ErrorLog ("Preparing message ...");
 
         $this->to = $user["email"];
-        $this->subject = "Потвърждение на поръчка от ".SITE_DOMAIN;
+        $this->subject = "Потвърждение на поръчка от ".Spark::Get(Config::SITE_DOMAIN);
 
         $message = "Здравейте, {$user["fullname"]}\r\n\r\n";
         $message .= "Изпращаме Ви това съобщение за да Ви уведомим, че поръчка Ви е приета за обработка. ";
         $message .= "\r\n\r\n";
 
-        $order_link = SITE_URL . LOCAL . "/account/order_details.php?orderID=$orderID";
+        $orderURL = new URL(Spark::Get(Config::LOCAL)."/account/order_details.php");
+        $orderURL->add(new URLParameter("orderID", $orderID));
 
         $message .= "Можете да видите поръчката си в меню ";
-        $message .= "<a href='$order_link'>моят профил -> поръчки</a>";
+        $message .= "<a href='{$orderURL->fullURL()}'>моят профил -> поръчки</a>";
 
         $message .= "\r\n\r\n";
 
@@ -76,7 +77,7 @@ class OrderConfirmationMailer extends Mailer
         $message .= "<th>#</th><th>Продукт</th><th>Брой</th><th>Ед.Цена</th><th>Сума</th>";
         $message .= "</tr>";
 
-        debug ("Preparing order items table ...");
+        Debug::ErrorLog ("Preparing order items table ...");
 
         $order_items = new OrderItemsBean();
         $qry = $order_items->query("product", "position", "qty", "price");
@@ -100,8 +101,8 @@ class OrderConfirmationMailer extends Mailer
             $message .= "</td>";
 
             $message .= "<td>" . $item["qty"] . "</td>";
-            $message .= "<td>" . sprintf("%0.2f лв.", $item["price"]) . "</td>";
-            $message .= "<td>" . sprintf("%0.2f лв.", ((int)$item["qty"] * $item["price"])) . "</td>";
+            $message .= "<td>" . formatPrice($item["price"], Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "</td>";
+            $message .= "<td>" . formatPrice(((int)$item["qty"] * $item["price"]), Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "</td>";
 
             $message .= "</tr>";
         }
@@ -112,10 +113,12 @@ class OrderConfirmationMailer extends Mailer
         $message .= "\r\n";
         $message .= "\r\n";
 
-        $message .= "Продкти общо: " . sprintf("%0.2f лв.", ($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0))) . "\r\n";
+        $productsTotal = $order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0);
+
+        $message .= "Продкти общо: " . formatPrice($productsTotal) . "\r\n";
         $delivery_text = "";
         if ($order["delivery_price"]>0) {
-            $delivery_text = sprintf("%0.2f лв.", $order["delivery_price"]);
+            $delivery_text = formatPrice($order["delivery_price"]);
         }
         else  if ($order["delivery_price"]==0) {
             $delivery_text = "Безплатна";
@@ -131,11 +134,11 @@ class OrderConfirmationMailer extends Mailer
         $message .= "\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
 
 
     }

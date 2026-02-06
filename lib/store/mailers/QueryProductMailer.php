@@ -35,15 +35,15 @@ class QueryProductMailer extends Mailer
 
         parent::__construct();
 
-        $this->to = ORDER_EMAIL;
+        $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
 
-        $this->subject = "Запитване за продукт на: ".SITE_DOMAIN;
+        $this->subject = "Запитване за продукт на: ". Spark::Get(Config::SITE_DOMAIN);
 
     }
 
     public function prepareMessage()
     {
-        debug ("Preparing message contents ...");
+        Debug::ErrorLog ("Preparing message contents ...");
 
         $message  = "От: ".$this->client_name;
         $message .= "\r\n";
@@ -63,11 +63,11 @@ class QueryProductMailer extends Mailer
         $message .= "\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
     }
 
 }

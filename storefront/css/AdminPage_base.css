@@ -26,15 +26,6 @@
     max-width: 100px;
 }
 
-.KeywordSearch .fields {
-    vertical-align: bottom;
-}
-
-.KeywordSearch .buttons {
-    vertical-align: bottom;
-}
-
-
 
 
 
@@ -215,3 +206,5 @@
     /*min-width: min-content;*/
     min-height: 100px;
 }
+
+.admin_layout .page_area

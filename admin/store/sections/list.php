@@ -19,7 +19,7 @@ $cmp->viewItemActions()->append(Action::RowSeparator());
 $cmp->viewItemActions()->append(new Action("Banners Gallery", "banners/list.php", array(new DataParameter("secID", $bean->key()))));
 $cmp->viewItemActions()->append(Action::RowSeparator());
 $cmp->viewItemActions()->append(
-    new Action("Products", ADMIN_LOCAL."/store/products/list.php",
+    new Action("Products", Spark::Get(Config::ADMIN_LOCAL)."/store/products/list.php",
         array(
            new DataParameter("filter_section", "section_title"),
            new URLParameter("filter", "search"),

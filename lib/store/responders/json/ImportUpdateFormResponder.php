@@ -41,7 +41,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
                 rewind($stream);
             }
             else {
-                debug("BOM UTF-8 skipped");
+                Debug::ErrorLog("BOM UTF-8 skipped");
             }
 
             //read key column names
@@ -80,15 +80,15 @@ class ImportUpdateFormResponder extends JSONFormResponder
                     if (count($line) != $keyCount) throw new Exception("Incorrect number of columns. Expected $keyCount columns");
 
                     $prodID = (int)$line[0];
-                    $productName = sanitizeInput($line[1]);
-                    $productDescription = sanitizeInput($line[2]);
-                    $seoDescription = sanitizeInput($line[3]);
+                    $productName = Spark::SanitizeInput($line[1]);
+                    $productDescription = Spark::SanitizeInput($line[2]);
+                    $seoDescription = Spark::SanitizeInput($line[3]);
                     $updateData = array("product_name" => $productName,
                         "product_description" => $productDescription,
                         "seo_description" => $seoDescription,
                     );
 
-                    debug("Going to update prodID: $prodID ...");
+                    Debug::ErrorLog("Going to update prodID: $prodID ...");
 
                     $bean->update($prodID, $updateData, $db);
                     $productsUpdated++;

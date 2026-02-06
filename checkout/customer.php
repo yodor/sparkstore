@@ -44,7 +44,7 @@ if ($page->getUserID() > 0) {
     exit;
 }
 else {
-    Session::Set("login.redirect", LOCAL."/checkout/confirm.php");
+    Session::Set("login.redirect", Spark::Get(Config::LOCAL)."/checkout/confirm.php");
 //    header("Location: ".LOCAL."/account/login.php");
 //    exit;
 }
@@ -86,7 +86,7 @@ $note->buffer()->end();
 
 $section->value()->items()->append($note);
 $section->button()->setContents(tr("Continue"));
-$section->button()->setAttribute("href", LOCAL."/account/login.php");
+$section->button()->setAttribute("href", Spark::Get(Config::LOCAL)."/account/login.php");
 $page->base()->items()->append($section);
 
 $page->render();

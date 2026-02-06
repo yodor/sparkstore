@@ -8,16 +8,16 @@ class QueryProductForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 0);
+        $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "query", "Запитване", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "query", "Запитване", 1);
         $this->addInput($field);
 
     }

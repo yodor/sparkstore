@@ -114,8 +114,8 @@ class ProductListPageBase extends ProductPageBase
 
         $this->view->setSchemaType($this->view->getSchemaType()." https://schema.org/OfferCatalog");
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/product_list.css");
-        $this->head()->addJS(STORE_LOCAL . "/js/product_list.js");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/product_list.css");
+        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL) . "/js/product_list.js");
 
         //enable canonical link tag
         $categoryURL = new CategoryURL();

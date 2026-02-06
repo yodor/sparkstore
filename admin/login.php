@@ -12,8 +12,8 @@ $page = new AdminLoginPage();
 $auth = new AdminAuthenticator();
 
 $req = new AuthenticatorResponder($auth);
-$req->setCancelUrl(ADMIN_LOCAL . "/login.php");
-$req->setSuccessUrl(ADMIN_LOCAL . "/index.php");
+$req->setCancelUrl(Spark::Get(Config::ADMIN_LOCAL) . "/login.php");
+$req->setSuccessUrl(Spark::Get(Config::ADMIN_LOCAL) . "/index.php");
 
 
 $af = new LoginForm();
@@ -29,7 +29,7 @@ header("Expires: 0");
 $page->startRender();
 
 
-$afr->setCaption(SITE_TITLE . "<BR><small>" . tr("Administration") . "</small>");
+$afr->setCaption(Spark::Get(Config::SITE_TITLE) . "<BR><small>" . tr("Administration") . "</small>");
 
 $afr->render();
 

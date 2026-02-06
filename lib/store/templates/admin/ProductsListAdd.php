@@ -22,7 +22,7 @@ $template = new ProductsListAdd();
 
 $closure = function(BeanFormEditorEvent $event) {
     if ($event->isEvent(BeanFormEditorEvent::EDITOR_CREATED)) {
-        debug("Processing BeanFormEditorEvent::EDITOR_CREATED ...");
+        Debug::ErrorLog("Processing BeanFormEditorEvent::EDITOR_CREATED ...");
         $editor = $event->getSource();
         if (!($editor instanceof BeanFormEditor)) throw new Exception("Event source is not BeanFormEditor");
 
@@ -35,11 +35,11 @@ SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closu
 $old_stock_amount = -1;
 $closure_editor = function(BeanFormEditorEvent $event) use (&$old_stock_amount) {
     if ($event->isEvent(BeanFormEditorEvent::FORM_BEAN_LOADED)) {
-        debug("Processing BeanFormEditorEvent::FORM_BEAN_LOADED ...");
+        Debug::ErrorLog("Processing BeanFormEditorEvent::FORM_BEAN_LOADED ...");
         $editor = $event->getSource();
         if ($editor instanceof BeanFormEditor) {
             $old_stock_amount = $editor->getForm()->getInput("stock_amount")->getValue();
-            debug("Current stock_amount: $old_stock_amount");
+            Debug::ErrorLog("Current stock_amount: $old_stock_amount");
         }
     }
 };
@@ -47,7 +47,7 @@ SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closu
 
 $closure_transactor = function(BeanTransactorEvent $event) use(&$old_stock_amount) {
     if ($event->isEvent(BeanTransactorEvent::AFTER_COMMIT)) {
-        debug("Processing BeanTransactorEvent::AFTER_COMMIT ...");
+        Debug::ErrorLog("Processing BeanTransactorEvent::AFTER_COMMIT ...");
         $transactor = $event->getSource();
         if (!($transactor instanceof BeanTransactor)) return;
         $prodID = $transactor->getEditID();
@@ -63,7 +63,7 @@ $closure_transactor = function(BeanTransactorEvent $event) use(&$old_stock_amoun
             ProductDetailsItem::CleanCacheEntry($prodID);
         }
         catch (Exception $e) {
-            debug("Exception during CleanCacheEntry: ".$e->getMessage());
+            Debug::ErrorLog("Exception during CleanCacheEntry: ".$e->getMessage());
         }
     }
 };

@@ -20,11 +20,11 @@ class OrderStatusMailer extends Mailer
 
         $this->to = $user["email"];
 
-        $this->subject = "Вашата поръчка от ".SITE_DOMAIN;
+        $this->subject = "Вашата поръчка от ".Spark::Get(Config::SITE_DOMAIN);
 
         $message = "Здравейте, {$user["fullname"]}\r\n\r\n";
 
-        $message .= "Състоянието на Вашата поръчка от " . SITE_DOMAIN . " беше обновено: ";
+        $message .= "Състоянието на Вашата поръчка от " . Spark::Get(Config::SITE_DOMAIN) . " беше обновено: ";
 
         $message .= tr($status) . "\r\n";
         $message .= "\r\n\r\n";
@@ -33,7 +33,7 @@ class OrderStatusMailer extends Mailer
 
         $message .= "Поздрави,";
         $message .= "\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
 
         $this->body = $this->templateMessage($message);

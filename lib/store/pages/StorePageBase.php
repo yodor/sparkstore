@@ -106,8 +106,8 @@ class StorePageBase extends SparkPage
             $this->head()->addScript($gtag);
         }
 
-        $adsID = $config->get("googleID_ads", "");
-        $conversionID = $config->get("googleID_ads_conversion", "");
+        $adsID = $config->get("googleID_ads");
+        $conversionID = $config->get("googleID_ads_conversion");
         if ($adsID && $conversionID) {
             $obj = new GTAGObject();
             $obj->setCommand(GTAGObject::COMMAND_EVENT);
@@ -121,22 +121,22 @@ class StorePageBase extends SparkPage
         }
 
         $config->setSection("store_config");
-        $phone = $config->get("phone_orders", "");
+        $phone = $config->get("phone_orders");
 
-        $page_id = $config->get("tawkto_id", "");
+        $page_id = $config->get("tawkto_id");
         if ($page_id) {
             $this->head()->addScript(new TawktoScript($page_id));
         }
 
         $organization = new LinkedData("Organization");
-        $organization->set("name", SITE_TITLE);
-        $organization->set("url", SITE_URL);
-        $organization->set("logo", SITE_URL."/images/logo_header.svg");
+        $organization->set("name", Spark::Get(Config::SITE_TITLE));
+        $organization->set("url", Spark::Get(Config::SITE_URL));
+        $organization->set("logo", Spark::Get(Config::SITE_URL)."/images/logo_header.svg");
         $contactPoint = new LinkedData("ContactPoint");
         $contactPoint->set("telephone", $phone);
         $contactPoint->set("contactType", "sales");
-        $contactPoint->set("areaServed", substr(DEFAULT_LANGUAGE_ISO3, 0, 2));
-        $contactPoint->set("availableLanguage", DEFAULT_LANGUAGE);
+        $contactPoint->set("areaServed", substr(Spark::Get(Config::DEFAULT_LANGUAGE_ISO3), 0, 2));
+        $contactPoint->set("availableLanguage", Spark::Get(Config::DEFAULT_LANGUAGE));
         $organization->set("contactPoint", $contactPoint->toArray());
 
         $orgScript = new LDJsonScript();
@@ -144,8 +144,8 @@ class StorePageBase extends SparkPage
         $this->head()->addScript($orgScript);
 
         $website = new LinkedData("WebSite");
-        $website->set("name", mb_strtoupper(SITE_TITLE). " - " . tr("Official Page"));
-        $website->set("url", SITE_URL);
+        $website->set("name", mb_strtoupper(Spark::Get(Config::SITE_URL)). " - " . tr("Official Page"));
+        $website->set("url", Spark::Get(Config::SITE_URL));
 
         $potentialAction = new LinkedData("SearchAction");
 
@@ -164,14 +164,14 @@ class StorePageBase extends SparkPage
         $this->head()->addScript($wwwScript);
 
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/store.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
 
-        $this->head()->addJS(SPARK_LOCAL."/js/SparkCookies.js");
-        $this->head()->addJS(STORE_LOCAL."/js/cookies.js");
-        $this->head()->addJS(STORE_LOCAL."/js/menusticky.js");
+        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkCookies.js");
+        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/cookies.js");
+        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/menusticky.js");
 
 
-        $this->head()->addOGTag("site_name", SITE_TITLE);
+        $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
         $this->head()->addOGTag("type", "website");
 
 
@@ -217,7 +217,7 @@ class StorePageBase extends SparkPage
             if (mb_strlen($title) > 0) {
                 $this->preferred_title = $title;
             } else {
-                $this->preferred_title = constructSiteTitle($selectedPath);
+                $this->preferred_title = Spark::SiteTitle($selectedPath);
             }
         }
 
@@ -243,7 +243,7 @@ class StorePageBase extends SparkPage
     {
 
         $this->auth = new UserAuthenticator();
-        $this->loginURL = LOCAL . "/account/login.php";
+        $this->loginURL = Spark::Get(Config::LOCAL) . "/account/login.php";
 
         parent::__construct();
 
@@ -285,8 +285,8 @@ class StorePageBase extends SparkPage
         $this->_header = new PageSection();
         $this->_header->addClassName("header");
         $this->_header->content()->setTagName("header");
-        $this->_header->setAttribute("itemscope", "");
-        $this->_header->setAttribute("itemtype", "http://schema.org/WPHeader");
+        $this->_header->setAttribute("itemscope");
+        $this->_header->setAttribute("itemtype", "https://schema.org/WPHeader");
 
         $this->_menu = new PageSection();
         $this->_menu->addClassName("menu");
@@ -334,7 +334,7 @@ class StorePageBase extends SparkPage
 
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
-            $this->head()->addJS(STORE_LOCAL."/js/vouchers.js");
+            $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");
         }
 
     }
@@ -399,19 +399,19 @@ class StorePageBase extends SparkPage
         $icon_contents = "<span class='icon'></span>";
 
         $button_account = new Action();
-        $button_account->getURL()->fromString(LOCAL . "/account/login.php");
+        $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/login.php");
         $button_account->setAttribute("title", tr("Account"));
         $button_account->setClassName("button account");
         $button_account->setContents($icon_contents);
         if ($this->context) {
-            $button_account->getURL()->fromString(LOCAL . "/account/");
+            $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/");
             $button_account->addClassName("logged");
         }
 
         $container->items()->append($button_account);
 
         $button_cart = new Action();
-        $button_cart->getURL()->fromString(LOCAL . "/checkout/cart.php");
+        $button_cart->getURL()->fromString(Spark::Get(Config::LOCAL) . "/checkout/cart.php");
         $button_cart->setAttribute("title", tr("Cart"));
         $button_cart->addClassName("button cart");
 
@@ -441,8 +441,11 @@ class StorePageBase extends SparkPage
         }
     }
 
-    protected function createLogo(string $href = LOCAL . "/home.php") : Component
+    protected function createLogo(string $href = "") : Component
     {
+        if (!$href) {
+            $href = Spark::Get(Config::LOCAL)."/home.php";
+        }
         $link = new Action();
         $link->setTagName("a");
         $link->setAttribute("aria-label", "logo");
@@ -453,9 +456,11 @@ class StorePageBase extends SparkPage
         return $link;
     }
 
-    protected function createVideo(string $src = LOCAL."/images/header_logo") : Video
+    protected function createVideo(string $src = "") : Video
     {
-
+        if (!$src) {
+            $src = Spark::Get(Config::LOCAL)."/images/header_logo";
+        }
         $video = new Video();
         $video->setAttribute("autoplay");
         $video->setAttribute("playsInline");
@@ -510,7 +515,7 @@ class StorePageBase extends SparkPage
         $query->select->where()->add("visible", 1);
         $num = $query->exec();
         while ($result = $query->nextResult()) {
-            $linkButton = Button::Action($result->get("item_title"), new URL(LOCAL."/pages/index.php?id=".$result->get("dpID")));
+            $linkButton = Button::Action($result->get("item_title"), new URL(Spark::Get(Config::LOCAL)."/pages/index.php?id=".$result->get("dpID")));
             $linkButton->setComponentClass("item");
             $linkButton->setTitle($result->get("item_title"));
             $columnLinks->items()->append($linkButton);
@@ -519,13 +524,13 @@ class StorePageBase extends SparkPage
 
         $cfg = ConfigBean::Factory();
         $cfg->setSection("store_config");
-        $phone = $cfg->get("phone_text", "");
+        $phone = $cfg->get("phone_text");
         $phone = str_replace("\\r\\n", "<BR>", $phone);
-        $email = $cfg->get("email_text", "");
+        $email = $cfg->get("email_text");
         $email = str_replace("\\r\\n", "<BR>", $email);
-        $location = $cfg->get("address_text", "");
+        $location = $cfg->get("address_text");
         $location = str_replace("\\r\\n", "<BR>", $location);
-        $working_hours = $cfg->get("working_hours_text", "");
+        $working_hours = $cfg->get("working_hours_text");
         $working_hours = str_replace("\\r\\n", "<BR>", $working_hours);
 
         $items = array("phone"=>$phone, "email"=>$email, "location"=>$location, "working_hours"=>$working_hours);
@@ -567,26 +572,26 @@ class StorePageBase extends SparkPage
             "facebook"=>"",
             "instagram"=>"",
             "youtube"=>"",
-            "terms"=>LOCAL."/pages/index.php?class=terms",
-            "contacts"=>LOCAL."/contacts.php",
+            "terms"=>Spark::Get(Config::LOCAL)."/pages/index.php?class=terms",
+            "contacts"=>Spark::Get(Config::LOCAL)."/contacts.php",
             "phone"=>"",
         );
 
         $cfg = new ConfigBean();
         $cfg->setSection("store_config");
-        $facebook_href = $cfg->get("facebook_url", "");
+        $facebook_href = $cfg->get("facebook_url");
         if ($facebook_href) {
             $items["facebook"] = $facebook_href;
         }
-        $instagram_href = $cfg->get("instagram_url", "");
+        $instagram_href = $cfg->get("instagram_url");
         if ($instagram_href) {
             $items["instagram"] = $instagram_href;
         }
-        $youtube_href = $cfg->get("youtube_url", "");
+        $youtube_href = $cfg->get("youtube_url");
         if ($youtube_href) {
             $items["youtube"] = $youtube_href;
         }
-        $phone = $cfg->get("phone_orders", "");
+        $phone = $cfg->get("phone_orders");
         if ($phone) {
             $items["phone"] = "tel:$phone";
         }

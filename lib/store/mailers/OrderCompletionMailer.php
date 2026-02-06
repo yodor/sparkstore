@@ -7,6 +7,7 @@ class OrderCompletionMailer extends Mailer
 
     public function __construct($orderID)
     {
+        parent::__construct();
 
         $orders = new OrdersBean();
         $order_row = $orders->getByID($orderID);
@@ -17,7 +18,7 @@ class OrderCompletionMailer extends Mailer
 
         $message = "Здравейте, <br><br>\r\n\r\n";
 
-        $message .= "Изпращаме Ви това съобщение за да Ви уведомим че Вашата поръчка от " . SITE_DOMAIN . " беше изпратена. ";
+        $message .= "Изпращаме Ви това съобщение за да Ви уведомим че Вашата поръчка от " . Spark::Get(Config::SITE_DOMAIN) . " беше изпратена. ";
 
         $message .= "\r\n\r\n<br><br>";
         $message .= "Поръчка Номер: $orderID\r\n<br>";
@@ -29,18 +30,18 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Цена Всичко: " . $order_row["order_total"] . " " . $order_row["active_currency"];
-        if (DOUBLE_PRICE_ENABLED) {
-            $message .= "Цена Всичко: " . formatPrice(($order_row["order_total"]/DOUBLE_PRICE_RATE),DOUBLE_PRICE_CURRENCY);
+        if (Spark::GetFloat(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+            $message .= "Цена Всичко: " . formatPrice(($order_row["order_total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
         }
 
         $message .= "<BR><BR>\r\n\r\nС Уважение,<BR>\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $message .= "<BR><BR>\r\n\r\n";
 
         $message .= "Hello, <br><br>\r\n\r\n";
 
-        $message .= "This message is sent to let you know that your order at " . SITE_DOMAIN . " is now shipped. ";
+        $message .= "This message is sent to let you know that your order at " . Spark::Get(Config::SITE_DOMAIN) . " is now shipped. ";
 
         $message .= "\r\n\r\n<br><br>";
         $message .= "OrderID: $orderID\r\n<br>";
@@ -52,11 +53,11 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Order Total: " . $order_row["order_total"] . " " . $order_row["active_currency"];
-        if (DOUBLE_PRICE_ENABLED) {
-            $message .= "Order Total: " . formatPrice($order_row["order_total"]/DOUBLE_PRICE_RATE,DOUBLE_PRICE_CURRENCY);
+        if (Spark::GetFloat(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+            $message .= "Order Total: " . formatPrice($order_row["order_total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
         }
         $message .= "<BR><BR>\r\n\r\nSincerely,<BR>\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 

@@ -102,7 +102,7 @@ class SellableProducts extends DBViewBean
     {
 
         $meta = function($itemProp, $attributeValue) {
-            echo "<meta itemprop='$itemProp' content='".attributeValue($attributeValue)."'>";
+            echo "<meta itemprop='$itemProp' content='".Spark::AttributeValue($attributeValue)."'>";
         };
         SellableProducts::AttributesWalker($attributes, $supported, $meta);
 

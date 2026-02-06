@@ -2,7 +2,7 @@
 include_once("session.php");
 include_once("class/pages/AdminPage.php");
 
-$page = new AdminPage("Settings");
+$page = new AdminPage();
 
 $menu = array(
 

@@ -37,12 +37,12 @@ class OrderProductFormResponder extends JSONFormResponder
 
         if (count($option_names)>0) {
             if (!isset($_REQUEST["variant"])) throw new Exception("Variant data not passed");
-            $variant = sanitizeInput($_REQUEST["variant"]);
+            $variant = Spark::SanitizeInput($_REQUEST["variant"]);
 
             foreach ($variant as $idx=>$pair) {
                 list($option_name, $option_value) = explode(":", $pair);
-                $option_name = sanitizeInput($option_name);
-                $option_value = sanitizeInput($option_value);
+                $option_name = Spark::SanitizeInput($option_name);
+                $option_value = Spark::SanitizeInput($option_value);
 
                 if (!$this->sellable->haveVariant($option_name)) throw new Exception("Incorrect variant name received");
                 $vitem = $this->sellable->getVariant($option_name);

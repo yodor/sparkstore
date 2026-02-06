@@ -14,11 +14,11 @@ class NewsPageBase extends StorePage
     {
         parent::__construct();
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/news.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/news.css");
 
         $this->news = new NewsItemsBean();
 
-        $this->pac = new PublicationsComponent($this->news, LOCAL . "/news/index.php");
+        $this->pac = new PublicationsComponent($this->news, Spark::Get(Config::LOCAL) . "/news/index.php");
     }
 
     public function getPublications() : PublicationsComponent

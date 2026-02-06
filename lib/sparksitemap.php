@@ -17,7 +17,7 @@ $qry->select->group_by = " prodID ";
 $num = $qry->exec();
 
 echo "<?xml version='1.0' encoding='UTF-8'?>";
-echo "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:image='http://www.google.com/schemas/sitemap-image/1.1'>";
+echo "<urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9' xmlns:image='https://www.google.com/schemas/sitemap-image/1.1'>";
 
 $factory = new BeanMenuFactory(new MenuItemsBean());
 $list = $factory->menu();
@@ -25,7 +25,7 @@ if ($list instanceof MenuItemList) {
     $itr = $list->iterator();
     while($menuItem = $itr->next()) {
         if ($menuItem instanceof MenuItem) {
-            renderItem(fullURL($menuItem->getHref()));
+            renderItem(new URL($menuItem->getHref())->fullURL());
         }
     }
 }
@@ -40,7 +40,7 @@ while ($result = $qry->nextResult()) {
     if (strlen($photos)>0) {
         $productURL = new ProductURL();
         $productURL->setData(array("prodID"=>$prodID,"product_name"=>$productName));
-        renderItem(fullURL($productURL->toString()), $update_date->format('Y-m-d'), $photos, slugify($productName));
+        renderItem($productURL->fullURL(), $update_date->format('Y-m-d'), $photos, Spark::Slugify($productName));
     }
 }
 
@@ -59,13 +59,13 @@ while ($result = $query->nextResult())
     $photos = (string)$result->get("product_photos");
     $categoryURL = new CategoryURL();
     $categoryURL->setData(array("catID"=>$catID,"category_name"=>$categoryName));
-    renderItem(fullURL($categoryURL), "", $photos, slugify($categoryName));
+    renderItem($categoryURL->fullURL(), "", $photos, Spark::Slugify($categoryName));
 
 }
 
 if (isset($items_add) && is_array($items_add)) {
     foreach ($items_add as $idx=>$item) {
-        renderItem(fullURL($item));
+        renderItem(new URL($item)->fullURL());
     }
 }
 
@@ -88,9 +88,9 @@ function renderItem(string $loc, string $lastmod="", string $photos="", string $
                 if ($relationName) {
                     $imageLocation->setName($relationName);
                 }
-                $location = $imageLocation->hrefImage()->toString();
+                $location = $imageLocation->hrefImage()->fullURL();
                 $location = htmlspecialchars($location, ENT_XML1 | ENT_QUOTES, 'UTF-8');
-                echo "<image:loc>".fullURL($location)."</image:loc>";
+                echo "<image:loc>$location</image:loc>";
             echo "</image:image>";
         }
     }

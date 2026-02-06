@@ -12,7 +12,7 @@ class ProductListURL extends URL
     public function __construct()
     {
         parent::__construct();
-        $this->fromString(LOCAL.self::$urlProductList);
+        $this->fromString(Spark::Get(Config::LOCAL).self::$urlProductList);
     }
 }
 ?>

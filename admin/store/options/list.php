@@ -80,7 +80,7 @@ $cmp->getPage()->setName($title);
 
 $closure = function(ClosureComponent $cmp) use ($class_filter, $classes) {
 
-    $input = DataInputFactory::Create(DataInputFactory::SELECT, $class_filter->getName(), $class_filter->getTitle(), 0);
+    $input = DataInputFactory::Create(InputType::SELECT, $class_filter->getName(), $class_filter->getTitle(), 0);
     $renderer = $input->getRenderer();
     $renderer->setIterator($classes->query("pclsID", "class_name"));
     $renderer->getItemRenderer()->setLabelKey("class_name");

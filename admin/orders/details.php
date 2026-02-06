@@ -17,7 +17,7 @@ include_once("store/beans/InvoiceDetailsBean.php");
 
 $page = new AdminPage();
 
-$page->head()->addCSS(STORE_LOCAL."/css/print.css");
+$page->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL)."/css/print.css");
 
 $ekont_addresses = new CourierAddressesBean();
 $client_addresses = new ClientAddressesBean();
@@ -166,7 +166,8 @@ echo "</div>";//panel
 
                     $prodID = $item["prodID"];
 
-                    echo "<a class='item photo' href='" . LOCAL . "/products/details.php?prodID=$prodID'>";
+                    echo "<a class='item photo' href='" . Spark::Get(Config::LOCAL) . "/products/details.php?prodID=$prodID'>";
+
                     $href = StorageItem::Image($item["itemID"], get_class($items), 128, -1);
                     echo "<img src='$href'>";
                     echo "</a>";

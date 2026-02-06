@@ -9,13 +9,13 @@ class ProductURL extends URL
     public function __construct(?URL $other=null)
     {
         parent::__construct();
-        if (PRODUCT_ITEM_SLUG) {
-            $this->fromString(LOCAL.self::$urlProductSlug);
+        if (Spark::GetBoolean(StoreConfig::PRODUCT_ITEM_SLUG)) {
+            $this->fromString(Spark::Get(Config::LOCAL).self::$urlProductSlug);
             $this->add(new PathParameter("prodID", "prodID", false));
             $this->add(new PathParameter("product_name", "product_name", true));
         }
         else {
-            $this->fromString(LOCAL.self::$urlProduct);
+            $this->fromString(Spark::Get(Config::LOCAL).self::$urlProduct);
             $this->add(new DataParameter("prodID"));
         }
 

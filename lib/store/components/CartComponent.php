@@ -29,16 +29,16 @@ class SummaryItem extends Container
         $this->value = new Container(false);
         $this->value->setComponentClass("value");
 
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
+            $eurPrice->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
             $eurPrice->disableLinkedData();
 
             $this->value->items()->append($eurPrice);
         }
 
         $this->price = new PriceLabel();
-        $this->price->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->price->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
         $this->price->disableLinkedData();
 
         $this->value->items()->append($this->price);
@@ -48,10 +48,10 @@ class SummaryItem extends Container
     protected function processAttributes(): void
     {
         parent::processAttributes();
-        if (DOUBLE_PRICE_ENABLED) {
-            $priceLabel = $this->value->items()->getByName(DOUBLE_PRICE_CURRENCY);
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+            $priceLabel = $this->value->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             if ($priceLabel instanceof PriceLabel) {
-                $priceLabel->priceSell()->setAmount($this->price->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+                $priceLabel->priceSell()->setAmount($this->price->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
             }
         }
 
@@ -217,14 +217,14 @@ class CartListItem extends Container {
         $tdPrice->setComponentClass("");
         $tdPrice->setAttribute("field", "price");
         $tdPrice->items()->append(new TextComponent(tr("Price"), "mobile-label"));
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
+            $eurPrice->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
             $eurPrice->disableLinkedData();
             $tdPrice->items()->append($eurPrice);
         }
         $this->price = new PriceLabel();
-        $this->price->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->price->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
         $this->price->disableLinkedData();
         $tdPrice->items()->append($this->price);
         $this->items()->append($tdPrice);
@@ -234,15 +234,15 @@ class CartListItem extends Container {
         $tdLineTotal->setAttribute("field", "line-total");
         $tdLineTotal->items()->append(new TextComponent(tr("Total"),"mobile-label"));
 
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $eurLine = new PriceLabel();
-            $eurLine->setCurrencyLabels(DOUBLE_PRICE_CURRENCY, DOUBLE_PRICE_SYMBOL);
+            $eurLine->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
             $eurLine->disableLinkedData();
             $tdLineTotal->items()->append($eurLine);
         }
 
         $this->lineTotal = new PriceLabel();
-        $this->lineTotal->setCurrencyLabels(DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL);
+        $this->lineTotal->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
         $this->lineTotal->disableLinkedData();
         $tdLineTotal->items()->append($this->lineTotal);
         $this->items()->append($tdLineTotal);
@@ -259,20 +259,20 @@ class CartListItem extends Container {
             $this->actIncrement->setRenderEnabled(false);
             $this->actDecrement->setRenderEnabled(false);
         }
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $tdPrice = $this->items()->getByAttribute("price", "field");
-            $eurPrice = $tdPrice->items()->getByName(DOUBLE_PRICE_CURRENCY);
+            $eurPrice = $tdPrice->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             if ($eurPrice instanceof PriceLabel) {
                 if ($this->price->priceOld()->getAmount()) {
-                    $eurPrice->priceOld()->setAmount($this->price->priceOld()->getAmount() / DOUBLE_PRICE_RATE);
+                    $eurPrice->priceOld()->setAmount($this->price->priceOld()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
                 }
-                $eurPrice->priceSell()->setAmount($this->price->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+                $eurPrice->priceSell()->setAmount($this->price->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
             }
 
             $tdLine = $this->items()->getByAttribute("line-total", "field");
-            $eurPrice = $tdLine->items()->getByName(DOUBLE_PRICE_CURRENCY);
+            $eurPrice = $tdLine->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             if ($eurPrice instanceof PriceLabel) {
-                $eurPrice->priceSell()->setAmount($this->lineTotal->priceSell()->getAmount() / DOUBLE_PRICE_RATE);
+                $eurPrice->priceSell()->setAmount($this->lineTotal->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
             }
         }
     }
@@ -342,7 +342,7 @@ class CartComponent extends Container implements IHeadContents
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
-        $arr[] = STORE_LOCAL . "/css/CartComponent.css";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/CartComponent.css";
         return $arr;
     }
 

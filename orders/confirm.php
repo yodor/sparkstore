@@ -103,7 +103,8 @@ else {
     echo "<BR>";
     echo tr("Ако все още има проблем с потвърждаването на поръчката, моля свържете се с нас.");
     echo "<BR>";
-    echo "<a href='" . LOCAL . "/contacts.php'>" . tr("Продължи към страницата за контакти.") . "</a>";
+    $contactsURL = new URL(Spark::Get(Config::LOCAL) . "/contacts.php");
+    echo "<a href='{$contactsURL->fullURL()}'>" . tr("Продължи към страницата за контакти.") . "</a>";
     echo "<BR><BR>";
 
     echo tr("Код за потвърждение на поръчка") . ": ";

@@ -77,7 +77,7 @@ class ContentPageBase extends StorePage
         }
         catch (Exception $e) {
             Session::SetAlert($e->getMessage());
-            header("Location: ".LOCAL."/home.php");
+            header("Location: ".Spark::Get(Config::LOCAL)."/home.php");
             exit;
         }
 
@@ -174,7 +174,7 @@ class ContentPageBase extends StorePage
                 $itemID = (int)$menuItem->get($this->bean->key());
                 $itemTitle = $menuItem->get("item_title");
                 $page_param = implode(";", $this->page_class);
-                echo "<a class='item' href='index.php?id=$itemID&page_class=$page_param' title='".attributeValue($itemTitle)."'>";
+                echo "<a class='item' href='index.php?id=$itemID&page_class=$page_param' title='".Spark::AttributeValue($itemTitle)."'>";
 
                 if ($menuItem->get("have_photo")) {
                     echo "<div class='photo'>";

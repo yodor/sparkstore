@@ -68,7 +68,7 @@ class CheckoutPageBase extends StorePage
     {
         parent::__construct();
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/checkout.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/checkout.css");
 
         $this->heading = new Component(false);
         $this->heading->setTagName("h1");

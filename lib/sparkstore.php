@@ -1,55 +1,52 @@
 <?php
 
-$globals = SparkGlobals::Instance();
+Spark::EnableBeanLocation("store/beans/");
+Spark::EnableBeanLocation("store/auth/");
 
-$globals->addIncludeLocation("store/beans/");
-$globals->addIncludeLocation("store/auth/");
+$location = Spark::Get(Config::LOCAL);
 
-$location = $globals->get("LOCAL");
+Spark::Set(StoreConfig::STORE_LOCAL, $location . "/storefront");
+Spark::Set(StoreConfig::LOGO_NAME, "logo_header.svg");
+Spark::Set(StoreConfig::LOGO_PATH, Spark::Get("INSTALL_PATH")."/storefront/images/");
 
-//sparkbox frontend classes location (js/css/images) - HTTP accessible - without ending slash
-$globals->set("STORE_LOCAL", $location . "/storefront");
-$globals->set("LOGO_NAME", "logo_header.svg");
-$globals->set("LOGO_PATH", $globals->get("INSTALL_PATH")."/storefront/images/");
+Spark::Set(StoreConfig::DEFAULT_CURRENCY, "EUR");
+Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");
 
-//setup order recipient email address
+//show double prices - convert from default currency to EURO
+Spark::Set(StoreConfig::DOUBLE_PRICE_ENABLED, false);
+Spark::Set(StoreConfig::DOUBLE_PRICE_CURRENCY, "BGN");
+Spark::Set(StoreConfig::DOUBLE_PRICE_SYMBOL, "лв.");
+Spark::Set(StoreConfig::DOUBLE_PRICE_RATE, (1/1.95583));
+
+//slugified URLs
+Spark::Set(Config::STORAGE_ITEM_SLUG, TRUE);
+Spark::Set(StoreConfig::CATEGORY_ITEM_SLUG, TRUE);
+Spark::Set(StoreConfig::PRODUCT_ITEM_SLUG, TRUE);
+
+Spark::Set(StoreConfig::ORDER_EMAIL, Spark::Get(Config::DEFAULT_SERVICE_EMAIL));
+
+//re-read local store config and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
+require("config/defaults.php");
+
+//allow ORDER_EMAIL override from DB configuration
 if (!defined("SKIP_DB")) {
     include_once("beans/ConfigBean.php");
     $config = ConfigBean::Factory();
     $config->setSection("store_config");
 
-//override ORDER_ADMIN_EMAIL
-    $order_email = $config->get("email_orders", "");
-    if (strlen(trim($order_email)) < 1) {
-        if (defined("ORDER_ADMIN_EMAIL")) {
-            $order_email = ORDER_ADMIN_EMAIL;
-        }
+    $order_email = $config->get("email_orders");
+    if (strlen(trim($order_email)) > 0) {
+        Spark::Set(StoreConfig::ORDER_EMAIL, $order_email);
     }
-    $globals->set("ORDER_EMAIL", $order_email);
 }
 
-$globals->set("DEFAULT_CURRENCY", "EUR");
-$globals->set("DEFAULT_CURRENCY_SYMBOL", "&euro;");
+//Spark::DefineConfig();
 
-//iso3 currency
-//$globals->set("DEFAULT_CURRENCY", "BGN");
-//currency short name/symbol
-//$globals->set("DEFAULT_CURRENCY_SYMBOL", "лв.");
-
-//show double prices - convert from default currency to EURO
-$globals->set("DOUBLE_PRICE_ENABLED", false);
-$globals->set("DOUBLE_PRICE_CURRENCY", "BGN");
-$globals->set("DOUBLE_PRICE_SYMBOL", "лв.");
-//$globals->set("DOUBLE_PRICE_RATE", 1.95583);
-$globals->set("DOUBLE_PRICE_RATE", (1/1.95583));
-
-$globals->set("PRODUCT_ITEM_SLUG", FALSE);
-$globals->set("CATEGORY_ITEM_SLUG", FALSE);
-
-$globals->export();
-
-function formatPrice($price, string $currency_symbol=DEFAULT_CURRENCY_SYMBOL, bool $symbol_front=false) : string
+function formatPrice($price, ?string $currency_symbol=null, bool $symbol_front=false) : string
 {
+    if (is_null($currency_symbol)) {
+        $currency_symbol = Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL);
+    }
     $format = "%0.2f";
 
     if ($symbol_front) {

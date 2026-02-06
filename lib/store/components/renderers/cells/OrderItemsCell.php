@@ -70,7 +70,7 @@ class OrderItemsCell extends TableCell
             echo "</div>";
 
             if ($prodID > 0) {
-                echo "<a class='Action' href='" . LOCAL . "/admin/store/products/inventory/list.php?prodID=$prodID'>" . tr("Виж инвентар") . "</a>";
+                echo "<a class='Action' href='" . Spark::Get(Config::LOCAL) . "/admin/store/products/inventory/list.php?prodID=$prodID'>" . tr("Виж инвентар") . "</a>";
             }
         }
 

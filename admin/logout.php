@@ -6,7 +6,7 @@ $auth = new AdminAuthenticator();
 $auth->logout();
 Session::Destroy();
 
-header("Location: " . LOCAL . "/admin/");
+header("Location: " . Spark::Get(Config::ADMIN_LOCAL));
 exit;
 
 ?>

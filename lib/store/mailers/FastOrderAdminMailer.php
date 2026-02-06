@@ -20,13 +20,13 @@ class FastOrderAdminMailer extends Mailer
 
         parent::__construct();
 
-        debug ("Preparing message ...");
+        Debug::ErrorLog ("Preparing message ...");
 
-        $this->to = ORDER_EMAIL;
-        $this->subject = "Бърза поръчка на ".SITE_DOMAIN;
+        $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
+        $this->subject = "Бърза поръчка на ".Spark::Get(Config::SITE_DOMAIN);
 
         $message = "Здравейте, \r\n\r\n";
-        $message .= "Беше направена бърза поръчка на ". SITE_DOMAIN;
+        $message .= "Беше направена бърза поръчка на ". Spark::Get(Config::SITE_DOMAIN);
         $message .= "\r\n\r\n";
 
         $message .= "Име: ".$form->getInput("fullname")->getValue();
@@ -69,7 +69,7 @@ class FastOrderAdminMailer extends Mailer
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
 
 
     }
@@ -81,7 +81,7 @@ class FastOrderAdminMailer extends Mailer
         $result .= "<tr>";
         $result .= "<td>";
         $si = $item->getMainPhoto();
-        $src = fullURL($si->hrefImage(256,256));
+        $src = new URL($si->hrefImage(256,256))->fullURL();
         $result .= "<img src='$src'>";
         $result .= "</td>";
 
@@ -89,9 +89,9 @@ class FastOrderAdminMailer extends Mailer
 
         $result .= "Продукт: ".$item->getTitle();
         $result .= "\r\n";
-        $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".DEFAULT_CURRENCY;
-        if (DOUBLE_PRICE_ENABLED) {
-            $result .= "Цена: ".formatPrice($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE, DOUBLE_PRICE_CURRENCY);
+        $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".Spark::Get(StoreConfig::DEFAULT_CURRENCY);
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+            $result .= "Цена: ".formatPrice($item->getPriceInfo()->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
         }
         $result .= "\r\n";
 
@@ -104,8 +104,10 @@ class FastOrderAdminMailer extends Mailer
             }
         }
 
-        $href = fullURL(LOCAL."/products/details.php?prodID=".$item->getProductID());
-        $result .= "<a href='$href'>Виж продукта</a>";
+
+        $productURL = new ProductURL();
+        $productURL->setProductID($item->getProductID());
+        $result .= "<a href='{$productURL->fullURL()}'>Виж продукта</a>";
         $result .= "\r\n";
         $result .= "</td>";
         $result .= "</tr>";

@@ -120,7 +120,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
         catch (Exception $e) {
             $this->enabled = false;
             $this->handler = null;
-            debug("Unable to initialize UniCredit payment module: ".$e->getMessage());
+            Debug::ErrorLog("Unable to initialize UniCredit payment module: ".$e->getMessage());
         }
 
         //template

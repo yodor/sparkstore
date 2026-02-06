@@ -13,21 +13,21 @@ class OrderConfirmationAdminMailer extends Mailer
 
         parent::__construct();
 
-        debug ("Accessing OrderBean with orderID: $orderID");
+        Debug::ErrorLog ("Accessing OrderBean with orderID: $orderID");
         $orders = new OrdersBean();
         $order = $orders->getByID($orderID);
 
         $userID = (int)$order["userID"];
 
-        debug ("Accessing UsersBean with order userID: $userID");
+        Debug::ErrorLog ("Accessing UsersBean with order userID: $userID");
 
         $users = new UsersBean();
         $user = $users->getByID($userID, "userID", "fullname", "email", "phone");
 
-        debug ("Preparing message ...");
+        Debug::ErrorLog ("Preparing message ...");
 
-        $this->to = ORDER_EMAIL;
-        $this->subject = "Нова поръчка на ".SITE_DOMAIN;
+        $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
+        $this->subject = "Нова поръчка на ".Spark::Get(Config::SITE_DOMAIN);
 
         $message = "Здравейте, \r\n\r\n";
         $message .= "Изпращаме Ви това съобщение за да Ви уведомим, че беше направена нова поръчка. ";
@@ -55,7 +55,7 @@ class OrderConfirmationAdminMailer extends Mailer
         $message .= "<th>#</th><th>Продукт</th><th>Брой</th><th>Ед.Цена</th><th>Сума</th>";
         $message .= "</tr>";
 
-        debug ("Preparing order items table ...");
+        Debug::ErrorLog ("Preparing order items table ...");
 
         $order_items = new OrderItemsBean();
         $qry = $order_items->query("product", "position", "qty", "price");
@@ -79,9 +79,9 @@ class OrderConfirmationAdminMailer extends Mailer
 //            $message .= "</td>";
 
             $message .= "<td>" . $item["qty"] . "</td>";
-            $message .= "<td>" . formatPrice($item["price"], DEFAULT_CURRENCY) . "</td>";
+            $message .= "<td>" . formatPrice($item["price"], Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "</td>";
             $lineTotal = ((int)$item["qty"] * $item["price"]);
-            $message .= "<td>" . formatPrice( $lineTotal , DEFAULT_CURRENCY ) . "</td>";
+            $message .= "<td>" . formatPrice( $lineTotal , Spark::Get(StoreConfig::DEFAULT_CURRENCY) ) . "</td>";
 
             $message .= "</tr>";
         }
@@ -93,10 +93,10 @@ class OrderConfirmationAdminMailer extends Mailer
         $message .= "\r\n";
 
         $itemsTotal = ($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0));
-        $message .= "Продкти общо: " . formatPrice($itemsTotal, DEFAULT_CURRENCY) . "\r\n";
+        $message .= "Продкти общо: " . formatPrice($itemsTotal, Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "\r\n";
         $delivery_text = "";
         if ($order["delivery_price"]>0) {
-            $delivery_text = formatPrice($order["delivery_price"], DEFAULT_CURRENCY);
+            $delivery_text = formatPrice($order["delivery_price"], Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         }
         else  if ($order["delivery_price"]==0) {
             $delivery_text = "Безплатна";
@@ -105,9 +105,9 @@ class OrderConfirmationAdminMailer extends Mailer
             $delivery_text = "Според тарифния план на куриера";
         }
         $message .= "Цена доставка: $delivery_text\r\n";
-        $message .= "Поръчка oбщо: " . formatPrice($order["total"], DEFAULT_CURRENCY) . "\r\n";
-        if (DOUBLE_PRICE_ENABLED) {
-            $message .= "Поръчка oбщо: " . formatPrice($order["total"] / DOUBLE_PRICE_RATE, DOUBLE_PRICE_CURRENCY) . "\r\n";
+        $message .= "Поръчка oбщо: " . formatPrice($order["total"], Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "\r\n";
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+            $message .= "Поръчка oбщо: " . formatPrice($order["total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY)) . "\r\n";
         }
 
         $message .= "\r\n";
@@ -117,11 +117,11 @@ class OrderConfirmationAdminMailer extends Mailer
         $message .= "\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
 
 
     }

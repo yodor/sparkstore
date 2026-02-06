@@ -12,15 +12,15 @@ class TBIFusionPaymentButton extends CreditPaymentButton
 
         $config = ConfigBean::Factory();
         $config->setSection("store_config");
-        $tbi_fusion_style = $config->get("tbi_fusion_style", "");
-        $tbi_fusion_script = $config->get("tbi_fusion_script", "");
+        $tbi_fusion_style = $config->get("tbi_fusion_style");
+        $tbi_fusion_script = $config->get("tbi_fusion_script");
 
         if ($tbi_fusion_style && $tbi_fusion_script) {
             $css = new Link();
             $css->setHref($tbi_fusion_style);
             $script = new Script();
             $script->setSrc($tbi_fusion_script);
-            $script->setAttribute("async", "");
+            $script->setAttribute("async");
             $this->initialize($css, $script);
         }
     }

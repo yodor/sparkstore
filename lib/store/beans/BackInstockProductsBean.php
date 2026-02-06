@@ -20,7 +20,7 @@ class BackInstockProductsBean extends DBTableBean
     public function backinstock(int $prodID)
     {
         //insert into backinstock list
-        debug("Updating back in stock list for prodID: $prodID");
+        Debug::ErrorLog("Updating back in stock list for prodID: $prodID");
         $db = DBConnections::Open();
         try {
             $db->transaction();
@@ -34,7 +34,7 @@ class BackInstockProductsBean extends DBTableBean
     }
     public function outofstock(int $prodID)
     {
-        debug("Deleting from back in stock list for prodID: $prodID");
+        Debug::ErrorLog("Deleting from back in stock list for prodID: $prodID");
 
         $db = DBConnections::Open();
         try {

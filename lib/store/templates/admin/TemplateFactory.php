@@ -51,7 +51,7 @@ class TemplateFactory
         if (isset($menu) && is_array($menu)) {
             return $menu;
         }
-        debug("Menu can not be loaded for this path returning empty menu");
+        Debug::ErrorLog("Menu can not be loaded for this path returning empty menu");
         return array();
     }
 

@@ -11,24 +11,24 @@ class InstockProductMailer extends Mailer
     public function __construct()
     {
         parent::__construct();
-        $this->subject = "Отново в наличност на ".SITE_DOMAIN;
+        $this->subject = "Отново в наличност на ".Spark::Get(Config::SITE_DOMAIN);
     }
 
-    public function setRecipient(string $client_email)
+    public function setRecipient(string $client_email) : void
     {
         $this->to = $client_email;
     }
 
-    public function setProduct(string $product_name, string $product_link)
+    public function setProduct(string $product_name, string $product_link) : void
     {
         $this->product_name = $product_name;
         $this->product_link = $product_link;
     }
 
-    public function prepareMessage()
+    public function prepareMessage() : void
     {
 
-        debug ("Preparing message contents ...");
+        Debug::ErrorLog ("Preparing message contents ...");
 
         $message  = "Здравейте, ";
         $message .= "\r\n";
@@ -42,11 +42,11 @@ class InstockProductMailer extends Mailer
         $message .= "\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Message contents prepared ...");
+        Debug::ErrorLog ("Message contents prepared ...");
     }
 
 }

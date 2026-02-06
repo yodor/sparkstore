@@ -8,8 +8,8 @@ class CategoryURL extends ProductListURL
     public function __construct(?URL $other=null)
     {
         parent::__construct();
-        if (CATEGORY_ITEM_SLUG) {
-            $this->fromString(LOCAL.self::$urlCategorySlug);
+        if (Spark::GetBoolean(StoreConfig::CATEGORY_ITEM_SLUG)) {
+            $this->fromString(Spark::Get(Config::LOCAL).self::$urlCategorySlug);
             $this->add(new PathParameter("catID", "catID", false));
             $this->add(new PathParameter("category_name", "category_name", true));
         }

@@ -26,7 +26,7 @@ class AccountPageBase extends StorePage
         $this->account_menu->append(new MenuItem("Редакция на профил", "profile.php"));
         $this->account_menu->append(new MenuItem("Изход", "logout.php"));
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/account.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/account.css");
     }
 
     public function startRender(): void

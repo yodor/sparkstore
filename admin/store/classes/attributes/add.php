@@ -12,7 +12,7 @@ $cmp->getPage()->setName("Изберете входен етикет за доб
 $bean = new ProductClassesBean();
 $req = new BeanKeyCondition($bean, "../list.php", array("class_name"));
 $className = $bean->getValue($req->getID(), "class_name");
-$pclsID = $req->getID();;
+$pclsID = $req->getID();
 
 $cmp->setBean(new ProductClassAttributesBean());
 
@@ -22,7 +22,7 @@ $cmp->setForm($form);
 
 $closure = function(BeanFormEditorEvent $event) use ($pclsID) {
     if ($event->isEvent(BeanFormEditorEvent::EDITOR_CREATED)) {
-        debug("Processing BeanFormEditorEvent::EDITOR_CREATED ...");
+        Debug::ErrorLog("Processing BeanFormEditorEvent::EDITOR_CREATED ...");
         $editor = $event->getSource();
         if (!($editor instanceof BeanFormEditor)) throw new Exception("Event source is not BeanFormEditor");
 

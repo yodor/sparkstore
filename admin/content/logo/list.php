@@ -10,12 +10,12 @@ $page->navigation()->clear();
 
 
 $current = new SparkFile("logo");
-$current->setPath(CACHE_PATH);
+$current->setPath(Spark::Get(Config::CACHE_PATH));
 
-$origin_file = new SparkFile(LOGO_NAME);
-$origin_file->setPath(LOGO_PATH);
+$origin_file = new SparkFile(Spark::Get(StoreConfig::LOGO_NAME));
+$origin_file->setPath(Spark::Get(StoreConfig::LOGO_PATH));
 
-$image_input = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "logo", "Upload logo image (450px x 90px)", 1);
+$image_input = DataInputFactory::Create(InputType::SESSION_IMAGE, "logo", "Upload logo image (450px x 90px)", 1);
 
 if (isset($_GET["restore"])) {
     $current->remove();

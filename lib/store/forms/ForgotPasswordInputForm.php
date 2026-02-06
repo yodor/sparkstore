@@ -9,7 +9,7 @@ class ForgotPasswordInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "email", "Email", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "email", "Email", 1);
         $this->addInput($field);
 
     }

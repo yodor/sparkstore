@@ -18,7 +18,7 @@ class RequireInvoiceInputForm extends InputForm
     public function __construct()
     {
         parent::__construct();
-        $input = DataInputFactory::Create(DataInputFactory::CHECKBOX, "require_invoice", "Да се издаде фактура", 0);
+        $input = DataInputFactory::Create(InputType::CHECKBOX, "require_invoice", "Да се издаде фактура", 0);
 
         $input->getRenderer()->getItemRenderer()->setAttribute("onClick", "javascript:document.forms.RequireInvoiceInputForm.submit()");
         $input->getRenderer()->getItemRenderer()->getInput()->setAttribute("autocomplete", "off");
@@ -54,7 +54,7 @@ class OrderNoteInputForm extends InputForm
     public function __construct()
     {
         parent::__construct();
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "note", "Бележка", 0);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "note", "Бележка", 0);
         $field->getRenderer()->input()?->setAttribute("maxlength", "200");
         $this->addInput($field);
     }
@@ -202,7 +202,8 @@ $page->base()->items()->append($section);
 
 $note = new Component(false);
 $note->setComponentClass("acceptNote");
-$note->setContents("<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='" . LOCAL . "/pages/index.php?class=terms'>" . tr("Условия за ползване") . "</a></i>");
+$termsURL = new URL(Spark::Get(Config::LOCAL) . "/pages/index.php?class=terms");
+$note->setContents("<i>" . tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите") . "&nbsp;" . "<a  href='{$termsURL->fullURL()}'>" . tr("Условия за ползване") . "</a></i>");
 $page->base()->items()->append($note);
 
 

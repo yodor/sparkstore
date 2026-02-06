@@ -13,19 +13,20 @@ class CheckStockState
     {
         $this->prodID = $prodID;
         $this->product_name = $product_name;
-        $this->product_link = fullURL(LOCAL."/products/details.php?prodID={$this->prodID}");
+        $this->product_link = new ProductURL();
+        $this->product_link->setProductID($this->prodID);
     }
 
-    public function notify()
+    public function notify() : void
     {
-        debug("Notify starting ...");
+        Debug::ErrorLog("Notify starting ...");
 
         $bean = new InstockSubscribersBean();
         $query = $bean->query($bean->key(), "email");
         $query->select->where()->add("prodID", $this->prodID);
         $num = $query->exec();
 
-        debug("Going to notify ".$num." subscribers ...");
+        Debug::ErrorLog("Going to notify ".$num." subscribers ...");
         $mailer = new InstockProductMailer();
         $mailer->setProduct($this->product_name, $this->product_link);
 
@@ -39,57 +40,57 @@ class CheckStockState
                 $mailer->send();
             }
             catch (Exception $e) {
-                debug("Unable to send notification email to subscriber: ".$client_email." | Error: ".$e->getMessage());
+                Debug::ErrorLog("Unable to send notification email to subscriber: ".$client_email." | Error: ".$e->getMessage());
             }
 
             try {
                 $bean->delete($result->get($bean->key()));
             }
             catch (Exception $e) {
-                debug("Unable to delete subscriber: ".$client_email);
+                Debug::ErrorLog("Unable to delete subscriber: ".$client_email);
             }
         }
 
-        debug("Notify finished ...");
+        Debug::ErrorLog("Notify finished ...");
 
     }
-    public function process(int $stock_amount, int $old_stock_amount)
+    public function process(int $stock_amount, int $old_stock_amount) : void
     {
-        debug("Transacted stock_amount: $stock_amount | Loaded stock_amount: $old_stock_amount");
+        Debug::ErrorLog("Transacted stock_amount: $stock_amount | Loaded stock_amount: $old_stock_amount");
 
         $bispb = new BackInstockProductsBean();
 
         if ($old_stock_amount == 0 && $stock_amount > 0) {
-            debug("Product is back in stock ...");
+            Debug::ErrorLog("Product is back in stock ...");
 
             try {
                 $this->notify();
             }
             catch (Exception $e) {
-                debug("Error notifying subscribers: ".$e->getMessage());
+                Debug::ErrorLog("Error notifying subscribers: ".$e->getMessage());
             }
 
             try {
                 $bispb->backinstock($this->prodID);
             }
             catch (Exception $e) {
-                debug("Error updating backinstock list: ".$e->getMessage());
+                Debug::ErrorLog("Error updating backinstock list: ".$e->getMessage());
             }
 
         }
         else if ($old_stock_amount > 0 && $stock_amount == 0) {
-            debug("Product is out of stock ...");
+            Debug::ErrorLog("Product is out of stock ...");
             try {
                 $bispb->outofstock($this->prodID);
             }
             catch (Exception $e) {
-                debug("Error deleting from backinstock list: ".$e->getMessage());
+                Debug::ErrorLog("Error deleting from backinstock list: ".$e->getMessage());
             }
 
 
         }
         else {
-            debug("No need to call InstockSubscribers mailer");
+            Debug::ErrorLog("No need to call InstockSubscribers mailer");
         }
     }
 }

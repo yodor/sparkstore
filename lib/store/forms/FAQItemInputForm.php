@@ -10,7 +10,7 @@ class FAQItemInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "section", "Секция", 1);
+        $field = DataInputFactory::Create(InputType::SELECT, "section", "Секция", 1);
 
         $data = new DBEnumIterator("faq_items", "section");
         $rend = $field->getRenderer();
@@ -20,10 +20,10 @@ class FAQItemInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "question", "Въпрос", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "question", "Въпрос", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "answer", "Отговор", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "answer", "Отговор", 1);
         $this->addInput($field);
 
     }

@@ -6,7 +6,7 @@ $auth = new UserAuthenticator();
 $auth->logout();
 Session::Destroy();
 
-header("Location: " . LOCAL."/");
+header("Location: " . Spark::Get(Config::LOCAL)."/");
 exit;
 
 ?>

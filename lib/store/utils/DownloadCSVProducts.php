@@ -45,7 +45,7 @@ class ImagesExporter extends ProductExporter {
 
         //ini_set('max_execution_time', 300);
 
-        $folder = CACHE_PATH."/catalog-images-".time();
+        $folder = Spark::Get(Config::CACHE_PATH)."/catalog-images-".time();
         if (!mkdir($folder)) {
             throw new Exception("Can not create export folder");
         }
@@ -254,13 +254,14 @@ class FacebookCSVExporter extends CSVProductExporter
         $this->values["availability"] = "in stock";
         $this->values["condition"] = "new";
 
-        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
-        $this->values["link"] = fullURL($link);
+        $productURL = new ProductURL();
+        $productURL->setProductID($item->getProductID());
+        $this->values["link"] = $productURL->fullURL();
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
             $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
+            $image_link = new URL($image_link)->fullURL();
         }
         $this->values["image_link"] = $image_link;
 
@@ -319,7 +320,7 @@ class GoogleCSVExporter extends CSVProductExporter
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
             $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
+            $image_link = new URL($image_link)->fullURL();
         }
         $this->values["productImageUrl"] = $image_link;
 
@@ -371,18 +372,19 @@ class GoogleMerchantCSVExporter extends CSVProductExporter
         $this->values["description"] = mb_substr(strip_tags($item->getDescription()), 0, 5000);
         $this->values["condition"] = "new";
 
-        $link = LOCAL . "/products/details.php?prodID=" . $item->getProductID();
-        $this->values["link"] = fullURL($link);
+        $productURL = new ProductURL();
+        $productURL->setProductID($item->getProductID());
+        $this->values["link"] = $productURL->fullURL();
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
             $image_link = $item->getMainPhoto()->hrefImage(640, -1);
-            $image_link = fullURL($image_link);
+            $image_link = new URL($image_link)->fullURL();
         }
         $this->values["image_link"] = $image_link;
 
         $this->values["availability"] = "in_stock";
-        $this->values["price"] = formatPrice($item->getPriceInfo()->getSellPrice(), DEFAULT_CURRENCY, true);
+        $this->values["price"] = formatPrice($item->getPriceInfo()->getSellPrice());
 
     }
 }

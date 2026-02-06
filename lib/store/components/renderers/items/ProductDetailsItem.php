@@ -62,15 +62,15 @@ class ProductDetailsItem extends Container implements IHeadContents
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
-        $arr[] = STORE_LOCAL . "/css/ProductDetailsItem.css";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/ProductDetailsItem.css";
         return $arr;
     }
 
     public function requiredScript(): array
     {
         $arr = parent::requiredScript();
-        $arr[] = STORE_LOCAL . "/js/SellableItem.js";
-        $arr[] = STORE_LOCAL . "/js/ProductDetailsItem.js";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/SellableItem.js";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ProductDetailsItem.js";
         return $arr;
     }
 
@@ -129,7 +129,7 @@ class ProductDetailsItem extends Container implements IHeadContents
     {
 
         $componentEntryName = basename(ProductURL::$urlProduct)."-".ProductDetailsItem::class."--".$prodID;
-        $entryName = ProductDetailsItem::class . "-" . sparkHash($componentEntryName);
+        $entryName = ProductDetailsItem::class . "-" . Spark::Hash($componentEntryName);
 
         $cacheEntry = CacheFactory::PageCacheEntry($entryName);
         $cacheEntry->remove();
@@ -242,7 +242,7 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $config = ConfigBean::Factory();
         $config->setSection("store_config");
-        $text = $config->get("products_howtoorder", "");
+        $text = $config->get("products_howtoorder");
         if ($text) {
             $tab = new DetailsTab();
             $tab->setClassName("description");

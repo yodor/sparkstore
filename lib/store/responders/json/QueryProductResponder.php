@@ -96,7 +96,9 @@ class QueryProductResponder extends JSONResponder
 
 
             $this->mailer->setClient($this->phone, $this->email, $this->name);
-            $this->mailer->setProduct($result->get("product_name"), fullURL(LOCAL."/products/details.php?prodID=$prodID"));
+            $productURL = new ProductURL();
+            $productURL->setProductID($prodID);
+            $this->mailer->setProduct($result->get("product_name"), $productURL->fullURL());
             $this->mailer->setQueryText($this->query);
             $this->mailer->prepareMessage();
             $this->mailer->send();

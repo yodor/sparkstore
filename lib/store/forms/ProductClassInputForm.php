@@ -15,7 +15,7 @@ class ProductClassInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "class_name", "Class Name", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "class_name", "Class Name", 1);
         $this->addInput($field);
         $field->enableTranslator(FALSE);
 

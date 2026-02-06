@@ -20,16 +20,16 @@ class OrderOwnerAuthenticator extends UserAuthenticator
             $order_userID = (int)$orders->getValue($orderID, "userID");
 
             if ($logged_userID == $order_userID) {
-                debug("Authenticated userID is matching the order ownerID");
+                Debug::ErrorLog("Authenticated userID is matching the order ownerID");
                 return $context;
             }
-            debug("Authorized but not owner of this order");
+            Debug::ErrorLog("Authorized but not owner of this order");
 
             return NULL;
 
         }
 
-        debug("Not authorized");
+        Debug::ErrorLog("Not authorized");
 
         return $context;
 

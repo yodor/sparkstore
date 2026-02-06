@@ -67,15 +67,15 @@ class NavigationListItem extends DataIteratorItem
     public function requiredScript(): array
     {
         $arr = parent::requiredScript();
-        $arr[] = SPARK_LOCAL . "/js/SwipeListener.js";
-        $arr[] = STORE_LOCAL . "/js/ImageSlider.js";
+        $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/js/SwipeListener.js";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageSlider.js";
         return $arr;
     }
 
     public function requiredStyle(): array
     {
         $arr = parent::requiredStyle();
-        $arr[] = STORE_LOCAL . "/css/NavigationListItem.css";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/NavigationListItem.css";
         return $arr;
     }
 

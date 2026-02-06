@@ -25,7 +25,7 @@ class ProductInputFormBase extends InputForm
         parent::__construct();
 
 
-        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "catID", tr("Category"), 1);
+        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "catID", tr("Category"), 1);
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
 
@@ -35,7 +35,7 @@ class ProductInputFormBase extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "brand_name", tr("Brand"), 1);
+        $field = DataInputFactory::Create(InputType::SELECT, "brand_name", tr("Brand"), 1);
         $rend = $field->getRenderer();
         $brands = new BrandsBean();
 
@@ -44,44 +44,44 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setLabelKey("brand_name");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "product_name", "Заглавие / SEO заглавие", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Заглавие / SEO заглавие", 1);
         $field->getRenderer()->input()->setAttribute("size", "50em");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::MCE_TEXTAREA, "product_description", "Описание", 0);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "product_description", "Описание", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "seo_description", "SEO описание (до 150 символа)", 0);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "seo_description", "SEO описание (до 150 символа)", 0);
         $field->enableTranslator(true);
         $field->getRenderer()->input()->setAttribute("maxLength","150");
         $field->getRenderer()->input()->setAttribute("rows","3");
         $field->getRenderer()->input()->setAttribute("cols","60");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "price", "Продажна цена", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "price", "Продажна цена", 1);
         $field->setValidator(new NumericValidator(false,false));
         $field->setValue(0.0);
-        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(DEFAULT_CURRENCY_SYMBOL, ""));
+        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL), ""));
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "promo_price", "Промо цена", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "promo_price", "Промо цена", 1);
         $field->setValidator(new NumericValidator(true,false));
         $field->setValue(0.0);
-        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(DEFAULT_CURRENCY_SYMBOL, ""));
+        $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL), ""));
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "stock_amount", "Стокова наличност", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "stock_amount", "Стокова наличност", 1);
         //default stock amount
         $field->setValidator(new NumericValidator(true,false));
         $field->setValue(1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "visible", "Видим (в продажба)", 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "visible", "Видим (в продажба)", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимки", 1);
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимки", 1);
         $pphotos = new ProductPhotosBean();
         $field->getProcessor()->setTransactBean($pphotos);
         $field->getProcessor()->setTransactBeanItemLimit(20);
@@ -108,7 +108,7 @@ class ProductInputFormBase extends InputForm
         $field->getProcessor()->setTransactBean($product_sections);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::RADIO, "pclsID", tr("Product Class"), 0);
+        $field = DataInputFactory::Create(InputType::RADIO, "pclsID", tr("Product Class"), 0);
         $rend = $field->getRenderer();
         $pcb = new ProductClassesBean();
 
@@ -183,7 +183,7 @@ class ProductInputFormBase extends InputForm
             if (isset($data["pclsID"])) {
                 $pclsID = (int)$data["pclsID"];
                 $renderer->setClassID($pclsID);
-                debug("Setting PCLSID: ". (int)$data["pclsID"]);
+                Debug::ErrorLog("Setting PCLSID: ". (int)$data["pclsID"]);
             }
 
 

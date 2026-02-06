@@ -160,7 +160,7 @@ class SellableDataParser
         $product->set("description", strip_tags($description));
 
         if (!is_null($productURL)) {
-            $product->set("url", fullURL($productURL->toString()));
+            $product->set("url", new URL($productURL->toString())->fullURL());
         }
         $product->set("category", $item->getCategoryName());
 
@@ -184,17 +184,17 @@ class SellableDataParser
         $offer->set("availability", $availability);
 
         $offer->set("price", sprintf("%0.2f", $item->getPriceInfo()->getSellPrice()));
-        $offer->set("priceCurrency", DEFAULT_CURRENCY);
+        $offer->set("priceCurrency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
 
         $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
         $offer->set("priceValidUntil", $priceValidUntil);
 
-        if (DOUBLE_PRICE_ENABLED) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $offerEUR = new LinkedData("Offer");
             $offerEUR->set("availability", $availability);
-            $eurPrice = sprintf("%0.2f", ($item->getPriceInfo()->getSellPrice()/DOUBLE_PRICE_RATE));
+            $eurPrice = sprintf("%0.2f", ($item->getPriceInfo()->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)));
             $offerEUR->set("price", $eurPrice);
-            $offerEUR->set("priceCurrency", DOUBLE_PRICE_CURRENCY);
+            $offerEUR->set("priceCurrency", Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             $offerEUR->set("priceValidUntil", $priceValidUntil);
 
             $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());

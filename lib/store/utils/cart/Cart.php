@@ -37,18 +37,18 @@ class Cart
     static public function Instance(): Cart
     {
         if (self::$instance instanceof Cart) {
-            debug("Returning already assigned instance");
+            Debug::ErrorLog("Returning already assigned instance");
             return self::$instance;
         }
 
         $cart = NULL;
         try {
             if (Session::Contains(Cart::SessionKey())) {
-                debug("Trying to de-serialize Cart object from session");
+                Debug::ErrorLog("Trying to de-serialize Cart object from session");
                 $cart = @unserialize(Session::Get(Cart::SessionKey()));
 
                 if ($cart instanceof Cart) {
-                    debug("de-serialize success - calling delivery option initialization");
+                    Debug::ErrorLog("de-serialize success - calling delivery option initialization");
                     //check correctnes of keys in cart
                     $cart->check();
                     $cart->getDelivery()->initialize();
@@ -59,12 +59,12 @@ class Cart
             }
         }
         catch (Exception $e) {
-            debug("de-serialize Cart error: " . $e->getMessage());
+            Debug::ErrorLog("de-serialize Cart error: " . $e->getMessage());
             $cart = null;
         }
 
         if (is_null($cart)) {
-            debug("Creating new instance of Cart");
+            Debug::ErrorLog("Creating new instance of Cart");
             $cart = new Cart();
             $cart->store();
         }
@@ -73,7 +73,7 @@ class Cart
 
         self::$instance = $cart;
 
-        debug("Returning cart instance");
+        Debug::ErrorLog("Returning cart instance");
 
         return self::$instance;
     }
@@ -83,7 +83,7 @@ class Cart
         if (self::$session_key) {
             return self::$session_key;
         }
-        self::$session_key = sparkHash(Cart::SESSION_KEY . "-" . Cart::VERSION . "-" . SITE_TITLE);
+        self::$session_key = Spark::Hash(Cart::SESSION_KEY . "-" . Cart::VERSION . "-" . Spark::Get(Config::SITE_TITLE));
         return self::$session_key;
     }
 
@@ -164,7 +164,7 @@ class Cart
         $itemHash = $item->getItem()->hash();
 
         if ($this->contains($itemHash)) {
-            debug("Already existing item incrementing count");
+            Debug::ErrorLog("Already existing item incrementing count");
             $closure = function() use ($itemHash, $item) {
                 $exist_item = $this->get($itemHash);
                 $exist_item->increment($item->getQuantity());
@@ -172,7 +172,7 @@ class Cart
             $this->emit($closure, ICartListener::ITEM_QTY_INCREMENT, $item);
         }
         else {
-            debug("Non existing item setting new value");
+            Debug::ErrorLog("Non existing item setting new value");
 
             $closure = function() use ($itemHash, $item) {
                 $this->items[$itemHash] = $item;
@@ -216,7 +216,7 @@ class Cart
             $closure = function() use ($item) {
                 $item->decrement();
             };
-            $this->emit($closure, ICartListener::ITEM_QTY_DECREMENT, $item, $this);
+            $this->emit($closure, ICartListener::ITEM_QTY_DECREMENT, $item);
 
             if ($item->getQuantity()<1) {
                 $this->removeItem($item);

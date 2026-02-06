@@ -27,13 +27,13 @@ class ContactRequestMailer extends Mailer
     {
         parent::__construct();
 
-        $this->subject = "Получена нова заявка за контакти на : ".SITE_DOMAIN;
-        $this->to = ORDER_EMAIL;
+        $this->subject = "Получена нова заявка за контакти на : ".Spark::Get(Config::SITE_DOMAIN);
+        $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
     }
 
     public function prepareMessage()
     {
-        debug ("Preparing contact request message contents ...");
+        Debug::ErrorLog ("Preparing contact request message contents ...");
 
         $message  = "От: ".$this->client_name;
         $message .= "\r\n";
@@ -46,15 +46,16 @@ class ContactRequestMailer extends Mailer
 
         $message .= "За достъп до заявките натиснете връзката по долу";
         $message .= "\r\n";
-        $message .= "<a href='" . SITE_URL . ADMIN_LOCAL . "/contact_requests/list.php'>".tr("Списък заявки")."</a>";
+        $contactsURL = new URL(Spark::Get(Config::ADMIN_LOCAL) . "/contact_requests/list.php");
+        $message .= "<a href='{$contactsURL->fullURL()}'>".tr("Списък заявки")."</a>";
         $message .= "\r\n";
 
         $message .= "Поздрави,\r\n";
-        $message .= SITE_DOMAIN;
+        $message .= Spark::Get(Config::SITE_DOMAIN);
 
         $this->body = $this->templateMessage($message);
 
-        debug ("Contact request message contents prepared ...");
+        Debug::ErrorLog ("Contact request message contents prepared ...");
     }
 }
 

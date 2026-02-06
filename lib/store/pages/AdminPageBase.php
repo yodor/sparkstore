@@ -15,9 +15,9 @@ class AdminPageBase extends SparkAdminPage
     {
         parent::__construct();
 
-        MenuItem::$icon_path = STORE_LOCAL . "/images/admin/spark_icons/";
+        MenuItem::$icon_path = Spark::Get(StoreConfig::STORE_LOCAL) . "/images/admin/spark_icons/";
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/AdminPage.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/AdminPage.css");
 
         $this->head()->addMeta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0");
 

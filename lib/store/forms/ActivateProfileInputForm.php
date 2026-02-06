@@ -9,10 +9,10 @@ class ActivateProfileInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 1);
+        $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "confirm_code", "Активационен код", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "confirm_code", "Активационен код", 1);
         $this->addInput($field);
 
     }

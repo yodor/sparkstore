@@ -59,13 +59,13 @@ class OrderProcessor
 
         $page = StorePage::Instance();
         if ($page->getUserID() < 1) {
-            debug("Login required ... ");
+            Debug::ErrorLog("Login required ... ");
             throw new Exception("Изисква регистриран потребител");
         }
 
         $userID = $page->getUserID();
 
-        debug("Using userID='$userID'");
+        Debug::ErrorLog("Using userID='$userID'");
 
         $db = DBConnections::Open();
 
@@ -135,7 +135,7 @@ class OrderProcessor
             $this->orderID = $orders->insert($order, $db);
             if ($this->orderID < 1) throw new Exception("Unable to insert order: " . $db->getError());
 
-            debug("Created orderID: {$this->orderID} - for clientID: $userID - Filling order items ...");
+            Debug::ErrorLog("Created orderID: {$this->orderID} - for clientID: $userID - Filling order items ...");
 
             $order_items = new OrderItemsBean();
 
@@ -163,7 +163,7 @@ class OrderProcessor
 
                 $item_photo = "";
                 try {
-                    debug("Doing copy of product photos to order ");
+                    Debug::ErrorLog("Doing copy of product photos to order ");
 
 
                     $sitem = $cartEntry->getItem()->getMainPhoto();
@@ -177,7 +177,7 @@ class OrderProcessor
 
                 }
                 catch (Exception $e) {
-                    debug("Unable to copy source product photos. ProdID=$prodID | Exception: " . $e->getMessage());
+                    Debug::ErrorLog("Unable to copy source product photos. ProdID=$prodID | Exception: " . $e->getMessage());
                 }
 
                 $order_item = array();
@@ -201,7 +201,7 @@ class OrderProcessor
                 $pos++;
             }
 
-            debug("OrderProcessor::createOrder() finalizing transaction for orderID='{$this->orderID}' ... ");
+            Debug::ErrorLog("OrderProcessor::createOrder() finalizing transaction for orderID='{$this->orderID}' ... ");
             $db->commit();
 
             $cart->clear();
@@ -214,7 +214,7 @@ class OrderProcessor
             }
 
 
-            debug("OrderProcessor::createOrder() completed for orderID='{$this->orderID}' ... ");
+            Debug::ErrorLog("OrderProcessor::createOrder() completed for orderID='{$this->orderID}' ... ");
         }
         catch (Exception $e) {
             $this->orderID = -1;
@@ -244,7 +244,7 @@ class OrderProcessor
             }
             catch (Exception $e) {
                 $db->rollback();
-                debug("Unable to increment stock_amount: ".$e->getMessage());
+                Debug::ErrorLog("Unable to increment stock_amount: ".$e->getMessage());
             }
         }
         else if($this->manage_order_counter) {
@@ -260,7 +260,7 @@ class OrderProcessor
                 $db->commit();
             } catch (Exception $e) {
                 $db->rollback();
-                debug("Unable to increment order_counter: " . $e->getMessage());
+                Debug::ErrorLog("Unable to increment order_counter: " . $e->getMessage());
             }
         }
     }

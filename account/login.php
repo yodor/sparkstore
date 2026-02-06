@@ -19,10 +19,10 @@ $page->setTitle(tr("Вход клиенти"));
 
 $auth = new UserAuthenticator();
 
-$req = new AuthenticatorResponder($auth, "doLogin");
-$req->setCancelUrl(LOCAL . "/account/login.php");
+$req = new AuthenticatorResponder($auth);
+$req->setCancelUrl(Spark::Get(Config::LOCAL) . "/account/login.php");
 
-$login_redirect = Session::Get("login.redirect", LOCAL."/account/orders.php");
+$login_redirect = Session::Get("login.redirect", Spark::Get(Config::LOCAL)."/account/orders.php");
 $req->setSuccessUrl($login_redirect);
 
 
@@ -42,7 +42,7 @@ $page->startRender();
 
 echo "<div class='column login'>";
 
-    echo "<h1 class='Caption'>" . SITE_TITLE. " - " . tr("вход") . "</h1>";
+    echo "<h1 class='Caption'>" . Spark::Get(Config::SITE_TITLE). " - " . tr("вход") . "</h1>";
 
     echo "<div class='panel'>";
         echo "<div align=center>";

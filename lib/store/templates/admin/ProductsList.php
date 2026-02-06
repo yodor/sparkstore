@@ -119,11 +119,10 @@ class ProductsList extends BeanListPage
         );
 
         $search_fields = array("p.product_name",
-            "pc.category_name",
-            "pcls.class_name",
+            "category_name",
+            "class_name",
             "p.brand_name",
             "p.prodID",
-            "p.importID",
             "sections",
             "product_attributes",
             "product_variants",
@@ -201,7 +200,7 @@ class ProductsList extends BeanListPage
         $this->keyword_search->setLayout(FormRenderer::LAYOUT_VBOX);
         $form = $this->keyword_search->getForm();
 
-        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "filter_catID", "Category", 0);
+        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "filter_catID", "Category", 0);
         $field->skip_search_filter_processing = true;
 
         $bean1 = new ProductCategoriesBean();
@@ -221,7 +220,7 @@ class ProductsList extends BeanListPage
         $form->insertInputBefore($field, "keyword");
 
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_brand", "Brand", 0);
+        $field = DataInputFactory::Create(InputType::SELECT, "filter_brand", "Brand", 0);
         $field->skip_search_filter_processing = true;
 
         $bean1 = new BrandsBean();
@@ -241,7 +240,7 @@ class ProductsList extends BeanListPage
         $form->insertInputBefore($field, "keyword");
 
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_section", "Section", 0);
+        $field = DataInputFactory::Create(InputType::SELECT, "filter_section", "Section", 0);
         $field->skip_search_filter_processing = true;
 
         $rend = $field->getRenderer();
@@ -260,7 +259,7 @@ class ProductsList extends BeanListPage
         $form->insertInputBefore($field, "keyword");
 
 
-        $field = DataInputFactory::Create(DataInputFactory::SELECT, "filter_class", "Product Class", 0);
+        $field = DataInputFactory::Create(InputType::SELECT, "filter_class", "Product Class", 0);
         $field->skip_search_filter_processing = true;
 
         $rend = $field->getRenderer();
@@ -279,7 +278,7 @@ class ProductsList extends BeanListPage
         $form->insertInputBefore($field, "keyword");
     }
 
-    public function processInput()
+    public function processInput() : void
     {
         //parent::processInput();
 
@@ -325,7 +324,7 @@ class ProductsList extends BeanListPage
 
     }
 
-    public function initView() : TableView
+    public function initView() : ?Component
     {
         $view = parent::initView();
 

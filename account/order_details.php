@@ -13,7 +13,7 @@ $page = new AccountPage();
 $page->setTitle(tr("Детайли за поръчка"));
 
 
-$page->head()->addCSS(STORE_LOCAL."/css/print.css");
+$page->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL)."/css/print.css");
 
 $courier_addresses = new CourierAddressesBean();
 $client_addresses = new ClientAddressesBean();
@@ -148,7 +148,10 @@ echo "<div class='column details'>";
 
                     $prodID = $item["prodID"];
 
-                    echo "<a class='item photo' href='" . LOCAL . "/products/details.php?prodID=$prodID'>";
+                    $productURL = new ProductURL();
+                    $productURL->setProductID($prodID);
+
+                    echo "<a class='item photo' href='{$productURL->fullURL()}'>";
                     $href = StorageItem::Image($item["itemID"], get_class($items), 100, -1);
                     echo "<img src='$href'>";
                     echo "</a>";

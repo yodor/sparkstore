@@ -133,7 +133,7 @@ class ProductPageBase extends StorePage
                 $link->add($current->get(KeywordSearch::SUBMIT_KEY));
             }
 
-            $search_title = tr("Search results").": ".mysql_real_unescape_string($this->keyword_search->getForm()->getInput("keyword")->getValue());
+            $search_title = tr("Search results").": ".Spark::Unescape($this->keyword_search->getForm()->getInput("keyword")->getValue());
             $search_action = new Action($search_title,  $link, array());
             $actions[] = $search_action;
         }
@@ -144,7 +144,7 @@ class ProductPageBase extends StorePage
             $actions[] = $search_action;
         }
         else {
-            $product_action = new Action("Начало", LOCAL . "/home.php", array());
+            $product_action = new Action("Начало", Spark::Get(Config::LOCAL) . "/home.php", array());
             $actions[] = $product_action;
         }
 
@@ -215,7 +215,7 @@ class ProductPageBase extends StorePage
 
         if ($this->keyword_search->isProcessed()) {
             $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
-            $title = tr("Search results")." - ".mysql_real_unescape_string($search_value).($title?" - ".$title:"");
+            $title = tr("Search results")." - ".Spark::Unescape($search_value).($title?" - ".$title:"");
         }
         else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters())>0) {
             $title = tr("Search results").($title?" - ".$title:"");

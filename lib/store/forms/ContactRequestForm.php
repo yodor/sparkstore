@@ -9,13 +9,13 @@ class ContactRequestForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::EMAIL, "email", "Email", 1);
+        $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "query", "Запитване (до 255 символа)", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "query", "Запитване (до 255 символа)", 1);
         $field->getProcessor()->accepted_tags = "";
         $this->addInput($field);
 

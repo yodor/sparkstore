@@ -13,13 +13,13 @@ class StorePromoInputForm extends InputForm
 
         parent::__construct();
 
-        $input = DataInputFactory::Create(DataInputFactory::DATE, "start_date", "Start Date", 1);
+        $input = DataInputFactory::Create(InputType::DATE, "start_date", "Start Date", 1);
         $this->addInput($input);
 
-        $input = DataInputFactory::Create(DataInputFactory::DATE, "end_date", "End Date", 1);
+        $input = DataInputFactory::Create(InputType::DATE, "end_date", "End Date", 1);
         $this->addInput($input);
 
-        $field = DataInputFactory::Create(DataInputFactory::NESTED_SELECT, "targetID", "Category", 1);
+        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "targetID", "Category", 1);
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
         $rend->setIterator(new SQLQuery($bean1->selectTree(array("category_name")), "catID"));
@@ -27,7 +27,7 @@ class StorePromoInputForm extends InputForm
         $rend->getItemRenderer()->setLabelKey("category_name");
         $this->addInput($field);
 
-        $input = DataInputFactory::Create(DataInputFactory::TEXT, "discount_percent", "Discount Percent", 1);
+        $input = DataInputFactory::Create(InputType::TEXT, "discount_percent", "Discount Percent", 1);
         $input->setValidator(new NumericValidator());
         $this->addInput($input);
 

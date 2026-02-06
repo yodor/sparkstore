@@ -8,13 +8,13 @@ class SectionInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "section_title", "Секция", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "section_title", "Секция", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "section_seodescription", "СЕО Описание", 0);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "section_seodescription", "СЕО Описание", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта (опция)", 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта (опция)", 0);
         $this->addInput($field);
 
     }

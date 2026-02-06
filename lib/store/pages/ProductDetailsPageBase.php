@@ -45,8 +45,8 @@ class ProductDetailsPageBase extends ProductPageBase
         });
 
 
-        $this->head()->addCSS(STORE_LOCAL . "/css/product_details.css");
-        $this->head()->addCSS(STORE_LOCAL . "/css/ProductListItem.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/product_details.css");
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/ProductListItem.css");
 
         $this->head()->addCanonicalParameter("prodID");
         $this->head()->addCanonicalParameter("product_name");
@@ -98,7 +98,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->head()->addOGTag("type", "product");
 
         $this->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
-        $this->head()->addOGTag("product:price:currency", DEFAULT_CURRENCY);
+        $this->head()->addOGTag("product:price:currency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
@@ -165,7 +165,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
     protected static function UpdateViewCounter(int $prodID) : void
     {
-        debug("Updating view counter for prodID: " . $prodID);
+        Debug::ErrorLog("Updating view counter for prodID: " . $prodID);
 
         //INSERT INTO product_view_log (prodID, view_counter, order_counter) select p.prodID, coalesce(p.view_counter,0), coalesce(p.order_counter,0) FROM products p ON DUPLICATE KEY UPDATE view_counter=coalesce(p.view_counter,0), order_counter=coalesce(p.order_counter,0)
         $db = DBConnections::Open();
@@ -176,7 +176,7 @@ class ProductDetailsPageBase extends ProductPageBase
         }
         catch (Exception $e) {
             $db->rollback();
-            debug("Unable to increment view counter: ".$e->getMessage());
+            Debug::ErrorLog("Unable to increment view counter: ".$e->getMessage());
         }
 
     }

@@ -10,19 +10,19 @@ class ContactAddressInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "city", "Град", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "city", "Град", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXTAREA, "address", "Адрес", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "address", "Адрес", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "map_url", "Google Maps URL", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "map_url", "Google Maps URL", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "phone", "Телефон", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(DataInputFactory::TEXT, "email", "E-Mail", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "email", "E-Mail", 0);
         $this->addInput($field);
 
 
