@@ -8,6 +8,10 @@ include_once("store/utils/SellableItem.php");
 include_once("store/utils/ProductsSQL.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("storage/SparkHTTPResponse.php");
+
+include_once("store/utils/url/ProductURL.php");
+include_once("store/utils/url/CategoryURL.php");
+
 abstract class ProductExporter {
     protected string $typeName = "";
 
