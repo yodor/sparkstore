@@ -114,7 +114,7 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
     {
         $result =  parent::requiredScript();
         $result[] = Spark::Get(Config::SPARK_LOCAL)."/js/SwipeListener.js";
-        $result[] = Spark::Get(Config::SPARK_LOCAL)."/js/ImageSlider.js";
+        $result[] = Spark::Get(StoreConfig::STORE_LOCAL)."/js/ImageSlider.js";
         return $result;
     }
 

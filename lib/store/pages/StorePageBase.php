@@ -167,8 +167,8 @@ class StorePageBase extends SparkPage
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
 
         $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkCookies.js");
-        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/cookies.js");
-        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/menusticky.js");
+        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
+        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
 
         $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
