@@ -16,7 +16,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
         return new ImportUpdateChooserForm();
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
         $uploadFiles = $this->form->getInput("update_file")->getValue();

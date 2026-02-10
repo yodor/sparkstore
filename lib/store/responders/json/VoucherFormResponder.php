@@ -1,5 +1,4 @@
 <?php
-
 include_once("responders/json/JSONFormResponder.php");
 include_once("store/forms/VoucherForm.php");
 include_once("iterators/ArrayDataIterator.php");
@@ -20,7 +19,7 @@ class VoucherFormResponder extends JSONFormResponder
         return new VoucherForm();
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
 

@@ -47,7 +47,7 @@ class SectionChooserFormResponder extends JSONFormResponder
 
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
         $sections = $this->form->getInput("secID")->getValue();

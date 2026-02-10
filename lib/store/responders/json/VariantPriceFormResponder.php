@@ -7,7 +7,7 @@ include_once("store/beans/ProductVariantsBean.php");
 class VariantPriceFormResponder extends JSONFormResponder
 {
 
-    protected $prodID = -1;
+    protected int $prodID = -1;
 
     public function __construct(int $prodID)
     {
@@ -17,19 +17,15 @@ class VariantPriceFormResponder extends JSONFormResponder
 
     protected function createForm(): InputForm
     {
-        $form = new VariantPriceForm();
-
-
-        return $form;
-
+        return new VariantPriceForm();
     }
 
-    public function _render(JSONResponse $resp)
+    public function _render(JSONResponse $resp): void
     {
         $this->form->getRenderer()->render();
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
 

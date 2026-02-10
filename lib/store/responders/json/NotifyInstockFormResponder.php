@@ -1,6 +1,6 @@
 <?php
-
 include_once("responders/json/JSONFormResponder.php");
+include_once("store/utils/SellableItem.php");
 include_once("store/forms/NotifyInstockForm.php");
 include_once("iterators/ArrayDataIterator.php");
 include_once("input/validators/NumericValidator.php");
@@ -11,7 +11,7 @@ class NotifyInstockFormResponder extends JSONFormResponder
     /**
      * @var SellableItem
      */
-    protected $sellable;
+    protected SellableItem $sellable;
 
     public function __construct(SellableItem $sellable)
     {
@@ -24,7 +24,7 @@ class NotifyInstockFormResponder extends JSONFormResponder
         return new NotifyInstockForm();
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
         $email = $this->form->getInput("email")->getValue();

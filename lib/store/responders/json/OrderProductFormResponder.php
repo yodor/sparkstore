@@ -1,5 +1,6 @@
 <?php
 include_once("responders/json/JSONFormResponder.php");
+include_once("store/utils/SellableItem.php");
 include_once("store/forms/FastOrderProductForm.php");
 include_once("store/mailers/FastOrderAdminMailer.php");
 
@@ -9,7 +10,7 @@ class OrderProductFormResponder extends JSONFormResponder
     /**
      * @var SellableItem
      */
-    protected $sellable;
+    protected SellableItem $sellable;
 
     public function __construct(SellableItem $sellable)
     {
@@ -22,13 +23,13 @@ class OrderProductFormResponder extends JSONFormResponder
         return new FastOrderProductForm();
     }
 
-    public function _render(JSONResponse $resp)
+    public function _render(JSONResponse $resp): void
     {
         //echo "<pre>".print_r($_REQUEST, true)."</pre>";
         parent::_render($resp);
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
 

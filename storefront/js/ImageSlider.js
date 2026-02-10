@@ -140,7 +140,7 @@ class ImageSlider extends Component {
             this.imagePopup.addObserver((event)=>this.onEvent(event));
         }
 
-        // Pause auto-play when hovering over the banner (desktop)
+        // Pause autoplay when hovering over the banner (desktop)
         this.container.addEventListener('mouseenter', (event) => this.stopAutoPlay());
         this.container.addEventListener('mouseleave', (event) => {
             this.swipeListener.touchEndHandler(event);

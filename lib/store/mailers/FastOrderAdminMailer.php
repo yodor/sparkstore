@@ -74,7 +74,7 @@ class FastOrderAdminMailer extends Mailer
 
     }
 
-    protected function renderSellableItem(SellableItem $item)
+    protected function renderSellableItem(SellableItem $item) : string
     {
         $result = "";
 

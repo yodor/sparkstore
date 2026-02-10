@@ -466,7 +466,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
     }
 
-    public function _calculateMonthly(JSONResponse $resp)
+    public function _calculateMonthly(JSONResponse $resp) : void
     {
         if (isset($_GET["installmentCount"]) && isset($_GET["initialPayment"])) {
             $this->calculateMonthlyPayment((int)$_GET["installmentCount"], (int)$_GET["initialPayment"], $resp);
@@ -478,7 +478,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
     }
 
 
-    public function _render(JSONResponse $resp)
+    public function _render(JSONResponse $resp): void
     {
 
         echo "<div class='unilogo'><img src='".Spark::Get(StoreConfig::STORE_LOCAL)."/images/unicredit-logo.png'></div>";
@@ -493,7 +493,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
 
     }
 
-    protected function onProcessError(JSONResponse $resp)
+    protected function onProcessError(JSONResponse $resp): void
     {
         $this->fldInstallment->setValue($this->form->getInput("installmentCount")->getValue());
         $this->fldInitial->setValue($this->form->getInput("initialPayment")->getValue());
@@ -502,7 +502,7 @@ class UniCreditProductFormResponder extends JSONFormResponder
     }
 
     //form processing complete success
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
 
         $monthlyPayment = $this->form->getInput("monthlyPayment")->getValue();

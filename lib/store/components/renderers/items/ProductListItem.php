@@ -33,7 +33,7 @@ class ProductDetails extends Action
         $this->title->setContents($item->getTitle());
         $this->items()->append($this->title);
 
-        //additional info like brand, author, publisher etc - disabled by default
+        //additional info like brand, author, publisher etc. - disabled by default
         $this->info = new Container(false);
         $this->info->setComponentClass("info");
         $this->info->setRenderEnabled(false);

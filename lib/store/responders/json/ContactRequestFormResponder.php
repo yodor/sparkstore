@@ -17,7 +17,7 @@ class ContactRequestFormResponder extends JSONFormResponder
         return new ContactRequestForm();
     }
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
 

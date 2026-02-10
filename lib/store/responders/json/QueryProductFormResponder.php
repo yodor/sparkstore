@@ -1,15 +1,13 @@
 <?php
-
 include_once("responders/json/JSONFormResponder.php");
-
 include_once("store/utils/SellableItem.php");
 include_once("store/forms/QueryProductForm.php");
 include_once("store/mailers/QueryProductMailer.php");
 
 class QueryProductFormResponder extends JSONFormResponder
 {
-    protected $mailer;
-    protected $sellable;
+    protected QueryProductMailer $mailer;
+    protected SellableItem $sellable;
 
     public function __construct(SellableItem $sellable)
     {
@@ -24,7 +22,7 @@ class QueryProductFormResponder extends JSONFormResponder
     }
 
 
-    protected function onProcessSuccess(JSONResponse $resp)
+    protected function onProcessSuccess(JSONResponse $resp): void
     {
         parent::onProcessSuccess($resp);
         $prodID = $this->sellable->getProductID();
