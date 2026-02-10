@@ -25,6 +25,11 @@ Spark::Set(StoreConfig::PRODUCT_ITEM_SLUG, TRUE);
 
 Spark::Set(StoreConfig::ORDER_EMAIL, Spark::Get(Config::DEFAULT_SERVICE_EMAIL));
 
+
+Spark::Set("UNICREDIT_KEY_FILE", Spark::Get("CACHE_PATH")."/../certs/avalon_private_key.pem");
+Spark::Set("UNICREDIT_CERT_FILE", Spark::Get("CACHE_PATH")."/../certs/avalon_cert.pem");
+//Spark::Set("TBI_UID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+
 //re-read local store config and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
 require("config/defaults.php");
 
@@ -40,7 +45,9 @@ if (!defined("SKIP_DB")) {
     }
 }
 
-//Spark::DefineConfig();
+include_once("store/utils/url/CategoryURL.php");
+include_once("store/utils/url/ProductListURL.php");
+include_once("store/utils/url/ProductURL.php");
 
 function formatPrice($price, ?string $currency_symbol=null, bool $symbol_front=false) : string
 {
