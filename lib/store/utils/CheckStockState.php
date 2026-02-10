@@ -2,17 +2,20 @@
 include_once("store/beans/InstockSubscribersBean.php");
 include_once("store/mailers/InstockProductMailer.php");
 include_once("store/beans/BackInstockProductsBean.php");
+include_once("store/utils/url/ProductURL.php");
 
 class CheckStockState
 {
     protected int $prodID = -1;
     protected string $product_name = "";
-    protected string $product_link = "";
+    protected ?ProductURL $product_link = null;
 
     public function __construct(int $prodID, string $product_name)
     {
         $this->prodID = $prodID;
+
         $this->product_name = $product_name;
+
         $this->product_link = new ProductURL();
         $this->product_link->setProductID($this->prodID);
     }

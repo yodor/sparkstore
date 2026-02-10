@@ -1,11 +1,12 @@
 <?php
 include_once("mailers/Mailer.php");
+include_once("store/utils/url/ProductURL.php");
 
 class InstockProductMailer extends Mailer
 {
 
     protected string $product_name = "";
-    protected string $product_link = "";
+    protected ?ProductURL $product_link = null;
 
 
     public function __construct()
@@ -19,7 +20,7 @@ class InstockProductMailer extends Mailer
         $this->to = $client_email;
     }
 
-    public function setProduct(string $product_name, string $product_link) : void
+    public function setProduct(string $product_name, ProductURL $product_link) : void
     {
         $this->product_name = $product_name;
         $this->product_link = $product_link;
@@ -27,6 +28,10 @@ class InstockProductMailer extends Mailer
 
     public function prepareMessage() : void
     {
+
+        if (is_null($this->product_link) || !$this->product_name || !$this->to) {
+            throw new Exception("Object initialization incomplete.");
+        }
 
         Debug::ErrorLog ("Preparing message contents ...");
 
@@ -37,7 +42,7 @@ class InstockProductMailer extends Mailer
 
         $message .= "Продукт: ";
         $message .= "\r\n";
-        $message .= "<a href='{$this->product_link}'>{$this->product_name}</a>";
+        $message .= "<a href='{$this->product_link->fullURL()}'>{$this->product_name}</a>";
         $message .= "\r\n";
         $message .= "\r\n";
 
