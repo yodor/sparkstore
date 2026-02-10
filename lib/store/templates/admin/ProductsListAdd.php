@@ -1,10 +1,15 @@
 <?php
 include_once("templates/admin/BeanEditorPage.php");
+include_once("store/utils/url/CategoryURL.php");
+include_once("store/utils/url/ProductListURL.php");
+include_once("store/utils/url/ProductURL.php");
 include_once("store/forms/ProductInputFormBase.php");
 include_once("store/beans/ProductsBean.php");
 include_once("store/utils/CheckStockState.php");
 include_once("objects/events/BeanFormEditorEvent.php");
 include_once("objects/events/BeanTransactorEvent.php");
+
+
 
 class ProductsListAdd extends BeanEditorPage
 {

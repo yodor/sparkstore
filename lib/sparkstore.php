@@ -45,10 +45,6 @@ if (!defined("SKIP_DB")) {
     }
 }
 
-include_once("store/utils/url/CategoryURL.php");
-include_once("store/utils/url/ProductListURL.php");
-include_once("store/utils/url/ProductURL.php");
-
 function formatPrice($price, ?string $currency_symbol=null, bool $symbol_front=false) : string
 {
     if (is_null($currency_symbol)) {
