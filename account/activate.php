@@ -40,4 +40,3 @@ echo "</div>"; //column
 
 
 $page->finishRender();
-?>

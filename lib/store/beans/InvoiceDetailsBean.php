@@ -27,5 +27,3 @@ class InvoiceDetailsBean extends DBTableBean
     }
 
 }
-
-?>

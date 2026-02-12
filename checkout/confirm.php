@@ -227,5 +227,3 @@ $action->getURL()->fromString("javascript:document.forms.OrderNoteInputForm.subm
 Session::set("checkout.navigation.back",  URL::Current()->toString());
 
 $page->render();
-
-?>

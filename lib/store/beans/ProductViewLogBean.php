@@ -22,5 +22,3 @@ class ProductViewLogBean extends DBTableBean
         parent::__construct("product_view_log", $dbdriver);
     }
 }
-
-?>

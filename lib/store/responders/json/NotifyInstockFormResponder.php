@@ -47,4 +47,3 @@ class NotifyInstockFormResponder extends JSONFormResponder
     }
 
 }
-?>

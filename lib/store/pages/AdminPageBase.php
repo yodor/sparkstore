@@ -6,7 +6,7 @@ include_once("components/renderers/cells/BooleanCell.php");
 include_once("components/ClosureComponent.php");
 include_once("utils/menu/MenuItem.php");
 
-include_once("store/templates/admin/TemplateFactory.php");
+include_once("utils/TemplateFactory.php");
 
 class AdminPageBase extends SparkAdminPage
 {
@@ -28,5 +28,3 @@ class AdminPageBase extends SparkAdminPage
         return TemplateFactory::MenuForPage("Main");
     }
 }
-
-?>

@@ -24,5 +24,3 @@ class SectionBannersBean extends OrderedDataBean
     }
 
 }
-
-?>

@@ -97,4 +97,3 @@ function renderItem(string $loc, string $lastmod="", string $photos="", string $
     echo "</url>";
 
 }
-?>

@@ -6,4 +6,3 @@ $page = new ProductListPage();
 $page->initialize();
 $page->processInput();
 $page->render();
-?>

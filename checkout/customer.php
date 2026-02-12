@@ -90,4 +90,3 @@ $section->button()->setAttribute("href", Spark::Get(Config::LOCAL)."/account/log
 $page->base()->items()->append($section);
 
 $page->render();
-?>

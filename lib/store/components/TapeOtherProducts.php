@@ -26,5 +26,3 @@ class TapeOtherProducts extends ProductsTape
     }
 
 }
-
-?>

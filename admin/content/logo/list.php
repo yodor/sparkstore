@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/ConfigEditorPage.php");
+include_once("components/templates/admin/ConfigEditorPage.php");
 include_once("storage/SparkFile.php");
 
 $page = new AdminPage();
@@ -62,5 +62,3 @@ echo "<hr>";
 $frend->render();
 
 $page->finishRender();
-
-?>

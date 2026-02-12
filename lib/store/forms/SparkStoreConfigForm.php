@@ -98,5 +98,3 @@ class SparkStoreConfigForm extends InputForm
     }
 
 }
-
-?>

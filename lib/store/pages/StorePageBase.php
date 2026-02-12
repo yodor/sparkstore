@@ -644,5 +644,3 @@ class StorePageBase extends SparkPage
 
 
 }
-
-?>

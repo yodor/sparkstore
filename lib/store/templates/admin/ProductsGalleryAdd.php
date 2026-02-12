@@ -1,5 +1,5 @@
 <?php
-include_once("templates/admin/BeanEditorPage.php");
+include_once("components/templates/admin/BeanEditorPage.php");
 include_once("forms/PhotoForm.php");
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductsBean.php");
@@ -32,4 +32,3 @@ class ProductsGalleryAdd extends BeanEditorPage
 }
 
 $template = new ProductsGalleryAdd();
-?>

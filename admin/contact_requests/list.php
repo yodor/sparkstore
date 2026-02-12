@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/ContactRequestsBean.php");
 include_once("components/renderers/cells/ClosureCell.php");
 
@@ -41,5 +41,3 @@ $cmp->getPage()->getActions()->removeByAction("Add");
 
 $cmp->getPage()->navigation()->clear();
 $cmp->render();
-
-?>

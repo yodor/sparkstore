@@ -79,5 +79,3 @@ class ProductClassAttributeInputForm extends InputForm
 
     }
 }
-
-?>

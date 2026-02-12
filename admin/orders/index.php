@@ -22,4 +22,3 @@ $page->startRender();
 echo tr("Управление на поръчки");
 
 $page->finishRender();
-?>

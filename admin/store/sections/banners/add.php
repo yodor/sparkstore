@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanEditorPage.php");
+include_once("components/templates/admin/BeanEditorPage.php");
 include_once("store/beans/SectionsBean.php");
 include_once("store/beans/SectionBannersBean.php");
 
@@ -26,4 +26,3 @@ $cmp->setBean($photos);
 $cmp->setForm($form);
 
 $cmp->render();
-?>

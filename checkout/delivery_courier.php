@@ -14,5 +14,3 @@ $courier = $cart->getDelivery()->getSelectedCourier();
 $courier_id = $courier->getID();
 
 include_once("courier_office.php");
-
-?>

@@ -187,5 +187,3 @@ class ProductDetailsPageBase extends ProductPageBase
         return clone $this->item->getURL();
     }
 }
-
-?>

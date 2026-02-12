@@ -19,4 +19,3 @@ class VariantPriceForm extends InputForm {
 
     }
 }
-?>

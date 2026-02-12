@@ -35,5 +35,3 @@ class OrderOwnerAuthenticator extends UserAuthenticator
 
     }
 }
-
-?>

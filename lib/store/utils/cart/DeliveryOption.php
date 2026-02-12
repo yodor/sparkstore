@@ -42,5 +42,3 @@ class DeliveryOption {
         return array(DeliveryOption::USER_ADDRESS, DeliveryOption::COURIER_OFFICE);
     }
 }
-
-?>

@@ -15,5 +15,3 @@ class ForgotPasswordInputForm extends InputForm
     }
 
 }
-
-?>

@@ -8,5 +8,3 @@ Session::Destroy();
 
 header("Location: " . Spark::Get(Config::ADMIN_LOCAL));
 exit;
-
-?>

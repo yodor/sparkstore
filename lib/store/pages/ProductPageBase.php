@@ -232,5 +232,3 @@ class ProductPageBase extends StorePage
         parent::applyTitleDescription();
     }
 }
-
-?>

@@ -50,5 +50,3 @@ class ActivateProfileFormProcessor extends FormProcessor
 
     }
 }
-
-?>

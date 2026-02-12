@@ -97,4 +97,3 @@ class SectionChooserFormResponder extends JSONFormResponder
     }
 
 }
-?>

@@ -36,4 +36,3 @@ class ProductURL extends URL
     }
 
 }
-?>

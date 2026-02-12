@@ -41,5 +41,3 @@ class OrderStatusMailer extends Mailer
     }
 
 }
-
-?>

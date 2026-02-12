@@ -56,5 +56,3 @@ catch (Exception $e) {
     header("Location: confirm.php");
     exit;
 }
-
-?>

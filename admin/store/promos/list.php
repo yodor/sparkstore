@@ -1,7 +1,7 @@
 <?php
 include_once("session.php");
 
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/StorePromosBean.php");
 include_once("store/beans/ProductCategoriesBean.php");
 
@@ -44,8 +44,3 @@ $cmp->getView()->getColumn("targetID")->setCellRenderer(new ClosureCell($renderC
 $cmp->getPage()->navigation()->clear();
 
 $cmp->render();
-
-
-
-
-?>

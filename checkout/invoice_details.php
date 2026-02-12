@@ -65,4 +65,3 @@ $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.InvoiceDetails.submit()");
 
 $page->render();
-?>

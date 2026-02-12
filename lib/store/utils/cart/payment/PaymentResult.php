@@ -35,5 +35,3 @@ class PaymentResult
         return $this->gateway;
     }
 }
-
-?>

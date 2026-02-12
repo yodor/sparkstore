@@ -63,5 +63,3 @@ class RegisterClientInputForm extends InputForm
     }
 
 }
-
-?>

@@ -59,4 +59,3 @@ class OrderProductFormResponder extends JSONFormResponder
 
     }
 }
-?>

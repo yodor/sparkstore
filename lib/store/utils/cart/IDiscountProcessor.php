@@ -9,4 +9,3 @@ interface IDiscountProcessor {
     public function amount() : float;
 
 }
-?>

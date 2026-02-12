@@ -44,5 +44,3 @@ class OrderClientCell extends TableCell
     }
 
 }
-
-?>

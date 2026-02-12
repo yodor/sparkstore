@@ -15,4 +15,3 @@ class ProductListURL extends URL
         $this->fromString(Spark::Get(Config::LOCAL).self::$urlProductList);
     }
 }
-?>

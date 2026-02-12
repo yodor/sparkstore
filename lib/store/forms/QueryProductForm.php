@@ -24,4 +24,3 @@ class QueryProductForm extends InputForm
 
 
 }
-?>

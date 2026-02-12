@@ -202,9 +202,26 @@
     font-style:italic;
 }
 
+
 .FormRenderer[name='SectionChooserForm'] SELECT {
     /*min-width: min-content;*/
     min-height: 100px;
+    min-width:250px;
 }
 
-.admin_layout .page_area
+.FormRenderer[layout="VBox"][name] {
+    gap:1em;
+}
+
+.FormRenderer[layout="VBox"][name] .InputLabel {
+    /*border-bottom:3px dashed gray;*/
+    font-style: oblique;
+    /*padding-bottom: 0.2em;*/
+    margin-bottom: 0.2em;
+    font-weight: 600;
+    font-size: 120%;
+}
+
+.FormRenderer[layout="VBox"][name] .ClassAttributeField .FieldElements {
+    grid-template-columns: auto 1fr;
+}

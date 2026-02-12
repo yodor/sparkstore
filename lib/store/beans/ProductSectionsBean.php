@@ -21,5 +21,3 @@ class ProductSectionsBean extends DBTableBean
     }
 
 }
-
-?>

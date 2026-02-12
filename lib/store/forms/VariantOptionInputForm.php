@@ -17,5 +17,3 @@ class VariantOptionInputForm extends InputForm
     }
 
 }
-
-?>

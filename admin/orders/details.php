@@ -228,4 +228,3 @@ echo "</div>";//panel
 
 
 $page->finishRender();
-?>

@@ -81,5 +81,3 @@ $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.CourierOffice.submit()");
 
 $page->render();
-
-?>

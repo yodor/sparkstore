@@ -15,4 +15,3 @@ $callback = function(SparkEvent $event) {
 };
 SparkEventManager::register(TemplateFactoryEvent::class, new SparkObserver($callback));
 TemplateFactory::RenderPage("ProductsList");
-?>

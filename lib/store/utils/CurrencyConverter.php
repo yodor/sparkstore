@@ -171,4 +171,3 @@ class CurrencyConverter
         return $front_symbol . " " . sprintf("%0.2f",$converted_price) . " " . $back_symbol;
     }
 }
-?>

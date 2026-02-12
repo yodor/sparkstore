@@ -70,4 +70,3 @@ class CategoryNavigation extends NavigationList
     }
 
 }
-?>

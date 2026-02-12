@@ -20,4 +20,3 @@ class ProductAttributes extends DBViewBean
     }
 
 }
-?>

@@ -7,4 +7,3 @@ $page = new AdminPage();
 $page->startRender();
 
 $page->finishRender();
-?>

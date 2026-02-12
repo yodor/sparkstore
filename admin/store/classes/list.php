@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 
 include_once("store/beans/ProductClassesBean.php");
 include_once("store/beans/ProductClassAttributesBean.php");
@@ -66,5 +66,3 @@ $text->buffer()->end();
 
 $cmp->items()->insert($text, 0);
 $cmp->render();
-
-?>

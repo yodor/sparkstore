@@ -30,5 +30,3 @@ class VariantOptionsBean extends OrderedDataBean
 
 
 }
-
-?>

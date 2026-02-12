@@ -25,5 +25,3 @@ class ProductClassAttributeValuesBean extends DBTableBean
     }
 
 }
-
-?>

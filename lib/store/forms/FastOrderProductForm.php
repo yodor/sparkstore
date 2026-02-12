@@ -20,4 +20,3 @@ class FastOrderProductForm extends InputForm
     }
 
 }
-?>

@@ -12,4 +12,3 @@ class ColumnFilter extends ClosureFilter
         $this->matchMode = $matchMode;
     }
 }
-?>

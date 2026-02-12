@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once ("templates/admin/BeanEditorPage.php");
+include_once("components/templates/admin/BeanEditorPage.php");
 include_once("forms/MenuItemForm.php");
 include_once("beans/MenuItemsBean.php");
 
@@ -11,5 +11,3 @@ $cmp->setBean($bean);
 $cmp->setForm(new MenuItemForm($bean));
 
 $cmp->render();
-
-?>

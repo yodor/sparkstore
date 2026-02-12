@@ -23,5 +23,3 @@ class CourierAddressesBean extends DBTableBean
     }
 
 }
-
-?>

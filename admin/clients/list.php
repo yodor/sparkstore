@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("components/renderers/cells/DateCell.php");
 include_once("components/renderers/cells/NumericCell.php");
 include_once("responders/ToggleFieldResponder.php");
@@ -61,5 +61,3 @@ $cmp->getPage()->getActions()->removeByAction("Add");
 $cmp->viewItemActions()->removeByAction("Edit");
 
 $cmp->render();
-
-?>

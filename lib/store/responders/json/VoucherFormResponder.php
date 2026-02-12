@@ -31,4 +31,3 @@ class VoucherFormResponder extends JSONFormResponder
         $resp->message = tr("Заявката Ви беще приета");
     }
 }
-?>

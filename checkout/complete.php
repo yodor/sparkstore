@@ -31,4 +31,3 @@ if ($orderID > 0) {
 $page->base()->items()->append(new TextComponent(tr("Ще се свържем с Вас относно детйали за Вашата поръчка")));
 
 $page->render();
-?>

@@ -144,5 +144,3 @@ class OrderConfirmationMailer extends Mailer
     }
 
 }
-
-?>

@@ -24,5 +24,3 @@ class EkontAddressesBean extends DBTableBean
     }
 
 }
-
-?>

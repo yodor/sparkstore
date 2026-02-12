@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/BrandsBean.php");
 
 $cmp = new BeanListPage();
@@ -21,5 +21,3 @@ $view->getColumn("home_visible")->setCellRenderer(new BooleanCell("Yes", "No"));
 $view->getColumn("cover")->setCellRenderer(new ImageCell());
 
 $cmp->render();
-
-?>

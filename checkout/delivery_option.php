@@ -112,4 +112,3 @@ $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.DeliveryAddress.submit();");
 
 $page->render();
-?>

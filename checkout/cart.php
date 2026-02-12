@@ -132,6 +132,3 @@ $page->render();
 
 
 Session::set("checkout.navigation.back", URL::Current()->toString());
-
-
-?>

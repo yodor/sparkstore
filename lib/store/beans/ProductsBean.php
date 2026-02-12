@@ -43,5 +43,3 @@ class ProductsBean extends DBTableBean
     }
 
 }
-
-?>

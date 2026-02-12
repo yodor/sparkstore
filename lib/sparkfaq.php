@@ -55,4 +55,3 @@ echo "</div>"; //page_data
 
 
 $page->finishRender();
-?>

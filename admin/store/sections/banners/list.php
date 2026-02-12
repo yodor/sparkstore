@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/GalleryViewPage.php");
+include_once("components/templates/admin/GalleryViewPage.php");
 include_once("store/beans/SectionBannersBean.php");
 include_once("store/beans/SectionsBean.php");
 
@@ -16,4 +16,3 @@ $cmp->getPage()->setName(tr("Banners Gallery") . ": " . $rc->getData("section_ti
 $cmp->setBean(new SectionBannersBean());
 
 $cmp->render();
-?>

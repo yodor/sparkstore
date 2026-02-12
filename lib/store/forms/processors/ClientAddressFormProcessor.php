@@ -31,5 +31,3 @@ class ClientAddressFormProcessor extends FormProcessor
 
     }
 }
-
-?>

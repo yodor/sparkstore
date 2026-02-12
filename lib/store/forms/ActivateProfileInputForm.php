@@ -18,5 +18,3 @@ class ActivateProfileInputForm extends InputForm
     }
 
 }
-
-?>

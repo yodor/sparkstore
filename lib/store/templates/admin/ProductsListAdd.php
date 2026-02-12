@@ -1,5 +1,5 @@
 <?php
-include_once("templates/admin/BeanEditorPage.php");
+include_once("components/templates/admin/BeanEditorPage.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("store/utils/url/ProductURL.php");
@@ -73,6 +73,3 @@ $closure_transactor = function(BeanTransactorEvent $event) use(&$old_stock_amoun
     }
 };
 SparkEventManager::register(BeanTransactorEvent::class, new SparkObserver($closure_transactor));
-
-
-?>

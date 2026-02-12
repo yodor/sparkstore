@@ -111,4 +111,3 @@ class QueryProductResponder extends JSONResponder
 
     }
 }
-?>

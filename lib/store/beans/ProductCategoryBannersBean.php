@@ -24,5 +24,3 @@ class ProductCategoryBannersBean extends OrderedDataBean
     }
 
 }
-
-?>

@@ -98,4 +98,3 @@ echo "<div class='column'>";
 echo "</div>";
 
 $page->finishRender();
-?>

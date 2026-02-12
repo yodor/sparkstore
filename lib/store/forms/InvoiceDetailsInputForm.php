@@ -43,5 +43,3 @@ class InvoiceDetailsInputForm extends InputForm
 //        echo "</div>";
 //    }
 }
-
-?>

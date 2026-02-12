@@ -160,5 +160,3 @@ class CheckoutPageBase extends StorePage
     }
 
 }
-
-?>

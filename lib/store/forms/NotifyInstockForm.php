@@ -15,4 +15,3 @@ class NotifyInstockForm extends InputForm
 
 
 }
-?>

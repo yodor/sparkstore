@@ -148,25 +148,54 @@ abstract class CSVProductExporter extends ProductExporter
         $this->createKeys();
     }
 
-    public function process() : void
+    protected function defaultSelect() : SQLSelect
     {
         $bean = new SellableProducts();
 
         $query = $bean->query("prodID");
         $query->select->group_by = " prodID ";
 
-        $this->processQuery($query);
-
         if (isset($_GET["filter_catID"])) {
             $catID = (int)$_GET["filter_catID"];
             $query->select->where()->add("catID", $catID);
         }
+        return $query->select;
+    }
+    public function process() : void
+    {
+
+        $select = null;
+
+        if (Session::Contains("ProductListSelect")) {
+            $select = Session::get("ProductListSelect");
+            @$select = unserialize($select);
+        }
+
+        if (!($select instanceof SQLSelect)) {
+            Debug::ErrorLog("Using default ProductListSelect");
+            $select = $this->defaultSelect();
+        }
+        else {
+            Debug::ErrorLog("Using Deserialized ProductListSelect");
+        }
+
+        $select->fields()->set("prodID");
+
+
+        $query = new SQLQuery($select);
+
+        $this->processQuery($query);
 
         $total_rows = $query->exec();
 
         $this->writeHeader();
         while ($result = $query->nextResult()) {
-            $this->writeItem(SellableItem::Load($result->get("prodID")));
+            try {
+                $this->writeItem(SellableItem::Load($result->get("prodID")));
+            }
+            catch (Exception $e) {
+                //
+            }
         }
     }
 

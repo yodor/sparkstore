@@ -27,4 +27,3 @@ $actions->append(
 
 
 $page->render();
-?>

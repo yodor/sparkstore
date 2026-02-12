@@ -18,5 +18,3 @@ class ProductFeaturesBean extends DBTableBean
     }
 
 }
-
-?>

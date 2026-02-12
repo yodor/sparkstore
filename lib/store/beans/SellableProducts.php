@@ -112,4 +112,3 @@ class SellableProducts extends DBViewBean
         return isset($attributes[$name]) && strlen((string)$attributes[$name])>0;
     }
 }
-?>

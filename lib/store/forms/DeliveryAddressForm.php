@@ -34,5 +34,3 @@ class DeliveryAddressForm extends InputForm
     }
 
 }
-
-?>

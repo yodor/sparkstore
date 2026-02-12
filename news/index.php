@@ -9,4 +9,3 @@ $page->getPublications()->processInput();
 
 $page->startRender();
 $page->finishRender();
-?>

@@ -34,4 +34,3 @@ class VariantPriceFormResponder extends JSONFormResponder
     }
 
 }
-?>

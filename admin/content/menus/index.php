@@ -13,4 +13,3 @@ $page->navigation()->clear();
 $page->startRender();
 
 $page->finishRender();
-?>

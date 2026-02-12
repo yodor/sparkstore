@@ -1,5 +1,5 @@
 <?php
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/ProductsBean.php");
 include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductCategoriesBean.php");
@@ -322,6 +322,15 @@ class ProductsList extends BeanListPage
             }
         }
 
+        //serialize for product export
+        if ($this->view instanceof TableView) {
+            $itr = $this->view->getIterator();
+            if ($itr instanceof SQLQuery) {
+                Session::Set("ProductListSelect", serialize($itr->select));
+                Debug::ErrorLog("Serialized SQLSelect for this product listing");
+            }
+        }
+
     }
 
     public function initView() : ?Component
@@ -353,9 +362,6 @@ class ProductsList extends BeanListPage
 
         return $view;
     }
-
 }
 
 $template = new ProductsList();
-
-?>

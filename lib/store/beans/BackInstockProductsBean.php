@@ -26,12 +26,12 @@ class BackInstockProductsBean extends DBTableBean
             $db->transaction();
             $db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP");
             $db->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
     }
+
     public function outofstock(int $prodID)
     {
         Debug::ErrorLog("Deleting from back in stock list for prodID: $prodID");
@@ -41,12 +41,9 @@ class BackInstockProductsBean extends DBTableBean
             $db->transaction();
             $db->query("DELETE FROM backinstock_products WHERE prodID = $prodID");
             $db->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
     }
 }
-
-?>

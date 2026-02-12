@@ -75,4 +75,3 @@ echo "</div>";
 echo "</div>";
 
 $page->finishRender();
-?>

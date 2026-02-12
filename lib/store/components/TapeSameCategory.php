@@ -41,5 +41,3 @@ class TapeSameCategory extends ProductsTape
     }
 
 }
-
-?>

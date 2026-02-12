@@ -54,5 +54,3 @@ class ProductClassInputForm extends InputForm
     }
 
 }
-
-?>

@@ -210,4 +210,3 @@ class ContentPageBase extends StorePage
         parent::finishRender();
     }
 }
-?>

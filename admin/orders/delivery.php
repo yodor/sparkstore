@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/ConfigEditorPage.php");
+include_once("components/templates/admin/ConfigEditorPage.php");
 include_once("store/forms/DeliveryConfigForm.php");
 
 include_once("beans/ConfigBean.php");
@@ -16,4 +16,3 @@ $cmp->setForm($form);
 $cmp->getPage()->navigation()->clear();
 
 $cmp->render();
-?>

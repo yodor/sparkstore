@@ -12,5 +12,3 @@ $menu[] = new MenuItem("Съдържание", Spark::Get(Config::ADMIN_LOCAL) .
 $menu[] = new MenuItem("Настройки", Spark::Get(Config::ADMIN_LOCAL) . "/settings/index.php", "class:icon_settings");
 
 $menu[] = new MenuItem("Контакти", Spark::Get(Config::ADMIN_LOCAL) . "/contact_requests/list.php", "class:icon_settings");
-
-?>

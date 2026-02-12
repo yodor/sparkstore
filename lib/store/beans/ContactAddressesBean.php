@@ -20,5 +20,3 @@ class ContactAddressesBean extends OrderedDataBean
     }
 
 }
-
-?>

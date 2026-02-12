@@ -17,5 +17,3 @@ class FAQItemsBean extends DBTableBean
     }
 
 }
-
-?>

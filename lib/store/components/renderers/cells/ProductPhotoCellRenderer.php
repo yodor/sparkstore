@@ -21,5 +21,3 @@ class ProductPhotoCellRenderer extends ImageCell
     }
 
 }
-
-?>

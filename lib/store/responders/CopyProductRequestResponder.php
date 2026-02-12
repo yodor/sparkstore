@@ -113,5 +113,3 @@ class CopyProductRequestResponder extends RequestResponder
     }
 
 }
-
-?>

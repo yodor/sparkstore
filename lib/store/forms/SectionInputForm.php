@@ -20,5 +20,3 @@ class SectionInputForm extends InputForm
     }
 
 }
-
-?>

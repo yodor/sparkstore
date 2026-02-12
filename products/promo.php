@@ -12,4 +12,3 @@ $page->getSellableProducts()->select()->where()->append($clause);
 $page->initialize();
 $page->processInput();
 $page->render();
-?>

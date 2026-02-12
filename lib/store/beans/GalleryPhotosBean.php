@@ -19,5 +19,3 @@ class GalleryPhotosBean extends OrderedDataBean
     }
 
 }
-
-?>

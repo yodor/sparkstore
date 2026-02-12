@@ -98,5 +98,3 @@ class PriceLabel extends Container {
         return $this->priceSell;
     }
 }
-
-?>

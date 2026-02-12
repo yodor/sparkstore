@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/ContactAddressesBean.php");
 
 $cmp = new BeanListPage();
@@ -15,6 +15,3 @@ $cmp->getView()->setDefaultOrder(" caID ASC ");
 $cmp->getPage()->navigation()->clear();
 
 $cmp->render();
-
-
-?>

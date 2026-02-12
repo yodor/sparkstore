@@ -26,5 +26,3 @@ class ZeroDiscount implements IDiscountProcessor
         // TODO: Implement calculate() method.
     }
 }
-
-?>

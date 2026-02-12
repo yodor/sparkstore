@@ -18,4 +18,3 @@ else {
     $response->sendFile($origin_logo);
 }
 exit;
-?>

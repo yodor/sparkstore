@@ -18,5 +18,3 @@ class AttributeInputForm extends InputForm
     }
 
 }
-
-?>

@@ -97,5 +97,3 @@ class DeliveryCourier {
         throw new Exception("Delivery option ID:$id is not initialized");
     }
 }
-
-?>

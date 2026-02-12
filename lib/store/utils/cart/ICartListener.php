@@ -27,4 +27,3 @@ interface ICartListener {
     public function after(string $operation, ?CartEntry $item, Cart $cart);
 
 }
-?>

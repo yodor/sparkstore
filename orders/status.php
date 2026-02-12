@@ -106,4 +106,3 @@ else {
 echo "</div>";
 
 $page->finishRender();
-?>

@@ -70,5 +70,3 @@ class OrderStatusRequestResponder extends RequestResponder
     }
 
 }
-
-?>

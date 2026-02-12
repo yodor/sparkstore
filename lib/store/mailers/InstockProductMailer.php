@@ -55,5 +55,3 @@ class InstockProductMailer extends Mailer
     }
 
 }
-
-?>

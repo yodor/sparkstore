@@ -115,5 +115,3 @@ class FastOrderAdminMailer extends Mailer
         return $result;
     }
 }
-
-?>

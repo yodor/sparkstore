@@ -420,4 +420,3 @@ class ProductListFilterInputForm extends InputForm {
         return $having;
     }
 }
-?>

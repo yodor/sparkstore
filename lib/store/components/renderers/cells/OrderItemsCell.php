@@ -79,5 +79,3 @@ class OrderItemsCell extends TableCell
     }
 
 }
-
-?>

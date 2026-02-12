@@ -16,4 +16,3 @@ $page->startRender();
 $view->render();
 
 $page->finishRender();
-?>

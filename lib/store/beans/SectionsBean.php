@@ -22,5 +22,3 @@ class SectionsBean extends OrderedDataBean
     }
 
 }
-
-?>

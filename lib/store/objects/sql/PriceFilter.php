@@ -35,4 +35,3 @@ class PriceFilter extends ClosureFilter {
         parent::__construct($title, $closure_price);
     }
 }
-?>

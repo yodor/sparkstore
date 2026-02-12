@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/NestedSetViewPage.php");
+include_once("components/templates/admin/NestedSetViewPage.php");
 include_once("store/beans/ProductCategoriesBean.php");
 
 $cmp = new NestedSetViewPage();
@@ -32,9 +32,4 @@ if ($item instanceof TextTreeItem) {
 
 }
 
-
-
 $cmp->render();
-
-
-?>

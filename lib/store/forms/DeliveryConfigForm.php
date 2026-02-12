@@ -63,5 +63,3 @@ class DeliveryConfigForm extends InputForm
     }
 
 }
-
-?>

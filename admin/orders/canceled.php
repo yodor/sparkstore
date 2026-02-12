@@ -10,4 +10,3 @@ $page->getOrderListSQL()->where()->add("status", "'" . OrdersBean::STATUS_CANCEL
 
 
 $page->render();
-?>

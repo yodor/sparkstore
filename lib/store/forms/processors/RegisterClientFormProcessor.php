@@ -109,5 +109,3 @@ class RegisterClientFormProcessor extends FormProcessor
         }
     }
 }
-
-?>

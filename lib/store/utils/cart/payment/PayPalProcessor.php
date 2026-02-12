@@ -410,5 +410,3 @@ class PayPalProcessor
         return $sale_item;
     }
 }
-
-?>

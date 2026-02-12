@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 
 include_once("store/beans/VariantOptionsBean.php");
 include_once("store/beans/ProductClassesBean.php");
@@ -259,5 +259,3 @@ $col->append( new Action("Photo Gallery", "gallery/list.php", array(new DataPara
 
 $cmp->getPage()->getActions()->removeByAction(SparkAdminPage::ACTION_ADD);
 $cmp->render();
-
-?>

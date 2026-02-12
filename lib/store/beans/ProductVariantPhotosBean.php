@@ -19,5 +19,3 @@ class ProductVariantPhotosBean extends OrderedDataBean
         parent::__construct("product_variant_photos", $dbdriver);
     }
 }
-
-?>

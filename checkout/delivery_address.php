@@ -62,5 +62,3 @@ $action->setClassName("checkout");
 $action->getURL()->fromString("javascript:document.forms.ClientAddressInputForm.submit();");
 
 $page->render();
-
-?>

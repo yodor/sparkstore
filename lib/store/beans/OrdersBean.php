@@ -35,5 +35,3 @@ class OrdersBean extends DBTableBean
     }
 
 }
-
-?>

@@ -15,5 +15,3 @@ class OrdersSQL extends SQLSelect
 
     }
 }
-
-?>

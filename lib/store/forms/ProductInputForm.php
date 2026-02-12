@@ -11,4 +11,3 @@ class ProductInputForm extends ProductInputFormBase
     }
 
 }
-?>

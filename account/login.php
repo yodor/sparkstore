@@ -67,4 +67,3 @@ echo "<div class='column register'>"; //register
 echo "</div>"; //column
 
 $page->finishRender();
-?>

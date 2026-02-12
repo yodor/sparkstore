@@ -17,5 +17,3 @@ $mailer = new OrderConfirmationMailer($orderID);
 $mailer->send();
 
 $page->finishRender();
-
-?>

@@ -26,4 +26,3 @@ $page->navigation()->clear();
 $page->startRender();
 echo "Content Management";
 $page->finishRender();
-?>

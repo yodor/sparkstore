@@ -15,7 +15,7 @@ class EkontOfficeInputForm extends InputForm
 
     }
 
-    public function renderPlain()
+    public function renderPlain(): void
     {
         echo "<div class='InvoiceDetailsList'>";
 
@@ -32,5 +32,3 @@ class EkontOfficeInputForm extends InputForm
     }
 
 }
-
-?>

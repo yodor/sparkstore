@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/GalleryViewPage.php");
+include_once("components/templates/admin/GalleryViewPage.php");
 
 include_once("beans/DynamicPagePhotosBean.php");
 include_once("beans/DynamicPagesBean.php");
@@ -16,5 +16,3 @@ $cmp->setBean($bean);
 $cmp->getPage()->setName(tr("Photo Gallery") . ": " . $rc->getData("item_title"));
 
 $cmp->render();
-
-?>

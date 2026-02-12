@@ -42,5 +42,3 @@ class VoucherAdminMailer extends Mailer
     }
 
 }
-
-?>

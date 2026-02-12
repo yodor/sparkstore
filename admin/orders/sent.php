@@ -19,4 +19,3 @@ $actions->append(new Action("Потвърди завършване", "?cmd=order
 
 
 $page->render();
-?>

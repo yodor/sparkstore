@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/GalleryViewPage.php");
+include_once("components/templates/admin/GalleryViewPage.php");
 
 include_once("store/beans/GalleryPhotosBean.php");
 
@@ -12,5 +12,3 @@ $cmp->getPage()->navigation()->clear();
 
 
 $cmp->render();
-
-?>

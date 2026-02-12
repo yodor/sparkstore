@@ -1,5 +1,5 @@
 <?php
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/responders/OrderStatusRequestResponder.php");
 include_once("store/beans/OrdersBean.php");
 

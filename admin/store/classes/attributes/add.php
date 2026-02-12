@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanEditorPage.php");
+include_once("components/templates/admin/BeanEditorPage.php");
 
 include_once("store/beans/ProductClassesBean.php");
 include_once("store/beans/ProductClassAttributesBean.php");
@@ -34,5 +34,3 @@ SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closu
 
 
 $cmp->render();
-
-?>

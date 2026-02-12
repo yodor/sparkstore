@@ -37,4 +37,3 @@ class TBIFusionPaymentButton extends CreditPaymentButton
         $this->script->render();
     }
 }
-?>

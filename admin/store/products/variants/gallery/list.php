@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/GalleryViewPage.php");
+include_once("components/templates/admin/GalleryViewPage.php");
 
 include_once("store/beans/ProductVariantPhotosBean.php");
 include_once("store/beans/ProductVariantsBean.php");
@@ -26,5 +26,3 @@ $bean = new ProductVariantPhotosBean();
 $cmp->setBean($bean);
 
 $cmp->render();
-
-?>

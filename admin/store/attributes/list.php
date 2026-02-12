@@ -1,6 +1,6 @@
 <?php
 include_once("session.php");
-include_once("templates/admin/BeanListPage.php");
+include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/AttributesBean.php");
 
 $cmp = new BeanListPage();
@@ -23,6 +23,3 @@ $text->buffer()->end();
 
 $cmp->items()->insert($text, 0);
 $cmp->render();
-
-
-?>

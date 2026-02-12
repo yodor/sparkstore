@@ -38,5 +38,3 @@ class ProductPhotosBean extends OrderedDataBean
 
     }
 }
-
-?>

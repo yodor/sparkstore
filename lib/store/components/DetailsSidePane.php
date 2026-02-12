@@ -476,4 +476,3 @@ class DetailsSidePane extends Container
     }
 
 }
-?>

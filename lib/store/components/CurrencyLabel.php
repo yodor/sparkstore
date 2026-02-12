@@ -49,5 +49,3 @@ class CurrencyLabel extends LabelSpan {
         return $this->symbol;
     }
 }
-
-?>

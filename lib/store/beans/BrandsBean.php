@@ -21,5 +21,3 @@ class BrandsBean extends DBTableBean
     }
 
 }
-
-?>

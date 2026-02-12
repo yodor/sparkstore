@@ -43,4 +43,3 @@ class QueryProductFormResponder extends JSONFormResponder
 
     }
 }
-?>

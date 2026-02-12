@@ -34,5 +34,3 @@ class DeliveryCourierForm extends InputForm
     }
 
 }
-
-?>

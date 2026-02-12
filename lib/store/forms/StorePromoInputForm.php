@@ -51,5 +51,3 @@ class StorePromoInputForm extends InputForm
     }
 
 }
-
-?>

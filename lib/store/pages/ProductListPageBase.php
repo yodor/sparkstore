@@ -629,5 +629,3 @@ class ProductListPageBase extends ProductPageBase
     }
 
 }
-
-?>

@@ -5,4 +5,3 @@ if (!isset($info)) {
 $info = pathinfo($info["dirname"]);
 $parent = $info["dirname"];
 include_once($parent."/session.php");
-?>

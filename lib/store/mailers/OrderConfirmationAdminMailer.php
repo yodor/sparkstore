@@ -127,5 +127,3 @@ class OrderConfirmationAdminMailer extends Mailer
     }
 
 }
-
-?>

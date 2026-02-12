@@ -27,5 +27,3 @@ class ProductCategoriesBean extends NestedSetBean
     }
 
 }
-
-?>

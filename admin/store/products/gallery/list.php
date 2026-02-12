@@ -40,5 +40,3 @@ $page->startRender();
 $gv->render();
 
 $page->finishRender();
-
-?>

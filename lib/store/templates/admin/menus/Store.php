@@ -14,4 +14,3 @@ new MenuItem("Продукти", "products/list.php", "class:store products"),
 new MenuItem("Промоции", "promos/list.php", "class:store products"),
 
 );
-?>

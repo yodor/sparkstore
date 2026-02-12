@@ -58,5 +58,3 @@ class ContactRequestMailer extends Mailer
         Debug::ErrorLog ("Contact request message contents prepared ...");
     }
 }
-
-?>

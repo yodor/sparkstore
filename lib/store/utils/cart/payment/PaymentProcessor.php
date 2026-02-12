@@ -88,5 +88,3 @@ abstract class PaymentProcessor
         return $order;
     }
 }
-
-?>

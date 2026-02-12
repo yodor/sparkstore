@@ -8,4 +8,3 @@ class ProductsTemplateBean extends DBTableBean
         parent::__construct("products_template");
     }
 }
-?>

@@ -164,5 +164,3 @@ abstract class NavigationList extends Container
         }
     }
 }
-
-?>

@@ -31,4 +31,3 @@ class CategoryURL extends ProductListURL
     }
 
 }
-?>

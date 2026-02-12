@@ -6,4 +6,3 @@ $page = new ProductDetailsPage();
 $page->initialize();
 $page->processInput();
 $page->render();
-?>

@@ -91,6 +91,3 @@ $action->getURL()->fromString("javascript:document.forms.DeliveryCourier.submit(
 $page->render();
 
 Session::set("checkout.navigation.back",  URL::Current()->toString());
-
-
-?>

@@ -28,5 +28,3 @@ class BrandInputForm extends InputForm
     }
 
 }
-
-?>

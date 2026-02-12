@@ -77,4 +77,3 @@ class StoreConfig {
     const string DOUBLE_PRICE_RATE = "DOUBLE_PRICE_RATE";
 
 }
-?>

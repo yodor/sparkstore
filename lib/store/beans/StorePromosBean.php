@@ -24,5 +24,3 @@ class StorePromosBean extends DBTableBean
     }
 
 }
-
-?>

@@ -46,5 +46,3 @@ class ProductVariantsBean extends DBTableBean
         return $query;
     }
 }
-
-?>

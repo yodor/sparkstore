@@ -13,4 +13,3 @@ $page->startRender();
 echo "Управление на магазина";
 
 $page->finishRender();
-?>

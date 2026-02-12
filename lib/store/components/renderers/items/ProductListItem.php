@@ -343,5 +343,3 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
     }
 
 }
-
-?>

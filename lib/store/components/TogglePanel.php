@@ -52,5 +52,3 @@ class TogglePanel extends Container {
         return $this->viewport;
     }
 }
-
-?>
