@@ -20,6 +20,7 @@ class SparkStoreConfigForm extends InputForm
         $this->addInput($field, $grp_general);
 
         $field = DataInputFactory::Create(InputType::TEXTAREA, "marquee_text", "Header Marquee Text", 0);
+
         $this->addInput($field, $grp_general);
 
         $field = DataInputFactory::Create(InputType::TEXT, "tawkto_id", "Tawk.to Chat Plugin ID", 0);
@@ -28,10 +29,7 @@ class SparkStoreConfigForm extends InputForm
         $grp_productInfo = new InputGroup("products", "Products Information");
         $this->addGroup($grp_productInfo);
 
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "product_list_footer", "All products list footer (When no category is selected)", 0);
-        $rend = $field->getRenderer();
-        $rend->input()?->setAttribute("rows", 10);
-        $rend->input()?->setAttribute("cols", 80);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "product_list_footer", "All products list footer (When no category is selected)", 0);
         $this->addInput($field, $grp_productInfo);
 
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "products_howtoorder", "How To Order Description", 0);
