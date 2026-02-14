@@ -5,12 +5,12 @@ include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductURL.php");
-include_once("store/utils/url/ProductListURL.php");
+
 include_once("store/beans/ProductViewLogBean.php");
 
 class ProductPageBase extends StorePage
 {
-    protected ?Action $home_action = null;
+
 
     /**
      * @var SellableProducts|null
@@ -62,8 +62,6 @@ class ProductPageBase extends StorePage
         $this->sections = new SectionsBean();
         $this->breadcrumb = new BreadcrumbList();
 
-        $this->home_action = new Action(tr("Products"));
-        $this->home_action->setURL(new ProductListURL());
     }
 
     public function initialize() : void

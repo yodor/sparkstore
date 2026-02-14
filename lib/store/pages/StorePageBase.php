@@ -36,9 +36,12 @@ include_once("store/utils/url/ProductListURL.php");
 include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/components/ProductsTape.php");
+include_once("store/utils/url/ProductListURL.php");
 
 class StorePageBase extends SparkPage
 {
+
+    protected ?Action $home_action = null;
 
     protected ?MenuBar $menu_bar = NULL;
 
@@ -337,6 +340,8 @@ class StorePageBase extends SparkPage
             $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");
         }
 
+        $this->home_action = new Action(tr("Products"));
+        $this->home_action->setURL(new ProductListURL());
     }
 
     public function getMenuBar(): ?MenuBar
