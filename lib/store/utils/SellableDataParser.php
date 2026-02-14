@@ -160,7 +160,7 @@ class SellableDataParser
         $product->set("description", strip_tags($description));
 
         if (!is_null($productURL)) {
-            $product->set("url", new URL($productURL->toString())->fullURL());
+            $product->set("url", $productURL->fullURL());
         }
         $product->set("category", $item->getCategoryName());
 
