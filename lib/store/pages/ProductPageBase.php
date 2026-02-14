@@ -5,11 +5,12 @@ include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductURL.php");
+include_once("store/utils/url/ProductListURL.php");
 include_once("store/beans/ProductViewLogBean.php");
 
 class ProductPageBase extends StorePage
 {
-    protected string $products_title = "Продукти";
+    protected ?Action $home_action = null;
 
     /**
      * @var SellableProducts|null
@@ -61,6 +62,8 @@ class ProductPageBase extends StorePage
         $this->sections = new SectionsBean();
         $this->breadcrumb = new BreadcrumbList();
 
+        $this->home_action = new Action(tr("Products"));
+        $this->home_action->setURL(new ProductListURL());
     }
 
     public function initialize() : void
@@ -144,8 +147,9 @@ class ProductPageBase extends StorePage
             $actions[] = $search_action;
         }
         else {
-            $product_action = new Action("Начало", Spark::Get(Config::LOCAL) . "/home.php", array());
-            $actions[] = $product_action;
+            if (!is_null($this->home_action)) {
+                $actions[] = $this->home_action;
+            }
         }
 
         if ($this->property_filter instanceof SparkMap) {

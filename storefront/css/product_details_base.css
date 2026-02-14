@@ -1,11 +1,11 @@
 .section.main .content {
     padding: 1em;
     box-sizing: border-box;
-    padding-bottom:2em;
     font-size:80%;
     display:grid;
     grid-template-rows: min-content auto;
     gap:1.5em;
+    padding-bottom: 5em;
 }
 
 .column.details {
@@ -57,5 +57,3 @@
     display:block;
     align-self: center;
 }
-
-
