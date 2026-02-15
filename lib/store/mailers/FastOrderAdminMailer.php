@@ -81,8 +81,8 @@ class FastOrderAdminMailer extends Mailer
         $result .= "<tr>";
         $result .= "<td>";
         $si = $item->getMainPhoto();
-        $src = new URL($si->hrefImage(256,256))->fullURL();
-        $result .= "<img src='$src'>";
+        $src = new URL($si->hrefImage(256,256));
+        $result .= "<img src='{$src->fullURL()}'>";
         $result .= "</td>";
 
         $result .= "<td>";

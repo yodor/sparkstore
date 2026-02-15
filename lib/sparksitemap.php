@@ -25,7 +25,8 @@ if ($list instanceof MenuItemList) {
     $itr = $list->iterator();
     while($menuItem = $itr->next()) {
         if ($menuItem instanceof MenuItem) {
-            renderItem(new URL($menuItem->getHref())->fullURL());
+            $url = new URL($menuItem->getHref());
+            renderItem($url->fullURL());
         }
     }
 }
@@ -65,7 +66,8 @@ while ($result = $query->nextResult())
 
 if (isset($items_add) && is_array($items_add)) {
     foreach ($items_add as $idx=>$item) {
-        renderItem(new URL($item)->fullURL());
+        $url = new URL($item);
+        renderItem($url->fullURL());
     }
 }
 
