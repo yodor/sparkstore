@@ -12,7 +12,7 @@ class CurrencyLabel extends LabelSpan {
     public function __construct()
     {
         parent::__construct();
-        $this->setComponentClass("price");
+        $this->setComponentClass("CurrencyLabel");
         $this->label()->setComponentClass("currency");
     }
 

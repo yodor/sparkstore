@@ -20,7 +20,7 @@ class PriceLabel extends Container {
     public function __construct()
     {
         parent::__construct(false);
-        $this->setComponentClass("price_info");
+        $this->setComponentClass("PriceLabel");
 
         $this->setAttribute("itemscope");
         $this->setAttribute("itemprop", "offers");

@@ -40,7 +40,7 @@ class ProductDetails extends Action
         $this->items()->append($this->info);
 
         $this->priceLabel = new Container(false);
-        $this->priceLabel->setComponentClass("price_label");
+        $this->priceLabel->setComponentClass("PriceTag");
         $this->items()->append($this->priceLabel);
 
         if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {

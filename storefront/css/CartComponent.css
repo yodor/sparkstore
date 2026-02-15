@@ -91,23 +91,12 @@
 .CartComponent .item [field='price'] {
     text-align: right;
 }
-.CartComponent .price_info {
+.CartComponent .CurrencyLabel {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: flex-end;
 }
-.CartComponent .price_info .price {
-    display: flex;
-    flex-direction: row;
-}
-.CartComponent .price_info .price.old {
-    text-decoration: line-through;
-}
-.CartComponent .price_info[name='BGN'] .price {
-    flex-direction: row-reverse;
-}
-
 
 
 

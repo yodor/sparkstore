@@ -1047,3 +1047,37 @@ H2 A {
     font-size:150%;
     padding:2em;
 }
+
+/**/
+.PriceLabel {
+    display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-self: flex-start;
+    align-items: flex-end;
+    justify-content: right;
+    text-align:right;
+
+    box-sizing: border-box;
+    white-space: nowrap;
+    flex-grow:1;
+}
+
+.PriceLabel .CurrencyLabel {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: right;
+    gap:0.2em;
+    font-size:1.1em;
+
+}
+
+.PriceLabel .CurrencyLabel.old {
+    text-decoration: line-through;
+}
+
+.PriceLabel[name] .CurrencyLabel {
+    flex-direction: row-reverse;
+    justify-content: left;
+}

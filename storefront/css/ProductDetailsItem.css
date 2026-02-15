@@ -512,31 +512,11 @@
     grid-column: span 1;
 }
 
-.side_pane .group.pricing .price_info {
-    display:flex;
-    font-size: 2em;
-    font-weight:bold;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-self: flex-start;
-}
-.side_pane .group.pricing .price_info .price {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-/*.side_pane .group.pricing .price_info .price .currency::after {*/
-/*    content: "\00a0";*/
-/*}*/
-.side_pane .group.pricing .price_info[name="BGN"] .price {
-    flex-direction: row-reverse;
-}
-/*.side_pane .group.pricing .price_info[name="BGN"] .price .currency::before {*/
-/*    content: "\00a0";*/
-/*}*/
+.side_pane .group.pricing .PriceLabel {
 
-.side_pane .group.pricing .price_info .old {
-    text-decoration: line-through;
+    font-size:2em;
+    font-weight:bold;
+    flex-grow:0;
 }
 
 
