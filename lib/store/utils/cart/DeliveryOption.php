@@ -2,13 +2,13 @@
 
 class DeliveryOption {
 
-    const NONE = 0;
-    const USER_ADDRESS = 1;
-    const COURIER_OFFICE = 2;
+    const int NONE = 0;
+    const int USER_ADDRESS = 1;
+    const int COURIER_OFFICE = 2;
 
-    protected $id = -1;
-    protected $title = "";
-    protected $price = 0.0;
+    protected int $id = -1;
+    protected string $title = "";
+    protected float $price = 0.0;
 
     public function __construct(int $id, string $title, float $price)
     {
@@ -29,7 +29,7 @@ class DeliveryOption {
         return $this->price;
     }
 
-    public function setPrice(float $price) {
+    public function setPrice(float $price) : void {
         $this->price = $price;
     }
 

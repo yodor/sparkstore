@@ -1,3 +1,8 @@
+.CheckoutPage .section.main .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .CheckoutPage .base {
     display: flex;
     flex-direction: column;
@@ -9,11 +14,13 @@
     flex-direction: row;
 
     border-spacing:10px;
-    margin-top:40px;
-    margin-bottom:40px;
+
     flex-wrap:wrap;
     justify-content:space-evenly;
     gap:0.5em;
+
+    /*margin-top: auto;*/
+    order: 99;
 
 }
 
@@ -154,4 +161,17 @@
     text-align:left;
     max-width:25em;
     margin-bottom:1em;
+}
+
+/*iframe locator*/
+.CheckoutPage.delivery_courier .OfficeLocator {
+    width:100%;
+    max-width:640px;
+    height:auto;
+    aspect-ratio: 3/4;
+    margin-top:2em;
+    align-self: center;
+}
+.CheckoutPage.delivery_courier .navigation {
+    order: unset;
 }

@@ -78,13 +78,13 @@ class CheckoutPageBase extends StorePage
         $this->ccmp = new CartComponent();
         $this->items()->append($this->ccmp);
 
-        $this->content = new Container(false);
-        $this->content->setComponentClass("base");
-        $this->items()->append($this->content);
-
         $this->navigation = new Container();
         $this->navigation->setClassName("navigation");
         $this->items()->append($this->navigation);
+
+        $this->content = new Container(false);
+        $this->content->setComponentClass("base");
+        $this->items()->append($this->content);
 
 
 

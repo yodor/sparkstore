@@ -4,16 +4,16 @@ include_once("store/utils/cart/DeliveryOption.php");
 
 class DeliveryCourier {
 
-    const NONE = 0;
-    const COURIER_EKONT = 1;
-    const COURIER_SPEEDY = 2;
+    const int NONE = 0;
+    const int COURIER_EKONT = 1;
+    const int COURIER_SPEEDY = 2;
 
-    protected $id = -1;
-    protected $title = "";
+    protected int $id = -1;
+    protected string $title = "";
 
-    protected $options = array();
+    protected array $options = array();
 
-    protected $selected_option = NULL;
+    protected ?DeliveryOption $selected_option = NULL;
 
 
     public function __construct(int $id, string $title)
@@ -29,7 +29,7 @@ class DeliveryCourier {
 
     }
 
-    public function initialize()
+    public function initialize() : void
     {
         $config = ConfigBean::Factory();
         $config->setSection("delivery_options");
@@ -69,7 +69,7 @@ class DeliveryCourier {
         return array(DeliveryCourier::COURIER_EKONT);//, DeliveryCourier::COURIER_SPEEDY);
     }
 
-    public function setSelectedOption(int $id)
+    public function setSelectedOption(int $id) : void
     {
         if (isset($this->options[$id])) {
             $this->selected_option = $this->options[$id];

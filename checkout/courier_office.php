@@ -5,6 +5,8 @@ if (!isset($page)) exit;
 if (!$page instanceof CheckoutPage) exit;
 if (!$courier instanceof DeliveryCourier) exit;
 
+$courier_id = $courier->getID();
+
 include_once("store/forms/CourierOfficeInputForm.php");
 include_once("store/beans/CourierAddressesBean.php");
 
@@ -63,7 +65,15 @@ $page->setTitle(tr("Избор на офис на куриер за достав
 $frend->getSubmitLine()->setRenderEnabled(false);
 $page->base()->items()->append($frend);
 
-$page->base()->setClassName("item ekont_office $empty");
+@include_once("courier_$courier_id.php");
+$closure = function() use($courier_id) {
+
+};
+$locator = new ClosureComponent($closure, true, false);
+$locator->setComponentClass("OfficeLocator");
+
+
+$page->base()->setClassName("item courier_office $empty");
 
 //$page->initialize();
 $page->getCartComponent()->setRenderEnabled(false);
