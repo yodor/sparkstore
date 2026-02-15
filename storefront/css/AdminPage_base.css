@@ -225,3 +225,6 @@
 .FormRenderer[layout="VBox"][name] .ClassAttributeField .FieldElements {
     grid-template-columns: auto 1fr;
 }
+.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_value'] {
+    min-width:300px;
+}
