@@ -91,8 +91,8 @@ class ImagesExporter extends ProductExporter {
                     $current->write($photo->data());
                     $current->close();
                 }
-//                $photo = null;
-//                $result1 = null;
+                $photo = null;
+                $result1 = null;
             }
 
             $qry1->free();
@@ -112,30 +112,12 @@ class ImagesExporter extends ProductExporter {
             Spark::DeleteFolder($folder);
         }
 
+        readfile($zipFile);
 
-        $file = new SparkFile();
-        $file->setPath(Spark::Get(Config::CACHE_PATH));
-        $file->setFilename($zipName);
-        try {
-            $file->open("r");
-            $file->passthru();
-            $file->close();
-        }
-        catch (Exception $e) {
-            throw $e;
-        }
-        finally {
-            ignore_user_abort(true);
-            register_shutdown_function(function () use ($file) {
-                try {
-                    $file->remove();
-                }
-                catch (Exception $e)  {
-                    //
-                }
-
-            });
-        }
+        ignore_user_abort(true);
+        register_shutdown_function(function () use($zipFile) {
+            @unlink($zipFile);
+        });
 
     }
 
