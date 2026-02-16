@@ -90,42 +90,97 @@ class ImagesExporter extends ProductExporter {
 
         }
 
-//        $zipname = $folder.".zip";
-//        $zip = new ZipArchive();
-//        $zip->open($zipname, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-//
-//        // Create recursive directory iterator
-//        $files = new RecursiveIteratorIterator(
-//            new RecursiveDirectoryIterator($folder),
-//            RecursiveIteratorIterator::LEAVES_ONLY
-//        );
-//
-//        foreach ($files as $file)
-//        {
-//            // Skip directories (they would be added automatically)
-//            if (!$file->isDir())
-//            {
-//                // Get real and relative path for current file
-//                $filePath = $file->getRealPath();
-//
-//                // Add current file to archive
-//                $zip->addFile($filePath, "images/".$file->getFilename());
-//            }
-//        }
-//
-//        // Zip archive will be created only after closing object
-//        $zip->close();
-//
-//        $current = new SparkFile();
-//        $current->setPath(CACHE_PATH);
-//        $current->setFilename($zipname);
-//
-//        $response = new SparkHTTPResponse();
-//        if ($current->exists()) {
-//            $response->sendFile($current);
-//        }
+
+        $zipFile = $folder.".zip";
+
+        try {
+            $this->createZipUsingSystemCommand($folder, $zipFile);
+            Spark::DeleteFolder($folder);
+        }
+        catch (Exception $e) {
+            Spark::DeleteFolder($folder);
+            throw $e;
+        }
+
+        try {
+            $file = new SparkFile($zipFile);
+            $file->passthru();
+
+            ignore_user_abort(true);
+            register_shutdown_function(function () use ($file) {
+                try {
+                    $file->remove();
+                }
+                catch (Exception $e)  {
+                   //
+                }
+
+            });
+        }
+        catch (Exception $e) {
+            throw $e;
+        }
 
     }
+
+    /**
+     * Creates a ZIP archive from a source directory using the system 'zip' command.
+     * This approach matches the behavior of the previous ZipArchive-based version:
+     * - The resulting ZIP contains the folder's contents at the root level (no top-level folder name).
+     * - All files (including hidden/dot files) and subdirectories are included recursively.
+     * - Empty directories are preserved.
+     * - Existing destination file is removed to ensure a clean, fresh archive.
+     *
+     * Requirements:
+     * - The system 'zip' utility must be installed and available in the PATH.
+     * - PHP must allow shell execution (exec() not disabled in disable_functions).
+     * - The process user must have read access to the source directory and write access to the destination.
+     *
+     * @param string $source Full path to the source directory (must exist).
+     * @param string $destination Full path to the output ZIP file.
+     * @throws Exception Throws exception on error
+     */
+    protected function createZipUsingSystemCommand(string $source, string $destination): void
+    {
+        // Check if the system zip command is available
+        exec('zip --version 2>&1', $output, $returnVar);
+        if ($returnVar !== 0) {
+            throw new Exception('System "zip" command is not available or not executable.');
+        }
+
+        // Normalize and validate source path
+        $source = rtrim(realpath($source), DIRECTORY_SEPARATOR);
+        if (!$source || !is_dir($source)) {
+            throw new Exception("Source directory does not exist or is invalid: $source");
+        }
+
+        // Ensure destination directory exists
+        $destDir = dirname($destination);
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true)) {
+            throw new Exception("Cannot create destination directory: $destDir");
+        }
+
+        // Build safe shell command:
+        // - Remove existing ZIP (if any) to ensure a clean archive
+        // - Use subshell to cd into source and zip '.' (current directory contents)
+        $command = 'rm -f ' . escapeshellarg($destination) .
+            ' && (cd ' . escapeshellarg($source) .
+            ' && zip -r ' . escapeshellarg($destination) . ' .)';
+
+        // Execute and capture output/return code
+        exec($command . ' 2>&1', $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            throw new Exception('zip command failed: ' . implode(PHP_EOL, $output));
+        }
+
+        // Verify the archive was created
+        if (!file_exists($destination)) {
+            throw new Exception('ZIP file was not created despite command success.');
+        }
+    }
+
+
 }
 
 abstract class CSVProductExporter extends ProductExporter
