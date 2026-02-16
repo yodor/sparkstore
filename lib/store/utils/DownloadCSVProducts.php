@@ -95,30 +95,36 @@ class ImagesExporter extends ProductExporter {
 
         try {
             $this->createZipUsingSystemCommand($folder, $zipFile);
-            Spark::DeleteFolder($folder);
         }
         catch (Exception $e) {
-            Spark::DeleteFolder($folder);
             throw $e;
         }
+        finally {
+            Spark::DeleteFolder($folder);
+        }
 
+
+        $file = new SparkFile($zipFile);
         try {
-            $file = new SparkFile($zipFile);
-            $file->passthru();
 
+            $file->open("r");
+            $file->passthru();
+            $file->close();
+        }
+        catch (Exception $e) {
+            throw $e;
+        }
+        finally {
             ignore_user_abort(true);
             register_shutdown_function(function () use ($file) {
                 try {
                     $file->remove();
                 }
                 catch (Exception $e)  {
-                   //
+                    //
                 }
 
             });
-        }
-        catch (Exception $e) {
-            throw $e;
         }
 
     }
