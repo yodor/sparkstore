@@ -56,19 +56,25 @@ class ImagesExporter extends ProductExporter {
 
         $select = new SQLSelect();
         $select->from = " product_photos  ";
+        $select->fields()->set("prodID");
         $select->fields()->set("ppID");
+        $select->fields()->set("position");
 
-        $select->order_by = " ppID ASC ";
+        $select->order_by = " prodID ASC, position ASC ";
+
         $qry = new SQLQuery($select);
         $num = $qry->exec();
 
         while ($result = $qry->nextResult()) {
+            $prodID = $result->get("prodID");
             $ppID = $result->get("ppID");
+            $position = $result->get("position");
 
             $select1 = new SQLSelect();
             $select1->from = " product_photos ";
             $select1->fields()->set("photo");
             $select1->where()->add("ppID", $ppID);
+
             $qry1 = new SQLQuery($select1);
             $num1 = $qry1->exec();
             if ($result1 = $qry1->nextResult()) {
@@ -77,7 +83,7 @@ class ImagesExporter extends ProductExporter {
                 if ($photo instanceof ImageStorageObject) {
                     $current = new SparkFile();
                     $current->setPath($folder);
-                    $current->setFilename($ppID);
+                    $current->setFilename($prodID."-".$ppID."-".$position);
                     $current->open("w");
                     $current->write($photo->data());
                     $current->close();
