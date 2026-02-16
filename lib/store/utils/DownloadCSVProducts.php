@@ -111,9 +111,15 @@ class ImagesExporter extends ProductExporter {
         finally {
             Spark::DeleteFolder($folder);
         }
-        ob_end_flush();
 
-        readfile($zipFile);
+        ob_end_clean();
+
+        $file = new SparkFile();
+        $file->setPath(Spark::Get(Config::CACHE_PATH));
+        $file->setFilename($zipName);
+
+        $resp = new SparkHTTPResponse();
+        $resp->sendFile($file);
 
         ignore_user_abort(true);
         register_shutdown_function(function () use($zipFile) {
