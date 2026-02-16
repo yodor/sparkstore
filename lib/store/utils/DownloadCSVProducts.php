@@ -111,6 +111,7 @@ class ImagesExporter extends ProductExporter {
         finally {
             Spark::DeleteFolder($folder);
         }
+        ob_end_flush();
 
         readfile($zipFile);
 
@@ -118,7 +119,7 @@ class ImagesExporter extends ProductExporter {
         register_shutdown_function(function () use($zipFile) {
             @unlink($zipFile);
         });
-
+        exit;
     }
 
     /**
