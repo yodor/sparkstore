@@ -112,8 +112,6 @@ class ImagesExporter extends ProductExporter {
             Spark::DeleteFolder($folder);
         }
 
-        ob_end_clean();
-
         $file = new SparkFile();
         $file->setPath(Spark::Get(Config::CACHE_PATH));
         $file->setFilename($zipName);
