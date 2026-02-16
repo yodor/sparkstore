@@ -49,7 +49,10 @@ class ImagesExporter extends ProductExporter {
 
         //ini_set('max_execution_time', 300);
 
-        $folder = Spark::Get(Config::CACHE_PATH)."/catalog-images-".time();
+        $folderName = "catalog-images-".time();
+        $zipName = $folderName.".zip";
+
+        $folder = Spark::Get(Config::CACHE_PATH)."/".$folderName;
         if (!mkdir($folder)) {
             throw new Exception("Can not create export folder");
         }
@@ -97,7 +100,7 @@ class ImagesExporter extends ProductExporter {
         }
 
 
-        $zipFile = $folder.".zip";
+        $zipFile = Spark::Get(Config::CACHE_PATH)."/".$zipName;
 
         try {
             $this->createZipUsingSystemCommand($folder, $zipFile);
@@ -110,9 +113,10 @@ class ImagesExporter extends ProductExporter {
         }
 
 
-        $file = new SparkFile($zipFile);
+        $file = new SparkFile();
+        $file->setPath(Spark::Get(Config::CACHE_PATH));
+        $file->setFilename($zipName);
         try {
-
             $file->open("r");
             $file->passthru();
             $file->close();
