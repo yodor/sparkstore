@@ -86,7 +86,7 @@ class ImagesExporter extends ProductExporter {
                 if ($photo instanceof ImageStorageObject) {
                     $current = new SparkFile();
                     $current->setPath($folder);
-                    $current->setFilename($prodID."-".$ppID."-".$position);
+                    $current->setFilename($prodID."-".$ppID."-".$position.".webp");
                     $current->open("w");
                     $current->write($photo->data());
                     $current->close();
