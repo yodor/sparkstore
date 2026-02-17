@@ -272,11 +272,15 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getRenderer()->setAttribute("action", new ProductListURL());
         $ksc->getForm()->getRenderer()->setAttribute("aria-label", "Product Search Form");
 
-        $ksc->getButton("search")->setComponentClass("");
+//        $ksc->getButton("search")->setComponentClass("");
         $ksc->getButton("search")->setContents("");
+        $ksc->getButton("search")->setComponentClass("");
         $ksc->getButton("search")->setAttribute("aria-label", "Search Products");
 
-        $ksc->getButton("clear")->setRenderEnabled(false);
+        $ksc->getButton("clear")->setContents("");
+
+        $ksc->getButton("clear")->setComponentClass("");
+        //$ksc->getButton("clear")->setRenderEnabled(false);
         $ksc->setMethod(FormRenderer::METHOD_GET);
 //        $show_search = new ColorButton();
 //        $show_search->setAttribute("action", "show_search");

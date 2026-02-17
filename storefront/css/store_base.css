@@ -352,7 +352,7 @@ A.Caption:active {
 .section.menu .group.search_pane {
     flex-grow:1;
     container-type: inline-size;
-    min-width:180px;
+    /*min-width:180px;*/
 }
 
 .section.menu .group.search_pane .KeywordSearch {
@@ -367,6 +367,7 @@ A.Caption:active {
     display:inline-flex;
     align-items: center;
     justify-content: left;
+    flex-grow:1;
 
 }
 
@@ -375,37 +376,28 @@ A.Caption:active {
 }
 .section.menu .group.search_pane .KeywordSearch .InputField {
     flex-direction:row;
+    flex-grow:1;
 }
 
 .section.menu .group.search_pane .KeywordSearch .InputField INPUT {
     border:none;
-    width:calc(100cqw);
+    flex-grow:1;
 
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine {
-    width:28px;
-    height:30px;
-
-    min-width:28px;
-    min-height:30px;
-
-    max-width:28px;
-    max-height:30px;
+    justify-content: center;
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
     display:none;
 }
 
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons {
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons .ColorButton {
 
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons * {
     outline:none;
     box-shadow: none;
 
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons [action='search'] {
 
     width:28px;
     height:30px;
@@ -421,15 +413,21 @@ A.Caption:active {
     margin:0;
 
     padding:0;
-    background-image:url("../images/search_icon.svg");
+
     background-position:center center;
     background-size:80%;
     background-repeat:no-repeat;
     background-color:transparent;
     filter: var(--theme-filter-colorize-gray);
 
-}
 
+}
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action='search'] {
+    background-image:url("../images/search_icon.svg");
+}
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action='clear'] {
+    background-image:url("../images/search_clear.svg");
+}
 
 
 .section.menu .group.customer_pane {
