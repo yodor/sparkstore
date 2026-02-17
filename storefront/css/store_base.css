@@ -375,15 +375,17 @@ A.Caption:active {
     display:none;
 }
 .section.menu .group.search_pane .KeywordSearch .InputField {
-    flex-direction:row;
+    /*flex-direction:row;*/
     flex-grow:1;
 }
 
 .section.menu .group.search_pane .KeywordSearch .InputField INPUT {
     border:none;
     flex-grow:1;
-
+    outline-offset: 3px;
+    margin-left:5px;
 }
+
 .section.menu .group.search_pane .KeywordSearch .SubmitLine {
     justify-content: center;
 }
