@@ -418,8 +418,7 @@ A.Caption:active {
     background-size:80%;
     background-repeat:no-repeat;
     background-color:transparent;
-    filter: var(--theme-filter-colorize-gray);
-
+    filter: var(--theme-filter-colorize-gray) invert(100%);
 
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action='search'] {
