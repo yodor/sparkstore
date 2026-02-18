@@ -1,6 +1,6 @@
 .ContentPage .summary {
     /*padding: 1em;*/
-    line-height:110%;
+
 }
 .ContentPage .summary A:any-link {
     color: var(--theme-accent);
