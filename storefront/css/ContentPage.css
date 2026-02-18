@@ -1,6 +1,9 @@
 .ContentPage .summary {
     /*padding: 1em;*/
 }
+.ContentPage .summary A:any-link {
+    color: var(--theme-accent);
+}
 @media screen and (max-width: 1184px) {
     .ContentPage .summary {
         padding: 1em;
