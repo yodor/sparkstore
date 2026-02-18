@@ -1,0 +1,8 @@
+.ContentPage .summary {
+    /*padding: 1em;*/
+}
+@media screen and (max-width: 1184px) {
+    .ContentPage .summary {
+        padding: 1em;
+    }
+}

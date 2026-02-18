@@ -19,6 +19,8 @@ class ContentPageBase extends StorePage
     {
         parent::__construct();
 
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL)."/css/ContentPage.css");
+
         $this->id = -1;
         if (isset($_GET["id"])) {
             $this->id = (int)$_GET["id"];
