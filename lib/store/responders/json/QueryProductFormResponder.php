@@ -4,7 +4,7 @@ include_once("store/utils/SellableItem.php");
 include_once("store/forms/QueryProductForm.php");
 include_once("store/mailers/QueryProductMailer.php");
 include_once("beans/ConfigBean.php");
-include_once("objects/data/GTAGConversion.php");
+include_once("objects/data/GTMConversionCommand.php");
 
 class QueryProductFormResponder extends JSONFormResponder
 {
@@ -47,7 +47,7 @@ class QueryProductFormResponder extends JSONFormResponder
         $config->setSection("marketing_config");
         $conversionID = $config->get(GTMConvParam::QUERY_PRODUCT->value);
         if ($conversionID) {
-            $resp->gtm = new GTAGConversion($conversionID);
+            $resp->gtm = new GTMConversionCommand($conversionID);
         }
     }
 }

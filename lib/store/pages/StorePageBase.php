@@ -38,7 +38,9 @@ include_once("store/utils/url/CategoryURL.php");
 include_once("store/components/ProductsTape.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("objects/data/GTMConvParam.php");
-include_once("objects/data/GTAGConversion.php");
+include_once("objects/data/GTMConversionCommand.php");
+include_once("objects/data/GTMConsentCommand.php");
+
 
 class StorePageBase extends SparkPage
 {
@@ -85,12 +87,12 @@ class StorePageBase extends SparkPage
     {
         parent::headInitialize();
 
+        $this->description = "";
+
         $this->head()->addMeta("robots", "index, follow, snippet");
 
         $config = ConfigBean::Factory();
-        $config->setSection("seo");
-
-        $this->description = "";
+        $config->setSection("marketing_config");
 
         $facebookID_pixel = $config->get("facebookID_pixel");
         if ($facebookID_pixel) {
@@ -98,31 +100,31 @@ class StorePageBase extends SparkPage
         }
 
         $gtag = new GTAG();
+        $this->head()->addScript($gtag);
+
         $googleID_analytics = $config->get("googleID_analytics");
         if ($googleID_analytics) {
-            $gtag->setID($googleID_analytics);
-            $this->head()->addScript($gtag);
+            $cmd = new GTMCommand();
+            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
+            $cmd->setType($googleID_analytics);
+            $this->head()->addScript($cmd->script());
         }
 
-        $gtag = new GTAG();
         $googleID_ads = $config->get("googleID_ads");
         if ($googleID_ads) {
-            $gtag->setID($googleID_ads);
-            $this->head()->addScript($gtag);
+            $cmd = new GTMCommand();
+            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
+            $cmd->setType($googleID_ads);
+            $this->head()->addScript($cmd->script());
         }
 
-        $adsID = $config->get("googleID_ads");
-        $conversionID = $config->get("googleID_ads_conversion");
-        if ($adsID && $conversionID) {
-            $obj = new GTAGObject();
-            $obj->setCommand(GTAGObject::COMMAND_EVENT);
-            $obj->setType("conversion");
-            $obj->setParamTemplate("{'send_to': '%googleID_ads_conversion%'}");
-            $obj->setName("googleID_ads_conversion");
-            $data = array("googleID_ads_conversion"=>$conversionID);
-            $obj->setData($data);
+        $default_consent = new GTMConsentCommand();
+        $this->head()->addScript($default_consent->script());
 
-            $this->head()->addScript($obj->script());
+        $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
+        if ($conversionID) {
+            $cmd = new GTMConversionCommand($conversionID);
+            $this->head()->addScript($cmd->script());
         }
 
         $config->setSection("store_config");

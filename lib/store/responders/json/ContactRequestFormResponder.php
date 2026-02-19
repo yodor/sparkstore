@@ -4,7 +4,7 @@ include_once("store/forms/ContactRequestForm.php");
 include_once("store/beans/ContactRequestsBean.php");
 include_once("store/mailers/ContactRequestMailer.php");
 include_once("beans/ConfigBean.php");
-include_once("objects/data/GTAGConversion.php");
+include_once("objects/data/GTMConversionCommand.php");
 
 
 class ContactRequestFormResponder extends JSONFormResponder
@@ -55,7 +55,7 @@ class ContactRequestFormResponder extends JSONFormResponder
             $config->setSection("marketing_config");
             $conversionID = $config->get(GTMConvParam::CONTACT_REQUEST->value);
             if ($conversionID) {
-                $resp->gtm = new GTAGConversion($conversionID);
+                $resp->gtm = new GTMConversionCommand($conversionID);
             }
 
         }

@@ -8,7 +8,6 @@ $menu = array(
 
     new MenuItem("Administrators", "admins/list.php", "admin_users"),
     new MenuItem("Languages", "languages/list.php", "language"),
-    new MenuItem("SEO", "seo.php", "seo"),
 
 );
 

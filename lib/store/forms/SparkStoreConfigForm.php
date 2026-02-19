@@ -43,6 +43,12 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "products_howtoorder", "How To Order Description", 0);
         $this->addInput($field,$grp_productInfo);
 
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "meta_description", "Fallback Meta Description", 0);
+        $rend = $field->getRenderer();
+        $rend->input()?->setAttribute("rows", 10);
+        $rend->input()?->setAttribute("cols", 80);
+        $this->addInput($field);
+
 //
         $grp_footer = new InputGroup("footerButtons", "Site Footer - Round Buttons");
         $this->addGroup($grp_footer);

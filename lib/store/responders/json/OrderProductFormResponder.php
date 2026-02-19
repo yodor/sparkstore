@@ -4,7 +4,7 @@ include_once("store/utils/SellableItem.php");
 include_once("store/forms/FastOrderProductForm.php");
 include_once("store/mailers/FastOrderAdminMailer.php");
 include_once("beans/ConfigBean.php");
-include_once("objects/data/GTAGConversion.php");
+include_once("objects/data/GTMConversionCommand.php");
 
 class OrderProductFormResponder extends JSONFormResponder
 {
@@ -63,7 +63,7 @@ class OrderProductFormResponder extends JSONFormResponder
         $config->setSection("marketing_config");
         $conversionID = $config->get(GTMConvParam::FAST_ORDER->value);
         if ($conversionID) {
-            $resp->gtm = new GTAGConversion($conversionID);
+            $resp->gtm = new GTMConversionCommand($conversionID);
         }
 
     }

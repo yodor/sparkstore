@@ -1,9 +1,9 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
-include_once("objects/data/GTAGObject.php");
 include_once("input/processors/DataObjectInput.php");
 include_once("objects/data/GTMConvParam.php");
+include_once("objects/data/GTMCommand.php");
 
 class MarketingConfigForm extends InputForm
 {
@@ -14,9 +14,26 @@ class MarketingConfigForm extends InputForm
 
         parent::__construct();
 
+        $grp_basic = new InputGroup("basic", "Basic");
+        $grp_basic->setDescription("Various Google and FB tracking IDs");
+        $this->addGroup($grp_basic);
+
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_analytics", "Google Analytics ID (eg: UA-123456789-1)", 0);
+        $this->addInput($field, $grp_basic);
+
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads", "Google Ads ID (eg: AW-123456789)", 0);
+        $this->addInput($field, $grp_basic);
+
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads_conversion", "Google Ads ID (eg: AW-123456789)", 0);
+        $this->addInput($field, $grp_basic);
+
+        $field = DataInputFactory::Create(InputType::TEXT, "facebookID_pixel", "Facebook Pixel ID", 0);
+        $this->addInput($field, $grp_basic);
+
+
+
         $grp_conversion = new InputGroup("conversion", "Conversion Tags");
         $grp_conversion->setDescription("Format: AW-CONVERSION_ID/CONVERSION_LABEL");
-
         $this->addGroup($grp_conversion);
 
         $field = DataInputFactory::Create(InputType::TEXT, GTMConvParam::CART_ADD->value, tr("Product Add To Cart"), 0);
