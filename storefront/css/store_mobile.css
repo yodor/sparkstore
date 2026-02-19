@@ -112,9 +112,6 @@
     .JSONFormDialog FORM {
         align-content: stretch;
         align-self: stretch;
-    }
-
-    .JSONFormDialog FORM {
         flex-grow:1;
     }
     .JSONFormDialog FORM .InputComponent[field='query'] {
@@ -126,17 +123,5 @@
     .JSONFormDialog FORM .InputComponent[field='query'] .InputField.TextArea TEXTAREA {
         height:100%;
     }
-    /**/
-    /*.JSONFormDialog[responder='QueryProductFormResponder'] FORM {*/
-    /*    flex-grow:1;*/
-    /*}*/
-    /*.JSONFormDialog[responder='QueryProductFormResponder'] FORM .InputComponent[field='query'] {*/
-    /*    flex-grow:1;*/
-    /*}*/
-    /*.JSONFormDialog[responder='QueryProductFormResponder'] FORM .InputComponent[field='query'] .InputField.TextArea  {*/
-    /*    flex-grow:1;*/
-    /*}*/
-    /*.JSONFormDialog[responder='QueryProductFormResponder'] FORM .InputComponent[field='query'] .InputField.TextArea TEXTAREA {*/
-    /*    height:100%;*/
-    /*}*/
+
 }
