@@ -15,7 +15,7 @@ class MarketingConfigForm extends InputForm
         parent::__construct();
 
         $grp_conversion = new InputGroup("conversion", "Conversion Tags");
-        $grp_conversion->setDescription("Format: AW-CONVERSION_ID/CONVERSION_LABEL");
+        //$grp_conversion->setDescription("Format: AW-CONVERSION_ID/CONVERSION_LABEL");
         $this->addGroup($grp_conversion);
 
         $field = DataInputFactory::Create(InputType::TEXT, GTMConvParam::CART_ADD->value, tr("Product Add To Cart"), 0);

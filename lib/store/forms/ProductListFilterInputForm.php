@@ -253,7 +253,7 @@ class ProductListFilterInputForm extends InputForm {
 //        $this->addInput(new ColorFilter());
 //        $this->addInput(new SizeFilter());
 
-        $this->getGroup(InputForm::DEFAULT_GROUP)->setDescription("Основни");
+        $this->getGroup(InputForm::DEFAULT_GROUP)->setTitle("Основни");
         $this->group_attributes = new InputGroup(self::GROUP_ATTRIBUTES, "Етикети");
         $this->group_variants = new InputGroup(self::GROUP_VARIANTS, "Варианти");
 
