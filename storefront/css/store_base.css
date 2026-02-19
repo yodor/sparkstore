@@ -337,7 +337,7 @@ A.Caption:active {
     align-items: center;
     justify-content: right;
     flex-grow:1;
-    min-width:0;
+    /*min-width:0;*/
 }
 .section.menu .menu_groups:empty {
     display:none;
@@ -352,7 +352,7 @@ A.Caption:active {
 .section.menu .group.search_pane {
     flex-grow:1;
     container-type: inline-size;
-    /*min-width:180px;*/
+    min-width:180px;
 }
 
 .section.menu .group.search_pane .KeywordSearch {
@@ -388,6 +388,7 @@ A.Caption:active {
 
 .section.menu .group.search_pane .KeywordSearch .SubmitLine {
     justify-content: center;
+    min-width:64px;
 }
 .section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
     display:none;
