@@ -21,10 +21,10 @@ class MarketingConfigForm extends InputForm
         $field = DataInputFactory::Create(InputType::TEXT, "googleID_analytics", "Google Analytics ID (eg: UA-123456789-1)", 0);
         $this->addInput($field, $grp_basic);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads", "Google Ads ID (eg: AW-123456789)", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads", "Google ADs ID (eg: AW-123456789)", 0);
         $this->addInput($field, $grp_basic);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads_conversion", "Google Ads ID (eg: AW-123456789)", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads_conversion", "Google ADs Any Page Conversion ID", 0);
         $this->addInput($field, $grp_basic);
 
         $field = DataInputFactory::Create(InputType::TEXT, "facebookID_pixel", "Facebook Pixel ID", 0);
@@ -32,7 +32,7 @@ class MarketingConfigForm extends InputForm
 
 
 
-        $grp_conversion = new InputGroup("conversion", "Conversion Tags");
+        $grp_conversion = new InputGroup("conversion", "Google ADs Conversion IDs");
         $grp_conversion->setDescription("Format: AW-CONVERSION_ID/CONVERSION_LABEL");
         $this->addGroup($grp_conversion);
 
