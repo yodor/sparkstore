@@ -1081,3 +1081,19 @@ H2 A {
     flex-direction: row-reverse;
     justify-content: left;
 }
+
+.JSONFormDialog {
+    zoom:150%;
+    text-align:left;
+}
+.JSONFormDialog FORM {
+    width:100%;
+}
+
+.JSONFormDialog FORM .TextField .Input {
+    width:100%;
+}
+.JSONFormDialog FORM .TextArea .Input {
+    width:100%;
+    height:5em;
+}
