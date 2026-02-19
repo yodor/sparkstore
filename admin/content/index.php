@@ -13,7 +13,7 @@ $menu = array(new MenuItem("Menu Items", "menus/index.php", "menu"),
 
               new MenuItem("News", "news/list.php", "list"),
 
-              new MenuItem("Config", "config/list.php", "list"),
+              new MenuItem("Config", "config/index.php", "list"),
 
               new MenuItem("Logo", "logo/list.php", "list"),
 

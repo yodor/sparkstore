@@ -3,6 +3,8 @@ include_once("responders/json/JSONFormResponder.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/forms/QueryProductForm.php");
 include_once("store/mailers/QueryProductMailer.php");
+include_once("beans/ConfigBean.php");
+include_once("objects/data/GTAGConversion.php");
 
 class QueryProductFormResponder extends JSONFormResponder
 {
@@ -41,5 +43,11 @@ class QueryProductFormResponder extends JSONFormResponder
 
         $resp->message = tr("Заявката Ви беше приета");
 
+        $config = ConfigBean::Factory();
+        $config->setSection("marketing_config");
+        $conversionID = $config->get(GTMConvParam::QUERY_PRODUCT->value);
+        if ($conversionID) {
+            $resp->gtm = new GTAGConversion($conversionID);
+        }
     }
 }

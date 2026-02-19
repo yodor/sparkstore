@@ -37,6 +37,8 @@ include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/components/ProductsTape.php");
 include_once("store/utils/url/ProductListURL.php");
+include_once("objects/data/GTMConvParam.php");
+include_once("objects/data/GTAGConversion.php");
 
 class StorePageBase extends SparkPage
 {
@@ -173,6 +175,7 @@ class StorePageBase extends SparkPage
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
+        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkGTM.js");
 
         $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
         $this->head()->addOGTag("type", "website");

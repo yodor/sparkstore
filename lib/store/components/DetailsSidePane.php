@@ -1,4 +1,5 @@
 <?php
+include_once("objects/data/GTMConvParam.php");
 
 class SidePaneGroup extends Container
 {
@@ -376,6 +377,8 @@ class DetailsSidePane extends Container
     protected function initCartLinkGroup() : void
     {
 
+        $config = ConfigBean::Factory();
+
         $grp = new SidePaneGroup();
         $grp->setClassName("cart_link");
 
@@ -409,21 +412,24 @@ class DetailsSidePane extends Container
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER)) {
                 $btnCartAdd = new CartButton();
                 $btnCartAdd->setClassName("cart_add");
-                $btnCartAdd->setURL(new URL("javascript:addToCart()"));
+                $config->setSection("marketing_config");
+                $btnCartAdd->setURL(new URL("javascript:addToCart('{$config->get(GTMConvParam::CART_ADD->value)}')"));
                 $btnCartAdd->setTitle(tr("Купи"));
                 $grp->items()->append($btnCartAdd);
             }
         }
 
 
-        $config = ConfigBean::Factory();
+
+
         $config->setSection("store_config");
         $phone = $config->get("phone_orders");
         if ($phone) {
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER)) {
                 $btnPhoneOrder = new CartButton();
                 $btnPhoneOrder->setClassName("order_phone");
-                $btnPhoneOrder->setURL(new URL("tel:$phone"));
+                $config->setSection("marketing_config");
+                $btnPhoneOrder->setURL(new URL("javascript:initiateCall('$phone','{$config->get(GTMConvParam::PHONE_CALL->value)}')"));
                 $btnPhoneOrder->setTitle($phone);
                 $grp->items()->append($btnPhoneOrder);
             }

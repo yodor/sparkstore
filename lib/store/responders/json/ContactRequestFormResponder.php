@@ -3,6 +3,9 @@ include_once("responders/json/JSONFormResponder.php");
 include_once("store/forms/ContactRequestForm.php");
 include_once("store/beans/ContactRequestsBean.php");
 include_once("store/mailers/ContactRequestMailer.php");
+include_once("beans/ConfigBean.php");
+include_once("objects/data/GTAGConversion.php");
+
 
 class ContactRequestFormResponder extends JSONFormResponder
 {
@@ -44,6 +47,17 @@ class ContactRequestFormResponder extends JSONFormResponder
             Debug::ErrorLog ("Mail accepted for delivery: ".(int)$success);
 
             $resp->message = tr("Заявката Ви беше приета успешно");
+
+            $config = ConfigBean::Factory();
+            $config->setSection("marketing_config");
+
+            $config = ConfigBean::Factory();
+            $config->setSection("marketing_config");
+            $conversionID = $config->get(GTMConvParam::CONTACT_REQUEST->value);
+            if ($conversionID) {
+                $resp->gtm = new GTAGConversion($conversionID);
+            }
+
         }
         catch (Exception $e) {
             Debug::ErrorLog("Unable to insert contact request");

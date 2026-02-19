@@ -20,8 +20,16 @@ class SparkStoreConfigForm extends InputForm
         $this->addInput($field, $grp_general);
 
         $field = DataInputFactory::Create(InputType::TEXTAREA, "marquee_text", "Header Marquee Text", 0);
-
         $this->addInput($field, $grp_general);
+
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "home_banner_popup", "Banner Image (Home page banner popup)", 0);
+//        $responder = $field->getRenderer()->getResponder();
+//        if ($responder instanceof ImageUploadResponder) {
+//            $responder->setPhotoSize(-1,256);
+//        }
+        $this->addInput($field, $grp_general);
+
+
 
         $field = DataInputFactory::Create(InputType::TEXT, "tawkto_id", "Tawk.to Chat Plugin ID", 0);
         $this->addInput($field, $grp_general);

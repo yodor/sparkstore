@@ -100,7 +100,9 @@ if ($maps_src || $num_addresses>0) {
     }
     function updateMap(elm)
     {
-        document.querySelector("#google_map").setAttribute("src", elm.getAttribute("map-url"));
+        if (elm) {
+            document.querySelector("#google_map").setAttribute("src", elm.getAttribute("map-url"));
+        }
     }
     onPageLoad(function(){
         updateMap(document.querySelector(".details[pos='1']"));

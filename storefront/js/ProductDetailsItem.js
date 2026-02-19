@@ -43,7 +43,9 @@ function selectVariantParameter(elm) {
     elm.setAttribute("selected", "");
 }
 
-function addToCart() {
+function addToCart(conversionID) {
+
+
 
     //TODO check element existance and use value then
     //let stock_amount = parseInt(document.querySelector(".stock_amount .value").innerText);
@@ -80,6 +82,11 @@ function addToCart() {
     url.searchParams.set("variant", encoded);
 
     console.log(url.href);
+
+    if (conversionID) {
+        document.sparkGTM.emitConversion(conversionID);
+    }
+
     window.location.href = url.href;
 
 }
@@ -131,4 +138,25 @@ function showOrderProductForm() {
     });
 
     order_dialog.show();
+}
+
+/**
+ *
+ * @param phone {string}
+ * @param conversionID {string} AW-CONVERSION_ID/CONVERSION_LABEL
+ */
+function initiateCall(phone, conversionID) {
+
+    if (conversionID) {
+        document.sparkGTM.emitConversion(conversionID);
+    }
+
+    // Remove any non-digit characters except + (E.164 format is safest)
+    const cleaned = phone.replace(/[^\d+]/g, '');
+
+    // Option A: Most compatible
+    window.location.href = `tel:${cleaned}`;
+
+    // Option B: Slightly more explicit in some browsers
+    // window.location.assign(`tel:${cleaned}`);
 }

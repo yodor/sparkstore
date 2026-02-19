@@ -3,6 +3,8 @@ include_once("responders/json/JSONFormResponder.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/forms/FastOrderProductForm.php");
 include_once("store/mailers/FastOrderAdminMailer.php");
+include_once("beans/ConfigBean.php");
+include_once("objects/data/GTAGConversion.php");
 
 class OrderProductFormResponder extends JSONFormResponder
 {
@@ -56,6 +58,13 @@ class OrderProductFormResponder extends JSONFormResponder
         $mailer->send();
 
         $resp->message = tr("Поръчката Ви беше приета");
+
+        $config = ConfigBean::Factory();
+        $config->setSection("marketing_config");
+        $conversionID = $config->get(GTMConvParam::FAST_ORDER->value);
+        if ($conversionID) {
+            $resp->gtm = new GTAGConversion($conversionID);
+        }
 
     }
 }

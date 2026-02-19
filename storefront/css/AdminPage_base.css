@@ -228,3 +228,6 @@
 .ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_value'] {
     min-width:300px;
 }
+FORM[name='MarketingConfigForm'] .InputField.TextField INPUT {
+    flex-grow:1;
+}
