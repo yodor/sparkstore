@@ -183,7 +183,7 @@ class StorePageBase extends SparkPage
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
-        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkGTM.js");
+        //$this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkGTM.js");
 
         $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
         $this->head()->addOGTag("type", "website");
