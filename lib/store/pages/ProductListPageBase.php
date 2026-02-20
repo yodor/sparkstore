@@ -58,6 +58,12 @@ class ProductListPageBase extends ProductPageBase
         parent::__construct();
 
 
+        $config = ConfigBean::Factory();
+        $conversionID = $config->get(GTMConvParam::VIEW_PLP->value);
+        if ($conversionID) {
+            $cmd = new GTMConversionCommand($conversionID);
+            $this->head()->addScript($cmd->script());
+        }
 
         $this->setSellableProducts($this->createSellableProducts());
 

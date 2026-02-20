@@ -55,6 +55,13 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->_main->content()->setTagName("main");
         $this->_main->content()->setRole("main");
+
+        $config = ConfigBean::Factory();
+        $conversionID = $config->get(GTMConvParam::VIEW_PDP->value);
+        if ($conversionID) {
+            $cmd = new GTMConversionCommand($conversionID);
+            $this->head()->addScript($cmd->script());
+        }
     }
 
     /**
