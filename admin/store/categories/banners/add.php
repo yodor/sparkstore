@@ -18,8 +18,7 @@ $cmp->getPage()->setName(tr("Banners Gallery") . ": " . $rc->getData("category_n
 $photos = new ProductCategoryBannersBean();
 
 $form = new PhotoForm();
-$field = new DataInput("link", "Link", 0);
-new TextField($field);
+$field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
 $form->addInput($field);
 
 $cmp->setBean($photos);

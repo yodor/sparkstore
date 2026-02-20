@@ -8,6 +8,10 @@ include_once("store/beans/ProductsBean.php");
 include_once("store/beans/ProductVariantsBean.php");
 
 include_once("store/responders/json/VariantPriceFormResponder.php");
+include_once("input/renderers/CheckField.php");
+include_once("input/validators/EmptyValueValidator.php");
+include_once("input/processors/InputProcessor.php");
+
 
 //TODO: Triggers on update/delete for colors and sizes
 

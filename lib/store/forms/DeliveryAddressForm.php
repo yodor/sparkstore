@@ -19,15 +19,11 @@ class DeliveryAddressForm extends InputForm
 
         $data = new ArrayDataIterator($option_values);
 
-        $field = new DataInput("delivery_option", "Изберете адрес за доставка", 1);
-
-        $radio = new RadioField($field);
+        $field = DataInputFactory::Create(InputType::RADIO, "delivery_option", "Изберете адрес за доставка", 1);
+        $radio = $field->getRenderer();
         $radio->setIterator($data);
         $radio->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);
         $radio->getItemRenderer()->setLabelKey(ArrayDataIterator::KEY_VALUE);
-
-        $field->setValidator(new EmptyValueValidator());
-        new InputProcessor($field);
 
         $this->addInput($field);
 

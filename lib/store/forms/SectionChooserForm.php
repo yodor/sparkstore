@@ -9,7 +9,7 @@ class SectionChooserForm extends InputForm
     {
         parent::__construct();
 
-        $field = new ArrayDataInput("secID", "Section", 0);
+        $field = DataInputFactory::Create(InputType::SELECT_MULTI, "secID", "Section", 0);
         $proc = new InputProcessor($field);
         $renderer = new SelectMultipleField($field);
 

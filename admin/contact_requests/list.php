@@ -9,7 +9,7 @@ $bean = new ContactRequestsBean();
 
 $menu = array(
 //    new MenuItem("Settings", "config/list.php", "code-class.png"),
-    new MenuItem("Adresses", "addresses/list.php", "code-class.png"),
+    new MenuItem("Addresses", "addresses/list.php", "code-class.png"),
 );
 
 

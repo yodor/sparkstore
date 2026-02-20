@@ -8,12 +8,10 @@ class AttributeInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = new DataInput("name", "Name", 1);
-        new TextField($field);
+        $field = DataInputFactory::Create(InputType::TEXT, "name", "Name", 1);
         $this->addInput($field);
 
-        $field = new DataInput("unit", "Unit", 0);
-        new TextField($field);
+        $field = DataInputFactory::Create(InputType::TEXT,"unit", "Unit", 0);
         $this->addInput($field);
     }
 

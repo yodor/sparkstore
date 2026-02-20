@@ -10,15 +10,14 @@ class ProductCategoryInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = new DataInput("category_name", "Име на категория", 1);
-        new TextField($field);
+        $field = DataInputFactory::Create(InputType::TEXT, "category_name", "Име на категория", 1);
         $this->addInput($field);
 
-        $field = new DataInput("parentID", "Родителска категория", 1);
+        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "parentID", "Родителска категория", 1);
 
         $pcats = new ProductCategoriesBean();
 
-        $rend = new NestedSelectField($field);
+        $rend = $field->getRenderer();
 
         $rend->setIterator(new SQLQuery($pcats->selectTree(array("category_name")), $pcats->key(), $pcats->getTableName()));
         $rend->getItemRenderer()->setValueKey($pcats->key());
@@ -30,13 +29,11 @@ class ProductCategoryInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
         $this->addInput($field);
 
-        $field = new DataInput("category_seotitle", "SEO Заглавие (опция)", 0);
-        new TextField($field);
+        $field = DataInputFactory::Create(InputType::TEXT, "category_seotitle", "SEO Заглавие (опция)", 0);
         $this->addInput($field);
 
-        $field = new DataInput("category_seodescription", "SEO Описание (опция - 150 символа)", 0);
-        $rend = new TextArea($field);
-        $rend->input()?->setAttribute("maxLength", 150);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "category_seodescription", "SEO Описание (опция - 150 символа)", 0);
+        $field->getRenderer()->input()?->setAttribute("maxLength", 150);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимка", 0);
