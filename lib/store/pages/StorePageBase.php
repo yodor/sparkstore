@@ -91,6 +91,12 @@ class StorePageBase extends SparkPage
 
         $this->head()->addMeta("robots", "index, follow, snippet");
 
+        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
+
+        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkCookies.js");
+        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
+        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
+
         $config = ConfigBean::Factory();
         $config->setSection("marketing_config");
 
@@ -104,9 +110,6 @@ class StorePageBase extends SparkPage
 
         $googleID_analytics = $config->get("googleID_analytics");
         if ($googleID_analytics) {
-//            $gtag = new GTAG();
-//            $this->head()->addScript($gtag);
-
             $cmd = new GTMCommand();
             $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
             $cmd->setType($googleID_analytics);
@@ -115,18 +118,17 @@ class StorePageBase extends SparkPage
 
         $googleID_ads = $config->get("googleID_ads");
         if ($googleID_ads) {
-//            $gtag = new GTAG();
-//            $this->head()->addScript($gtag);
-
             $cmd = new GTMCommand();
             $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
             $cmd->setType($googleID_ads);
             $this->head()->addScript($cmd->script());
         }
 
+        //default consent
         $default_consent = new GTMConsentCommand();
         $this->head()->addScript($default_consent->script());
 
+        //any page conversion
         $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
         if ($conversionID) {
             $cmd = new GTMConversionCommand($conversionID);
@@ -176,14 +178,6 @@ class StorePageBase extends SparkPage
         $wwwScript->setLinkedData($website);
         $this->head()->addScript($wwwScript);
 
-
-        $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
-
-        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkCookies.js");
-        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
-        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
-
-        //$this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkGTM.js");
 
         $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
         $this->head()->addOGTag("type", "website");
