@@ -99,23 +99,18 @@ class StorePageBase extends SparkPage
             $this->head()->addScript(new FBPixel($facebookID_pixel));
         }
 
-        $gtag = new GTAG();
-        $this->head()->addScript($gtag);
+
 
         $googleID_analytics = $config->get("googleID_analytics");
         if ($googleID_analytics) {
-            $cmd = new GTMCommand();
-            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-            $cmd->setType($googleID_analytics);
-            $this->head()->addScript($cmd->script());
+            $gtag = new GTAG($googleID_analytics);
+            $this->head()->addScript($gtag);
         }
 
         $googleID_ads = $config->get("googleID_ads");
         if ($googleID_ads) {
-            $cmd = new GTMCommand();
-            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-            $cmd->setType($googleID_ads);
-            $this->head()->addScript($cmd->script());
+            $gtag = new GTAG($googleID_ads);
+            $this->head()->addScript($gtag);
         }
 
         $default_consent = new GTMConsentCommand();

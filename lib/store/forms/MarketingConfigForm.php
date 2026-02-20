@@ -18,7 +18,7 @@ class MarketingConfigForm extends InputForm
         $grp_basic->setDescription("Various Google and FB tracking IDs");
         $this->addGroup($grp_basic);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "googleID_analytics", "Google Analytics ID (eg: UA-123456789-1)", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "googleID_analytics", "Google Analytics ID (eg: G-XY12AB3CD1)", 0);
         $this->addInput($field, $grp_basic);
 
         $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads", "Google ADs ID (eg: AW-123456789)", 0);
