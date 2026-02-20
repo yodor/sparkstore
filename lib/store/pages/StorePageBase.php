@@ -103,7 +103,7 @@ class StorePageBase extends SparkPage
 
         $googleID_analytics = $config->get("googleID_analytics");
         if ($googleID_analytics) {
-            $gtag = new GTAG();
+            $gtag = new GTAG($googleID_analytics);
             $this->head()->addScript($gtag);
 
             $cmd = new GTMCommand();
@@ -114,7 +114,7 @@ class StorePageBase extends SparkPage
 
         $googleID_ads = $config->get("googleID_ads");
         if ($googleID_ads) {
-            $gtag = new GTAG();
+            $gtag = new GTAG($googleID_ads);
             $this->head()->addScript($gtag);
 
             $cmd = new GTMCommand();
