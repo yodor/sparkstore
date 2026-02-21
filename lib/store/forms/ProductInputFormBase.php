@@ -58,6 +58,11 @@ class ProductInputFormBase extends InputForm
         $field->getRenderer()->input()->setAttribute("cols","60");
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
+        $field->getRenderer()->input()->setAttribute("size", "50em");
+        $field->getRenderer()->input()->setAttribute("placeholder", "AW-CONVERSION_ID/CONVERSION_LABEL");
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(InputType::TEXT, "price", "Продажна цена", 1);
         $field->setValidator(new NumericValidator(false,false));
         $field->setValue(0.0);

@@ -36,6 +36,11 @@ class ProductCategoryInputForm extends InputForm
         $field->getRenderer()->input()?->setAttribute("maxLength", 150);
         $this->addInput($field);
 
+        $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
+        $field->getRenderer()->input()->setAttribute("size", "50em");
+        $field->getRenderer()->input()->setAttribute("placeholder", "AW-CONVERSION_ID/CONVERSION_LABEL");
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимка", 0);
         $field->getProcessor()->setTransactBean(new ProductCategoryPhotosBean());
         $field->getProcessor()->setTransactBeanItemLimit(1);
