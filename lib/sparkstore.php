@@ -39,16 +39,16 @@ TemplateFactory::AddTemplateLocation("store/templates/admin");
 require("config/defaults.php");
 
 //allow ORDER_EMAIL override from DB configuration
-if (!defined("SKIP_DB")) {
-    include_once("beans/ConfigBean.php");
-    $config = ConfigBean::Factory();
-    $config->setSection("store_config");
 
-    $order_email = $config->get("email_orders");
-    if (strlen(trim($order_email)) > 0) {
-        Spark::Set(StoreConfig::ORDER_EMAIL, $order_email);
-    }
+include_once("beans/ConfigBean.php");
+$config = ConfigBean::Factory();
+$config->setSection("store_config");
+
+$order_email = $config->get("email_orders");
+if (strlen(trim($order_email)) > 0) {
+    Spark::Set(StoreConfig::ORDER_EMAIL, $order_email);
 }
+
 
 function formatPrice($price, ?string $currency_symbol=null, bool $symbol_front=false) : string
 {
