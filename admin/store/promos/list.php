@@ -1,6 +1,4 @@
 <?php
-include_once("session.php");
-
 include_once("components/templates/admin/BeanListPage.php");
 include_once("store/beans/StorePromosBean.php");
 include_once("store/beans/ProductCategoriesBean.php");

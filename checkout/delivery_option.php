@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("class/pages/CheckoutPage.php");
 include_once("store/forms/DeliveryAddressForm.php");
 include_once("store/beans/ClientAddressesBean.php");

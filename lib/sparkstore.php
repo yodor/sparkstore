@@ -39,14 +39,15 @@ TemplateFactory::AddTemplateLocation("store/templates/admin");
 require("config/defaults.php");
 
 //allow ORDER_EMAIL override from DB configuration
+if (!Spark::isStorageRequest()) {
+    include_once("beans/ConfigBean.php");
+    $config = ConfigBean::Factory();
+    $config->setSection("store_config");
 
-include_once("beans/ConfigBean.php");
-$config = ConfigBean::Factory();
-$config->setSection("store_config");
-
-$order_email = $config->get("email_orders");
-if (strlen(trim($order_email)) > 0) {
-    Spark::Set(StoreConfig::ORDER_EMAIL, $order_email);
+    $order_email = $config->get("email_orders");
+    if (strlen(trim($order_email)) > 0) {
+        Spark::Set(StoreConfig::ORDER_EMAIL, $order_email);
+    }
 }
 
 

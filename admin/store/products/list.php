@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 //called before render
 $callback = function(SparkEvent $event) {
     if ($event->isEvent(TemplateFactoryEvent::TEMPLATE_CREATED)) {

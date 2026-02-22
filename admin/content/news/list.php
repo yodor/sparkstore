@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("components/templates/admin/NewsItemsListPage.php");
 include_once("beans/NewsItemsBean.php");
 

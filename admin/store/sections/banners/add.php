@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("components/templates/admin/BeanEditorPage.php");
 include_once("store/beans/SectionsBean.php");
 include_once("store/beans/SectionBannersBean.php");

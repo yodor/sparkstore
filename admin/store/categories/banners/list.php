@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("components/templates/admin/GalleryViewPage.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/beans/ProductCategoryBannersBean.php");

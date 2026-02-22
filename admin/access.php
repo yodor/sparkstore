@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("class/pages/AdminPage.php");
 
 $content = new AdminPage();

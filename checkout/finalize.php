@@ -1,6 +1,4 @@
 <?php
-include_once("session.php");
-
 include_once("store/mailers/OrderConfirmationMailer.php");
 
 include_once("class/pages/CheckoutPage.php");

@@ -1,5 +1,4 @@
 <?php
-include_once("session.php");
 include_once("auth/UserAuthenticator.php");
 include_once("responders/AuthenticatorResponder.php");
 include_once("forms/LoginForm.php");
