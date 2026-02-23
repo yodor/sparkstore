@@ -128,3 +128,6 @@ function sendViewItemListEvent() {
         });
     }
 }
+onPageLoad(function () {
+    sendViewItemListEvent();
+});
