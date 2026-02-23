@@ -100,6 +100,7 @@ function sendViewItemListEvent() {
     // Select all Schema.org list items
     const schemaItems = document.querySelectorAll('[itemprop="itemListElement"]');
     const itemsForGA4 = [];
+    let indexSKU = 0;
 
     schemaItems.forEach((el, index) => {
         // Extract SKU, Name, and URL from the Microdata
@@ -111,11 +112,12 @@ function sendViewItemListEvent() {
         const itemUrl = el.querySelector('[itemprop="url"]')?.href ||
             el.querySelector('a[itemprop="item"]')?.href;
 
-        if (sku || itemName) {
+        if (sku && itemName) {
+            indexSKU++;
             itemsForGA4.push({
-                item_id: sku || 'N/A',      // Mapping SKU to item_id
-                item_name: itemName || '',
-                index: index + 1,           // 1-based indexing for reports
+                item_id: sku,      // Mapping SKU to item_id
+                item_name: itemName,
+                index: indexSKU,           // 1-based indexing for reports
                 location_id: itemUrl        // Alternative: using an existing field for the URL
             });
         }
