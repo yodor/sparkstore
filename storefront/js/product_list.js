@@ -97,35 +97,37 @@ function togglePanel(elm)
 }
 
 function sendViewItemListEvent() {
-    // Select all Schema.org list items
-    const schemaItems = document.querySelectorAll('[itemprop="itemListElement"]');
+    const listItems = document.querySelectorAll('[itemprop="itemListElement"]');
     const itemsForGA4 = [];
-    let indexSKU = 0;
 
-    schemaItems.forEach((el, index) => {
-        // Extract SKU, Name, and URL from the Microdata
-        const sku = el.querySelector('[itemprop="sku"]')?.innerText ||
-            el.querySelector('[itemprop="item"] [itemprop="sku"]')?.innerText;
+    listItems.forEach((li) => {
+        // 1. Extract values from meta tags inside the <li> and <article>
+        const sku = li.querySelector('meta[itemprop="sku"]')?.content;
+        const name = li.querySelector('[itemprop="name"]')?.innerText;
+        const category = li.querySelector('meta[itemprop="category"]')?.content;
+        const url = li.querySelector('meta[itemprop="url"]')?.content;
+        const position = li.querySelector('meta[itemprop="position"]')?.content;
 
-        const itemName = el.querySelector('[itemprop="name"]')?.innerText;
+        // 2. Target the BGN price specifically (ignores the EUR label)
+        const priceEl = li.querySelector('.PriceLabel[name="EUR"] [itemprop="price"]');
+        const price = priceEl ? parseFloat(priceEl.content || priceEl.innerText) : 0;
 
-        const itemUrl = el.querySelector('[itemprop="url"]')?.href ||
-            el.querySelector('a[itemprop="item"]')?.href;
 
-        if (sku && itemName) {
-            indexSKU++;
+        if (sku) {
             itemsForGA4.push({
-                item_id: sku,      // Mapping SKU to item_id
-                item_name: itemName,
-                index: indexSKU,           // 1-based indexing for reports
-                location_id: itemUrl        // Alternative: using an existing field for the URL
+                item_id: sku,
+                item_name: name,
+                item_category: category,
+                price: price,
+                index: parseInt(position) || 0,
+                item_url: url
             });
         }
     });
 
     if (itemsForGA4.length > 0) {
         gtag('event', 'view_item_list', {
-            item_list_name: document.title,
+            item_list_name: document.title, //document.querySelector('h1')?.innerText || 'Product Catalog',
             items: itemsForGA4
         });
     }
