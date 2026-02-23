@@ -6,6 +6,7 @@ include_once("store/utils/PriceInfo.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/components/renderers/items/ProductDetailsItem.php");
 include_once("store/components/TapeSameCategory.php");
+include_once("store/objects/data/GTMViewItemEvent.php");
 
 class ProductDetailsPageBase extends ProductPageBase
 {
