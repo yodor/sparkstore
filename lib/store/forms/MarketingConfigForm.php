@@ -24,7 +24,7 @@ class MarketingConfigForm extends InputForm
         $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads", "Google ADs ID (eg: AW-123456789)", 0);
         $this->addInput($field, $grp_basic);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "googleID_ads_conversion", "Google ADs Any Page Conversion ID", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, GTMConvParam::VIEW_ANY_PAGE->value, "Google ADs Any Page Conversion ID", 0);
         $this->addInput($field, $grp_basic);
 
         $field = DataInputFactory::Create(InputType::TEXT, "facebookID_pixel", "Facebook Pixel ID", 0);
