@@ -63,6 +63,10 @@ class ProductDetailsPageBase extends ProductPageBase
             $cmd = new GTMConversionCommand($conversionID);
             $this->head()->addScript($cmd->script());
         }
+
+        $viewItemEvent = new GTMViewItemEvent();
+        $viewItemEvent->setSellable($this->sellable);
+        $this->head()->addScript($viewItemEvent->script());
     }
 
     /**

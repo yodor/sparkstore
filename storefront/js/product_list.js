@@ -95,3 +95,36 @@ function togglePanel(elm)
         viewport.style.display = "none";
     }
 }
+
+function sendViewItemListEvent() {
+    // Select all Schema.org list items
+    const schemaItems = document.querySelectorAll('[itemprop="itemListElement"]');
+    const itemsForGA4 = [];
+
+    schemaItems.forEach((el, index) => {
+        // Extract SKU, Name, and URL from the Microdata
+        const sku = el.querySelector('[itemprop="sku"]')?.innerText ||
+            el.querySelector('[itemprop="item"] [itemprop="sku"]')?.innerText;
+
+        const itemName = el.querySelector('[itemprop="name"]')?.innerText;
+
+        const itemUrl = el.querySelector('[itemprop="url"]')?.href ||
+            el.querySelector('a[itemprop="item"]')?.href;
+
+        if (sku || itemName) {
+            itemsForGA4.push({
+                item_id: sku || 'N/A',      // Mapping SKU to item_id
+                item_name: itemName || '',
+                index: index + 1,           // 1-based indexing for reports
+                location_id: itemUrl        // Alternative: using an existing field for the URL
+            });
+        }
+    });
+
+    if (itemsForGA4.length > 0) {
+        gtag('event', 'view_item_list', {
+            item_list_name: document.title,
+            items: itemsForGA4
+        });
+    }
+}
