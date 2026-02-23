@@ -57,6 +57,7 @@ class ProductDetailsPageBase extends ProductPageBase
         $this->_main->content()->setRole("main");
 
         $config = ConfigBean::Factory();
+        $config->setSection("marketing_config");
         $conversionID = $config->get(GTMConvParam::VIEW_PDP->value);
         if ($conversionID) {
             $cmd = new GTMConversionCommand($conversionID);

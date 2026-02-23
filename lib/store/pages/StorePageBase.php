@@ -140,13 +140,13 @@ class StorePageBase extends SparkPage
                 $cmd->setType($googleID_analytics);
                 $this->head()->addScript($cmd->script());
             }
-        }
 
-        //any page conversion
-        $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
-        if ($conversionID) {
-            $cmd = new GTMConversionCommand($conversionID);
-            $this->head()->addScript($cmd->script());
+            //any page conversion
+            $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
+            if ($conversionID) {
+                $cmd = new GTMConversionCommand($conversionID);
+                $this->head()->addScript($cmd->script());
+            }
         }
 
         $config->setSection("store_config");
