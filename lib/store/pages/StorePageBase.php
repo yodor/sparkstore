@@ -93,7 +93,9 @@ class StorePageBase extends SparkPage
 
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
 
-        $this->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/SparkCookies.js");
+
+
+        //update consent
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
@@ -105,28 +107,37 @@ class StorePageBase extends SparkPage
             $this->head()->addScript(new FBPixel($facebookID_pixel));
         }
 
-        $gtag = new GTAG();
-        $this->head()->addScript($gtag);
+
+        //default consent fired from sparkGTM
+//        $default_consent = new GTMConsentCommand();
+//        $this->head()->addScript($default_consent->script());
 
         $googleID_analytics = $config->get("googleID_analytics");
-        if ($googleID_analytics) {
-            $cmd = new GTMCommand();
-            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-            $cmd->setType($googleID_analytics);
-            $this->head()->addScript($cmd->script());
-        }
-
         $googleID_ads = $config->get("googleID_ads");
-        if ($googleID_ads) {
-            $cmd = new GTMCommand();
-            $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-            $cmd->setType($googleID_ads);
-            $this->head()->addScript($cmd->script());
+
+        $gtag = null;
+        if ($googleID_analytics) {
+            $gtag = new GTAG($googleID_analytics);
+        }
+        else if ($googleID_ads) {
+            $gtag = new GTAG($googleID_ads);
         }
 
-        //default consent
-        $default_consent = new GTMConsentCommand();
-        $this->head()->addScript($default_consent->script());
+        if ($gtag instanceof GTAG) {
+            $this->head()->addScript($gtag);
+            if ($googleID_analytics) {
+                $cmd = new GTMCommand();
+                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
+                $cmd->setType($googleID_analytics);
+                $this->head()->addScript($cmd->script());
+            }
+            if ($googleID_ads) {
+                $cmd = new GTMCommand();
+                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
+                $cmd->setType($googleID_ads);
+                $this->head()->addScript($cmd->script());
+            }
+        }
 
         //any page conversion
         $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);

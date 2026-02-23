@@ -76,7 +76,7 @@ function addToCart(conversionID) {
     let current_url = new URL(window.location.href);
     let prodID = document.querySelector(".ProductDetailsItem")?.getAttribute("productID");
 
-    let url = new URL(LOCAL + "/checkout/cart.php", location.href);
+    let url = new URL(document.Spark.LOCAL + "/checkout/cart.php", location.href);
     url.searchParams.set("add", "");
     url.searchParams.set("prodID", prodID);
     url.searchParams.set("variant", encoded);
@@ -157,6 +157,11 @@ function initiateCall(phone, conversionID) {
     // Option A: Most compatible
     window.location.href = `tel:${cleaned}`;
 
-    // Option B: Slightly more explicit in some browsers
-    // window.location.assign(`tel:${cleaned}`);
+
+    // gtag("event", "conversion", {
+    //     send_to: "AW-XXX/LABEL",
+    //     value: 50,
+    //     currency: "EUR",
+    //     user_data: { email: "user@example.com" },
+    // });
 }
