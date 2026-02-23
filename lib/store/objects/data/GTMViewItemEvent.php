@@ -15,7 +15,7 @@ class GTMViewItemEvent extends GTMCommand
         $this->addParameter("value", $sellable->getPriceInfo()->getSellPrice());
         $items = array(
             "item_id" => $sellable->getProductID(),
-            "item_name" => $sellable->getName(),
+            "item_name" => $sellable->getTitle(),
             "affiliation" => Spark::Get(Config::SITE_DOMAIN),
             "index" => 0,
             "item_brand" => $sellable->getBrandName(),
