@@ -116,25 +116,28 @@ class StorePageBase extends SparkPage
         $googleID_ads = $config->get("googleID_ads");
 
         $gtag = null;
-        if ($googleID_analytics) {
-            $gtag = new GTAG($googleID_analytics);
-        }
-        else if ($googleID_ads) {
+        if ($googleID_ads) {
             $gtag = new GTAG($googleID_ads);
+        }
+        else if ($googleID_analytics) {
+            $gtag = new GTAG($googleID_analytics);
         }
 
         if ($gtag instanceof GTAG) {
+
             $this->head()->addScript($gtag);
-            if ($googleID_analytics) {
-                $cmd = new GTMCommand();
-                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-                $cmd->setType($googleID_analytics);
-                $this->head()->addScript($cmd->script());
-            }
+
             if ($googleID_ads) {
                 $cmd = new GTMCommand();
                 $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
                 $cmd->setType($googleID_ads);
+                $this->head()->addScript($cmd->script());
+            }
+
+            if ($googleID_analytics) {
+                $cmd = new GTMCommand();
+                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
+                $cmd->setType($googleID_analytics);
                 $this->head()->addScript($cmd->script());
             }
         }
