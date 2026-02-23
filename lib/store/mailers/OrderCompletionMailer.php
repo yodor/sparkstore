@@ -30,7 +30,7 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Цена Всичко: " . $order_row["order_total"] . " " . $order_row["active_currency"];
-        if (Spark::GetFloat(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $message .= "Цена Всичко: " . formatPrice(($order_row["order_total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
         }
 
@@ -53,7 +53,7 @@ class OrderCompletionMailer extends Mailer
         $message .= "\r\n\r\n<br><br>";
 
         $message .= "Order Total: " . $order_row["order_total"] . " " . $order_row["active_currency"];
-        if (Spark::GetFloat(StoreConfig::DOUBLE_PRICE_ENABLED)) {
+        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $message .= "Order Total: " . formatPrice($order_row["order_total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
         }
         $message .= "<BR><BR>\r\n\r\nSincerely,<BR>\r\n";
