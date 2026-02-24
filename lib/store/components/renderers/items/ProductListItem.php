@@ -164,10 +164,13 @@ class ProductPhoto extends Action
     public function setData(array $data) : void
     {
         parent::setData($data);
-        $this->image->getStorageItem()->setData($data);
 
-        $this->setAttribute("title", $this->data["product_name"]);
-        $this->image->setTitle($this->data["product_name"]);
+        $productName = $this->data["product_name"];
+        $this->setAttribute("title", $productName);
+
+        $this->image->setTitle($productName);
+        $this->image->getStorageItem()->setData($data);
+        $this->image->getStorageItem()->setName($productName);
 
         $this->discountLabel->setContents("");
         $this->discountLabel->setRenderEnabled(false);

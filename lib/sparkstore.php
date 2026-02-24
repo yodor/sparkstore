@@ -1,4 +1,5 @@
 <?php
+include_once("storeconfig.php");
 
 Spark::EnableBeanLocation("store/beans/");
 Spark::EnableBeanLocation("store/auth/");
@@ -35,8 +36,10 @@ TemplateFactory::AddTemplateLocation("class/templates/admin");
 TemplateFactory::AddTemplateLocation("store/templates/admin");
 
 
-//re-read local store config and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
-require("config/defaults.php");
+//read local store settings and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
+if (file_exists(APP_PATH."/config/store.php")) {
+    include_once(APP_PATH."/config/store.php");
+}
 
 //allow ORDER_EMAIL override from DB configuration
 if (!Spark::isStorageRequest()) {
