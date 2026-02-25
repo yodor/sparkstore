@@ -1,0 +1,96 @@
+<?php
+include_once("templates/TemplateContent.php");
+
+include_once("beans/ConfigBean.php");
+
+class ConfigEditor extends TemplateContent
+{
+
+    /**
+     * @var ConfigFormProcessor
+     */
+    protected ConfigFormProcessor $processor;
+
+
+    /**
+     * @var InputForm|null
+     */
+    protected ?InputForm $form = null;
+
+    /**
+     * @var ConfigBean
+     */
+    protected ConfigBean $config;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->processor = new ConfigFormProcessor();
+
+        $this->config = ConfigBean::Factory();
+        $this->processor->setBean($this->config);
+    }
+
+    public function setForm(InputForm $form) : void
+    {
+        $this->form = $form;
+
+        $rend = new FormRenderer($form);
+
+        $this->config->loadForm($form);
+
+    }
+
+    public function getForm() : InputForm
+    {
+        return $this->form;
+    }
+
+    public function getProcessor() : FormProcessor
+    {
+        return $this->processor;
+    }
+
+    public function setConfigSection(string $section) : void
+    {
+
+        $this->config->setSection($section);
+
+        if ($this->form) {
+            $this->config->loadForm($this->form);
+        }
+
+    }
+
+    public function processInput() : void
+    {
+        $this->processor->process($this->form);
+
+        if ($this->processor->getStatus() == IFormProcessor::STATUS_OK) {
+            Session::SetAlert("Configuration Updated");
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
+        }
+    }
+
+    public function initPageActions(ActionCollection $collection): void
+    {
+        // TODO: Implement initPageActions() method.
+    }
+
+    public function component(): Component
+    {
+        return $this->form->getRenderer();
+    }
+
+    public function initialize(): void
+    {
+
+    }
+
+    public function initPageFilters(Container $filters): void
+    {
+        // TODO: Implement initPageFilters() method.
+    }
+}
