@@ -1,4 +1,7 @@
 <?php
+include_once("objects/events/TemplateEvent.php");
+include_once("utils/menu/MenuItem.php");
+
 $menu = new MenuItemList();
 
 $store = new MenuItem("Store", "store");
@@ -36,7 +39,7 @@ $menu->append($clients);
 $content = new MenuItem("Content", "content");
 $menu->append($content);
 
-$settings = new MenuItem("Settings", "setting");
+$settings = new MenuItem("Settings", "settings");
 $menu->append($settings);
 
 $contacts = new MenuItem("Contacts", "contacts");
