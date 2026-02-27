@@ -29,7 +29,6 @@ $item = new MenuItem("Products", "products");
 $store->append($item);
 
 
-
 $orders = new MenuItem("Orders", "orders");
 $menu->append($orders);
 
@@ -39,10 +38,29 @@ $menu->append($clients);
 $content = new MenuItem("Content", "content");
 $menu->append($content);
 
+$config = new MenuItem("Config", "config");
+$content->append($config);
+
+$baseConfig = new MenuItem("Базови", "base.php", "list");
+$config->append($baseConfig);
+
+$mrktConfig = new MenuItem("Маркетинг", "marketing.php", "list");
+$config->append($mrktConfig);
+
+
 $settings = new MenuItem("Settings", "settings");
 $menu->append($settings);
 
+$admins = new MenuItem("Admins", "admins");
+$settings->append($admins);
+
+$langs = new MenuItem("Languages", "languages");
+$settings->append($langs);
+
 $contacts = new MenuItem("Contacts", "contacts");
 $menu->append($contacts);
+
+$addresses = new MenuItem("Addresses", "addresses", "code-class.png");
+$contacts->append($addresses);
 
 SparkEventManager::emit(new TemplateEvent(TemplateEvent::MENU_CREATED, $menu));
