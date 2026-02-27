@@ -241,7 +241,7 @@ class SellableItem extends SparkObject
         $this->seoDescription = $seoDescription;
     }
 
-    public function setAttribute(string $name, string $value)
+    public function setAttribute(string $name, string $value) : void
     {
         $this->attributes[$name] = $value;
     }
