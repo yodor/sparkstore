@@ -1,9 +1,6 @@
 <?php
 include_once("storeconfig.php");
 
-Spark::EnableBeanLocation("store/beans/");
-Spark::EnableBeanLocation("store/auth/");
-
 $location = Spark::Get(Config::LOCAL);
 
 Spark::Set(StoreConfig::STORE_LOCAL, $location . "/storefront");
