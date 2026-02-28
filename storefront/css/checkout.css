@@ -143,12 +143,15 @@
     display:inline-flex;
     text-align:center;
     padding:0;
+
 }
 
 .CheckoutPage.customer .base .item {
     padding:1.5em;
     border:1px solid #cccccc;
     margin-bottom:1em;
+    justify-items: center;
+
 }
 .CheckoutPage.customer .base .item .Caption {
     text-align:center;
