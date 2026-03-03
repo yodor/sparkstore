@@ -8,7 +8,8 @@ else {
 
     $config->listFields = array("category_name"=>"Category Name");
 
-    $config->observer = function(TemplateEvent $event)  {
+    $config->observer = Template::WrapObserver(
+    function(TemplateEvent $event)  {
         if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
         $source = $event->getSource();
         if (!($source instanceof BeanTree)) throw new Exception("Incorrect event source - expecting BeanTree");
@@ -32,6 +33,6 @@ else {
         $bannersAction->getURL()->add(new DataParameter("catID", $source->getBean()->key()));
         $item->getActions()->append($bannersAction);
 
-    };
+    }, $config->observer);
 }
 Template::Config($config);

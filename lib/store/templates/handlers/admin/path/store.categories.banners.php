@@ -1,0 +1,30 @@
+<?php
+include_once("store/beans/ProductCategoriesBean.php");
+Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Template::PathURL("/store/categories/"), array("category_name")) );
+
+
+$config = null;
+if (URL::Current()->contains("editID")) {
+    $config = Template::Editor(ProductCategoryBannersBean::class, PhotoForm::class);
+    $config->observer = Template::WrapObserver(
+        function(TemplateEvent $event) use($config) {
+            if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
+            $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
+            $event->getSource()->editor()->getForm()->addInput($field);
+
+        }, $config->observer);
+}
+else {
+    $config = Template::Gallery(ProductCategoryBannersBean::class);
+}
+
+//
+$config->observer = Template::WrapObserver(
+    function(TemplateEvent $event) use($config) {
+
+        if (!$event->isEvent(TemplateEvent::CONTENT_SETUP)) return;
+        $config->title .= " - " . Template::Condition()->getData("category_name");
+
+    }, $config->observer);
+
+Template::Config($config);
