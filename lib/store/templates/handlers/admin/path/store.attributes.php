@@ -9,5 +9,7 @@ else {
     $config->listFields = array("name"=>"Name","unit"=>"Unit", "type"=>"Type");
 
     $config->summary = "Тук може да добавяте входни етикет за ползване в продуктовите класове";
+
+    $config->clearNavigation = true;
 }
 Template::Config($config);

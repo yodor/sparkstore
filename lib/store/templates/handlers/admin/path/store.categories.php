@@ -34,5 +34,7 @@ else {
         $item->getActions()->append($bannersAction);
 
     }, $config->observer);
+
+    $config->clearNavigation = true;
 }
 Template::Config($config);

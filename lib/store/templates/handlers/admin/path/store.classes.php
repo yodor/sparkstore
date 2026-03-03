@@ -39,14 +39,13 @@ opt.option_name,
         if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
 
         $content = $event->getSource();
-        if (!($content instanceof BeanList)) throw new Exception("Incorrect event source - expecting BeanList: ".get_class($content));
+        if (!($content instanceof BeanList)) throw new Exception("Incorrect event source - expecting BeanList");
 
         $actions = $content->getItemActions()->getActions();
         $actions->append(Action::RowSeparator());
 
-        $optionsAction = TemplateContent::CreateAction("Options", "Options");
+        $optionsAction = TemplateContent::CreateAction("Options", "Options", "/store/options");
         $optionsAction->getURL()->add(new DataParameter("pclsID"));
-        $optionsAction->getURL()->get("path")->setValue("/store/options");
         $actions->append($optionsAction);
 
         $actions->append(Action::RowSeparator());
@@ -56,5 +55,7 @@ opt.option_name,
 
         $actions->append($attributesAction);
     };
+
+    $config->clearNavigation = true;
 }
 Template::Config($config);

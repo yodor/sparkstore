@@ -1,7 +1,7 @@
 <?php
 $config = null;
 
-if (isset($editor)) {
+if (URL::Current()->contains("editID")) {
     $config = Template::Editor(BrandsBean::class, BrandInputForm::class);
 }
 else {
@@ -17,6 +17,6 @@ else {
             $source->tableView()->getColumn("cover")->setCellRenderer(new ImageCell());
         }, $config->observer);
 
-
+    $config->clearNavigation = true;
 }
 Template::Config($config);

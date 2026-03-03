@@ -31,5 +31,7 @@ else {
         }
 
     };
+
+    $config->clearNavigation = true;
 }
 Template::Config($config);

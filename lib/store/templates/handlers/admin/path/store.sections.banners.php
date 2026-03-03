@@ -1,6 +1,6 @@
 <?php
 include_once("store/beans/SectionsBean.php");
-Template::Condition( new BeanKeyCondition(new SectionsBean(), Template::PathURL("/store/sections/"), array("section_title")) );
+Template::Condition( new BeanKeyCondition(new SectionsBean(), Template::PathURL("/store/sections"), array("section_title")) );
 
 
 $config = null;

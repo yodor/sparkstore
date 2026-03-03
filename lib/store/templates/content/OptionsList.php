@@ -13,27 +13,44 @@ class OptionsList extends BeanList
 
     protected Form $filters;
 
-    public function __construct(){
+    public function __construct()
+    {
+
         parent::__construct();
 
 
         $bean = new VariantOptionsBean();
-        $bean->select()->where()->add("parentID" , " NULL ", " IS ");
         $this->setBean($bean);
 
-        $this->product_filter = new GETProcessor("Продукт", "prodID");
-        $this->product_filter->setSQLSelect($bean->select());
+        $bean->select()->fields()->set(...$bean->columnNames());
+        $bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
+        //$bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(pcls.class_name) FROM product_classes pcls WHERE pcls.pclsID = variant_options.pclsID)", "class_name");
 
-        $this->class_filter = new GETProcessor("Продуктов клас", "pclsID");
-        $this->class_filter->setSQLSelect($bean->select());
+        //only options not their parameters
+        $bean->select()->where()->add("parentID" , " NULL ", " IS ");
+
+        //set query to reference bean->select() so changes to select are reflected to the other users - used in responders set position (getMaxPosition()) etc
+        $this->setIterator(new SQLQuery($bean->select(), $bean->key(), $bean->getTableName()));
 
         $this->setListFields(array("voID"=>"ID", "position"=>"Position", "option_name"=>"Option Name", "parameters"=>"Parameters"));
 
-        $query = $bean->queryFull();
-        $query->select->fields()->setExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
-        $this->setIterator($query);
+        $this->product_filter = new GETProcessor("Продукт", "prodID");
+        //manipulate the bean select
+        $this->product_filter->setSQLSelect($bean->select());
+
+
+        $this->class_filter = new GETProcessor("Опции към клас", "pclsID");
+        //manipulate the bean select
+        $this->class_filter->setSQLSelect($bean->select());
+
 
         //create filters form
+
+        $form = new Form();
+        $form->setName("Filters");
+        $form->setMethod(Form::METHOD_GET);
+        $this->filters = $form;
+
         $input = DataInputFactory::Create(InputType::SELECT, $this->class_filter->getName(), $this->class_filter->getTitle(), 0);
         $renderer = $input->getRenderer();
         $classes = new ProductClassesBean();
@@ -42,17 +59,13 @@ class OptionsList extends BeanList
         $renderer->getItemRenderer()->setValueKey("pclsID");
 
         if ($renderer instanceof SelectField) {
-            $renderer->setDefaultOption("--- Всички ---");
+            $renderer->setDefaultOption("--- Empty ---");
         }
 
         $renderer->input()?->setAttribute("onChange", "document.forms.Filters.submit()");
 
-
-        $form = new Form();
-        $form->setName("Filters");
-        $form->setMethod(Form::METHOD_GET);
         $form->items()->append(new InputComponent($input));
-        $this->filters = $form;
+
 
     }
     public function processInput(): void
@@ -60,65 +73,66 @@ class OptionsList extends BeanList
         parent::processInput();
 
         $this->product_filter->processInput();
+
+        //show only product options
         if ($this->product_filter->isProcessed()) {
 
+            $this->config->clearNavigation = false;
+
+            //disable class selection form
             $this->filters->setRenderEnabled(false);
 
-            $prodID = (int)$this->product_filter->getValue();
-            if ($prodID>0) {
-                try {
-                    $products = new ProductsBean();
-                    $product_data = $products->getByID($prodID, "product_name");
-
-                    $this->config->title = tr("Options List") . " - " . tr("Product") . ": " . $product_data["product_name"];
-                }
-                catch (Exception $e) {
-                    Session::SetAlert("Requested product is not accessible");
-                }
+            try {
+                $prodID = (int)$this->product_filter->getValue();
+                $products = new ProductsBean();
+                $product_data = $products->getByID($prodID, "product_name");
+                $this->config->title = tr("Options List") . " - " . tr("Product") . ": " . $product_data["product_name"];
             }
-            else {
-                $this->bean->select()->where()->add("pclsID" , " NULL ", " IS ");
-                $this->bean->select()->where()->add("prodID" , " NULL ", " IS ");
+            catch (Exception $e) {
+                Session::SetAlert("Requested product is not accessible");
             }
 
-
+            $this->query->select->where()->add("pclsID", "NULL" , " IS ");
         }
         else {
 
-            //$cmp->getPage()->navigation()->clear();
-
             $this->class_filter->processInput();
 
+            //if class was selected
             if ($this->class_filter->isProcessed()) {
+
+                $this->config->clearNavigation = false;
+
                 $pclsID = (int)$this->class_filter->getValue();
-                if ($pclsID>0) {
 
+                $icmp = $this->filters->items()->getByComponentClass("InputComponent");
 
-                    $icmp = $this->filters->items()->getByComponentClass("InputComponent");
-
-                    if ($icmp instanceof InputComponent) {
-                        $icmp->getDataInput()->setValue($this->class_filter->getValue());
-                    }
-
-
-                    try {
-                        $classes = new ProductClassesBean();
-                        $class_data = $classes->getByID($pclsID);
-
-                        $this->config->title = tr("Options List") . " - " . tr("Class") . ": " . $class_data["class_name"];
-                    }
-                    catch (Exception $e) {
-                        Session::SetAlert("Requested product class is not accessible");
-                    }
+                if ($icmp instanceof InputComponent) {
+                    $icmp->getDataInput()->setValue($pclsID);
                 }
+
+                try {
+                    $classes = new ProductClassesBean();
+                    $class_data = $classes->getByID($pclsID);
+
+                    $this->config->title = tr("Options List") . " - " . tr("Class") . ": " . $class_data["class_name"];
+                }
+                catch (Exception $e) {
+                    Session::SetAlert("Requested product class is not accessible");
+                }
+                $this->query->select->where()->add("prodID", "NULL" , " IS ");
+
             }
+            //neither prodID nor pclsID - show only top level options
             else {
-                $this->bean->select()->where()->add("pclsID" , " NULL ", " IS ");
-                $this->bean->select()->where()->add("prodID" , " NULL ", " IS ");
+                $this->config->clearNavigation = true;
+                $this->query->select->where()->add("pclsID", "NULL" , " IS ");
+                $this->query->select->where()->add("prodID", "NULL" , " IS ");
             }
+
         }
 
-
+        //echo $this->query->select->getSQL();
     }
 
     public function fillPageFilters(Container $filters): void
@@ -132,8 +146,17 @@ class OptionsList extends BeanList
         parent::initItemActions($act);
         $act->append(Action::RowSeparator());
         $paramAction = TemplateContent::CreateAction("Parameters", "Parameters", "parameters");
+        $paramAction->setTooltip(tr("Modify option parameters"));
         $paramAction->getURL()->add(new DataParameter("voID"));
         $act->append($paramAction);
 
+    }
+
+    public function setup(TemplateConfig $config): void
+    {
+        parent::setup($config);
+        $config->title = tr("Options List");
+
+        $config->clearNavigation = true;
     }
 }
