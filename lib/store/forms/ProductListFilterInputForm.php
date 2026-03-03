@@ -389,7 +389,7 @@ class ProductListFilterInputForm extends InputForm {
 
                 $value = $input->getValue();
 
-                if ($value > -1 && strcmp($value, "") != 0) {
+                if ($value > -1 && strcmp($value, "") !== 0) {
 
                     $input->appendWhereClause($where);
 
@@ -410,7 +410,7 @@ class ProductListFilterInputForm extends InputForm {
 
                 $value = $input->getValue();
 
-                if ($value > -1 && strcmp($value, "") != 0) {
+                if ($value > -1 && strcmp($value, "") !== 0) {
 
                     $input->appendHavingClause($having);
 

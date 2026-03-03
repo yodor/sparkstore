@@ -167,7 +167,7 @@ class ProductListFilter extends FormRenderer implements IRequestProcessor, ISQLS
 
                 $value = $input->getValue();
 
-                if ($value > -1 && strcmp($value, "") != 0) {
+                if ($value > -1 && strcmp($value, "") !== 0) {
 
                     $label = $input->getLabel();
                     $name = $input->getName();

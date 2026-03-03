@@ -46,12 +46,11 @@ class OptionsList extends BeanList
         }
 
         $renderer->input()?->setAttribute("onChange", "document.forms.Filters.submit()");
-        if ($this->class_filter->isProcessed()) {
-            $input->setValue($this->class_filter->getValue());
-        }
+
 
         $form = new Form();
         $form->setName("Filters");
+        $form->setMethod(Form::METHOD_GET);
         $form->items()->append(new InputComponent($input));
         $this->filters = $form;
 
@@ -93,6 +92,15 @@ class OptionsList extends BeanList
             if ($this->class_filter->isProcessed()) {
                 $pclsID = (int)$this->class_filter->getValue();
                 if ($pclsID>0) {
+
+
+                    $icmp = $this->filters->items()->getByComponentClass("InputComponent");
+
+                    if ($icmp instanceof InputComponent) {
+                        $icmp->getDataInput()->setValue($this->class_filter->getValue());
+                    }
+
+
                     try {
                         $classes = new ProductClassesBean();
                         $class_data = $classes->getByID($pclsID);

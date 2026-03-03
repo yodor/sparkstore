@@ -91,7 +91,7 @@ class RegisterClientFormProcessor extends FormProcessor
 
             $email = strtolower(trim($form->getInput("email")->getValue()));
 
-            if (strcmp($email, $existing_email) != 0) {
+            if (strcmp($email, $existing_email) !== 0) {
                 //check if email exists and is for different ID
                 $existingID = $users->email2id($email);
                 if ((int)$existingID != (int)$this->editID) {

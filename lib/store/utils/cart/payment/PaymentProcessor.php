@@ -38,7 +38,7 @@ abstract class PaymentProcessor
     {
         $result = $this->processTokenImpl($token);
         $chk = get_class($result);
-        if ($chk && strcmp($chk, "PaymentResult") == 0) {
+        if ($chk && strcmp($chk, "PaymentResult") === 0) {
             $this->paymentFinal($result);
         }
         else {

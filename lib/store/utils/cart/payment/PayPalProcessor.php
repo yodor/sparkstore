@@ -232,7 +232,7 @@ class PayPalProcessor
 
     public function __construct($api_mode)
     {
-        if (strcmp($api_mode, PayPalProcessor::MODE_LIVE) == 0) {
+        if (strcmp($api_mode, PayPalProcessor::MODE_LIVE) === 0) {
 
             $this->api_endpoint = "https://api-3t.paypal.com/nvp";
             $this->api_mode = PayPalProcessor::MODE_LIVE;
@@ -317,7 +317,7 @@ class PayPalProcessor
             $status = urldecode($httpParsedResponseAr["PAYMENTINFO_0_PAYMENTSTATUS"]);
             $transactionID = urldecode($httpParsedResponseAr["PAYMENTINFO_0_TRANSACTIONID"]);
 
-            if (strcmp($status, "Completed") != 0 && strcmp($status, "Pending") != 0) {
+            if (strcmp($status, "Completed") != 0 && strcmp($status, "Pending") !== 0) {
                 $error = "Payment status error.";
                 if (isset($httpParsedResponseAr["L_LONGMESSAGE0"])) {
                     $error .= " Error Details: " . urldecode($httpParsedResponseAr["L_LONGMESSAGE0"]);
@@ -404,7 +404,7 @@ class PayPalProcessor
         $sale_item = Session::Get("sale_item");
         $sale_item = unserialize($sale_item);
         $sale_token = $sale_item->getPaymentToken();
-        if (strcmp($sale_token, $token) != 0) {
+        if (strcmp($sale_token, $token) !== 0) {
             throw new Exception("Sale token missmatch: Session: " . $sale_token . " | Requested: " . $token);
         }
         return $sale_item;
