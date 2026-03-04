@@ -2,7 +2,6 @@
 include_once("store/beans/ProductCategoriesBean.php");
 Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Template::PathURL("/store/categories"), array("category_name")) );
 
-
 $config = null;
 if (URL::Current()->contains("editID")) {
     $config = Template::Editor(ProductCategoryBannersBean::class, PhotoForm::class);
@@ -26,5 +25,3 @@ $config->observer = Template::WrapObserver(
         $config->title .= " - " . Template::Condition()->getData("category_name");
 
     }, $config->observer);
-
-Template::SetConfig($config);

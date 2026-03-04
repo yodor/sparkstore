@@ -1,5 +1,4 @@
 <?php
-$config = null;
 
 if (URL::Current()->contains("editID")) {
     $config = Template::Editor(BrandsBean::class, BrandInputForm::class);
@@ -19,4 +18,3 @@ else {
 
     $config->clearNavigation = true;
 }
-Template::SetConfig($config);

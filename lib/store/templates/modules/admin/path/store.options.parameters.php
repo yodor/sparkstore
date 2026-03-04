@@ -2,7 +2,6 @@
 include_once("store/beans/VariantOptionsBean.php");
 Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Template::PathURL("/store/options"), array("option_name", "pclsID", "prodID")));
 
-$config = null;
 if (URL::Current()->contains("editID")) {
     //
     $config = Template::Editor(VariantOptionsBean::class, VariantParameterInputForm::class);
@@ -78,5 +77,3 @@ else {
 
 
 }
-
-Template::SetConfig($config);

@@ -1,5 +1,5 @@
 <?php
-$config = null;
+
 if (URL::Current()->contains("editID")) {
     $config = Template::Editor(ProductClassesBean::class, ProductClassInputForm::class);
 }
@@ -58,4 +58,3 @@ opt.option_name,
 
     $config->clearNavigation = true;
 }
-Template::SetConfig($config);

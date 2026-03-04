@@ -1,7 +1,5 @@
 <?php
 
-$config = null;
-
 if (URL::Current()->contains("editID")) {
 
 }
@@ -12,5 +10,3 @@ else {
 
     $config->clearNavigation = true;
 }
-
-Template::SetConfig($config);

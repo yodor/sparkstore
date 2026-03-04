@@ -34,4 +34,3 @@ else {
 
     $config->clearNavigation = true;
 }
-Template::SetConfig($config);

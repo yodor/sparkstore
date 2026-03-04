@@ -1,6 +1,5 @@
 <?php
 
-$config = null;
 if (URL::Current()->contains("editID")) {
     $config = Template::Editor(AttributesBean::class, AttributeInputForm::class);
 }
@@ -12,4 +11,3 @@ else {
 
     $config->clearNavigation = true;
 }
-Template::SetConfig($config);

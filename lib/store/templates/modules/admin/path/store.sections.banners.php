@@ -28,5 +28,3 @@ $config->observer = Template::WrapObserver(
         $config->title .= " - " . Template::Condition()->getData("section_title");
 
     }, $config->observer);
-
-Template::SetConfig($config);

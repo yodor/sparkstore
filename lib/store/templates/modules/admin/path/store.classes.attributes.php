@@ -2,7 +2,6 @@
 include_once("store/beans/ProductClassesBean.php");
 Template::Condition( new BeanKeyCondition(new ProductClassesBean(), Template::PathURL("/store/classes"), array("class_name")) );
 
-
 if (URL::Current()->contains("editID")) {
     $config = Template::Editor(ProductClassAttributesBean::class, ProductClassAttributeInputForm::class);
 
@@ -62,5 +61,3 @@ else {
     };
 
 }
-
-Template::SetConfig($config);

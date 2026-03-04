@@ -58,4 +58,3 @@ else {
     $config->contentClass = OptionsList::class;
 
 }
-Template::SetConfig($config);
