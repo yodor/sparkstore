@@ -79,4 +79,4 @@ else {
 
 }
 
-Template::Config($config);
+Template::SetConfig($config);

@@ -27,4 +27,4 @@ $config->observer = Template::WrapObserver(
 
     }, $config->observer);
 
-Template::Config($config);
+Template::SetConfig($config);

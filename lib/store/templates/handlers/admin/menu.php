@@ -66,4 +66,4 @@ $menu->append($contacts);
 $addresses = new MenuItem("Addresses", "addresses", "code-class.png");
 $contacts->append($addresses);
 
-SparkEventManager::emit(new TemplateMenuEvent(TemplateMenuEvent::CREATED, $menu));
+SparkTemplateAdminPage::SetMenu($menu);

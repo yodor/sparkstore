@@ -14,9 +14,9 @@ FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AN
     $sel->fields()->setExpression("(select group_concat(
 concat(
 opt.option_name, 
-'(',
- (select group_concat(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';') from variant_options vopt WHERE vopt.parentID=opt.voID ),
- ')'
+'<BR>[',
+ (select group_concat(vopt.option_value ORDER BY vopt.position ASC SEPARATOR '<BR>') from variant_options vopt WHERE vopt.parentID=opt.voID ),
+ ']<BR>'
  )
  ORDER BY opt.position ASC
  SEPARATOR '<BR>' 
@@ -58,4 +58,4 @@ opt.option_name,
 
     $config->clearNavigation = true;
 }
-Template::Config($config);
+Template::SetConfig($config);
