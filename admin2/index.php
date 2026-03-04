@@ -1,7 +1,7 @@
 <?php
-include_once("pages/SparkTemplateAdminPage.php");
+include_once("store/pages/AdminTemplatePageBase.php");
 
-$page = new SparkTemplateAdminPage();
+$page = new AdminTemplatePageBase();
 
 $page->initialize();
 

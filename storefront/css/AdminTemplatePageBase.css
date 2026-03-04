@@ -1,0 +1,40 @@
+body[path='/store/products'] .filters FORM {
+    flex-direction:row;
+}
+
+body[path='/store/products'] .actions {
+
+}
+
+body[path='/store/products'] .actions .Action[action='facebook'] {
+    background-image: url("../images/page_actions/download_csv_facebook.svg");
+}
+body[path='/store/products'] .actions .Action[action='google'] {
+    background-image: url("../images/page_actions/download_csv_google.svg");
+}
+
+body[path='/store/products'] .actions .Action[action='google_merchant'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+
+}
+body[path='/store/products'] .actions .Action[action='full'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+
+}
+body[path='/store/products'] .actions .Action[action='images'] {
+    /*background-image: url("../images/page_actions/download_csv_google.svg");*/
+
+}
+
+body[path='/store/products'] .actions .Action[action='export_update'] {
+    background-image: url("../../sparkfront/images/icon_sort_desc.svg");
+
+}
+body[path='/store/products'] .actions .Action[action='import_update'] {
+    background-image: url("../../sparkfront/images/icon_sort_asc.svg");
+
+}
+
+body[path='/store/products'] .Cell .ImageList .Image {
+    max-height: 64px;
+}
