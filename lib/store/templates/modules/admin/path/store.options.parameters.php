@@ -4,7 +4,7 @@ Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Template::Pat
 
 if (URL::Current()->contains("editID")) {
     //
-    $config = Template::Editor(VariantOptionsBean::class, VariantParameterInputForm::class);
+    $config = TemplateConfig::Editor(VariantOptionsBean::class, VariantParameterInputForm::class);
 
     $config->observer = function(TemplateEVent $event) use($config) {
         $content = $event->getSource();
@@ -52,7 +52,7 @@ if (URL::Current()->contains("editID")) {
 
 }
 else {
-    $config = Template::List(VariantOptionsBean::class);
+    $config = TemplateConfig::List(VariantOptionsBean::class);
     $config->listFields = array("voID"=>"ID", "position"=>"Position", "option_value"=>"Parameter Name");
 
     $config->observer = function(TemplateEvent $event) use($config) {
@@ -70,10 +70,5 @@ else {
 
         }
     };
-
-
-    $config->summary = "Тук добавяте избираеми параметри за съответната опция.<BR>
-Параметрите се използват за избор от клиента преди поръчка на продукт.<BR>";
-
 
 }

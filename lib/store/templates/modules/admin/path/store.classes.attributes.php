@@ -3,7 +3,7 @@ include_once("store/beans/ProductClassesBean.php");
 Template::Condition( new BeanKeyCondition(new ProductClassesBean(), Template::PathURL("/store/classes"), array("class_name")) );
 
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(ProductClassAttributesBean::class, ProductClassAttributeInputForm::class);
+    $config = TemplateConfig::Editor(ProductClassAttributesBean::class, ProductClassAttributeInputForm::class);
 
     $config->observer = function(TemplateEvent $event) use ($config) {
         $content = $event->getSource();
@@ -26,8 +26,7 @@ if (URL::Current()->contains("editID")) {
 
 }
 else {
-    $config = Template::List(ProductClassAttributesBean::class);
-    $config->summary = "Тук може да добавяте входни етикети към продуктите от избрания клас.<BR>";
+    $config = TemplateConfig::List(ProductClassAttributesBean::class);
 
     $config->listFields = array("pcaID"=>"ID", "name"=>"Входен Етикет");
 

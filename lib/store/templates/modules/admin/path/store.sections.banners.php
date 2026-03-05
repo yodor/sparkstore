@@ -5,8 +5,8 @@ Template::Condition( new BeanKeyCondition(new SectionsBean(), Template::PathURL(
 
 $config = null;
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(SectionBannersBean::class, PhotoForm::class);
-    $config->observer = Template::WrapObserver(
+    $config = TemplateConfig::Editor(SectionBannersBean::class, PhotoForm::class);
+    $config->observer = TemplateConfig::WrapObserver(
         function(TemplateEvent $event) use($config) {
             if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
             $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
@@ -15,11 +15,11 @@ if (URL::Current()->contains("editID")) {
         }, $config->observer);
 }
 else {
-    $config = Template::Gallery(SectionBannersBean::class);
+    $config = TemplateConfig::Gallery(SectionBannersBean::class);
 }
 
 //
-$config->observer = Template::WrapObserver(
+$config->observer = TemplateConfig::WrapObserver(
     function(TemplateEvent $event) use($config) {
 
 //        $cmp->getPage()->setName(tr("Banners Gallery") . ": " . $rc->getData("section_title"));

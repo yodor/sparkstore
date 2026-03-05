@@ -2,7 +2,7 @@
 $config = null;
 if (URL::Current()->contains("editID")) {
 
-    $config = Template::Editor(VariantOptionsBean::class, VariantOptionInputForm::class);
+    $config = TemplateConfig::Editor(VariantOptionsBean::class, VariantOptionInputForm::class);
 
     $config->observer = function(TemplateEvent $event) use($config) {
         $content = $event->getSource();
@@ -54,7 +54,5 @@ if (URL::Current()->contains("editID")) {
 }
 else {
     $config = new TemplateConfig();
-    $config->summary = "Тук може да добавяте опции за изграждане на продуктови варианти.";
     $config->contentClass = OptionsList::class;
-
 }

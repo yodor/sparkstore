@@ -1,3 +1,3 @@
 <?php
-$config = Template::Plain("Store", tr("Store Management"));
+$config = TemplateConfig::Plain("Store", tr("Store Management"));
 $config->clearNavigation = true;

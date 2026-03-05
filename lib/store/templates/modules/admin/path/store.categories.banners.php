@@ -4,8 +4,8 @@ Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Template:
 
 $config = null;
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(ProductCategoryBannersBean::class, PhotoForm::class);
-    $config->observer = Template::WrapObserver(
+    $config = TemplateConfig::Editor(ProductCategoryBannersBean::class, PhotoForm::class);
+    $config->observer = TemplateConfig::WrapObserver(
         function(TemplateEvent $event) use($config) {
             if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
             $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
@@ -14,11 +14,11 @@ if (URL::Current()->contains("editID")) {
         }, $config->observer);
 }
 else {
-    $config = Template::Gallery(ProductCategoryBannersBean::class);
+    $config = TemplateConfig::Gallery(ProductCategoryBannersBean::class);
 }
 
 //
-$config->observer = Template::WrapObserver(
+$config->observer = TemplateConfig::WrapObserver(
     function(TemplateEvent $event) use($config) {
 
         if (!$event->isEvent(TemplateEvent::CONTENT_SETUP)) return;

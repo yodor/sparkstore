@@ -1,2 +1,2 @@
 <?php
-Template::Plain("Settings", "Settings Help Summary");
+TemplateConfig::Plain("Settings", "Settings Help Summary");

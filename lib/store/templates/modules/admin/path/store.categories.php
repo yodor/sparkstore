@@ -1,14 +1,14 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(ProductCategoriesBean::class, ProductCategoryInputForm::class);
+    $config = TemplateConfig::Editor(ProductCategoriesBean::class, ProductCategoryInputForm::class);
 }
 else {
-    $config = Template::Tree(ProductCategoriesBean::class);
+    $config = TemplateConfig::Tree(ProductCategoriesBean::class);
 
     $config->listFields = array("category_name"=>"Category Name");
 
-    $config->observer = Template::WrapObserver(
+    $config->observer = TemplateConfig::WrapObserver(
     function(TemplateEvent $event)  {
         if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
         $source = $event->getSource();

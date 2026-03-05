@@ -1,10 +1,10 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(ProductClassesBean::class, ProductClassInputForm::class);
+    $config = TemplateConfig::Editor(ProductClassesBean::class, ProductClassInputForm::class);
 }
 else {
-    $config = Template::List(ProductClassesBean::class);
+    $config = TemplateConfig::List(ProductClassesBean::class);
 
     $sel = new SQLSelect();
     $sel->from = " product_classes pc ";
@@ -25,14 +25,6 @@ opt.option_name,
 
     $config->iterator = new SQLQuery($sel, "pclsID");
     $config->listFields = array("class_name"=>"Class Name", "class_attributes"=>"Class Attributes", "class_options"=>"Class Options");
-
-
-    $config->summary = "Тук може да добавяте класове за назначаване към продуктите.<BR>
-Всеки клас групира набор от входни етикети и опции.<BR>
-Входните етикети позволяват изграждане на допълнителни филтри, освен вградените - по марка и категория, в основния листинг на продуктите.<BR>
-Например за клас 'Книги' подходящи входни етикети биха били Автор и Издател<br>
-Опциите на класа служат за изграждане на варианти на продуктите, които също се използват за филтриране на продуктите.<BR>
-Например опция 'Цвят' или 'Размер'<br>";
 
     $config->observer = function(TemplateEvent $event) {
 

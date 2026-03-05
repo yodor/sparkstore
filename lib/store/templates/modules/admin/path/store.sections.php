@@ -1,13 +1,11 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = Template::Editor(SectionsBean::class, SectionInputForm::class);
+    $config = TemplateConfig::Editor(SectionsBean::class, SectionInputForm::class);
 }
 else {
-    $config = Template::List(SectionsBean::class);
+    $config = TemplateConfig::List(SectionsBean::class);
     $config->listFields = array("position"=>"#", "section_title"=>"Section");
-
-    $config->summary = "Тук добавяте секции за изграждане на списъци от продукти за извеждане в началната страница.<BR>";
 
     $config->observer = function(TemplateEvent $event) {
 
