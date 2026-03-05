@@ -1,8 +1,14 @@
 <?php
-include_once("store/pages/AdminTemplatePageBase.php");
+include_once("templates/Template.php");
 
-$page = new AdminTemplatePageBase();
+Template::ModuleInit(Spark::GetObject(Config::MODULE_ADMIN));
 
-$page->initialize();
+Template::ModuleResponse();
 
-$page->render();
+//include_once("store/pages/AdminTemplatePageBase.php");
+//
+//$page = new AdminTemplatePageBase();
+//
+//$page->initialize();
+//
+//$page->render();
