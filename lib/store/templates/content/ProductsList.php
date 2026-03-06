@@ -355,17 +355,26 @@ class ProductsList extends BeanList {
 
         $act->append(Action::RowSeparator());
 
-        $act->append(new Action("Photo Gallery", "gallery/list.php", array(new DataParameter("prodID", $this->bean->key()))));
+        $actGallery = TemplateContent::CreateAction("Photo Gallery", "Photo Gallery", "gallery/");
+        $actGallery->getURL()->add(new DataParameter("prodID"));
+        $act->append($actGallery);
+
         $act->append(Action::RowSeparator());
 
         $act->append(new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key()))));
 
         $act->append(Action::RowSeparator());
-        $act->append(new Action("Options", "../options/list.php", array(new DataParameter("prodID"))));
+
+        $actOptions = TemplateContent::CreateAction("Options", "Options", "/store/options/");
+        $actOptions->getURL()->add(new DataParameter("prodID"));
+        $act->append($actOptions);
 
 
         $act->append(Action::RowSeparator());
-        $act->append(new Action("Variants", "variants/list.php", array(new DataParameter("prodID"))));
+
+        $actVariants = TemplateContent::CreateAction("Variants", "Variants", "variants/");
+        $actVariants->getURL()->add(new DataParameter("prodID"));
+        $act->append($actVariants);
     }
 
     public function initialize() : void
