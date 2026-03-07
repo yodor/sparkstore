@@ -44,11 +44,12 @@ class NewsPageBase extends StorePage
         if (count($arr)>0) {
             $qry = $this->pac->getBean()->query(...$this->pac->getSelectionColumns());
             $qry->select->where()->add($this->news->key(), "(" . implode(",", $arr) . ")", " IN ");
+            $qry->select->order_by = " newsID DESC ";
             $qry->exec();
 
             while ($item = $qry->next()) {
                 echo "<div class='item'>";
-                echo "<div class='title'>" . $item["item_title"] . "</div>";
+                echo "<div class='Caption title'>" . $item["item_title"] . "</div>";
                 if (is_null($title)) {
                     $title = $item["item_title"];
                 }
@@ -56,7 +57,7 @@ class NewsPageBase extends StorePage
 
                 echo "<div class='image'>";
                 $img_href = StorageItem::Image($item[$qry->key()], $this->news);
-                echo "<img width=100% src='$img_href'>";
+                echo "<img src='$img_href'>";
                 echo "</div>";
 
                 echo "<div class='contents'>" . $item["content"] . "</div>";
