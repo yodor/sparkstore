@@ -7,7 +7,7 @@
 .news_view .column {
     display: table-cell;
     vertical-align: top;
-    border: 1px dotted red;
+    /*border: 1px dotted red;*/
 }
 
 .news_view .column.main {
@@ -26,6 +26,9 @@
 
 .news_view .column.main .content {
     margin-top: 20px;
+}
+.news_view .column.main .item .image IMG {
+    max-width: 100%;
 }
 
 .news_view .column.other {
