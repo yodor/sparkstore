@@ -270,7 +270,7 @@ class StorePageBase extends SparkPage
         parent::__construct();
 
         if ($this->context) {
-            $this->client_name = (string)$this->context->getData()->get(SessionData::FULLNAME);
+            $this->client_name = (string)$this->context->getData()->get(AuthContext::FULLNAME);
         }
 
         //template JSONFormDialog

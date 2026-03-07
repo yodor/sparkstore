@@ -1,6 +1,6 @@
 <?php
 include_once("store/beans/ProductCategoriesBean.php");
-Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Template::PathURL("/store/categories"), array("category_name")) );
+Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Module::PathURL("/store/categories"), array("category_name")) );
 
 $config = null;
 if (URL::Current()->contains("editID")) {

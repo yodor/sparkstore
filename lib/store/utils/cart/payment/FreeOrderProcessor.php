@@ -7,7 +7,7 @@ class FreeOrderProcessor extends PaymentProcessor
 
     protected function processOrderImpl($orderID, $order_row)
     {
-        $db = DBConnections::Open();
+        $db = DBConnections::Driver();
         $transaction_time = $db->dateTime();
         //
         $reference = Authenticator::RandomToken(16);

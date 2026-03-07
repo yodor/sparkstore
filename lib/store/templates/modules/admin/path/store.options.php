@@ -9,7 +9,7 @@ if (URL::Current()->contains("editID")) {
         if (!($content instanceof BeanEditor)) throw new Exception("Incorrect event source - expected BeanList");
 
         if (isset($_GET["prodID"]) && (int)$_GET["prodID"] > 0) {
-            Template::Condition(BeanKeyCondition::ForBean(ProductsBean::class, Template::PathURL("/store/options"), array("product_name")));
+            Template::Condition(BeanKeyCondition::ForBean(ProductsBean::class, Module::PathURL("/store/options"), array("product_name")));
             if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
                 $config->title .= " - " . tr("Products") . ": " . Template::Condition()->getData("product_name");
             }
@@ -18,7 +18,7 @@ if (URL::Current()->contains("editID")) {
             }
         }
         else if (isset($_GET["pclsID"]) && (int)$_GET["pclsID"] > 0) {
-            Template::Condition(BeanKeyCondition::ForBean(ProductClassesBean::class, Template::PathURL("/store/options"), array("class_name")));
+            Template::Condition(BeanKeyCondition::ForBean(ProductClassesBean::class, Module::PathURL("/store/options"), array("class_name")));
             if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
                 $config->title .= " - " . tr("Class") . ": " . Template::Condition()->getData("class_name");
             }

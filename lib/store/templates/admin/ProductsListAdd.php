@@ -32,7 +32,7 @@ $closure = function(BeanFormEditorEvent $event) {
         if (!($editor instanceof BeanFormEditor)) throw new Exception("Event source is not BeanFormEditor");
 
         $transactor = $editor->getTransactor();
-        $transactor->assignInsertValue("insert_date", DBConnections::Open()->dateTime());
+        $transactor->assignInsertValue("insert_date", DBConnections::Driver()->dateTime());
     }
 };
 SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closure));

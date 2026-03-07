@@ -1,6 +1,6 @@
 <?php
 include_once("store/beans/VariantOptionsBean.php");
-Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Template::PathURL("/store/options"), array("option_name", "pclsID", "prodID")));
+Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Module::PathURL("/store/options"), array("option_name", "pclsID", "prodID")));
 
 if (URL::Current()->contains("editID")) {
     //

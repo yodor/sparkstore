@@ -27,7 +27,7 @@ class ForgotPasswordProcessor extends FormProcessor
 
         $random_pass = Authenticator::RandomToken(8);
 
-        $db = DBConnections::Open();
+        $db = DBConnections::Driver();
         try {
             $db->transaction();
 

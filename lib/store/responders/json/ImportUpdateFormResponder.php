@@ -67,7 +67,7 @@ class ImportUpdateFormResponder extends JSONFormResponder
 
             $bean = new ProductsBean();
 
-            $db = DBConnections::Open();
+            $db = DBConnections::Driver();
 
             try {
 

@@ -1,4 +1,4 @@
 <?php
 
-$config = ModuleConfig::Active();
+$config = Module::Active();
 $config->pageClass = AdminTemplatePageBase::class;

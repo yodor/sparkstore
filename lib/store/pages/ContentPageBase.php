@@ -41,10 +41,10 @@ class ContentPageBase extends StorePage
         $this->page_class = array();
         $request_class = array();
         if (isset($_GET["page_class"])) {
-            $request_class = explode(";", DBConnections::Open()->escape($_GET["page_class"]));
+            $request_class = explode(";", DBConnections::Driver()->escape($_GET["page_class"]));
         }
         if (isset($_GET["class"])) {
-            $request_class = explode(";", DBConnections::Open()->escape($_GET["class"]));
+            $request_class = explode(";", DBConnections::Driver()->escape($_GET["class"]));
         }
 
         foreach ($request_class as $idx=>$class) {

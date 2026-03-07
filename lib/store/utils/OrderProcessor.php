@@ -67,7 +67,7 @@ class OrderProcessor
 
         Debug::ErrorLog("Using userID='$userID'");
 
-        $db = DBConnections::Open();
+        $db = DBConnections::Driver();
 
         $this->orderID = -1;
 
@@ -186,9 +186,9 @@ class OrderProcessor
                 $order_item["price"] = $cartEntry->getPrice();
                 $order_item["position"] = $pos;
                 $order_item["orderID"] = $this->orderID;
-                $order_item["product"] = DBConnections::Open()->escape($description);
+                $order_item["product"] = DBConnections::Driver()->escape($description);
                 $order_item["prodID"] = $prodID;
-                $order_item["photo"] = DBConnections::Open()->escape($item_photo);
+                $order_item["photo"] = DBConnections::Driver()->escape($item_photo);
 
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
@@ -229,7 +229,7 @@ class OrderProcessor
     protected function updateCounterStock(int $prodID, int $amount=1)
     {
 
-        $db = DBConnections::Open();
+        $db = DBConnections::Driver();
 
         if ($this->manage_stock_amount) {
             $sql = new SQLUpdate();
