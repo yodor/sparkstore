@@ -37,7 +37,7 @@ class ForgotPasswordProcessor extends FormProcessor
             if (!$users->update($userID, $update_row, $db)) throw new Exception("Невъзможна промяна на запис: " . $db->getError());
 
             $loginURL = new URL(Spark::Get(Config::LOCAL)."/account/");
-            $fpm = new ForgotPasswordMailer($email, $random_pass, $loginURL->fullURL());
+            $fpm = new ForgotPasswordMailer($email, $random_pass, $loginURL);
             $fpm->send();
 
             $db->commit();

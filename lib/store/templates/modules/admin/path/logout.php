@@ -1,9 +1,9 @@
 <?php
 include_once("auth/AdminAuthenticator.php");
 
-$auth = new AdminAuthenticator();
+$auth = Module::Active()->getAuthenticator();
 $auth->logout();
 Session::Destroy();
 
-header("Location: " . Spark::Get(Config::ADMIN_LOCAL));
+header("Location: " . Module::PathURL("login"));
 exit;

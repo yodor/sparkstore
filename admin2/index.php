@@ -8,9 +8,6 @@ $adminModule = Module::Factory("admin", Spark::PathParts(Spark::Get(Config::LOCA
 $adminModule->pageClass = SparkTemplateAdminPage::class;
 $adminModule->authClass = AdminAuthenticator::class;
 
-//include init.php from module prefix template/modules
-Module::Initialize();
-//authorize
-Module::Authorize();
+$adminModule->initialize();
 //reponse
 Module::Response();

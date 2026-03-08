@@ -53,6 +53,6 @@ if (URL::Current()->contains("editID")) {
     SparkEventManager::register(BeanTransactorEvent::class, new SparkObserver($observer_editor));
 }
 else {
-    $config = new TemplateConfig();
+    $config = TemplateConfig::Factory();
     $config->contentClass = OptionsList::class;
 }

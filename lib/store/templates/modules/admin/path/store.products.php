@@ -4,7 +4,7 @@ if (URL::Current()->contains("editID")) {
 
 }
 else {
-    $config = new TemplateConfig();
+    $config = TemplateConfig::Factory();
 
     $config->contentClass = ProductsList::class;
 

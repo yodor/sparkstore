@@ -103,6 +103,8 @@ catch (Exception $e) {
     exit;
 }
 
+Session::set("checkout.navigation.back", URL::Current()->toString());
+
 $page->setTitle(tr("Съдържание на кошницата"));
 
 $page->getCartComponent()->initialize();
@@ -127,7 +129,5 @@ if ($cart->itemsCount()>0) {
     $action->getURL()->fromString("customer.php");
 }
 
+
 $page->render();
-
-
-Session::set("checkout.navigation.back", URL::Current()->toString());
