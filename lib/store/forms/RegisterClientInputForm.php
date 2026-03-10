@@ -23,7 +23,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
 
         $label = new Component();
-        $label->setContents(tr("Ще Ви изпратим e-mail за потвърждение"));
+        $label->setContents(tr("Ще получите e-mail за потвърждение"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -53,12 +53,16 @@ class RegisterClientInputForm extends InputForm
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
 
-        $field = DataInputFactory::Create(InputType::HIDDEN, "pass", "Парола", 0);
+        $field = DataInputFactory::Create(InputType::HIDDEN, "challenge", "challenge", 0);
+        $this->addInput($field);
+
+        $field = DataInputFactory::Create(InputType::HIDDEN, "token", "token", 0);
         $this->addInput($field);
 
         $termsURL = new URL(Spark::Get(Config::LOCAL)."/pages/index.php?page_class=terms");
-        $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Прочетох и приемам <a href='{$termsURL->fullURL()}'>Общите условия</a>", 1);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Приемам <a href='{$termsURL->fullURL()}'>Общите условия</a>", 1);
         $this->addInput($field);
+
 
     }
 

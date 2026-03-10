@@ -50,29 +50,14 @@ class RegisterClientFormProcessor extends FormProcessor
 
             $urow["phone"] = $form->getInput("phone")->getValue();
 
-            $pass = $form->getInput("pass")->getValue();
-            if (strlen($pass)!=32) throw new Exception(tr("Неуспешно регистриране на парола"));
-            $urow["password"] = $pass;
+            //plaintext
+            $urow["password"] = $this->processPassword($form);
 
-
-            //automatic registration without activation email
-//            $password = Authenticator::RandomToken(8);
-//
-//            $urow["password"] = md5($password);
-//            $urow["confirmed"] = 1;
-//            $urow["date_signup"] = DBConnections::Get()->dateTime();
-//
-//            $auth = new UserAuthenticator();
-//
-//            $context = $auth->register($urow);
-//
-//            $mailer = new RegisterCustomerPasswordMailer($context->getID(), $password, $urow["fullname"], $urow["email"]);
-//            $mailer->send();
-            //
+            $confirm_code = Authenticator::RandomToken(32);
 
             //registration requires activation email
-            $confirm_code = Authenticator::RandomToken(32);
             $urow["confirmed"] = 0;
+
             $urow["date_signup"] = DBConnections::Driver()->dateTime();
             $urow["confirm_code"] = $confirm_code;
 
@@ -82,6 +67,8 @@ class RegisterClientFormProcessor extends FormProcessor
             $mailer = new RegisterCustomerActivationMailer($urow["fullname"], $urow["email"], $confirm_code);
             $mailer->send();
 
+            //auto activate or RegisterCustomerActivationMailer
+            //$users->activate($email, $confirm_code);
         }
         else {
 
@@ -103,9 +90,31 @@ class RegisterClientFormProcessor extends FormProcessor
             $urow["fullname"] = $form->getInput("fullname")->getValue();
             $urow["email"] = $email;
             $urow["phone"] = $form->getInput("phone")->getValue();
+            $password = $form->getInput("password")->getValue();
+
+            if (strlen($password)>0) {
+                $urow["password"] = $this->processPassword($form);
+            }
 
             if (!$users->update($this->editID, $urow)) throw new Exception("Грешка при обновяване на профила: " . $users->getDB()->getError());
 
         }
+    }
+
+    protected function processPassword(InputForm $form) : string
+    {
+        $password = $form->getInput("password")->getValue();
+        if (strlen($password)<6) throw new Exception(tr("Невалидна дължина на парола"));
+
+        $client_hmac = $form->getInput("challenge")->getValue();
+        if (strlen($client_hmac)<32) throw new Exception(tr("Incorrect token challenge"));
+        if (strlen($client_hmac)>128) throw new Exception(tr("Incorrect token challenge"));
+
+        $hash = new PasswordHash($password);
+        //get authenticator from controller and check hmac with session token - valid one time
+        SparkPage::Instance()->getAuthenticator()->verifyTokenHMAC($hash, $client_hmac);
+
+        //TODO: cpu expensive implement ratelimit
+        return $hash->getValue();
     }
 }

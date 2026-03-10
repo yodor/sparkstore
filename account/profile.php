@@ -6,8 +6,12 @@ include_once("store/forms/processors/RegisterClientFormProcessor.php");
 $page = new AccountPage();
 $page->setTitle(tr("Клиентски профил"));
 
+$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/LoginForm.js");
+$page->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/RegisterForm.js");
+
 $form = new RegisterClientInputForm();
 $form->removeInput("accept_terms");
+$form->getInput("token")->setValue($page->getAuthenticator()->produceLoginToken());
 
 $form->loadBeanData($page->getUserID(), new UsersBean());
 $form->getInput("email")->setEditable(false);

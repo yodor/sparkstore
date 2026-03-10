@@ -27,7 +27,7 @@ $req->setSuccessUrl($login_redirect);
 
 $af = new LoginForm();
 
-$afr = new LoginFormRenderer($af, $req);
+$afr = new LoginFormRenderer($af, AuthenticatorResponder::class, $req->getAuthenticator()->produceLoginToken());
 
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

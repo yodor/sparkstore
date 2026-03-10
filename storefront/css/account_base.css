@@ -67,13 +67,19 @@
     text-align:center;
 }
 
-
+.InputField {
+    text-align:left;
+}
+.InputLabel {
+    text-align:left;
+}
 
 .InputField .addon {
     /*display:block;*/
     font-size:90%;
     color:#aaaaaa;
     font-style: italic;
+
 }
 
 

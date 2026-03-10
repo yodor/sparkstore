@@ -6,13 +6,12 @@ include_once("store/forms/processors/RegisterClientFormProcessor.php");
 $page = new AccountPage(FALSE);
 $page->setTitle(tr("Регистрация"));
 
-$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/md5.js");
 $page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/LoginForm.js");
-$page->head()->addJS(Spark::Get(Config::SPARK_LOCAL)."/js/RegisterForm.js");
+$page->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/RegisterForm.js");
 
 
 $form = new RegisterClientInputForm();
-
+$form->getInput("token")->setValue($page->getAuthenticator()->produceLoginToken());
 
 $frender = new FormRenderer($form);
 $frender->setAttribute("autocomplete", "off");
