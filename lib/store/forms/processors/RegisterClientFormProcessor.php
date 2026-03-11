@@ -101,6 +101,12 @@ class RegisterClientFormProcessor extends FormProcessor
         }
     }
 
+    /**
+     * Verify challenge token and set new password
+     * @param InputForm $form
+     * @return string
+     * @throws Exception
+     */
     protected function processPassword(InputForm $form) : string
     {
         $password = $form->getInput("password")->getValue();
