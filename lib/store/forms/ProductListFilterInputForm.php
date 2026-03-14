@@ -342,7 +342,7 @@ class ProductListFilterInputForm extends InputForm {
         $select = $this->attributesSelect();
 
         $query = new SQLQuery($select, "name");
-        $num = $query->exec();
+        $query->exec();
         while ($result = $query->nextResult())
         {
 
@@ -366,7 +366,7 @@ class ProductListFilterInputForm extends InputForm {
 
 
         $query = new SQLQuery($select, "voID");
-        $num = $query->exec();
+        $query->exec();
         while ($result = $query->nextResult())
         {
             $name = $result->get("option_name");

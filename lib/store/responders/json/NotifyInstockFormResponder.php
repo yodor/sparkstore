@@ -34,8 +34,9 @@ class NotifyInstockFormResponder extends JSONFormResponder
 
         $query->select->where()->add("email", "'$email'");
         $query->select->where()->add("prodID", $this->sellable->getProductID());
-        $num = $query->exec();
-        if ($num>0) {
+        $query->exec();
+
+        if ($query->next()) {
             $resp->message = tr("Вече сте абониран");
             return;
         }

@@ -204,8 +204,11 @@ class ProductDetailsItem extends Container implements IHeadContents
         $features = new ProductFeaturesBean();
         $qry = $features->queryField("prodID", $this->sellable->getProductID());
         $qry->select->fields()->set("feature");
-        $num = $qry->exec();
+        $num = $qry->count();
+
         if ($num) {
+
+            $qry->exec();
 
             $tab = new DetailsTab();
             $tab->setCaption(tr("Свойства"));

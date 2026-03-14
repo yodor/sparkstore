@@ -77,15 +77,14 @@ class CurrencyConverter
         $qry = $currency_rates->queryFull();
         $qry->select->where()->add("srcID", $this->srcID)->add("dstID", $this->dstID);
         $qry->select->limit = 1;
-        $num = $qry->exec();
-        if ($num < 1) {
-            Session::Set("currencyID", $this->srcID);
-            $this->dstID = $this->srcID;
-        }
+        $qry->exec();
 
         if ($data = $qry->next()) {
             $this->setCurrency($conversion_currency, (float)$data["rate"]);
-
+        }
+        else {
+            Session::Set("currencyID", $this->srcID);
+            $this->dstID = $this->srcID;
         }
 
     }
@@ -111,13 +110,15 @@ class CurrencyConverter
             }
             $qry->select->limit = 1;
             $qry->select->order_by = $currencies->key() . " ASC";
-            $num = $qry->exec();
-            if ($num < 1) throw new Exception("Unable to set default currency");
+            $qry->exec();
 
-            $data = $qry->next();
-            $this->srcID = $data[$currencies->key()];
-            $this->setCurrency($data, 1.0);
-            Debug::ErrorLog("Default Currency ID: " . $this->srcID, " - Code: " . $this->code);
+
+            if ($data = $qry->next()) {
+                $this->srcID = $data[$currencies->key()];
+                $this->setCurrency($data, 1.0);
+                Debug::ErrorLog("Default Currency ID: " . $this->srcID, " - Code: " . $this->code);
+            }
+            else throw new Exception("Unable to set default currency");
         }
 
     }

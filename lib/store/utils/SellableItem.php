@@ -66,8 +66,10 @@ class SellableItem extends SparkObject
         $qry->select->where()->add("prodID", $prodID);
         $qry->select->group_by = "prodID";
 
-        $num = $qry->exec();
+        $num = $qry->count();
         if ($num < 1) throw new Exception("Product does not exist or is not accessible right now");
+
+        $qry->exec();
 
         $sellable = new SellableItem();
         SellableItem::GetDefaultDataParser()->parse($sellable, $qry->nextResult());

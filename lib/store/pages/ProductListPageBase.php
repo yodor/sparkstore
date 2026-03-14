@@ -72,6 +72,7 @@ class ProductListPageBase extends ProductPageBase
 
         $section_filter = new GETProcessor("section", "section");
         $closure = function(GETProcessor $filter) {
+
             $filter->setTitle($filter->getValue());
             $clause = new SQLClause();
             $value = $filter->getValue();
@@ -323,7 +324,7 @@ class ProductListPageBase extends ProductPageBase
             $this->select->fields()->unset("category_name");
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
         }
-        //echo $this->select->getSQL();
+
         $this->view->setIterator(new SQLQuery($this->select, "prodID"));
 
         //construct category tree for the products that will be listed

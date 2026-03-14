@@ -17,7 +17,7 @@ $page->startRender();
 
 
 $query = $sections->queryFull();
-$num = $query->exec();
+$query->exec();
 
 echo "<div class='column side faq_sections'>";
     echo "<div class='Caption'>".tr("Section")."</div>";
@@ -41,8 +41,10 @@ if ($secID>0) {
     $faq = new FAQItemsBean();
     $query = $faq->queryFull();
     $query->select->where()->add($sections->key(), $secID);
-    $num = $query->exec();
+
+    $num = $query->count();
     if ($num>0) {
+        $query->exec();
         while ($result = $query->nextResult()) {
             echo "<div class='question'><div class='icon'></div>" . $result->get("question") . "</div>";
             echo "<div class = 'answer'>";

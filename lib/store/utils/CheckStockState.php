@@ -27,12 +27,13 @@ class CheckStockState
         $bean = new InstockSubscribersBean();
         $query = $bean->query($bean->key(), "email");
         $query->select->where()->add("prodID", $this->prodID);
-        $num = $query->exec();
+        $query->exec();
 
-        Debug::ErrorLog("Going to notify ".$num." subscribers ...");
+        Debug::ErrorLog("Going to notify subscribers ...");
         $mailer = new InstockProductMailer();
         $mailer->setProduct($this->product_name, $this->product_link);
 
+        $notified = 0;
         while ($result = $query->nextResult()) {
 
             $client_email = $result->get("email");
@@ -41,6 +42,7 @@ class CheckStockState
                 $mailer->setRecipient($client_email);
                 $mailer->prepareMessage();
                 $mailer->send();
+                $notified++;
             }
             catch (Exception $e) {
                 Debug::ErrorLog("Unable to send notification email to subscriber: ".$client_email." | Error: ".$e->getMessage());
@@ -54,7 +56,7 @@ class CheckStockState
             }
         }
 
-        Debug::ErrorLog("Notify finished ...");
+        Debug::ErrorLog("Notified [$notified] subscribers ...");
 
     }
     public function process(int $stock_amount, int $old_stock_amount) : void

@@ -28,7 +28,7 @@ class ContactRequestFormResponder extends JSONFormResponder
         $email = $this->form->getInput("email")->getValue();
         $query = $this->form->getInput("query")->getValue();
 
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
         try {
             $db->transaction();
 

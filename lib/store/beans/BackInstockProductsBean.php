@@ -21,7 +21,7 @@ class BackInstockProductsBean extends DBTableBean
     {
         //insert into backinstock list
         Debug::ErrorLog("Updating back in stock list for prodID: $prodID");
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
         try {
             $db->transaction();
             $db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP");
@@ -36,7 +36,7 @@ class BackInstockProductsBean extends DBTableBean
     {
         Debug::ErrorLog("Deleting from back in stock list for prodID: $prodID");
 
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
         try {
             $db->transaction();
             $db->query("DELETE FROM backinstock_products WHERE prodID = $prodID");

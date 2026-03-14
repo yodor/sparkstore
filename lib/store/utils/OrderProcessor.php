@@ -67,7 +67,7 @@ class OrderProcessor
 
         Debug::ErrorLog("Using userID='$userID'");
 
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
 
         $this->orderID = -1;
 
@@ -105,10 +105,11 @@ class OrderProcessor
             }
             else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
                 $qry = $eab->queryField("userID", $userID, 1, "office");
-                $num = $qry->exec();
-                if ($num < 1) throw new Exception("Недостъпен адрес за доставка");
-                $ekont_address = $qry->next();
-                $order["delivery_address"] = $db->escape($ekont_address["office"]);
+                $qry->exec();
+                if ($ekont_address = $qry->next()) {
+                    $order["delivery_address"] = $db->escape($ekont_address["office"]);
+                }
+                else throw new Exception("Недостъпен адрес за доставка");
             }
             else {
                 throw new Exception("Недостъпен начин на доставка");
@@ -186,9 +187,9 @@ class OrderProcessor
                 $order_item["price"] = $cartEntry->getPrice();
                 $order_item["position"] = $pos;
                 $order_item["orderID"] = $this->orderID;
-                $order_item["product"] = DBConnections::Driver()->escape($description);
+                $order_item["product"] = $description;
                 $order_item["prodID"] = $prodID;
-                $order_item["photo"] = DBConnections::Driver()->escape($item_photo);
+                $order_item["photo"] = $item_photo;
 
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
@@ -229,7 +230,7 @@ class OrderProcessor
     protected function updateCounterStock(int $prodID, int $amount=1)
     {
 
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
 
         if ($this->manage_stock_amount) {
             $sql = new SQLUpdate();

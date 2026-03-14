@@ -30,8 +30,9 @@ class OrderStatusProcessor extends FormProcessor
         $qry = $orders->query();
         $qry->select->where()->add("order_identifier", "'$ticket'")->add("client_identifier", "'$email'");
         $qry->select->limit = " 1 ";
+        $qry->exec();
 
-        if ($qry->exec() > 0 && $order_row = $qry->next()) {
+        if ($order_row = $qry->next()) {
 
             $this->order = $order_row;
             $this->orderID = $order_row[$orders->key()];

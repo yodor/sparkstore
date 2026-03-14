@@ -40,7 +40,7 @@ $qry = $orders->queryFull();
 
 $qry->select->where()->add("orderID", $orderID);
 $qry->select->limit = " 1 ";
-$num = $qry->exec();
+$qry->exec();
 
 $page->setName(tr("Order Details").": ".$orderID);
 
@@ -154,7 +154,7 @@ echo "</div>";//panel
 
                 $qry = $items->queryField("orderID", $orderID);
                 $qry->select->fields()->set("prodID", "itemID", "price", "qty", "product");
-                $numItems = $qry->exec();
+                $qry->exec();
 
                 $pos = 0;
                 while ($item = $qry->next()) {

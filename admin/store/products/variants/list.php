@@ -43,7 +43,7 @@ class ProductVariantsInputForm extends InputForm
         $query->select->where()->add("prodID" , " null ", " is ");
         $query->select->where()->add("option_value" , " null ", " is ");
 
-        $num = $query->exec();
+        $query->exec();
         while ($result = $query->nextResult()) {
             $voID = $result->get("voID");
             $option_name = $result->get("option_name");
@@ -62,7 +62,7 @@ class ProductVariantsInputForm extends InputForm
             $query->select->where()->add("option_value" , " null ", " is ");
             $query->select->where()->add("prodID" , " null ", " is ");
 
-            $num = $query->exec();
+            $query->exec();
             while ($result = $query->nextResult()) {
                 $voID = $result->get("voID");
                 $option_name = $result->get("option_name");
@@ -80,7 +80,7 @@ class ProductVariantsInputForm extends InputForm
         $query->select->where()->add("option_value" , " null ", " is ");
         $query->select->where()->add("pclsID" , " null ", " is ");
 
-        $num = $query->exec();
+        $query->exec();
         while ($result = $query->nextResult()) {
             $voID = $result->get("voID");
             $option_name = $result->get("option_name");
@@ -129,12 +129,10 @@ class ProductVariantsProcessor extends FormProcessor
     }
 
 
-    protected function storeFormData(InputForm $form)
+    protected function storeFormData(InputForm $form) : void
     {
 
-        $db = DBConnections::Driver();
-
-
+        $db = DBConnections::CreateDriver();
 
         try {
             $db->transaction();
@@ -151,8 +149,6 @@ class ProductVariantsProcessor extends FormProcessor
                 }
 
             }
-
-
 
             if (is_array($posted_voIDs) && count($posted_voIDs)>0) {
                 //echo "<pre>Posted IDS: ".print_r($posted_voIDs)."</pre>";
@@ -192,7 +188,7 @@ class ProductVariantsProcessor extends FormProcessor
         $select->where()->add("pv.prodID", $this->prodID);
 
         $query = new SQLQuery($select, "pvID");
-        $num = $query->exec();
+        $query->exec();
 
         foreach ($form->inputs() as $idx=> $input) {
             $input->setValue(array());

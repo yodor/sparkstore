@@ -110,7 +110,7 @@ class SellableDataParser
                 }
                 $vitem->addParameter($value);
                 $query = $this->product_variants->queryVariantPhotos($item->getProductID(), $name, $value);
-                $num = $query->exec();
+                $query->exec();
                 while ($photo = $query->nextResult()) {
                     $si = new StorageItem();
                     $si->className = "ProductVariantPhotosBean";
@@ -130,7 +130,7 @@ class SellableDataParser
         $qry = $this->product_photos->query("ppID");
         $qry->select->where()->add("prodID", $item->getProductID());
         $qry->select->order_by = " position ASC ";
-        $num = $qry->exec();
+        $qry->exec();
 
         $main_photo = null;
         while ($row = $qry->next()) {

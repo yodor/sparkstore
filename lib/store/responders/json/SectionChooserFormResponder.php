@@ -37,7 +37,7 @@ class SectionChooserFormResponder extends JSONFormResponder
         $select->where()->add("ps.prodID", $this->prodID);
 
         $query = new SQLQuery($select, "psID");
-        $num = $query->exec();
+        $query->exec();
         $values = array();
         while ($result = $query->nextResult()) {
             $values[] = $result->get("secID");
@@ -56,7 +56,7 @@ class SectionChooserFormResponder extends JSONFormResponder
         $field = $this->form->getInput("secID");
         if (! ($field instanceof ArrayDataInput)) throw new Exception("Incorrect data type");
 
-        $db = DBConnections::Driver();
+        $db = DBConnections::CreateDriver();
         try {
             $db->transaction();
 
@@ -74,14 +74,17 @@ class SectionChooserFormResponder extends JSONFormResponder
 
             if (count($section_ids) > 0) {
 
-                //initialize columns
-                $insert->fields()->setColumn(new SQLColumn("prodID"));
-                $insert->fields()->setColumn(new SQLColumn("secID"));
+                //initialize columns with automatic bindings :prodID, :secID - empty arrays - to hold prodID, secID,
+                $colProdID = new SQLColumn("prodID", []);
+                $colSecID = new SQLColumn("secID", []);
 
                 foreach ($section_ids as $idx=>$secID) {
-                    $insert->fields()->getColumn("prodID")->addValue($this->prodID);
-                    $insert->fields()->getColumn("secID")->addValue($secID);
+                    $colProdID->addValue($this->prodID);
+                    $colSecID->addValue($secID);
                 }
+
+                $insert->fields()->setColumn($colProdID);
+                $insert->fields()->setColumn($colSecID);
 
                 $db->query($insert->getSQL());
             }

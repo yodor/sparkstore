@@ -10,11 +10,11 @@ include_once("store/beans/SellableProducts.php");
 abstract class NavigationList extends Container
 {
 
-    protected Container $list;
-    protected NavigationListItem $item;
+    protected ?Container $list = null;
+    protected ?NavigationListItem $item = null;
 
-    protected IDataIterator $iterator;
-    protected SQLSelect $tapeProducts;
+    protected ?IDataIterator $iterator = null;
+    protected ?SQLSelect $tapeProducts = null;
 
     public Closure $createListIterator;
     public Closure $createTapeIterator;
@@ -103,14 +103,17 @@ abstract class NavigationList extends Container
     public function createTapeProducts() : SQLSelect
     {
         $sellable = new SellableProducts();
-        $select = $sellable->query(...$sellable->columnNames())->select;
+
+        $select = new SQLSelect();
+        $select->from = $sellable->getTableName();
+        $select->fields()->set("prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent");
 
         $select->fields()->unset($this->item->getValueKey());
         $select->fields()->unset($this->item->getLabelKey());
 
         $select->order_by = " RAND() ";
 
-        $select->where()->add("stock_amount", 0, ">");
+        $select->where()->addExpression("stock_amount > 0");
 
         $select->limit = " 4 ";
         return $select;
@@ -128,7 +131,9 @@ abstract class NavigationList extends Container
 
     protected function renderItems() : void
     {
+
         $this->iterator->exec();
+
         $position = 0;
         while ($result = $this->iterator->next())
         {
@@ -142,7 +147,8 @@ abstract class NavigationList extends Container
                 //tape iterator is set enable tape rendering
                 $this->item->getTape()->setRenderEnabled(true);
 
-                $num = $query->exec();
+                $num = $query->count();
+
                 if ($num > 0) {
                     $this->item->getTape()->setIterator($query);
                 }

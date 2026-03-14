@@ -66,7 +66,9 @@ class CategoryNavigation extends NavigationList
     public function createTapeIterator() : ?SQLQuery
     {
         $tape_select = $this->iterator->bean()->selectChildNodesWith($this->tapeProducts, "sellable_products", $this->item->getValue(), array($this->item->getValueKey(), $this->item->getLabelKey()));
-        return new SQLQuery($tape_select, "prodID");
+        $query = new SQLQuery($tape_select, "prodID");
+        //$query->setDB(DBConnections::CreateDriver());
+        return $query;
     }
 
 }

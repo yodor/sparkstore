@@ -41,10 +41,10 @@ class ContentPageBase extends StorePage
         $this->page_class = array();
         $request_class = array();
         if (isset($_GET["page_class"])) {
-            $request_class = explode(";", DBConnections::Driver()->escape($_GET["page_class"]));
+            $request_class = explode(";", $_GET["page_class"]);
         }
         if (isset($_GET["class"])) {
-            $request_class = explode(";", DBConnections::Driver()->escape($_GET["class"]));
+            $request_class = explode(";", $_GET["class"]);
         }
 
         foreach ($request_class as $idx=>$class) {
@@ -67,15 +67,17 @@ class ContentPageBase extends StorePage
             }
             else {
                 foreach ($this->page_class as $clsas) {
-                    $query->select->where()->add("keywords", "'%$clsas%'", " LIKE ", " AND ");
+                    $query->select->where()->addExpression("keywords LIKE :page_class");
+                    $query->select->bind(":page_class", "%$clsas%");
                 }
             }
             $query->select->limit = " 1 ";
             $query->select->order_by = " item_date DESC, {$this->bean->key()} DESC ";
-            $num = $query->exec();
-            if ($num < 1) throw new Exception("Page not found");
-            $this->result = $query->nextResult();
-            if (!$this->result) throw new Exception("Unable to query page data");
+            $query->exec();
+            if ($this->result = $query->nextResult()) {
+
+            }
+            else throw new Exception("Page not found");
         }
         catch (Exception $e) {
             Session::SetAlert($e->getMessage());
@@ -164,8 +166,12 @@ class ContentPageBase extends StorePage
 
         if (is_null($this->menuQuery)) return;
 
-        $menu_items = $this->menuQuery->exec();
+
+        $menu_items = $this->menuQuery->count();
+
         if ($menu_items>0) {
+
+            $this->menuQuery->exec();
 
             $css_class = implode(" ", $this->page_class);
 

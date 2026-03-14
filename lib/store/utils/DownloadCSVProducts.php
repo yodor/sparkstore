@@ -66,7 +66,7 @@ class ImagesExporter extends ProductExporter {
         $select->order_by = " prodID ASC, position ASC ";
 
         $qry = new SQLQuery($select);
-        $num = $qry->exec();
+        $qry->exec();
 
         while ($result = $qry->nextResult()) {
             $prodID = $result->get("prodID");
@@ -79,7 +79,7 @@ class ImagesExporter extends ProductExporter {
             $select1->where()->add("ppID", $ppID);
 
             $qry1 = new SQLQuery($select1);
-            $num1 = $qry1->exec();
+            $qry1->exec();
             if ($result1 = $qry1->nextResult()) {
                 $photo = $result1->get("photo");
                 $photo = unserialize($photo);
@@ -244,7 +244,7 @@ abstract class CSVProductExporter extends ProductExporter
 
         $this->processQuery($query);
 
-        $total_rows = $query->exec();
+        $query->exec();
 
         $this->writeHeader();
         while ($result = $query->nextResult()) {

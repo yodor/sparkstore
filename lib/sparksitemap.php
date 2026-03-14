@@ -13,7 +13,7 @@ $qry->select->fields()->set("prodID", "product_name", "update_date");
 $qry->select->fields()->setExpression("(SELECT GROUP_CONCAT(pp.ppID SEPARATOR ';') FROM product_photos pp WHERE pp.prodID=sellable_products.prodID ORDER BY pp.position ASC)", "photos");
 $qry->select->group_by = " prodID ";
 
-$num = $qry->exec();
+$qry->exec();
 
 echo "<?xml version='1.0' encoding='UTF-8'?>";
 echo "<urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9' xmlns:image='https://www.google.com/schemas/sitemap-image/1.1'>";
@@ -51,7 +51,7 @@ $select->fields()->setExpression("(SELECT group_concat(sp.ppID ORDER BY sp.prodI
 $select->from = " product_categories pc ";
 //echo $select->getSQL();
 $query = new SQLQuery($select);
-$num = $query->exec();
+$query->exec();
 while ($result = $query->nextResult())
 {
     $catID = $result->get("catID");

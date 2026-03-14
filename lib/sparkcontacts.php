@@ -19,7 +19,8 @@ $cfg->setSection("store_config");
 $cabean = new ContactAddressesBean();
 $qry = $cabean->queryFull();
 $qry->select->order_by = " position ASC ";
-$num_addresses = $qry->exec();
+
+$num_addresses = $qry->count();
 
 $maps_src = "";
 if ($num_addresses<1) {

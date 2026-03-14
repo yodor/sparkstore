@@ -122,12 +122,10 @@ class ProductsTape extends Container
     {
         if (!$this->query instanceof SQLQuery) return;
 
-        $numResults = 0;
+        $numResults = $this->query->count();
+
         if (!$this->query->isActive()) {
-            $numResults = $this->query->exec();
-        }
-        else {
-            $numResults = $this->query->count();
+            $this->query->exec();
         }
 
         $this->schemaItemCount->setContent($numResults);
