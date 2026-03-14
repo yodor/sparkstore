@@ -156,7 +156,7 @@ class ProductsList extends BeanList {
 //        }
 
         $qry = $this->bean->query();
-        $qry->select->fields()->set(
+        $qry->stmt->fields()->set(
             "p.prodID",
             "p.product_name",
             "p.brand_name",
@@ -166,17 +166,17 @@ class ProductsList extends BeanList {
             "p.stock_amount",
         );
 
-        $qry->select->fields()->setExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
-        $qry->select->fields()->setExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
+        $qry->stmt->fields()->setAliasExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
+        $qry->stmt->fields()->setAliasExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
 
-        $qry->select->fields()->setExpression("(SELECT 
+        $qry->stmt->fields()->setAliasExpression("(SELECT 
         GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID = pca.attrID
         WHERE pcav.prodID = p.prodID )", "product_attributes");
 
-        $qry->select->fields()->setExpression("(SELECT 
+        $qry->stmt->fields()->setAliasExpression("(SELECT 
     GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
     (SELECT 
         CONCAT(vo.option_name, ':', GROUP_CONCAT(vo.option_value ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR ';')) as label,
@@ -187,24 +187,24 @@ class ProductsList extends BeanList {
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->select->fields()->setExpression("(
+        $qry->stmt->fields()->setAliasExpression("(
         SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
         )", "class_name");
 
-        $qry->select->fields()->setExpression("(
+        $qry->stmt->fields()->setAliasExpression("(
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 
 
-        $qry->select->fields()->setExpression("(
+        $qry->stmt->fields()->setAliasExpression("(
         SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "view_counter");
 
-        $qry->select->fields()->setExpression("(
+        $qry->stmt->fields()->setAliasExpression("(
         SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "order_counter");
 
-        $qry->select->from = " products p ";
+        $qry->stmt->from = " products p ";
 
 
         $this->setIterator($qry);
@@ -307,34 +307,34 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_brand")) {
                 $filter_brand = $form->getInput("filter_brand")->getValue();
                 if ($filter_brand) {
-                    $this->query->select->where()->add("p.brand_name", "'".$filter_brand."'");
+                    $this->query->stmt->where()->add("p.brand_name", "'".$filter_brand."'");
                 }
             }
 
             if ($form->haveInput("filter_section")) {
                 $filter_section = $form->getInput("filter_section")->getValue();
                 if ($filter_section) {
-                    $this->query->select->having = " sections LIKE '%{$filter_section}%' ";
+                    $this->query->stmt->having = " sections LIKE '%{$filter_section}%' ";
                 }
             }
 
             if ($form->haveInput("filter_catID")) {
                 $filter_catID = $form->getInput("filter_catID")->getValue();
                 if ($filter_catID>0) {
-                    $this->query->select->where()->add("p.catID", $filter_catID);
+                    $this->query->stmt->where()->add("p.catID", $filter_catID);
                 }
             }
 
             if ($form->haveInput("filter_class")) {
                 $filter_class = $form->getInput("filter_class")->getValue();
                 if ($filter_class) {
-                    $this->query->select->having = " class_name = '$filter_class'";
+                    $this->query->stmt->having = " class_name = '$filter_class'";
                 }
             }
 
             if ($form->getInput("keyword")->getValue()) {
                 $clauses = $form->prepareClauseCollection("OR");
-                $this->query->select->having = $clauses->getSQL("");
+                $this->query->stmt->having = $clauses->getSQL();
             }
         }
 
@@ -342,7 +342,7 @@ class ProductsList extends BeanList {
         if ($this->cmp instanceof TableView) {
             $itr = $this->cmp->getIterator();
             if ($itr instanceof SQLQuery) {
-                Session::Set("ProductListSelect", serialize($itr->select));
+                Session::Set("ProductListSelect", serialize($itr->stmt));
                 Debug::ErrorLog("Serialized SQLSelect for this product listing");
             }
         }

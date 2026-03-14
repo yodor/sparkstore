@@ -26,7 +26,7 @@ class AttributeFilter extends ClosureFilter {
 //            ) AS {$input->getName()}
 //                ON {$input->getName()}.prodID = sellable_products.prodID";
 
-            $select->fields()->setExpression("{$input->getName()}.attribute_value", "{$input->getName()}");
+            $select->fields()->setAliasExpression("{$input->getName()}.attribute_value", "{$input->getName()}");
             $select->from .= " INNER JOIN product_attributes AS {$input->getName()} ON {$input->getName()}.prodID = sellable_products.prodID ";
             $select->where()->add("{$input->getName()}.attribute_name", "'{$input->getName()}'");
             $select->where()->add("{$input->getName()}.attribute_value", "'{$value}'", $opr);

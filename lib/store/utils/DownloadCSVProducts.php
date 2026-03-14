@@ -211,13 +211,13 @@ abstract class CSVProductExporter extends ProductExporter
         $bean = new SellableProducts();
 
         $query = $bean->query("prodID");
-        $query->select->group_by = " prodID ";
+        $query->stmt->group_by = " prodID ";
 
         if (isset($_GET["filter_catID"])) {
             $catID = (int)$_GET["filter_catID"];
-            $query->select->where()->add("catID", $catID);
+            $query->stmt->where()->add("catID", $catID);
         }
-        return $query->select;
+        return $query->stmt;
     }
     public function process() : void
     {
@@ -259,7 +259,7 @@ abstract class CSVProductExporter extends ProductExporter
 
     protected function processQuery(SQLQuery $query) : void
     {
-        $query->select->order_by = " update_date DESC ";
+        $query->stmt->order_by = " update_date DESC ";
     }
 
     public function getToolTipText() : string
@@ -546,7 +546,7 @@ class UpdateCSVExporter extends CSVProductExporter
 
     protected function processQuery(SQLQuery $query): void
     {
-        $query->select->order_by = " prodID DESC ";
+        $query->stmt->order_by = " prodID DESC ";
     }
 }
 

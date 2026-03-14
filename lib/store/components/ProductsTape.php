@@ -83,10 +83,7 @@ class ProductsTape extends Container
     public function getCacheName() : string
     {
         $result = parent::getCacheName();
-
-        if ($this->query instanceof SQLQuery) {
-            $result.="-".$this->query->select->getSQL();
-        }
+        if ($this->query instanceof ICacheIdentifier) $result.= $this->query->stmt->getSQL();
         return $result;
     }
 

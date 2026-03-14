@@ -48,8 +48,8 @@ class OrderStatusRequestResponder extends RequestResponder
 
             $bean = new OrdersBean();
 
-            $update_row["status"] = $db->escape($this->status);
-            $update_row["completion_date"] = $db->dateTime();
+            $update_row["status"] = $this->status;
+            $update_row["completion_date"] = "now()";
 
             if (!$bean->update($this->orderID, $update_row, $db)) throw new Exception("Unable to update this order: " . $db->getError());
 

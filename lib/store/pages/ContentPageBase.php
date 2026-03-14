@@ -60,19 +60,19 @@ class ContentPageBase extends StorePage
             if (count($this->page_class)==0 && $this->id < 1) throw new Exception("Parameter required");
 
             $query = $this->bean->query($this->bean->key(), "item_title", "content", "keywords", "item_date");
-            $query->select->fields()->setExpression("( photo IS NOT NULL )", "have_photo");
-            $query->select->where()->add("visible", 1);
+            $query->stmt->fields()->setAliasExpression("( photo IS NOT NULL )", "have_photo");
+            $query->stmt->where()->add("visible", 1);
             if ($this->id > 0) {
-                $query->select->where()->add($this->bean->key(), $this->id);
+                $query->stmt->where()->add($this->bean->key(), $this->id);
             }
             else {
                 foreach ($this->page_class as $clsas) {
-                    $query->select->where()->addExpression("keywords LIKE :page_class");
-                    $query->select->bind(":page_class", "%$clsas%");
+                    $query->stmt->where()->addExpression("keywords LIKE :page_class");
+                    $query->stmt->bind(":page_class", "%$clsas%");
                 }
             }
-            $query->select->limit = " 1 ";
-            $query->select->order_by = " item_date DESC, {$this->bean->key()} DESC ";
+            $query->stmt->limit = " 1 ";
+            $query->stmt->order_by = " item_date DESC, {$this->bean->key()} DESC ";
             $query->exec();
             if ($this->result = $query->nextResult()) {
 
@@ -108,18 +108,18 @@ class ContentPageBase extends StorePage
 
             //limit lising all
             if (count($page_class)>0) {
-                $query->select->where()->removeExpression("keywords");
+                $query->stmt->where()->removeExpression("keywords");
 
                 foreach ($page_class as $class) {
-                    $query->select->where()->add("keywords", "'%$class%'", " LIKE ", " AND ");
+                    $query->stmt->where()->add("keywords", "'%$class%'", " LIKE ", " AND ");
                 }
 
-                $query->select->where()->removeExpression($this->bean->key());
-                $query->select->limit = "";
+                $query->stmt->where()->removeExpression($this->bean->key());
+                $query->stmt->limit = "";
 
                 //minimum visible and id
-                if ($query->select->where()->count()>1) {
-                    $this->menuQuery = new SQLQuery($query->select, $this->bean->key());
+                if ($query->stmt->where()->count()>1) {
+                    $this->menuQuery = new SQLQuery($query->stmt, $this->bean->key());
                 }
             }
         }

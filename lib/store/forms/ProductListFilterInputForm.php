@@ -262,7 +262,7 @@ class ProductListFilterInputForm extends InputForm {
 
     }
 
-    public function setSQLSelect(SQLSelect $filters_select)
+    public function setSQLSelect(SQLSelect $filters_select) : void
     {
         $this->select = $filters_select;
 
@@ -296,6 +296,9 @@ class ProductListFilterInputForm extends InputForm {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     protected function attributesSelect() : SQLSelect
     {
         $product_list = clone $this->select;
@@ -311,10 +314,13 @@ class ProductListFilterInputForm extends InputForm {
         JOIN attributes attr ON attr.attrID=pca.attrID";
         $select->group_by = " attr.name ";
         $select->order_by = " attr.attrID ASC ";
-
+        SQLStatement::CopyBindings($select, $product_list);
         return $select;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function variantSelect() : SQLSelect
     {
         $product_list = clone $this->select;
@@ -331,6 +337,7 @@ class ProductListFilterInputForm extends InputForm {
         $select->group_by = " vo.option_name ";
         $select->order_by = " vo.voID ASC ";
 
+        SQLStatement::CopyBindings($select, $product_list);
         return $select;
     }
 
@@ -357,7 +364,7 @@ class ProductListFilterInputForm extends InputForm {
         }
     }
 
-    public function createVariantFilters()
+    public function createVariantFilters() : void
     {
 
         //current product list (filtered by category or section)

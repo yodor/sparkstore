@@ -67,16 +67,14 @@ abstract class NavigationList extends Container
     public function getCacheName() : string
     {
         $result = parent::getCacheName();
-        if ($this->iterator instanceof SQLQuery)
-        {
-            $result.= $this->iterator->select->getSQL();
-        }
+        if ($this->iterator instanceof ICacheIdentifier) $result.= $this->iterator->getCacheName();
+
         return $result;
     }
     public function initialize() : void
     {
         $this->iterator = ($this->createListIterator)();
-        ($this->createImagesColumn)($this->iterator->select);
+        ($this->createImagesColumn)($this->iterator->stmt);
 
         $this->tapeProducts = ($this->createTapeProducts)();
     }

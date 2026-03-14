@@ -38,8 +38,8 @@ if (isset($_GET["orderID"])) {
 }
 $qry = $orders->queryFull();
 
-$qry->select->where()->add("orderID", $orderID);
-$qry->select->limit = " 1 ";
+$qry->stmt->where()->add("orderID", $orderID);
+$qry->stmt->limit = " 1 ";
 $qry->exec();
 
 $page->setName(tr("Order Details").": ".$orderID);
@@ -153,7 +153,7 @@ echo "</div>";//panel
                 echo "</div>"; //line
 
                 $qry = $items->queryField("orderID", $orderID);
-                $qry->select->fields()->set("prodID", "itemID", "price", "qty", "product");
+                $qry->stmt->fields()->set("prodID", "itemID", "price", "qty", "product");
                 $qry->exec();
 
                 $pos = 0;

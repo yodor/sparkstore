@@ -203,7 +203,7 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $features = new ProductFeaturesBean();
         $qry = $features->queryField("prodID", $this->sellable->getProductID());
-        $qry->select->fields()->set("feature");
+        $qry->stmt->fields()->set("feature");
         $num = $qry->count();
 
         if ($num) {

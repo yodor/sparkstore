@@ -34,8 +34,8 @@ if (isset($_GET["orderID"])) {
 }
 $qry = $orders->queryFull();
 
-$qry->select->where()->add("orderID", $orderID)->add("userID", $userID);
-$qry->select->limit = " 1 ";
+$qry->stmt->where()->add("orderID", $orderID)->add("userID", $userID);
+$qry->stmt->limit = " 1 ";
 if (!($order = $qry->next())){
     Session::set("alert", "Няма достъп до тази поръчка");
     header("Location: orders.php");
@@ -132,7 +132,7 @@ echo "<div class='column details'>";
                 echo "</div>"; //line
 
                 $qry = $items->queryField("orderID", $orderID);
-                $qry->select->fields()->set( "prodID", "itemID", "price", "qty", "product");
+                $qry->stmt->fields()->set( "prodID", "itemID", "price", "qty", "product");
                 $qry->exec();
 
                 $pos = 0;

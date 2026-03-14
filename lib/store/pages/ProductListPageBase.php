@@ -494,7 +494,7 @@ class ProductListPageBase extends ProductPageBase
     {
 
         $sel_catID = $this->treeView->getSelectedID();
-        $catsel = clone $this->treeView->getIterator()->select;
+        $catsel = clone $this->treeView->getIterator()->stmt;
 
         $catsel->clearMode();
         $catsel->fields()->reset();
@@ -519,7 +519,7 @@ class ProductListPageBase extends ProductPageBase
         //echo $catsel->getSQL();
 
         $query = new SQLQuery($catsel, "catID");
-        $num = $query->exec();
+        $query->exec();
 
         echo "<div class='category_list'>";
         $builder =  new CategoryURL();

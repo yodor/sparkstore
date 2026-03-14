@@ -13,7 +13,7 @@ class SectionNavigation extends NavigationList
 
     public function createImagesColumn(SQLSelect $select): void
     {
-        $select->fields()->setExpression(
+        $select->fields()->setAliasExpression(
             "(SELECT 
             GROUP_CONCAT( CONCAT(sb.sbID,'|',sb.link) SEPARATOR ',')  
             FROM section_banners sb 

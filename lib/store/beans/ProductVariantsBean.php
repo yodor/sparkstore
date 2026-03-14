@@ -24,25 +24,25 @@ class ProductVariantsBean extends DBTableBean
     {
 
         $query = $this->queryFull();
-        $query->select->fields()->reset();
-        $query->select->fields()->set("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
-        $query->select->fields()->setExpression("(SELECT position FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_position");
-        $query->select->fields()->setExpression("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
-        $query->select->fields()->setExpression("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");
+        $query->stmt->fields()->reset();
+        $query->stmt->fields()->set("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
+        $query->stmt->fields()->setAliasExpression("(SELECT position FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_position");
+        $query->stmt->fields()->setAliasExpression("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
+        $query->stmt->fields()->setAliasExpression("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");
 
-        $query->select->from = " product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ";
-        $query->select->where()->add("pv.prodID", $prodID);
-        $query->select->order_by = "parent_product, parent_class, parentID, parent_position, position";
+        $query->stmt->from = " product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ";
+        $query->stmt->where()->add("pv.prodID", $prodID);
+        $query->stmt->order_by = "parent_product, parent_class, parentID, parent_position, position";
         return $query;
     }
 
     public function queryVariantPhotos(int $prodID, string $option_name, string $option_value) : SQLQuery
     {
         $query = $this->queryProduct($prodID);
-        $query->select->fields()->set("pvp.pvpID");
-        $query->select->where()->add("option_name", "'$option_name'");
-        $query->select->where()->add("option_value", "'$option_value'");
-        $query->select->from .= " JOIN product_variant_photos pvp ON pvp.pvID = pv.pvID ";
+        $query->stmt->fields()->set("pvp.pvpID");
+        $query->stmt->where()->add("option_name", "'$option_name'");
+        $query->stmt->where()->add("option_value", "'$option_value'");
+        $query->stmt->from .= " JOIN product_variant_photos pvp ON pvp.pvID = pv.pvID ";
         return $query;
     }
 }

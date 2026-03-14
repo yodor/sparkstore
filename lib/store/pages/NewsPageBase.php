@@ -43,8 +43,8 @@ class NewsPageBase extends StorePage
 
         if (count($arr)>0) {
             $qry = $this->pac->getBean()->query(...$this->pac->getSelectionColumns());
-            $qry->select->where()->add($this->news->key(), "(" . implode(",", $arr) . ")", " IN ");
-            $qry->select->order_by = " newsID DESC ";
+            $qry->stmt->where()->add($this->news->key(), "(" . implode(",", $arr) . ")", " IN ");
+            $qry->stmt->order_by = " newsID DESC ";
             $qry->exec();
 
             while ($item = $qry->next()) {

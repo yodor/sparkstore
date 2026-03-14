@@ -10,10 +10,10 @@ class TapeOtherProducts extends ProductsTape
 
         $bean = new SellableProducts();
         $qry = $bean->queryFull();
-        $qry->select->order_by = " rand() ";
-        $qry->select->group_by = " prodID ";
-        $qry->select->where()->add("stock_amount" , "0", " > ");
-        $qry->select->limit = "$limit";
+        $qry->stmt->order_by = " rand() ";
+        $qry->stmt->group_by = " prodID ";
+        $qry->stmt->where()->add("stock_amount" , "0", " > ");
+        $qry->stmt->limit = "$limit";
 
         $this->setCaption(tr("Други продукти"));
         $this->setIterator($qry);

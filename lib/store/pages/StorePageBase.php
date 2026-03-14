@@ -535,9 +535,9 @@ class StorePageBase extends SparkPage
 
         $dp = new DynamicPagesBean();
         $query = $dp->query("item_title", "keywords", $dp->key());
-        $query->select->where()->add("keywords", "'%footer_page%'", " LIKE ", " AND ");
-        $query->select->where()->add("visible", 1);
-        $num = $query->exec();
+        $query->stmt->where()->add("keywords", "'%footer_page%'", " LIKE ", " AND ");
+        $query->stmt->where()->add("visible", 1);
+        $query->exec();
         while ($result = $query->nextResult()) {
             $linkButton = Button::Action($result->get("item_title"), new URL(Spark::Get(Config::LOCAL)."/pages/index.php?id=".$result->get("dpID")));
             $linkButton->setComponentClass("item");

@@ -194,8 +194,8 @@ class ClassAttributeField extends DataIteratorField
         $sel = new SQLSelect();
 
         $sel->fields()->set("pca.pcaID", "attr.name");
-        $sel->fields()->setExpression("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", $this->dataInput->getName());
-        $sel->fields()->setExpression("(SELECT pcav.pcavID FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "pcavID");
+        $sel->fields()->setAliasExpression("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", $this->dataInput->getName());
+        $sel->fields()->setAliasExpression("(SELECT pcav.pcavID FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID={$this->prodID})", "pcavID");
 
         $sel->from = "product_class_attributes pca JOIN attributes attr ON attr.attrID=pca.attrID";
 

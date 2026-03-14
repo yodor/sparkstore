@@ -12,7 +12,7 @@ class FAQItemInputForm extends InputForm
 
         $field = DataInputFactory::Create(InputType::SELECT, "section", "Секция", 1);
 
-        $data = new DBEnumIterator("faq_items", "section");
+        $data = new DBEnumIterator(new FAQItemsBean(), "section");
         $rend = $field->getRenderer();
         $rend->setIterator($data);
         $rend->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_VALUE);

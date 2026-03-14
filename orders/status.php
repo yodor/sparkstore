@@ -28,8 +28,8 @@ class OrderStatusProcessor extends FormProcessor
         $email = $form->getInput("email")->getValue();
 
         $qry = $orders->query();
-        $qry->select->where()->add("order_identifier", "'$ticket'")->add("client_identifier", "'$email'");
-        $qry->select->limit = " 1 ";
+        $qry->stmt->where()->add("order_identifier", "'$ticket'")->add("client_identifier", "'$email'");
+        $qry->stmt->limit = " 1 ";
         $qry->exec();
 
         if ($order_row = $qry->next()) {
@@ -98,7 +98,7 @@ else {
     echo tr("Въведете Вашият email и код за потвърждение за да продължите.");
     echo "<BR>";
 
-    $tfr->renderForm($form);
+    $tfr->render();
 
     echo "</div>";
 }

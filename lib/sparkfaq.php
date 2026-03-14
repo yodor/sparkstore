@@ -40,7 +40,7 @@ if ($secID<1 && $itemID>0) $secID=$itemID;
 if ($secID>0) {
     $faq = new FAQItemsBean();
     $query = $faq->queryFull();
-    $query->select->where()->add($sections->key(), $secID);
+    $query->stmt->where()->add($sections->key(), $secID);
 
     $num = $query->count();
     if ($num>0) {

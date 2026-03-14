@@ -21,7 +21,7 @@ else {
         $treeView = $source->treeView();
         $treeView->setBranchRenderMode(NestedSetTreeView::MODE_BRANCHES_UNFOLDED);
 
-        $iterator->select->fields()->setExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = node.catID ORDER BY pcp.position ASC LIMIT 1)", " pcpID ");
+        $iterator->stmt->fields()->setAliasExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = node.catID ORDER BY pcp.position ASC LIMIT 1)", " pcpID ");
 
         $si = new StorageItem(-1, "ProductCategoryPhotosBean");
         $si->setName("pcpID");

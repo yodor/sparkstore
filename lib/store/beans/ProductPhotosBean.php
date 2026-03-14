@@ -26,8 +26,8 @@ class ProductPhotosBean extends OrderedDataBean
 
         $ppID = -1;
         $qry = $this->queryField("prodID", $prodID, 1);
-        $qry->select->order_by = " position ASC ";
-        $qry->select->fields()->set($this->key());
+        $qry->stmt->order_by = " position ASC ";
+        $qry->stmt->fields()->set($this->key());
         $qry->exec();
 
         if ($photo_row = $qry->next()) {

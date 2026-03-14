@@ -128,8 +128,8 @@ class SellableDataParser
 
         //attach default photo as single color gallery
         $qry = $this->product_photos->query("ppID");
-        $qry->select->where()->add("prodID", $item->getProductID());
-        $qry->select->order_by = " position ASC ";
+        $qry->stmt->where()->add("prodID", $item->getProductID());
+        $qry->stmt->order_by = " position ASC ";
         $qry->exec();
 
         $main_photo = null;

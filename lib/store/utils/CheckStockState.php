@@ -26,7 +26,7 @@ class CheckStockState
 
         $bean = new InstockSubscribersBean();
         $query = $bean->query($bean->key(), "email");
-        $query->select->where()->add("prodID", $this->prodID);
+        $query->stmt->where()->add("prodID", $this->prodID);
         $query->exec();
 
         Debug::ErrorLog("Going to notify subscribers ...");

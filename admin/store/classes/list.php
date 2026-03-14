@@ -17,9 +17,9 @@ $pattr = new ProductClassAttributesBean();
 $sel = new SQLSelect();
 $sel->from = " product_classes pc ";
 $sel->fields()->set("pc.pclsID", "pc.class_name");
-$sel->fields()->setExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
+$sel->fields()->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
 FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AND pca.pclsID=pc.pclsID)", "class_attributes");
-$sel->fields()->setExpression("(select group_concat(
+$sel->fields()->setAliasExpression("(select group_concat(
 concat(
 opt.option_name, 
 '(',

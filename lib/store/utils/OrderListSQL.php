@@ -10,8 +10,8 @@ class OrderListSQL extends SQLSelect
         //select additional the items and client - allow search
         $select = new SQLSelect();
         $select->fields()->set("*");
-        $select->fields()->setExpression(" (SELECT GROUP_CONCAT('-oi-', oi.product) FROM  order_items oi WHERE oi.orderID=o.orderID) ", "items");
-        $select->fields()->setExpression(" (SELECT CONCAT_WS('--', u.fullname, u.email, u.phone) FROM users u WHERE u.userID=o.userID) ", "client");
+        $select->fields()->setAliasExpression(" (SELECT GROUP_CONCAT('-oi-', oi.product) FROM  order_items oi WHERE oi.orderID=o.orderID) ", "items");
+        $select->fields()->setAliasExpression(" (SELECT CONCAT_WS('--', u.fullname, u.email, u.phone) FROM users u WHERE u.userID=o.userID) ", "client");
         $select->from = " orders o ";
 
         $this->fields()->set("derived.*");

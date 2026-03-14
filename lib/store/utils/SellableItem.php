@@ -63,8 +63,8 @@ class SellableItem extends SparkObject
         $qry = $bean->queryFull();
         $qry->setKey("prodID");
 
-        $qry->select->where()->add("prodID", $prodID);
-        $qry->select->group_by = "prodID";
+        $qry->stmt->where()->add("prodID", $prodID);
+        $qry->stmt->group_by = "prodID";
 
         $num = $qry->count();
         if ($num < 1) throw new Exception("Product does not exist or is not accessible right now");

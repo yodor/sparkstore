@@ -23,7 +23,7 @@ class OptionsList extends BeanList
         $this->setBean($bean);
 
         $bean->select()->fields()->set(...$bean->columnNames());
-        $bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
+        $bean->select()->fields()->setAliasExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
         //$bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(pcls.class_name) FROM product_classes pcls WHERE pcls.pclsID = variant_options.pclsID)", "class_name");
 
         //only options not their parameters
@@ -92,7 +92,7 @@ class OptionsList extends BeanList
                 Session::SetAlert("Requested product is not accessible");
             }
 
-            $this->query->select->where()->add("pclsID", "NULL" , " IS ");
+            $this->query->stmt->where()->add("pclsID", "NULL" , " IS ");
         }
         else {
 
@@ -120,14 +120,14 @@ class OptionsList extends BeanList
                 catch (Exception $e) {
                     Session::SetAlert("Requested product class is not accessible");
                 }
-                $this->query->select->where()->add("prodID", "NULL" , " IS ");
+                $this->query->stmt->where()->add("prodID", "NULL" , " IS ");
 
             }
             //neither prodID nor pclsID - show only top level options
             else {
                 $this->config->clearNavigation = true;
-                $this->query->select->where()->add("pclsID", "NULL" , " IS ");
-                $this->query->select->where()->add("prodID", "NULL" , " IS ");
+                $this->query->stmt->where()->add("pclsID", "NULL" , " IS ");
+                $this->query->stmt->where()->add("prodID", "NULL" , " IS ");
             }
 
         }

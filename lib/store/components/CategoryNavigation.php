@@ -29,7 +29,7 @@ class CategoryNavigation extends NavigationList
      */
     public function createImagesColumn(SQLSelect $select) : void
     {
-        $select->fields()->setExpression(
+        $select->fields()->setAliasExpression(
             "(SELECT 
             GROUP_CONCAT(pcp.pcpID SEPARATOR ',') 
             FROM product_category_photos pcp 

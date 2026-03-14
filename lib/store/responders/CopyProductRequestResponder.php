@@ -80,7 +80,6 @@ class CopyProductRequestResponder extends RequestResponder
             while ($pprow = $qry->next()) {
                 unset($pprow[$pp->key()]);
                 $pprow["prodID"] = $lastID;
-                $pprow["photo"] = $db->escape($pprow["photo"]);
                 // var_dump($pprow);
                 $lastppID = $pp->insert($pprow, $db);
                 if ($lastppID < 1) throw new Exception("Unable to copy photo: " . $db->getError());

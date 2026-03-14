@@ -28,7 +28,7 @@ $clients = new UsersBean();
 $sel = new SQLSelect();
 
 $sel->fields()->set("*");
-$sel->fields()->setExpression(" (SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = o.orderID) ", "item_count");
+$sel->fields()->setAliasExpression(" (SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = o.orderID) ", "item_count");
 $sel->from = " orders o ";
 $sel->where()->add("o.userID", $page->getUserID());
 $sel->order_by = " 'Processing', 'Sent', 'Completed' ";

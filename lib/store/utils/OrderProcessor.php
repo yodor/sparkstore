@@ -100,14 +100,14 @@ class OrderProcessor
                 $form = new ClientAddressInputForm();
                 $form->loadBeanData($uabrow[$uab->key()], $uab);
 
-                $order["delivery_address"] = $db->escape($form->serializeXML());
+                $order["delivery_address"] = $form->serializeXML();
 
             }
             else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
                 $qry = $eab->queryField("userID", $userID, 1, "office");
                 $qry->exec();
                 if ($ekont_address = $qry->next()) {
-                    $order["delivery_address"] = $db->escape($ekont_address["office"]);
+                    $order["delivery_address"] = $ekont_address["office"];
                 }
                 else throw new Exception("Недостъпен адрес за доставка");
             }
@@ -229,38 +229,33 @@ class OrderProcessor
 
     protected function updateCounterStock(int $prodID, int $amount=1)
     {
-
-        $db = DBConnections::CreateDriver();
-
         if ($this->manage_stock_amount) {
-            $sql = new SQLUpdate();
-            $sql->from = "products p";
-            $sql->set("p.stock_amount", "p.stock_amount-$amount");
-            $sql->where()->add("p.prodID", $prodID);
-
             try {
-                $db->transaction();
-                $db->query($sql->getSQL());
-                $db->commit();
+                $update = new SQLUpdate();
+                $update->from = "products p";
+                $update->setExpression("p.stock_amount","p.stock_amount - :amount");
+                $update->bind(":amount", $amount);
+                $update->where()->add("p.prodID", $prodID);
+
+                $query = new SQLQuery();
+                $query->exec($update);
             }
             catch (Exception $e) {
-                $db->rollback();
                 Debug::ErrorLog("Unable to increment stock_amount: ".$e->getMessage());
             }
         }
         else if($this->manage_order_counter) {
-
-            $sql = new SQLUpdate();
-            $sql->from = "product_view_log pvl";
-            $sql->set("pvl.order_counter", "pvl.order_counter+$amount");
-            $sql->where()->add("pvl.prodID", $prodID);
-
             try {
-                $db->transaction();
-                $db->query($sql->getSQL());
-                $db->commit();
-            } catch (Exception $e) {
-                $db->rollback();
+                $update = new SQLUpdate();
+                $update->from = "product_view_log pvl";
+                $update->setExpression("pvl.order_counter", "pvl.order_counter + :amount");
+                $update->bind(":amount", $amount);
+                $update->where()->add("pvl.prodID", $prodID);
+
+                $query = new SQLQuery();
+                $query->exec($update);
+            }
+            catch (Exception $e) {
                 Debug::ErrorLog("Unable to increment order_counter: " . $e->getMessage());
             }
         }

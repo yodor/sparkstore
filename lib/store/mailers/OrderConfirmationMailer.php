@@ -81,8 +81,8 @@ class OrderConfirmationMailer extends Mailer
 
         $order_items = new OrderItemsBean();
         $qry = $order_items->query("product", "position", "qty", "price");
-        $qry->select->where()->add("orderID", $orderID);
-        $qry->select->order_by = " position ASC ";
+        $qry->stmt->where()->add("orderID", $orderID);
+        $qry->stmt->order_by = " position ASC ";
         $qry->exec();
 
         while ($item = $qry->next()) {

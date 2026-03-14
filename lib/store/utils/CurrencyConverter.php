@@ -52,7 +52,7 @@ class CurrencyConverter
 
         $result->loadConversion();
 
-        Debug::ErrorLog("Conversion Currency ID: " . $result->dstID, " - Code: " . $result->code);
+        Debug::ErrorLog("Conversion Currency ID: " . $result->dstID. " - Code: " . $result->code);
 
         Session::Set("CurrencyConverter", serialize($result));
         return $result;
@@ -75,8 +75,8 @@ class CurrencyConverter
 
         $currency_rates = new CurrencyRatesBean();
         $qry = $currency_rates->queryFull();
-        $qry->select->where()->add("srcID", $this->srcID)->add("dstID", $this->dstID);
-        $qry->select->limit = 1;
+        $qry->stmt->where()->add("srcID", $this->srcID)->add("dstID", $this->dstID);
+        $qry->stmt->limit = 1;
         $qry->exec();
 
         if ($data = $qry->next()) {
@@ -106,17 +106,17 @@ class CurrencyConverter
 
             $qry = $currencies->queryFull();
             if (defined("DEFAULT_CURRENCY")) {
-                $qry->select->where()->add("currency_code", "'" . DEFAULT_CURRENCY . "'", " LIKE ");
+                $qry->stmt->where()->add("currency_code", "'" . DEFAULT_CURRENCY . "'", " LIKE ");
             }
-            $qry->select->limit = 1;
-            $qry->select->order_by = $currencies->key() . " ASC";
+            $qry->stmt->limit = 1;
+            $qry->stmt->order_by = $currencies->key() . " ASC";
             $qry->exec();
 
 
             if ($data = $qry->next()) {
                 $this->srcID = $data[$currencies->key()];
                 $this->setCurrency($data, 1.0);
-                Debug::ErrorLog("Default Currency ID: " . $this->srcID, " - Code: " . $this->code);
+                Debug::ErrorLog("Default Currency ID: " . $this->srcID." - Code: " . $this->code);
             }
             else throw new Exception("Unable to set default currency");
         }

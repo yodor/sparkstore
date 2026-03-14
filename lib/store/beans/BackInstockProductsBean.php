@@ -21,13 +21,19 @@ class BackInstockProductsBean extends DBTableBean
     {
         //insert into backinstock list
         Debug::ErrorLog("Updating back in stock list for prodID: $prodID");
-        $db = DBConnections::CreateDriver();
+
         try {
-            $db->transaction();
-            $db->query("INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP");
-            $db->commit();
+            //INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP
+            $insert = new SQLInsert();
+            $insert->from = "backinstock_products";
+            $insert->set("prodID", $prodID);
+            $insert->on = " DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP ";
+            $query = new SQLQuery();
+            $query->exec($insert);
+            $query->free();
+
         } catch (Exception $e) {
-            $db->rollback();
+            Debug::ErrorLog("Failed updating backinstock_products: ".$e->getMessage());
             throw $e;
         }
     }
@@ -36,13 +42,15 @@ class BackInstockProductsBean extends DBTableBean
     {
         Debug::ErrorLog("Deleting from back in stock list for prodID: $prodID");
 
-        $db = DBConnections::CreateDriver();
         try {
-            $db->transaction();
-            $db->query("DELETE FROM backinstock_products WHERE prodID = $prodID");
-            $db->commit();
+            $delete = new SQLDelete();
+            $delete->from = "backinstock_products";
+            $delete->where()->add("prodID", $prodID);
+            $query = new SQLQuery();
+            $query->exec($delete);
+            $query->free();
         } catch (Exception $e) {
-            $db->rollback();
+            Debug::ErrorLog("Failed deleting from backinstock_products: ".$e->getMessage());
             throw $e;
         }
     }

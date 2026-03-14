@@ -16,7 +16,7 @@ include_once("input/processors/InputProcessor.php");
 
 class ProductVariantsInputForm extends InputForm
 {
-    protected $voptions;
+    protected ?VariantOptionsBean $voptions = null;
 
     public function __construct(int $prodID)
     {
@@ -38,10 +38,10 @@ class ProductVariantsInputForm extends InputForm
 
         ///base options
         $query = $this->voptions->queryFull();
-        $query->select->where()->add("pclsID" , " null ", " is ");
-        $query->select->where()->add("parentID" , " null ", " is ");
-        $query->select->where()->add("prodID" , " null ", " is ");
-        $query->select->where()->add("option_value" , " null ", " is ");
+        $query->stmt->where()->addExpression("pclsID IS NULL");
+        $query->stmt->where()->addExpression("parentID IS NULL");
+        $query->stmt->where()->addExpression("prodID IS NULL");
+        $query->stmt->where()->addExpression("option_value IS NULL");
 
         $query->exec();
         while ($result = $query->nextResult()) {
@@ -52,15 +52,16 @@ class ProductVariantsInputForm extends InputForm
             $this->createInputIterator($input, $voID);
             $this->addInput($input, $group_normal);
         }
+        $query->free();
 
         ///options from product class
         $pclsID = (int)$product["pclsID"];
         if ($pclsID>0) {
             $query = $this->voptions->queryFull();
-            $query->select->where()->add("pclsID" , $pclsID);
-            $query->select->where()->add("parentID" , " null ", " is ");
-            $query->select->where()->add("option_value" , " null ", " is ");
-            $query->select->where()->add("prodID" , " null ", " is ");
+            $query->stmt->where()->add("pclsID" , $pclsID);
+            $query->stmt->where()->addExpression("parentID IS NULL");
+            $query->stmt->where()->addExpression("option_value IS NULL");
+            $query->stmt->where()->addExpression("prodID IS NULL");
 
             $query->exec();
             while ($result = $query->nextResult()) {
@@ -71,14 +72,15 @@ class ProductVariantsInputForm extends InputForm
                 $this->createInputIterator($input, $voID);
                 $this->addInput($input, $group_class);
             }
+            $query->free();
         }
 
         ///options for this product
         $query = $this->voptions->queryFull();
-        $query->select->where()->add("prodID" , $prodID);
-        $query->select->where()->add("parentID" , " null ", " is ");
-        $query->select->where()->add("option_value" , " null ", " is ");
-        $query->select->where()->add("pclsID" , " null ", " is ");
+        $query->stmt->where()->add("prodID" , $prodID);
+        $query->stmt->where()->addExpression("parentID IS NULL");
+        $query->stmt->where()->addExpression("option_value IS NULL");
+        $query->stmt->where()->addExpression("pclsID IS NULL");
 
         $query->exec();
         while ($result = $query->nextResult()) {
@@ -89,7 +91,7 @@ class ProductVariantsInputForm extends InputForm
             $this->createInputIterator($input, $voID);
             $this->addInput($input, $group_product);
         }
-
+        $query->free();
 
     }
 
@@ -99,7 +101,7 @@ class ProductVariantsInputForm extends InputForm
         $input->setValidator($validator);
 
         $query_parameters = $this->voptions->queryFull();
-        $query_parameters->select->where()->add("parentID" , $parentID);
+        $query_parameters->stmt->where()->add("parentID" , $parentID);
 
         $cf3 = new CheckField($input);
         $cf3->setArrayKeyFieldName("voID");
@@ -113,7 +115,7 @@ class ProductVariantsInputForm extends InputForm
 
 class ProductVariantsProcessor extends FormProcessor
 {
-    protected $prodID = -1;
+    protected int $prodID = -1;
 
 
     public function __construct(int $prodID)
@@ -135,7 +137,6 @@ class ProductVariantsProcessor extends FormProcessor
         $db = DBConnections::CreateDriver();
 
         try {
-            $db->transaction();
 
             $posted_voIDs = array();
 
@@ -154,21 +155,40 @@ class ProductVariantsProcessor extends FormProcessor
                 //echo "<pre>Posted IDS: ".print_r($posted_voIDs)."</pre>";
 
                 $id_list = implode(",", $posted_voIDs);
-                $db->query("DELETE FROM product_variants WHERE prodID={$this->prodID} AND voID NOT IN ($id_list) ");
 
-                //insert non-existing IDs
-                $values_list = array();
-                foreach ($posted_voIDs as $idx => $voID) {
-                    $values_list[] = "({$this->prodID}, $voID)";
+                $delete = new SQLDelete();
+                $delete->from = "product_variants";
+                $delete->where()->add("prodID", $this->prodID);
+                $delete->where()->addExpression("voID NOT IN (:id_list)");
+                $delete->bind(":id_list", $id_list);
+
+                $db->query($delete);
+
+                //insert non-existing IDs - multi-insert
+                $col_prodID = new SQLColumn("prodID", []);
+                $col_voID = new SQLColumn("voID", []);
+
+                foreach ($posted_voIDs as $idx=>$voID) {
+                    $col_prodID->addValue($this->prodID);
+                    $col_voID->addValue($voID);
                 }
-                $values_list = implode(",", $values_list);
 
-                $db->query("INSERT IGNORE INTO product_variants (prodID, voID) VALUES $values_list ");
+                $insert = new SQLInsert();
+                $insert->from = "product_variants";
+                $insert->fields()->setColumn($col_prodID);
+                $insert->fields()->setColumn($col_voID);
+
+                $db->query($insert);
 
             }
             else {
+
                 //clear all variants
-                $db->query("DELETE FROM product_variants WHERE prodID={$this->prodID}");
+                $delete = new SQLDelete();
+                $delete->from = "product_variants";
+                $delete->where()->add("prodID", $this->prodID);
+
+                $db->query($delete);
             }
 
             $db->commit();
@@ -203,6 +223,8 @@ class ProductVariantsProcessor extends FormProcessor
             $values[$voID] = $value;
             $form->getInput($input_name)->setValue($values);
         }
+
+        $query->free();
     }
 }
 
