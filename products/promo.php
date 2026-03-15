@@ -5,7 +5,7 @@ CategoryURL::$urlCategorySlug = "/products/promos/";
 $page = new ProductListPage();
 
 $clause = new SQLClause();
-$clause->setExpression("(discount_percent > 0 OR promo_price > 0)", "", "");
+$clause->setExpression("(discount_percent > 0 OR promo_price > 0)");
 $page->getSellableProducts()->select()->where()->append($clause);
 
 $page->initialize();

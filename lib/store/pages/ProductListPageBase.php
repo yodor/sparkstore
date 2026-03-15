@@ -76,7 +76,8 @@ class ProductListPageBase extends ProductPageBase
             $filter->setTitle($filter->getValue());
             $clause = new SQLClause();
             $value = $filter->getValue();
-            $clause->setExpression("product_sections LIKE '%$value%'", "","");
+            $clause->setExpression("product_sections LIKE :section_name");
+            $clause->bind(":section_name", "%$value%");
             $filter->getClauseCollection()->append($clause);
         };
         $section_filter->setClosure($closure);

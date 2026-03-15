@@ -74,16 +74,15 @@ class FilterDataInput extends DataInput {
     }
 
     //input name => val value posted
-    public function appendWhereClause(ClauseCollection $where)
+    public function appendWhereClause(ClauseCollection $where) : void
     {
         $clause = new SQLClause();
-        $name = $this->fieldName();
-        $clause->setExpression($name, $this->getValue());
+        $clause->setExpression($this->fieldName(), $this->getValue());
         $where->append($clause);
     }
 
 
-    public function appendHavingClause(ClauseCollection $having)
+    public function appendHavingClause(ClauseCollection $having) : void
     {
 
     }
@@ -155,17 +154,13 @@ class ProductAttributeFilter extends SelectFilter {
 
         $name = mb_ereg_replace("_", " ", $name);
 
-        $clause->setExpression("(product_attributes LIKE '$name:$value%' OR  product_attributes LIKE '%$name:$value%' OR product_attributes LIKE '$name:$value%')", "", "");
+        $clause->setExpression("product_attributes LIKE :nameValue");
+        $clause->bind(":nameValue", "%$name:$value%");
         $where->append($clause);
     }
     public function appendHavingClause(ClauseCollection $having) : void
     {
-//            $clause = new SQLClause();
-//            $name = $this->getName();
-//            $value = $this->getValue();
-//
-//            $clause->setExpression("(inventory_attributes LIKE '$name:$value%' OR  inventory_attributes LIKE '%$name:$value%' OR inventory_attributes LIKE '$name:$value%')", "", "");
-//            $having->append($clause);
+
     }
 }
 
@@ -206,7 +201,7 @@ class ProductVariantFilter extends SelectFilter {
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
-    public function appendWhereClause(ClauseCollection $where)
+    public function appendWhereClause(ClauseCollection $where) : void
     {
         $clause = new SQLClause();
         $name = $this->getName();
@@ -214,17 +209,13 @@ class ProductVariantFilter extends SelectFilter {
 
         $name = mb_ereg_replace("_", " ", $name);
 
-        $clause->setExpression("(product_variants LIKE '$name:$value%' OR  product_variants LIKE '%$name:$value%' OR product_variants LIKE '$name:$value%')", "", "");
+        $clause->setExpression("(product_variants LIKE :nameValue)");
+        $clause->bind(":nameValue", "%$name:$value%");
         $where->append($clause);
     }
-    public function appendHavingClause(ClauseCollection $having)
+    public function appendHavingClause(ClauseCollection $having) : void
     {
-        //            $clause = new SQLClause();
-        //            $name = $this->getName();
-        //            $value = $this->getValue();
-        //
-        //            $clause->setExpression("(inventory_attributes LIKE '$name:$value%' OR  inventory_attributes LIKE '%$name:$value%' OR inventory_attributes LIKE '$name:$value%')", "", "");
-        //            $having->append($clause);
+
     }
 }
 
