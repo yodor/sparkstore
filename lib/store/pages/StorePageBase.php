@@ -535,7 +535,7 @@ class StorePageBase extends SparkPage
 
         $dp = new DynamicPagesBean();
         $query = $dp->query("item_title", "keywords", $dp->key());
-        $query->stmt->where()->add("keywords", "'%footer_page%'", " LIKE ", " AND ");
+        $query->stmt->where()->add("keywords", "%footer_page%", " LIKE ", " AND ");
         $query->stmt->where()->add("visible", 1);
         $query->exec();
         while ($result = $query->nextResult()) {

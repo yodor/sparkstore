@@ -106,7 +106,7 @@ class CurrencyConverter
 
             $qry = $currencies->queryFull();
             if (defined("DEFAULT_CURRENCY")) {
-                $qry->stmt->where()->add("currency_code", "'" . DEFAULT_CURRENCY . "'", " LIKE ");
+                $qry->stmt->where()->add("currency_code", DEFAULT_CURRENCY, " LIKE ");
             }
             $qry->stmt->limit = 1;
             $qry->stmt->order_by = $currencies->key() . " ASC";

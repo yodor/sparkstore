@@ -111,7 +111,7 @@ class ContentPageBase extends StorePage
                 $query->stmt->where()->removeExpression("keywords");
 
                 foreach ($page_class as $class) {
-                    $query->stmt->where()->add("keywords", "'%$class%'", " LIKE ", " AND ");
+                    $query->stmt->where()->add("keywords", "%$class%", " LIKE ", " AND ");
                 }
 
                 $query->stmt->where()->removeExpression($this->bean->key());

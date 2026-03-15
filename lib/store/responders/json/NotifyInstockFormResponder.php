@@ -32,7 +32,7 @@ class NotifyInstockFormResponder extends JSONFormResponder
         $bean = new InstockSubscribersBean();
         $query = $bean->query("email", "prodID");
 
-        $query->stmt->where()->add("email", "'$email'");
+        $query->stmt->where()->add("email", $email);
         $query->stmt->where()->add("prodID", $this->sellable->getProductID());
         $query->exec();
 

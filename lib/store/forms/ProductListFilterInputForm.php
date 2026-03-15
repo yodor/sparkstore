@@ -3,11 +3,11 @@
 class FilterDataInput extends DataInput {
 
 
-    protected $table_prefix = "";
+    protected string $table_prefix = "";
 
-    protected $select = null;
+    protected ?SQLSelect $select = null;
 
-    protected $prefer_all_values = false;
+    protected bool $prefer_all_values = false;
 
     public function __construct(string $name, string $label, bool $required)
     {
@@ -35,7 +35,7 @@ class FilterDataInput extends DataInput {
      *
      * @param SQLSelect $filters_select main products sql select
      */
-    public function setSQLSelect(SQLSelect $filters_select)
+    public function setSQLSelect(SQLSelect $filters_select) : void
     {
         $this->select = clone $filters_select;
 
@@ -78,7 +78,7 @@ class FilterDataInput extends DataInput {
     {
         $clause = new SQLClause();
         $name = $this->fieldName();
-        $clause->setExpression($name, "'".$this->getValue()."'");
+        $clause->setExpression($name, $this->getValue());
         $where->append($clause);
     }
 
@@ -129,7 +129,7 @@ class ProductAttributeFilter extends SelectFilter {
         $this->select->order_by = " value ASC ";
         $this->select->group_by = " value ";
 
-        $this->select->where()->add("attr.name" , "'".$this->getName()."'", " LIKE ");
+        $this->select->where()->add("attr.name" , $this->getName(), " LIKE ");
 
         return new SQLQuery($this->select, "value");
     }
@@ -147,7 +147,7 @@ class ProductAttributeFilter extends SelectFilter {
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
 
-    public function appendWhereClause(ClauseCollection $where)
+    public function appendWhereClause(ClauseCollection $where) : void
     {
         $clause = new SQLClause();
         $name = $this->getName();
@@ -158,7 +158,7 @@ class ProductAttributeFilter extends SelectFilter {
         $clause->setExpression("(product_attributes LIKE '$name:$value%' OR  product_attributes LIKE '%$name:$value%' OR product_attributes LIKE '$name:$value%')", "", "");
         $where->append($clause);
     }
-    public function appendHavingClause(ClauseCollection $having)
+    public function appendHavingClause(ClauseCollection $having) : void
     {
 //            $clause = new SQLClause();
 //            $name = $this->getName();
@@ -187,7 +187,7 @@ class ProductVariantFilter extends SelectFilter {
         $this->select->order_by = " vo.option_value ASC ";
         $this->select->group_by = " vo.option_value ";
 
-        $this->select->where()->add("vo.option_name" , "'".$this->getName()."'", " LIKE ");
+        $this->select->where()->add("vo.option_name", $this->getName(), " LIKE ");
 
         return new SQLQuery($this->select, "option_value");
     }

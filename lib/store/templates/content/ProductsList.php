@@ -307,7 +307,7 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_brand")) {
                 $filter_brand = $form->getInput("filter_brand")->getValue();
                 if ($filter_brand) {
-                    $this->query->stmt->where()->add("p.brand_name", "'".$filter_brand."'");
+                    $this->query->stmt->where()->add("p.brand_name", $filter_brand);
                 }
             }
 

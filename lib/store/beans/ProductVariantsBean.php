@@ -40,8 +40,8 @@ class ProductVariantsBean extends DBTableBean
     {
         $query = $this->queryProduct($prodID);
         $query->stmt->fields()->set("pvp.pvpID");
-        $query->stmt->where()->add("option_name", "'$option_name'");
-        $query->stmt->where()->add("option_value", "'$option_value'");
+        $query->stmt->where()->add("option_name", $option_name);
+        $query->stmt->where()->add("option_value", $option_value);
         $query->stmt->from .= " JOIN product_variant_photos pvp ON pvp.pvID = pv.pvID ";
         return $query;
     }
