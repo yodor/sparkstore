@@ -50,7 +50,7 @@ if ($maps_src || $num_addresses>0) {
 
     echo "<div class='column addresses'>";
 
-
+    $qry->exec();
     while ($carow = $qry->next()) {
 
         echo "<div class='details' pos='{$carow["position"]}' onClick='updateMap(this);' map-url='{$carow["map_url"]}'>";
