@@ -34,7 +34,7 @@ class AttributeFilter extends ClosureFilter {
             $select->where()->add("{$input->getName()}.attribute_value", $value, $opr);
 
             //echo $select->debugSQL();
-            $select->setMeta("AttrubuteFilter Query");
+            //$select->setMeta("AttrubuteFilter Query");
         };
         parent::__construct($title, $attributeClosure);
         $this->matchMode = $matchMode;

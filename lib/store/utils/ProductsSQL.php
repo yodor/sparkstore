@@ -71,13 +71,4 @@ ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() 
         $this->where()->add("p.visible", 1);
     }
 
-    public function createView(string $view_name="sellable_products")
-    {
-
-        $sql = "CREATE VIEW IF NOT EXISTS $view_name AS ({$this->getSQL()})";
-        $db = DBConnections::Driver();
-        $result = $db->queryRaw($sql);
-        $result->free();
-
-    }
 }

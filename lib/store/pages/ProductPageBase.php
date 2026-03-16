@@ -54,7 +54,6 @@ class ProductPageBase extends StorePage
 
     public function __construct()
     {
-        Debug::ErrorLog("---CTOR---");
         parent::__construct();
 
         new ProductViewLogBean();

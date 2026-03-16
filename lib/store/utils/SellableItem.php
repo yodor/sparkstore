@@ -66,6 +66,7 @@ class SellableItem extends SparkObject
         $qry->stmt->where()->add("prodID", $prodID);
         $qry->stmt->group_by = "prodID";
         $qry->stmt->limit = " 1 ";
+        //$qry->stmt->setMeta("SellableItem::Load");
 
         $qry->exec();
         if (!$result = $qry->nextResult()) {

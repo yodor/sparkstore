@@ -94,14 +94,8 @@ class ProductsList extends BeanList {
 
         parent::__construct();
 
-        Debug::ErrorLog("ProductList CTOR");
-
         $this->dcsv_responder = new DownloadCSVProducts();
-
-
         $this->import_responder = new ImportUpdateFormResponder();
-
-
 
         new ImportUpdateScript();
 
