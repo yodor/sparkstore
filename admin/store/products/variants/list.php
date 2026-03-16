@@ -164,9 +164,9 @@ class ProductVariantsProcessor extends FormProcessor
                 $delete->where()->addExpression("voID NOT IN (:id_list)");
                 $delete->bind(":id_list", $id_list);
 
-                $db->query($delete);
+                $db->query($delete)->free();
 
-                //insert non-existing IDs - multi-insert initalized value to []
+                //insert non-existing IDs - multi-insert initialized value to []
                 $col_prodID = new SQLColumn("prodID", []);
                 $col_voID = new SQLColumn("voID", []);
 
@@ -180,7 +180,7 @@ class ProductVariantsProcessor extends FormProcessor
                 $insert->setColumn($col_prodID);
                 $insert->setColumn($col_voID);
 
-                $db->query($insert);
+                $db->query($insert)->free();
 
             }
             else {
@@ -190,7 +190,7 @@ class ProductVariantsProcessor extends FormProcessor
                 $delete->from = "product_variants";
                 $delete->where()->add("prodID", $this->prodID);
 
-                $db->query($delete);
+                $db->query($delete)->free();
             }
 
             $db->commit();

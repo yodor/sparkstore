@@ -42,7 +42,7 @@ if (URL::Current()->contains("editID")) {
             $update->from = $transactor->getBean()->getTableName();
             $update->set("option_name", $newName);
             $update->where()->add("parentID", $transactor->getEditID());
-            $db->query($update);
+            $db->query($update)->free();
         }
         catch (Exception $e) {
             throw new Exception("Updating option_name of child items failed: ".$e->getMessage());

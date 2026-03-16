@@ -66,7 +66,7 @@ class SectionChooserFormResponder extends JSONFormResponder
             $delete->from = " product_sections ";
             $delete->where()->add("prodID", $this->prodID);
 
-            $db->query($delete);
+            $db->query($delete)->free();
 
             $insert = new SQLInsert();
             $insert->from = " product_sections ";
@@ -87,7 +87,7 @@ class SectionChooserFormResponder extends JSONFormResponder
                 $insert->setColumn($colProdID);
                 $insert->setColumn($colSecID);
 
-                $db->query($insert);
+                $db->query($insert)->free();
             }
 
             $db->commit();
