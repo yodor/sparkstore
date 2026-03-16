@@ -2,7 +2,7 @@
 include_once("components/Container.php");
 include_once("components/ClosureComponent.php");
 include_once("sql/SQLSelect.php");
-include_once("iterators/SQLQuery.php");
+include_once("iterators/SelectQuery.php");
 
 include_once("store/components/renderers/items/NavigationListItem.php");
 include_once("store/beans/SellableProducts.php");
@@ -80,23 +80,25 @@ abstract class NavigationList extends Container
     }
 
     /**
-     * Return SQLQuery for all items in this list
-     * @return SQLQuery|null
+     * Return SelectQuery for all items in this list
+     * @return SelectQuery|null
      */
-    abstract public function createListIterator() : ?SQLQuery;
+    abstract public function createListIterator() : ?SelectQuery;
 
     /**
-     * Return SQLQuery with all the products to be shown in 'this' item of the list,
+     * Return SelectQuery with all the products to be shown in 'this' item of the list,
      * implementors modify the select returned from createTapeProducts
-     * @return SQLQuery|null
+     * @return SelectQuery|null
      */
-    abstract public function createTapeIterator() : ?SQLQuery;
+    abstract public function createTapeIterator() : ?SelectQuery;
 
     abstract public function createImagesColumn(SQLSelect $select) : void;
 
     /**
      * Return SQLSelect with all the products that will be used for display in this NavigationList
+     *
      * @return SQLSelect
+     * @throws Exception
      */
     public function createTapeProducts() : SQLSelect
     {
@@ -104,10 +106,10 @@ abstract class NavigationList extends Container
 
         $select = new SQLSelect();
         $select->from = $sellable->getTableName();
-        $select->fields()->set("prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent");
+        $select->set("prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent");
 
-        $select->fields()->unset($this->item->getValueKey());
-        $select->fields()->unset($this->item->getLabelKey());
+        $select->unset($this->item->getValueKey());
+        $select->unset($this->item->getLabelKey());
 
         $select->order_by = " RAND() ";
 
@@ -141,7 +143,7 @@ abstract class NavigationList extends Container
             $this->item->setRenderEnabled(true);
 
             $query = ($this->createTapeIterator)();
-            if ($query instanceof SQLQuery) {
+            if ($query instanceof SelectQuery) {
                 //tape iterator is set enable tape rendering
                 $this->item->getTape()->setRenderEnabled(true);
 

@@ -41,7 +41,7 @@ class OrdersListPage extends BeanListPage
 
         $this->setListFields($listFields);
 
-        $this->setIterator(new SQLQuery($this->orderList, "orderID", "orders"));
+        $this->setIterator(new SelectQuery($this->orderList, "orderID", "orders"));
 
     }
 

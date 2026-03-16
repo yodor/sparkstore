@@ -17,6 +17,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
     public function __construct()
     {
+        Debug::ErrorLog("---CTOR---");
         //should reach StorePage constructor to initialize defaults
         //SellableDataParser is customizable
         parent::__construct();
@@ -188,7 +189,7 @@ class ProductDetailsPageBase extends ProductPageBase
             $insert->set("view_counter", 1);
             $insert->set("order_counter", 0);
             $insert->on = " DUPLICATE KEY UPDATE view_counter=(view_counter+1) ";
-            $query = new SQLQuery();
+            $query = new DBQuery();
             $query->exec($insert);
             $query->free();
         }

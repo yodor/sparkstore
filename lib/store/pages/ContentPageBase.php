@@ -13,7 +13,7 @@ class ContentPageBase extends StorePage
     protected array $page_class = array();
 
     protected ?RawResult $result = null;
-    protected ?SQLQuery $menuQuery = null;
+    protected ?SelectQuery $menuQuery = null;
 
     public function __construct()
     {
@@ -60,7 +60,7 @@ class ContentPageBase extends StorePage
             if (count($this->page_class)==0 && $this->id < 1) throw new Exception("Parameter required");
 
             $query = $this->bean->query($this->bean->key(), "item_title", "content", "keywords", "item_date");
-            $query->stmt->fields()->setAliasExpression("( photo IS NOT NULL )", "have_photo");
+            $query->stmt->setAliasExpression("( photo IS NOT NULL )", "have_photo");
             $query->stmt->where()->add("visible", 1);
             if ($this->id > 0) {
                 $query->stmt->where()->add($this->bean->key(), $this->id);
@@ -119,7 +119,7 @@ class ContentPageBase extends StorePage
 
                 //minimum visible and id
                 if ($query->stmt->where()->count()>1) {
-                    $this->menuQuery = new SQLQuery($query->stmt, $this->bean->key());
+                    $this->menuQuery = new SelectQuery($query->stmt, $this->bean->key());
                 }
             }
         }

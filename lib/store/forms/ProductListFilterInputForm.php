@@ -48,21 +48,22 @@ class FilterDataInput extends DataInput {
     }
 
     /**
-     * Create the default SQLQuery iterator for this field
-     * @return SQLQuery
+     * Create the default SelectQuery iterator for this field
+     * @return SelectQuery
+     * @throws Exception
      */
-    protected function createQuery() : SQLQuery
+    protected function createQuery() : SelectQuery
     {
         $name = $this->fieldName();
-        $this->select->fields()->set($name);
+        $this->select->set($name);
         $this->select->where()->add($name , "NULL", " IS NOT ");
         $this->select->order_by = " $name ASC ";
         $this->select->group_by = " $name ";
 
-        return new SQLQuery($this->select, $name);
+        return new SelectQuery($this->select, $name);
     }
 
-    protected function updateRenderer()
+    protected function updateRenderer() : void
     {
         $renderer = $this->getRenderer();
         $renderer->getItemRenderer()->setValueKey($this->getName());
@@ -120,20 +121,20 @@ class ProductAttributeFilter extends SelectFilter {
     }
 
 
-    protected function createQuery() : SQLQuery
+    protected function createQuery() : SelectQuery
     {
-        $this->select->fields()->reset();
-        $this->select->fields()->set("pcav.value", "attr.name");
+        $this->select->reset();
+        $this->select->set("pcav.value", "attr.name");
 
         $this->select->order_by = " value ASC ";
         $this->select->group_by = " value ";
 
         $this->select->where()->add("attr.name" , $this->getName(), " LIKE ");
 
-        return new SQLQuery($this->select, "value");
+        return new SelectQuery($this->select, "value");
     }
 
-    protected function updateRenderer()
+    protected function updateRenderer() : void
     {
 
         $renderer = $this->getRenderer();
@@ -173,21 +174,21 @@ class ProductVariantFilter extends SelectFilter {
     }
 
 
-    protected function createQuery() : SQLQuery
+    protected function createQuery() : SelectQuery
     {
 
-        $this->select->fields()->reset();
-        $this->select->fields()->set("option_value");
+        $this->select->reset();
+        $this->select->set("option_value");
 
         $this->select->order_by = " vo.option_value ASC ";
         $this->select->group_by = " vo.option_value ";
 
         $this->select->where()->add("vo.option_name", $this->getName(), " LIKE ");
 
-        return new SQLQuery($this->select, "option_value");
+        return new SelectQuery($this->select, "option_value");
     }
 
-    protected function updateRenderer()
+    protected function updateRenderer() : void
     {
 
         $renderer = $this->getRenderer();
@@ -265,7 +266,7 @@ class ProductListFilterInputForm extends InputForm {
      * set prefer_all_values to such filter inputs
      * @param bool $all_values
      */
-    public function updateIterators(bool $all_values)
+    public function updateIterators(bool $all_values) : void
     {
         $inputs = $this->inputs();
         foreach ($this->inputs as $name=>$input) {
@@ -293,12 +294,12 @@ class ProductListFilterInputForm extends InputForm {
     protected function attributesSelect() : SQLSelect
     {
         $product_list = clone $this->select;
-        $product_list->fields()->reset();
-        $product_list->fields()->set("prodID", "pclsID");
+        $product_list->reset();
+        $product_list->set("prodID", "pclsID");
 
 
         $select = new SQLSelect();
-        $select->fields()->set("attr.name");
+        $select->set("attr.name");
         $select->from = " ({$product_list->getSQL()}) as list 
         JOIN product_class_attribute_values pcav ON pcav.prodID = list.prodID 
         JOIN product_class_attributes pca ON pca.pcaID=pcav.pcaID 
@@ -315,12 +316,12 @@ class ProductListFilterInputForm extends InputForm {
     protected function variantSelect() : SQLSelect
     {
         $product_list = clone $this->select;
-        $product_list->fields()->reset();
-        $product_list->fields()->set("prodID", "pclsID");
+        $product_list->reset();
+        $product_list->set("prodID", "pclsID");
 
 
         $select = new SQLSelect();
-        $select->fields()->set("vo.option_name", "vo.option_value");
+        $select->set("vo.option_name", "vo.option_value");
         $select->from = " ({$product_list->getSQL()}) as list 
         JOIN product_variants pv ON pv.prodID = list.prodID 
         JOIN variant_options vo ON vo.voID=pv.voID 
@@ -332,14 +333,14 @@ class ProductListFilterInputForm extends InputForm {
         return $select;
     }
 
-    public function createAttributeFilters()
+    public function createAttributeFilters() : void
     {
 
          //current product list (filtered by category or section)
 
         $select = $this->attributesSelect();
 
-        $query = new SQLQuery($select, "name");
+        $query = new SelectQuery($select, "name");
         $query->exec();
         while ($result = $query->nextResult())
         {
@@ -363,7 +364,7 @@ class ProductListFilterInputForm extends InputForm {
         $select = $this->variantSelect();
 
 
-        $query = new SQLQuery($select, "voID");
+        $query = new SelectQuery($select, "voID");
         $query->exec();
         while ($result = $query->nextResult())
         {

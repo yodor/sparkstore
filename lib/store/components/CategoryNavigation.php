@@ -29,7 +29,7 @@ class CategoryNavigation extends NavigationList
      */
     public function createImagesColumn(SQLSelect $select) : void
     {
-        $select->fields()->setAliasExpression(
+        $select->setAliasExpression(
             "(SELECT 
             GROUP_CONCAT(pcp.pcpID SEPARATOR ',') 
             FROM product_category_photos pcp 
@@ -43,12 +43,12 @@ class CategoryNavigation extends NavigationList
         $this->item->getStorageItem()->setValueKey("category_photos");
     }
 
-    public function createListIterator() : SQLQuery
+    public function createListIterator() : SelectQuery
     {
         $bean = new ProductCategoriesBean();
 
         $select = new SQLSelect();
-        $select->fields()->set("pc.catID, pc.category_name");
+        $select->set("pc.catID, pc.category_name");
         $select->from = " product_categories pc ";
         $select->where()->add("pc.parentID", $this->parentID);
         $select->order_by = " pc.lft ";
@@ -58,16 +58,15 @@ class CategoryNavigation extends NavigationList
 
         $this->item->getAction()->setURL(new CategoryURL());
 
-        $query = new SQLQuery($select, $bean->key());
+        $query = new SelectQuery($select, $bean->key());
         $query->setBean($bean);
         return $query;
     }
 
-    public function createTapeIterator() : ?SQLQuery
+    public function createTapeIterator() : ?SelectQuery
     {
         $tape_select = $this->iterator->bean()->selectChildNodesWith($this->tapeProducts, "sellable_products", $this->item->getValue(), array($this->item->getValueKey(), $this->item->getLabelKey()));
-        $query = new SQLQuery($tape_select, "prodID");
-        //$query->setDB(DBConnections::CreateDriver());
+        $query = new SelectQuery($tape_select, "prodID");
         return $query;
     }
 

@@ -22,7 +22,7 @@ class StorePromoInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::NESTED_SELECT, "targetID", "Category", 1);
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
-        $rend->setIterator(new SQLQuery($bean1->selectTree(array("category_name")), "catID"));
+        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), "catID"));
         $rend->getItemRenderer()->setValueKey("catID");
         $rend->getItemRenderer()->setLabelKey("category_name");
         $this->addInput($field);

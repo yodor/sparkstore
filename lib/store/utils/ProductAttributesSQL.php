@@ -7,9 +7,9 @@ class ProductAttributesSQL extends SQLSelect
     {
         parent::__construct();
 
-        $this->fields()->set(            "pcav.prodID");
-        $this->fields()->setAliasExpression("a.name", "attribute_name");
-        $this->fields()->setAliasExpression("pcav.value", "attribute_value");
+        $this->set("pcav.prodID");
+        $this->setAliasExpression("a.name", "attribute_name");
+        $this->setAliasExpression("pcav.value", "attribute_value");
 
         $this->from = " product_class_attribute_values pcav 
                 INNER JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 

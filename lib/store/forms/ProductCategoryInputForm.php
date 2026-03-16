@@ -19,7 +19,7 @@ class ProductCategoryInputForm extends InputForm
 
         $rend = $field->getRenderer();
 
-        $rend->setIterator(new SQLQuery($pcats->selectTree(array("category_name")), $pcats->key(), $pcats->getTableName()));
+        $rend->setIterator(new SelectQuery($pcats->selectTree(array("category_name")), $pcats->key(), $pcats->getTableName()));
         $rend->getItemRenderer()->setValueKey($pcats->key());
         $rend->getItemRenderer()->setLabelKey("category_name");
         $rend->setDefaultOption("--- TOP ---", "0");

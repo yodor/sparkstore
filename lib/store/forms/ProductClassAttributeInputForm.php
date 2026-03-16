@@ -63,7 +63,7 @@ class ProductClassAttributeInputForm extends InputForm
         $input = $this->getInput("attrID");
 
         $select = new SQLSelect();
-        $select->fields()->set("attrID", "name");
+        $select->set("attrID", "name");
         $select->from = " attributes ";
         $select->where()->addExpression("attrID not in (SELECT attrID FROM product_class_attributes WHERE pclsID = $pclsID)");
 
@@ -71,7 +71,7 @@ class ProductClassAttributeInputForm extends InputForm
 
         if ($rend instanceof SelectField) {
 
-            $rend->setIterator(new SQLQuery($select, "attrID", "attributes"));
+            $rend->setIterator(new SelectQuery($select, "attrID", "attributes"));
 
             $rend->getItemRenderer()->setValueKey("attrID");
             $rend->getItemRenderer()->setLabelKey("name");

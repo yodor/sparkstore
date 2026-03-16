@@ -32,10 +32,10 @@ else {
 
     $sel = new SQLSelect();
     $sel->from = " product_class_attributes pca LEFT JOIN attributes attr ON attr.attrID = pca.attrID";
-    $sel->fields()->set("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
+    $sel->set("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
     $sel->where()->add("pca.pclsID", Template::Condition()->getID());
 
-    $config->iterator = new SQLQuery($sel, "pcaID");
+    $config->iterator = new SelectQuery($sel, "pcaID");
 
     $config->observer = function(TemplateEvent $event) use ($config) {
         $content = $event->getSource();

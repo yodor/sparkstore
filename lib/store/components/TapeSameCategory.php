@@ -14,11 +14,11 @@ class TapeSameCategory extends ProductsTape
         $categories = new ProductCategoriesBean();
 
         $select = clone $bean->select();
-        $select->fields()->setPrefix("sellable_products");
+        $select->setPrefix("sellable_products");
         $select = $categories->selectChildNodesWith($select, "sellable_products", $sellable->getCategoryID());
 
 //        echo $select->getSQL();
-        $qry = new SQLQuery($select, "prodID");
+        $qry = new SelectQuery($select, "prodID");
 
 //        $qry = $this->bean->queryFull();
 //        $qry->select->where()->add("catID", $catID);

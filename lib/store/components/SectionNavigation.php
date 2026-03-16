@@ -13,7 +13,7 @@ class SectionNavigation extends NavigationList
 
     public function createImagesColumn(SQLSelect $select): void
     {
-        $select->fields()->setAliasExpression(
+        $select->setAliasExpression(
             "(SELECT 
             GROUP_CONCAT( CONCAT(sb.sbID,'|',sb.link) SEPARATOR ',')  
             FROM section_banners sb 
@@ -27,10 +27,10 @@ class SectionNavigation extends NavigationList
         $this->item->getStorageItem()->setValueKey("section_photos");
     }
 
-    public function createListIterator() : SQLQuery
+    public function createListIterator() : SelectQuery
     {
         $select = new SQLSelect();
-        $select->fields()->set("s.secID, s.section_title");
+        $select->set("s.secID, s.section_title");
         $select->from = " sections s";
         $select->where()->add("s.home_visible", 1 );
         $select->order_by = " s.position ASC ";
@@ -42,19 +42,19 @@ class SectionNavigation extends NavigationList
         $section_url->add(new DataParameter("section","section_title"));
         $this->item->getAction()->setURL($section_url);
 
-        $query = new SQLQuery($select, "secID");
+        $query = new SelectQuery($select, "secID");
         $query->setBean(new SectionsBean());
         return $query;
     }
 
-    public function createTapeIterator(): ?SQLQuery
+    public function createTapeIterator(): ?SelectQuery
     {
         $sectionName = $this->item->getLabel();
         $this->tapeProducts->where()->removeExpression("product_sections");
         $this->tapeProducts->where()->addExpression("product_sections LIKE :section_name");
         $this->tapeProducts->bind(":section_name", "%$sectionName%");
 
-        $query = new SQLQuery($this->tapeProducts, "prodID");
+        $query = new SelectQuery($this->tapeProducts, "prodID");
         return $query;
     }
 

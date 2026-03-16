@@ -138,6 +138,8 @@ class ProductVariantsProcessor extends FormProcessor
 
         try {
 
+            $db->transaction();
+
             $posted_voIDs = array();
 
             foreach ($form->inputValues() as $idx=> $values) {
@@ -164,7 +166,7 @@ class ProductVariantsProcessor extends FormProcessor
 
                 $db->query($delete);
 
-                //insert non-existing IDs - multi-insert
+                //insert non-existing IDs - multi-insert initalized value to []
                 $col_prodID = new SQLColumn("prodID", []);
                 $col_voID = new SQLColumn("voID", []);
 
@@ -175,8 +177,8 @@ class ProductVariantsProcessor extends FormProcessor
 
                 $insert = new SQLInsert();
                 $insert->from = "product_variants";
-                $insert->fields()->setColumn($col_prodID);
-                $insert->fields()->setColumn($col_voID);
+                $insert->setColumn($col_prodID);
+                $insert->setColumn($col_voID);
 
                 $db->query($insert);
 
@@ -203,11 +205,11 @@ class ProductVariantsProcessor extends FormProcessor
     {
 
         $select = new SQLSelect();
-        $select->fields()->set("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
+        $select->set("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
         $select->from = " product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ";
         $select->where()->add("pv.prodID", $this->prodID);
 
-        $query = new SQLQuery($select, "pvID");
+        $query = new SelectQuery($select, "pvID");
         $query->exec();
 
         foreach ($form->inputs() as $idx=> $input) {

@@ -263,6 +263,7 @@ class StorePageBase extends SparkPage
 
     public function __construct()
     {
+        Debug::ErrorLog("---CTOR---");
 
         $this->auth = new UserAuthenticator();
         $this->loginURL = Spark::Get(Config::LOCAL) . "/account/login.php";

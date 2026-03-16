@@ -32,11 +32,11 @@ class SectionChooserFormResponder extends JSONFormResponder
 
         //load selected sections into the form value
         $select = new SQLSelect();
-        $select->fields()->set("ps.prodID", "ps.secID");
+        $select->set("ps.prodID", "ps.secID");
         $select->from = " product_sections ps  ";
         $select->where()->add("ps.prodID", $this->prodID);
 
-        $query = new SQLQuery($select, "psID");
+        $query = new SelectQuery($select, "psID");
         $query->exec();
         $values = array();
         while ($result = $query->nextResult()) {
@@ -57,6 +57,7 @@ class SectionChooserFormResponder extends JSONFormResponder
         if (! ($field instanceof ArrayDataInput)) throw new Exception("Incorrect data type");
 
         $db = DBConnections::CreateDriver();
+
         try {
             $db->transaction();
 
@@ -83,8 +84,8 @@ class SectionChooserFormResponder extends JSONFormResponder
                     $colSecID->addValue($secID);
                 }
 
-                $insert->fields()->setColumn($colProdID);
-                $insert->fields()->setColumn($colSecID);
+                $insert->setColumn($colProdID);
+                $insert->setColumn($colSecID);
 
                 $db->query($insert);
             }

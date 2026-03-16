@@ -59,13 +59,13 @@ class ImagesExporter extends ProductExporter {
 
         $select = new SQLSelect();
         $select->from = " product_photos  ";
-        $select->fields()->set("prodID");
-        $select->fields()->set("ppID");
-        $select->fields()->set("position");
+        $select->set("prodID");
+        $select->set("ppID");
+        $select->set("position");
 
         $select->order_by = " prodID ASC, position ASC ";
 
-        $qry = new SQLQuery($select);
+        $qry = new SelectQuery($select);
         $qry->exec();
 
         while ($result = $qry->nextResult()) {
@@ -75,10 +75,10 @@ class ImagesExporter extends ProductExporter {
 
             $select1 = new SQLSelect();
             $select1->from = " product_photos ";
-            $select1->fields()->set("photo");
+            $select1->set("photo");
             $select1->where()->add("ppID", $ppID);
 
-            $qry1 = new SQLQuery($select1);
+            $qry1 = new SelectQuery($select1);
             $qry1->exec();
             if ($result1 = $qry1->nextResult()) {
                 $photo = $result1->get("photo");
@@ -237,10 +237,10 @@ abstract class CSVProductExporter extends ProductExporter
             Debug::ErrorLog("Using Deserialized ProductListSelect");
         }
 
-        $select->fields()->set("prodID");
+        $select->set("prodID");
 
 
-        $query = new SQLQuery($select);
+        $query = new SelectQuery($select);
 
         $this->processQuery($query);
 
@@ -257,7 +257,7 @@ abstract class CSVProductExporter extends ProductExporter
         }
     }
 
-    protected function processQuery(SQLQuery $query) : void
+    protected function processQuery(SelectQuery $query) : void
     {
         $query->stmt->order_by = " update_date DESC ";
     }
@@ -544,7 +544,7 @@ class UpdateCSVExporter extends CSVProductExporter
         $this->values["seo_description"] = $item->getSeoDescription();
     }
 
-    protected function processQuery(SQLQuery $query): void
+    protected function processQuery(SelectQuery $query): void
     {
         $query->stmt->order_by = " prodID DESC ";
     }

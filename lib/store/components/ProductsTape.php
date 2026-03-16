@@ -1,7 +1,7 @@
 <?php
 include_once("components/Component.php");
 include_once("components/Action.php");
-include_once("iterators/SQLQuery.php");
+include_once("iterators/SelectQuery.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 
 class ProductsTape extends Container
@@ -14,7 +14,7 @@ class ProductsTape extends Container
 
     protected ?ProductListItem $list_item = null;
 
-    protected ?SQLQuery $query = null;
+    protected ?SelectQuery $query = null;
 
     protected static ?ProductListItem $defaultItemRenderer = NULL;
 
@@ -87,7 +87,7 @@ class ProductsTape extends Container
         return $result;
     }
 
-    public function setIterator(SQLQuery $query): void
+    public function setIterator(SelectQuery $query): void
     {
         $this->query = $query;
     }
@@ -117,7 +117,7 @@ class ProductsTape extends Container
 
     protected function renderItems() : void
     {
-        if (!$this->query instanceof SQLQuery) return;
+        if (!$this->query instanceof SelectQuery) return;
 
         $numResults = $this->query->count();
 

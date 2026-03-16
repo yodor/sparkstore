@@ -222,7 +222,7 @@ class ProductListPageBase extends ProductPageBase
             throw new Exception("List bean is not set");
         }
         $this->select = clone $this->bean->select();
-        $this->select->fields()->setPrefix("sellable_products");
+        $this->select->setPrefix("sellable_products");
 
 
         $search_fields = array("product_name", "attribute_value");
@@ -230,7 +230,7 @@ class ProductListPageBase extends ProductPageBase
 
         //default - all categories not filtered or aggregated
         $treeSelect = $this->product_categories->selectTree(array("category_name"));
-        $treeQry = new SQLQuery($treeSelect, $this->product_categories->key(), $this->product_categories->getTableName());
+        $treeQry = new SelectQuery($treeSelect, $this->product_categories->key(), $this->product_categories->getTableName());
         $this->treeView->setIterator($treeQry);
 
         //default products select all products from all categories
@@ -238,7 +238,7 @@ class ProductListPageBase extends ProductPageBase
         //$products_list->group_by = SellableProducts::DefaultGrouping();
 
         //echo $products_list->getSQL();
-        $this->view->setIterator(new SQLQuery($products_list, "prodID"));
+        $this->view->setIterator(new SelectQuery($products_list, "prodID"));
 
         $this->initSortFields();
 
@@ -273,7 +273,7 @@ class ProductListPageBase extends ProductPageBase
             }
         }
 
-        $columnsCopy = clone $this->select->fields();
+        $columnNamesCopy = $this->select->columnNames();
 
         $iterator = $this->property_filter->iterator();
         while ($filter = $iterator->next()) {
@@ -321,12 +321,12 @@ class ProductListPageBase extends ProductPageBase
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
             //unset - will use catID and category name from selectChildNodesWith
-            $this->select->fields()->unset("catID");
-            $this->select->fields()->unset("category_name");
+            $this->select->unset("catID");
+            $this->select->unset("category_name");
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
         }
 
-        $this->view->setIterator(new SQLQuery($this->select, "prodID"));
+        $this->view->setIterator(new SelectQuery($this->select, "prodID"));
 
         //construct category tree for the products that will be listed
         //keep same grouping as the products list
@@ -334,20 +334,20 @@ class ProductListPageBase extends ProductPageBase
 
         //do not clear all fields here as filters might have appended dynamic columns for using in having clause
         //select only fields needed in the treeView iterator and remove non-needed columns
-        foreach ($columnsCopy->names() as $name) {
-            $products_tree->fields()->unset($name);
+        foreach ($columnNamesCopy as $idx=>$name) {
+            $products_tree->unset($name);
         }
-        $products_tree->fields()->set("sellable_products.prodID");
-        $products_tree->fields()->set("sellable_products.catID");
+        $products_tree->set("sellable_products.prodID");
+        $products_tree->set("sellable_products.catID");
         //echo $products_tree->getSQL();
 
         $products_tree = $products_tree->getAsDerived();
-        $products_tree->fields()->set("relation.prodID", "relation.catID");
+        $products_tree->set("relation.prodID", "relation.catID");
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
         if ($this->treeViewAggregateSelect) {
-            $this->treeView->setIterator(new SQLQuery($aggregateSelect, $this->product_categories->key()));
+            $this->treeView->setIterator(new SelectQuery($aggregateSelect, $this->product_categories->key()));
         }
 
         ////
@@ -519,7 +519,7 @@ class ProductListPageBase extends ProductPageBase
 
         //echo $catsel->getSQL();
 
-        $query = new SQLQuery($catsel, "catID");
+        $query = new SelectQuery($catsel, "catID");
         $query->exec();
 
         echo "<div class='category_list'>";

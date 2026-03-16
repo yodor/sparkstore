@@ -237,7 +237,7 @@ class OrderProcessor
                 $update->bind(":amount", $amount);
                 $update->where()->add("p.prodID", $prodID);
 
-                $query = new SQLQuery();
+                $query = new DBQuery();
                 $query->exec($update);
             }
             catch (Exception $e) {
@@ -252,7 +252,7 @@ class OrderProcessor
                 $update->bind(":amount", $amount);
                 $update->where()->add("pvl.prodID", $prodID);
 
-                $query = new SQLQuery();
+                $query = new DBQuery();
                 $query->exec($update);
             }
             catch (Exception $e) {

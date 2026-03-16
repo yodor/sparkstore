@@ -8,10 +8,10 @@ else {
 
     $sel = new SQLSelect();
     $sel->from = " product_classes pc ";
-    $sel->fields()->set("pc.pclsID", "pc.class_name");
-    $sel->fields()->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
+    $sel->set("pc.pclsID", "pc.class_name");
+    $sel->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
 FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AND pca.pclsID=pc.pclsID)", "class_attributes");
-    $sel->fields()->setAliasExpression("(select group_concat(
+    $sel->setAliasExpression("(select group_concat(
 concat(
 opt.option_name, 
 '<BR>[',
@@ -23,7 +23,7 @@ opt.option_name,
  )
  FROM variant_options opt WHERE opt.pclsID = pc.pclsID ORDER BY opt.position ASC)", "class_options");
 
-    $config->iterator = new SQLQuery($sel, "pclsID");
+    $config->iterator = new SelectQuery($sel, "pclsID");
     $config->listFields = array("class_name"=>"Class Name", "class_attributes"=>"Class Attributes", "class_options"=>"Class Options");
 
     $config->observer = function(TemplateEvent $event) {

@@ -16,10 +16,10 @@ $pattr = new ProductClassAttributesBean();
 
 $sel = new SQLSelect();
 $sel->from = " product_classes pc ";
-$sel->fields()->set("pc.pclsID", "pc.class_name");
-$sel->fields()->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
+$sel->set("pc.pclsID", "pc.class_name");
+$sel->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
 FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AND pca.pclsID=pc.pclsID)", "class_attributes");
-$sel->fields()->setAliasExpression("(select group_concat(
+$sel->setAliasExpression("(select group_concat(
 concat(
 opt.option_name, 
 '(',
@@ -31,7 +31,7 @@ opt.option_name,
  )
  FROM variant_options opt WHERE opt.pclsID = pc.pclsID ORDER BY opt.position ASC)", "class_options");
 
-$cmp->setIterator(new SQLQuery($sel, "pclsID"));
+$cmp->setIterator(new SelectQuery($sel, "pclsID"));
 $cmp->setListFields(array("class_name"=>"Class Name", "class_attributes"=>"Class Attributes", "class_options"=>"Class Options"));
 $cmp->setBean($bean);
 

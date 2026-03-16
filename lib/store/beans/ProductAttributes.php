@@ -14,8 +14,8 @@ class ProductAttributes extends DBViewBean
 
         parent::__construct($table_name);
 
-        $this->select->fields()->reset();
-        $this->select->fields()->set(...$this->columnNames());
+        $this->select->reset();
+        $this->select->set(...$this->columnNames());
         $this->prkey = "prodID";
     }
 

@@ -22,15 +22,15 @@ class OptionsList extends BeanList
         $bean = new VariantOptionsBean();
         $this->setBean($bean);
 
-        $bean->select()->fields()->set(...$bean->columnNames());
-        $bean->select()->fields()->setAliasExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
+        $bean->select()->set(...$bean->columnNames());
+        $bean->select()->setAliasExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
         //$bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(pcls.class_name) FROM product_classes pcls WHERE pcls.pclsID = variant_options.pclsID)", "class_name");
 
         //only options not their parameters
         $bean->select()->where()->add("parentID", null, " IS ");
 
         //set query to reference bean->select() so changes to select are reflected to the other users - used in responders set position (getMaxPosition()) etc
-        $this->setIterator(new SQLQuery($bean->select(), $bean->key(), $bean->getTableName()));
+        $this->setIterator(new SelectQuery($bean->select(), $bean->key(), $bean->getTableName()));
 
         $this->setListFields(array("voID"=>"ID", "position"=>"Position", "option_name"=>"Option Name", "parameters"=>"Parameters"));
 

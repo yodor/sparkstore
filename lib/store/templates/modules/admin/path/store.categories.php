@@ -14,14 +14,14 @@ else {
         $source = $event->getSource();
         if (!($source instanceof BeanTree)) throw new Exception("Incorrect event source - expecting BeanTree");
         $iterator = $source->getIterator();
-        if (!($iterator instanceof SQLQuery)) throw new Exception("TreeView iterator is not SQLQuery");
+        if (!($iterator instanceof SelectQuery)) throw new Exception("TreeView iterator is not SelectQuery");
         $item = $source->treeView()->getItemRenderer();
         if (!($item instanceof TextTreeItem)) throw new Exception("TreeView item renderer is not TextTreeItem");
 
         $treeView = $source->treeView();
         $treeView->setBranchRenderMode(NestedSetTreeView::MODE_BRANCHES_UNFOLDED);
 
-        $iterator->stmt->fields()->setAliasExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = node.catID ORDER BY pcp.position ASC LIMIT 1)", " pcpID ");
+        $iterator->stmt->setAliasExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = node.catID ORDER BY pcp.position ASC LIMIT 1)", " pcpID ");
 
         $si = new StorageItem(-1, "ProductCategoryPhotosBean");
         $si->setName("pcpID");

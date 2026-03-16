@@ -156,7 +156,7 @@ class ProductsList extends BeanList {
 //        }
 
         $qry = $this->bean->query();
-        $qry->stmt->fields()->set(
+        $qry->stmt->set(
             "p.prodID",
             "p.product_name",
             "p.brand_name",
@@ -166,17 +166,17 @@ class ProductsList extends BeanList {
             "p.stock_amount",
         );
 
-        $qry->stmt->fields()->setAliasExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
-        $qry->stmt->fields()->setAliasExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
+        $qry->stmt->setAliasExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
+        $qry->stmt->setAliasExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
 
-        $qry->stmt->fields()->setAliasExpression("(SELECT 
+        $qry->stmt->setAliasExpression("(SELECT 
         GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID = pca.attrID
         WHERE pcav.prodID = p.prodID )", "product_attributes");
 
-        $qry->stmt->fields()->setAliasExpression("(SELECT 
+        $qry->stmt->setAliasExpression("(SELECT 
     GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
     (SELECT 
         CONCAT(vo.option_name, ':', GROUP_CONCAT(vo.option_value ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR ';')) as label,
@@ -187,20 +187,20 @@ class ProductsList extends BeanList {
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->stmt->fields()->setAliasExpression("(
+        $qry->stmt->setAliasExpression("(
         SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
         )", "class_name");
 
-        $qry->stmt->fields()->setAliasExpression("(
+        $qry->stmt->setAliasExpression("(
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 
 
-        $qry->stmt->fields()->setAliasExpression("(
+        $qry->stmt->setAliasExpression("(
         SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "view_counter");
 
-        $qry->stmt->fields()->setAliasExpression("(
+        $qry->stmt->setAliasExpression("(
         SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "order_counter");
 
@@ -222,7 +222,7 @@ class ProductsList extends BeanList {
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
 
-        $rend->setIterator(new SQLQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
+        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
         $rend->getItemRenderer()->setValueKey("catID");
         $rend->getItemRenderer()->setLabelKey("category_name");
 
@@ -341,7 +341,7 @@ class ProductsList extends BeanList {
         //serialize for product export
         if ($this->cmp instanceof TableView) {
             $itr = $this->cmp->getIterator();
-            if ($itr instanceof SQLQuery) {
+            if ($itr instanceof SelectQuery) {
                 Session::Set("ProductListSelect", serialize($itr->stmt));
                 Debug::ErrorLog("Serialized SQLSelect for this product listing");
             }
