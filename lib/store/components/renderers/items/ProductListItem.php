@@ -11,8 +11,9 @@ include_once("store/beans/ProductPhotosBean.php");
 
 include_once("store/components/PriceLabel.php");
 include_once("store/components/CurrencyLabel.php");
+include_once("utils/IDataResultConsumer.php");
 
-class ProductDetails extends Action
+class ProductDetails extends Action implements IDataResultConsumer
 {
     protected ProductListItem $item;
 
@@ -110,9 +111,14 @@ class ProductDetails extends Action
         }
 
     }
+
+    public function collectDataKeys(): array
+    {
+        return ["price", "sell_price", "product_name"];
+    }
 }
 
-class ProductPhoto extends Action
+class ProductPhoto extends Action implements IDataResultConsumer
 {
     protected Image $image;
     protected Component $discountLabel;
@@ -196,11 +202,15 @@ class ProductPhoto extends Action
 
     }
 
+    public function collectDataKeys(): array
+    {
+        return ["stock_amount", "product_name", "ppID"];
+    }
 }
 
 
 
-class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
+class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer, IDataResultConsumer
 {
 
     /**
@@ -345,4 +355,9 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer
         $this->categoryMeta->setRenderEnabled(false);
     }
 
+    public function collectDataKeys(): array
+    {
+        $keys = ["prodID", "category_name", "price", "sell_price", "discount_percent", "ppID"];
+        return array_unique(array_merge($keys, $this->productPhoto->collectDataKeys(), $this->productDetails->collectDataKeys()));
+    }
 }
