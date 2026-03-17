@@ -130,7 +130,9 @@ abstract class NavigationList extends Container
 
         //TODO: set required columns for ProductListItem only
         //Get required columns from ProductListItem instance
-        $select->set("prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent");
+        $columns = ["prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent"];
+        $present = $sellable->existingColumns($columns);
+        $select->set(...$present);
 
         $select->unset($this->item->getValueKey());
         $select->unset($this->item->getLabelKey());
