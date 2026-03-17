@@ -173,16 +173,18 @@ class StorePageBase extends SparkPage
         $this->head()->addScript($orgScript);
 
         $website = new LinkedData("WebSite");
-        $website->set("name", mb_strtoupper(Spark::Get(Config::SITE_URL)). " - " . tr("Official Page"));
+        $website->set("name", Spark::Get(Config::SITE_TITLE). " - " . "Official Web Site");
         $website->set("url", Spark::Get(Config::SITE_URL));
 
         $potentialAction = new LinkedData("SearchAction");
 
         $entryPoint = new LinkedData("EntryPoint");
+
         $entryURL = new ProductListURL();
         $entryURL->add(new URLParameter("filter","search"));
-        $entryURL->add(new URLParameter("keyword", "{search_term_string}"));
-        $entryPoint->set("urlTemplate", $entryURL->fullURL()->toString());
+        $entryURL->add(new LiteralURLParameter("keyword", "{search_term_string}"));
+
+        $entryPoint->set("urlTemplate", $entryURL->fullURL());
         $potentialAction->set("target", $entryPoint->toArray());
         $potentialAction->set("query-input", "required name=search_term_string");
 
