@@ -5,6 +5,15 @@ include_once("components/Image.php");
 include_once("storage/StorageItem.php");
 include_once("store/components/ProductsTape.php");
 
+enum BannerEffect : int
+{
+    case NONE = 0;
+    case SLIDE = 1;
+    case FADE = 2;
+
+}
+
+
 class NavigationListItem extends DataIteratorItem
 {
     protected Action $action;
@@ -20,7 +29,21 @@ class NavigationListItem extends DataIteratorItem
     protected Container $viewport;
     protected Container $bannerItem;
 
-    protected bool $sliderEnabled = true;
+    const int EFFECT_NONE = 0;
+    const int EFFECT_SLIDE = 1;
+    const int EFFECT_FADE = 2;
+
+    /**
+     * Default effect if no custom effect for each item is assigned
+     * @var BannerEffect
+     */
+    protected BannerEffect $effect = BannerEffect::SLIDE;
+
+    /**
+     * Target specific names with different effect
+     * @var array<string, BannerEffect>
+     */
+    protected array $effectForName = array();
 
     public function __construct()
     {
@@ -69,6 +92,7 @@ class NavigationListItem extends DataIteratorItem
         $arr = parent::requiredScript();
         $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/js/SwipeListener.js";
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageSlider.js";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageFader.js";
         return $arr;
     }
 
@@ -85,15 +109,22 @@ class NavigationListItem extends DataIteratorItem
         $this->tape->setCacheable($mode);
     }
 
-    public function setSliderEnabled(bool $mode): void
+    public function setBannerEffect(BannerEffect $effect): void
     {
-        $this->sliderEnabled = $mode;
+        $this->effect = $effect;
+    }
+
+    public function setEffectForName(string $name, BannerEffect $effect): void
+    {
+        $this->effectForName[$name] = $effect;
     }
 
     public function setData(array $data) : void
     {
         parent::setData($data);
-        $this->setName($this->label);
+
+        $this->setName(Spark::AttributeValue($this->label));
+
         $this->action->setTitle($this->label);
         $this->action->getURL()->setData($data);
 
@@ -183,23 +214,54 @@ class NavigationListItem extends DataIteratorItem
     public function finishRender(): void
     {
         parent::finishRender();
-        if ($this->sliderEnabled) {
-            if ($this->viewport->items()->count()>1) {
-               ?>
+
+        if ($this->viewport->items()->count()>1) {
+            $name = $this->getName();
+
+            $effect = $this->effect;
+            if (isset($this->effectForName[$name])) {
+                $effect = $this->effectForName[$name];
+            }
+
+            switch ($effect) {
+
+                case BannerEffect::SLIDE:
+                    ?>
                     <script type="text/javascript">
                     onPageLoad(function () {
                         let slider = new ImageSlider();
                         slider.setClass(".NavigationListItem");
-                        slider.setName("<?php echo $this->getName();?>");
+                        slider.setName("<?php echo $name;?>");
                         slider.containerClass = ".banners";
                         slider.viewportClass = ".viewport";
                         slider.autoplayEnabled = false;
                         slider.initialize();
                     });
                     </script>
-                <?php
+                    <?php
+                    break;
+
+                case BannerEffect::FADE:
+                    ?>
+                    <script type="text/javascript">
+                    onPageLoad(function() {
+                        let fader = new ImageFader();
+                        fader.setClass(".NavigationListItem");
+                        fader.setName("<?php echo $name;?>");
+                        fader.containerClass = ".banners";
+                        fader.viewportClass = ".viewport";
+                        fader.initialize();
+                        fader.setupFadeDelayed(3000);
+                    });
+                    </script>
+                    <?php
+                    break;
+
+                case BannerEffect::NONE:
+                    break;
             }
         }
+
     }
 
 }
