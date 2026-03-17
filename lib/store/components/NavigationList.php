@@ -16,13 +16,34 @@ abstract class NavigationList extends Container
     protected ?IDataIterator $iterator = null;
     protected ?SQLSelect $tapeProducts = null;
 
+    /**
+     * Main iterator - each element of the NavigationList - ie main categories to list or sections
+     * @var Closure
+     */
     public Closure $createListIterator;
+
+    /**
+     * Iterator for the items listed inside each NavigationList element
+     * This can be disabled so only banners are shown and no related items are listed
+     * @var Closure
+     */
     public Closure $createTapeIterator;
+
+    /**
+     *
+     * @var Closure
+     */
     public Closure $createTapeProducts;
 
+    /**
+     * @var Closure
+     */
     public Closure $createImagesColumn;
 
     public int $imagesLimit = 4;
+
+    public int  $tapeItemsLimit = 4;
+    public bool $tapeItemsRandom = true;
 
     //do not render banner or text if tape iterator is empty
     public bool $emptyTapeDisableItem = true;
@@ -106,16 +127,20 @@ abstract class NavigationList extends Container
 
         $select = new SQLSelect();
         $select->from = $sellable->getTableName();
+
+        //TODO: set required columns for ProductListItem only
+        //Get required columns from ProductListItem instance
         $select->set("prodID", "product_name", "sell_price", "price", "stock_amount", "category_name", "class_name", "ppID", "discount_percent");
 
         $select->unset($this->item->getValueKey());
         $select->unset($this->item->getLabelKey());
 
-        $select->order_by = " RAND() ";
+        //do not rand here
+        //$select->order_by = " RAND() ";
 
         $select->where()->addExpression("stock_amount > 0");
 
-        $select->limit = " 4 ";
+        $select->limit = " $this->tapeItemsLimit ";
         return $select;
     }
 
@@ -131,41 +156,59 @@ abstract class NavigationList extends Container
 
     protected function renderItems() : void
     {
-
+        //element like sections, categories other collections that might have images/banners and/or related products/items to show
         $this->iterator->exec();
 
         $position = 0;
         while ($result = $this->iterator->next())
         {
             $this->item->setPosition($position);
+            //process caption and images/banners if any
             $this->item->setData($result);
 
+            //update any previous rendering state
             $this->item->setRenderEnabled(true);
 
+            //for each element of the NavigationList
             $query = ($this->createTapeIterator)();
+
+            $total = -1;
+
+            //we want tape items
             if ($query instanceof SelectQuery) {
-                //tape iterator is set enable tape rendering
-                $this->item->getTape()->setRenderEnabled(true);
 
-                $num = $query->count();
+                $total = $query->count();
 
-                if ($num > 0) {
-                    $this->item->getTape()->setIterator($query);
-                }
-                else {
-                    //do not render item
-                    if ($this->emptyTapeDisableItem) {
-                        $this->item->setRenderEnabled(false);
+                if ($total > 0) {
+                    //set here
+                    $query->stmt->limit = " $this->tapeItemsLimit ";
+                    //randomize results
+                    if ($this->tapeItemsRandom) {
+                        if ($total >= $this->tapeItemsLimit) {
+                            $offset = mt_rand(0, $total - 4);
+                            $query->stmt->limit .= " OFFSET $offset";
+                        }
                     }
+                    //debug output
+//                    $query->stmt->setMeta("TapeIterator");
+
+                    $this->item->getTape()->setIterator($query);
+                    //tape iterator is set enable tape rendering
+                    $this->item->getTape()->setRenderEnabled(true);
                 }
+
             }
-            else {
-                //tape iterator is null disable tape rendering
+
+            //tape iterator is empty or no iterator at all created
+            if ($total < 1) {
+                //no rendering for this NavigationListItem skip position update too
+                if ($this->emptyTapeDisableItem) continue;
+                //NavigationListItem might have images/banners - disable only tape items
                 $this->item->getTape()->setRenderEnabled(false);
             }
 
+            //render the NavigationListItem
             $this->item->render();
-
             $position++;
         }
     }

@@ -54,8 +54,7 @@ class SectionNavigation extends NavigationList
         $this->tapeProducts->where()->addExpression("product_sections LIKE :section_name");
         $this->tapeProducts->bind(":section_name", "%$sectionName%");
 
-        $query = new SelectQuery($this->tapeProducts, "prodID");
-        return $query;
+        return new SelectQuery($this->tapeProducts, "prodID");
     }
 
 

@@ -431,12 +431,6 @@ class ProductListPageBase extends ProductPageBase
             $supported_params[] = KeywordSearch::SUBMIT_KEY;
         }
 
-        //remove key page
-//        $view_params = $this->view->getPaginator()->getParameterNames();
-//        foreach ($view_params as $idx=>$name) {
-//            if (str_contains($name, Paginator::KEY_PAGE))continue;
-//            $supported_params[] = $name;
-//        }
         return $supported_params;
     }
     /**
@@ -535,6 +529,7 @@ class ProductListPageBase extends ProductPageBase
             echo "</div>";
         }
         echo "</div>";
+        $query->free();
 
         
     }
