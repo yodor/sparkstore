@@ -273,15 +273,17 @@ A.Caption:active {
 }
 
 .section.cookies {
-    position: sticky;
+    position: fixed;
     z-index: 11;
-
 
     bottom: 3.25em;
 
     background-color:rgba(1.0,0.0,0.0,0.8);
 
     display:none;
+
+    width:100%;
+    max-width:100%;
 }
 
 .section.cookies[accepted="true"] {
