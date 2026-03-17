@@ -171,6 +171,15 @@ class NavigationListItem extends DataIteratorItem
         return $this->image;
     }
 
+    /**
+     * Return the count of items that are assigned as banners/images using the $createImagesColumn() iterator
+     * @return int
+     */
+    public function bannersCount() : int
+    {
+        return $this->bannerItem->items()->count();
+    }
+
     public function finishRender(): void
     {
         parent::finishRender();

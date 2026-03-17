@@ -45,8 +45,9 @@ abstract class NavigationList extends Container
     public int  $tapeItemsLimit = 4;
     public bool $tapeItemsRandom = true;
 
-    //do not render banner or text if tape iterator is empty
-    public bool $emptyTapeDisableItem = true;
+    //do not render items with empty/disabled tape and no banners
+    //If this is false captions will be rendered only - even if not tape items or images
+    public bool $disableEmptyItems = true;
 
     public function __construct()
     {
@@ -174,6 +175,7 @@ abstract class NavigationList extends Container
             //for each element of the NavigationList
             $query = ($this->createTapeIterator)();
 
+            //total items for ProductsTape to render
             $total = -1;
 
             //we want tape items
@@ -201,13 +203,16 @@ abstract class NavigationList extends Container
 
             }
 
+
             //tape iterator is empty or no iterator at all created
             if ($total < 1) {
-                //no rendering for this NavigationListItem skip position update too
-                if ($this->emptyTapeDisableItem) continue;
                 //NavigationListItem might have images/banners - disable only tape items
                 $this->item->getTape()->setRenderEnabled(false);
             }
+
+            //no rendering for this NavigationListItem skip position update too
+            if ($total<1 && $this->item->bannersCount()<1 && $this->disableEmptyItems) continue;
+
 
             //render the NavigationListItem
             $this->item->render();
