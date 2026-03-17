@@ -4,6 +4,7 @@ include_once("components/Action.php");
 include_once("components/Image.php");
 include_once("storage/StorageItem.php");
 include_once("store/components/ProductsTape.php");
+include_once("components/InlinePageScript.php");
 
 enum BannerEffect : int
 {
@@ -12,7 +13,41 @@ enum BannerEffect : int
     case FADE = 2;
 
 }
+class FadeEffectScript extends InlinePageScript
+{
 
+    public function code(): string
+    {
+        $name = $this->getName();
+        return <<<JS
+let fader = new ImageFader();
+fader.setClass(".NavigationListItem");
+fader.setName("$name");
+fader.containerClass = ".banners";
+fader.viewportClass = ".viewport";
+fader.initialize();
+fader.setupFadeDelayed(3000);
+JS;
+    }
+}
+
+class SlideEffectScript extends InlinePageScript
+{
+
+    public function code(): string
+    {
+        $name = $this->getName();
+        return <<<JS
+let slider = new ImageSlider();
+slider.setClass(".NavigationListItem");
+slider.setName("$name");
+slider.containerClass = ".banners";
+slider.viewportClass = ".viewport";
+slider.autoplayEnabled = false;
+slider.initialize();
+JS;
+    }
+}
 
 class NavigationListItem extends DataIteratorItem
 {
@@ -226,35 +261,15 @@ class NavigationListItem extends DataIteratorItem
             switch ($effect) {
 
                 case BannerEffect::SLIDE:
-                    ?>
-                    <script type="text/javascript">
-                    onPageLoad(function () {
-                        let slider = new ImageSlider();
-                        slider.setClass(".NavigationListItem");
-                        slider.setName("<?php echo $name;?>");
-                        slider.containerClass = ".banners";
-                        slider.viewportClass = ".viewport";
-                        slider.autoplayEnabled = false;
-                        slider.initialize();
-                    });
-                    </script>
-                    <?php
+                    $script = new SlideEffectScript();
+                    $script->setName($name);
+                    $script->render();
                     break;
 
                 case BannerEffect::FADE:
-                    ?>
-                    <script type="text/javascript">
-                    onPageLoad(function() {
-                        let fader = new ImageFader();
-                        fader.setClass(".NavigationListItem");
-                        fader.setName("<?php echo $name;?>");
-                        fader.containerClass = ".banners";
-                        fader.viewportClass = ".viewport";
-                        fader.initialize();
-                        fader.setupFadeDelayed(3000);
-                    });
-                    </script>
-                    <?php
+                    $script = new FadeEffectScript();
+                    $script->setName($name);
+                    $script->render();
                     break;
 
                 case BannerEffect::NONE:
