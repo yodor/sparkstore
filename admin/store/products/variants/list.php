@@ -156,13 +156,12 @@ class ProductVariantsProcessor extends FormProcessor
             if (is_array($posted_voIDs) && count($posted_voIDs)>0) {
                 //echo "<pre>Posted IDS: ".print_r($posted_voIDs)."</pre>";
 
-                $id_list = implode(",", $posted_voIDs);
-
                 $delete = new SQLDelete();
                 $delete->from = "product_variants";
                 $delete->where()->add("prodID", $this->prodID);
-                $delete->where()->addExpression("voID NOT IN (:id_list)");
-                $delete->bind(":id_list", $id_list);
+
+                $idlist = $delete->bindList($posted_voIDs);
+                $delete->where()->addExpression("voID NOT IN ($idlist)");
 
                 $db->query($delete)->free();
 

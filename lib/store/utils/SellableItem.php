@@ -315,6 +315,4 @@ class SellableItem extends SparkObject
         return count(array_keys($this->variants));
     }
 
-
-
 }
