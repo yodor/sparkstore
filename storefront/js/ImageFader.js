@@ -24,6 +24,12 @@ class ImageFader extends Component
     {
         if (this.running) return;
 
+        //keep the load ordering
+        //absolute layout last is on top make the first last
+        //running takes first and make it last to make it visible
+        let first = this.viewport.childNodes.item(0);
+        this.viewport.appendChild(this.viewport.removeChild(first));
+
         this.container.classList.remove("fade");
         this.container.classList.add("fade");
 
@@ -70,11 +76,17 @@ class ImageFader extends Component
         if (!this.running) return;
 
         let first = this.viewport.childNodes.item(0);
+
         if (first instanceof HTMLElement) {
+
+            first.classList.add("running");
+
             this.viewport.appendChild(this.viewport.removeChild(first));
+
             if (this.running) {
                 this.timerID = setTimeout(()=>this.fadeBanner(), this.getTimeout());
             }
+
         }
     }
 

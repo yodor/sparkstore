@@ -26,7 +26,8 @@ fader.setName("$name");
 fader.containerClass = ".banners";
 fader.viewportClass = ".viewport";
 fader.initialize();
-fader.setupFadeDelayed(3000);
+// fader.setupFadeDelayed(3000);
+fader.setupFade();
 JS;
     }
 }
