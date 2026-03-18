@@ -43,7 +43,8 @@ class NewsPageBase extends StorePage
 
         if (count($arr)>0) {
             $qry = $this->pac->getBean()->query(...$this->pac->getSelectionColumns());
-            $qry->stmt->where()->add($this->news->key(), "(" . implode(",", $arr) . ")", " IN ");
+            $inlist = $qry->stmt->bindList($arr);
+            $qry->stmt->where()->addExpression("{$this->news->key()} IN ($inlist)");
             $qry->stmt->order_by = " newsID DESC ";
             $qry->exec();
 
