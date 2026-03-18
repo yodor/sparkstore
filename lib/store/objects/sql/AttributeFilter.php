@@ -26,12 +26,10 @@ class AttributeFilter extends ClosureFilter {
 //            ) AS {$input->getName()}
 //                ON {$input->getName()}.prodID = sellable_products.prodID";
 
-            //TODO Check binding
-            $select->setAliasExpression("{$input->getName()}.attribute_value", $input->getName());
+            $select->from .= " INNER JOIN product_attributes pa ON pa.prodID = sellable_products.prodID ";
 
-            $select->from .= " INNER JOIN product_attributes AS {$input->getName()} ON {$input->getName()}.prodID = sellable_products.prodID ";
-            $select->where()->add("{$input->getName()}.attribute_name", $input->getName());
-            $select->where()->add("{$input->getName()}.attribute_value", $value, $opr);
+            $select->where()->add("pa.attribute_name", $input->getName());
+            $select->where()->add("pa.attribute_value", $value, $opr);
 
             //echo $select->debugSQL();
             //$select->setMeta("AttrubuteFilter Query");
