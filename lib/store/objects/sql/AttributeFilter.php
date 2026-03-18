@@ -4,7 +4,10 @@ include_once("objects/sql/ClosureFilter.php");
 class AttributeFilter extends ClosureFilter {
 
     /**
-     * Join product attributes to  sellables
+     * Inner join product_attributes to sellable_products matching
+     * product_attributes.attribute_name with DataInput->getName() and
+     * product_attributes.attribute_value with DataInput->value() under getMatchValue helper for MATCH_LIKE
+     *
      * @param string $title
      * @param int $matchMode
      */
@@ -23,7 +26,7 @@ class AttributeFilter extends ClosureFilter {
             $select->where()->add("$filterName.attribute_value", $value, $opr);
 
             //echo $select->debugSQL();
-            $select->setMeta("AttrubuteFilter Query");
+//            $select->setMeta("AttrubuteFilter Query");
         };
 
         parent::__construct($title, $attributeClosure);
