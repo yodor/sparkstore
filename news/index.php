@@ -3,7 +3,6 @@ include_once("class/pages/NewsPage.php");
 
 $page = new NewsPage();
 
-$page->getPublications()->processInput();
+$page->initialize();
 
-$page->startRender();
-$page->finishRender();
+$page->render();
