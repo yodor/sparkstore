@@ -1,14 +1,14 @@
-.NewsPage .section.main .content {
+.NewsPage .section.main>.content {
     display: grid;
     grid-template-columns: 270px auto;
     grid-column-gap: 1em;
     margin-top: 1em;
 }
 
-
 .DatedItem .title {
     font-size: 18px;
     display: block;
+
 }
 
 .DatedItem .date {
