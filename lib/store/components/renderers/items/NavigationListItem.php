@@ -136,6 +136,7 @@ class NavigationListItem extends DataIteratorItem
     {
         $arr = parent::requiredStyle();
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/NavigationListItem.css";
+        $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/css/animations.css";
         return $arr;
     }
 
