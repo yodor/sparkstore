@@ -16,6 +16,9 @@
     font-style: italic;
 }
 
-.DatedItem .content {
-
+@media (max-width: 640px) {
+    .NewsPage .section.main>.content {
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+    }
 }
