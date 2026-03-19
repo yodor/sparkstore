@@ -8,7 +8,7 @@
 .DatedItem .title {
     font-size: 18px;
     display: block;
-
+    text-align: left;
 }
 
 .DatedItem .date {
@@ -17,5 +17,5 @@
 }
 
 .DatedItem .content {
-    padding-right: 0.5em;
+
 }
