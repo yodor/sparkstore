@@ -1,18 +1,9 @@
-.news_view {
-    display: table;
-    width: 100%;
-    border-spacing: 10px;
-}
-
-.news_view .column {
-    display: table-cell;
-    vertical-align: top;
-    /*border: 1px dotted red;*/
-}
-
-.news_view .column.main {
+.NewsPage .section.main .content {
+    display: grid;
+    grid-template-columns: 270px auto;
 
 }
+
 
 .news_view .column.main .Title {
     font-size: 18px;
