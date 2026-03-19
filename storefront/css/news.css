@@ -20,5 +20,6 @@
     .NewsPage .section.main>.content {
         grid-template-columns: auto;
         grid-template-rows: auto;
+        padding: 0.5em;
     }
 }
