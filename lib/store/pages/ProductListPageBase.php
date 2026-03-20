@@ -199,10 +199,10 @@ class ProductListPageBase extends ProductPageBase
      */
     protected function initSortFields(): void
     {
-        $sort_prod = new OrderColumn("prodID", "Най-нови",  "DESC");
+        $sort_prod = OrderColumn::Labeled("prodID", "Най-нови",  OrderDirection::DESC);
         $this->view->getPaginator()->addOrderColumn($sort_prod);
 
-        $sort_price = new OrderColumn("sell_price", "Цена", "ASC");
+        $sort_price = OrderColumn::Labeled("sell_price", "Цена", OrderDirection::ASC);
         $this->view->getPaginator()->addOrderColumn($sort_price);
     }
 
@@ -305,7 +305,7 @@ class ProductListPageBase extends ProductPageBase
             $keyword = $this->keyword_search->getForm()->getInput("keyword")->getValue();
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("OR");
             $cc->copyTo($this->select->where());
-            $this->select->from.=" LEFT JOIN product_attributes pa ON pa.prodID = sellable_products.prodID ";
+            $this->select->from()->leftJoin("product_attributes pa")->on("pa.prodID = sellable_products.prodID");
             $this->select->group_by = " prodID ";
             //echo $this->select->getSQL();
             //filter

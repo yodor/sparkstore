@@ -68,7 +68,7 @@ class OrdersListPage extends BeanListPage
 
         $this->view->getColumn("userID")->setCellRenderer(new OrderClientCell());
 
-        $this->view->setDefaultOrder(" order_date DESC ");
+        $this->view->setDefaultOrder(new OrderColumn("order_date", OrderDirection::DESC));
 
         return $this->view;
     }

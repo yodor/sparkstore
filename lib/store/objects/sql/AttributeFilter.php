@@ -20,7 +20,7 @@ class AttributeFilter extends ClosureFilter {
             $value = $this->getMatchValue($input);
 
             $filterName = "F_".Spark::Hash($input->getName());
-            $select->from .= " INNER JOIN product_attributes $filterName ON $filterName.prodID = sellable_products.prodID ";
+            $select->from()->innerJoin("product_attributes $filterName")->on("$filterName.prodID = sellable_products.prodID");
 
             $select->where()->add("$filterName.attribute_name", $input->getName());
             $select->where()->add("$filterName.attribute_value", $value, $opr);

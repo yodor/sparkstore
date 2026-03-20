@@ -231,8 +231,7 @@ class OrderProcessor
     {
         if ($this->manage_stock_amount) {
             try {
-                $update = new SQLUpdate();
-                $update->from = "products p";
+                $update = SQLUpdate::Table("products p");
                 $update->setExpression("p.stock_amount","p.stock_amount - :amount");
                 $update->bind(":amount", $amount);
                 $update->where()->add("p.prodID", $prodID);
@@ -246,8 +245,7 @@ class OrderProcessor
         }
         else if($this->manage_order_counter) {
             try {
-                $update = new SQLUpdate();
-                $update->from = "product_view_log pvl";
+                $update = SQLUpdate::Table("product_view_log pvl");
                 $update->setExpression("pvl.order_counter", "pvl.order_counter + :amount");
                 $update->bind(":amount", $amount);
                 $update->where()->add("pvl.prodID", $prodID);

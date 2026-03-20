@@ -182,12 +182,11 @@ class ProductDetailsPageBase extends ProductPageBase
 
         //INSERT INTO product_view_log (prodID, view_counter, order_counter) select p.prodID, coalesce(p.view_counter,0), coalesce(p.order_counter,0) FROM products p ON DUPLICATE KEY UPDATE view_counter=coalesce(p.view_counter,0), order_counter=coalesce(p.order_counter,0)
         try {
-            $insert = new SQLInsert();
-            $insert->from = "product_view_log";
+            $insert = SQLInsert::Table("product_view_log");
             $insert->set("prodID", $prodID);
             $insert->set("view_counter", 1);
             $insert->set("order_counter", 0);
-            $insert->on = " DUPLICATE KEY UPDATE view_counter=view_counter+1";
+            $insert->on(" DUPLICATE KEY UPDATE view_counter=view_counter+1");
 //            $insert->setMeta("UpdateViewCounter");
             $query = new DBQuery();
             $query->exec($insert);

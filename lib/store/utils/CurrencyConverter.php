@@ -76,7 +76,7 @@ class CurrencyConverter
         $currency_rates = new CurrencyRatesBean();
         $qry = $currency_rates->queryFull();
         $qry->stmt->where()->add("srcID", $this->srcID)->add("dstID", $this->dstID);
-        $qry->stmt->limit = 1;
+        $qry->stmt->limit(1);
         $qry->exec();
 
         if ($data = $qry->next()) {
@@ -108,8 +108,8 @@ class CurrencyConverter
             if (defined("DEFAULT_CURRENCY")) {
                 $qry->stmt->where()->add("currency_code", DEFAULT_CURRENCY, " LIKE ");
             }
-            $qry->stmt->limit = 1;
-            $qry->stmt->order_by = $currencies->key() . " ASC";
+            $qry->stmt->limit(1);
+            $qry->stmt->order($currencies->key() , OrderDirection::ASC);
             $qry->exec();
 
 

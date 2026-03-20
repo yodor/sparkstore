@@ -156,8 +156,7 @@ class ProductVariantsProcessor extends FormProcessor
             if (is_array($posted_voIDs) && count($posted_voIDs)>0) {
                 //echo "<pre>Posted IDS: ".print_r($posted_voIDs)."</pre>";
 
-                $delete = new SQLDelete();
-                $delete->from = "product_variants";
+                $delete = SQLDelete::Table("product_variants");
                 $delete->where()->add("prodID", $this->prodID);
 
                 $idlist = $delete->bindList($posted_voIDs);
@@ -174,8 +173,7 @@ class ProductVariantsProcessor extends FormProcessor
                     $col_voID->addValue($voID);
                 }
 
-                $insert = new SQLInsert();
-                $insert->from = "product_variants";
+                $insert = SQLInsert::Table("product_variants");
                 $insert->setColumn($col_prodID);
                 $insert->setColumn($col_voID);
 
@@ -185,8 +183,7 @@ class ProductVariantsProcessor extends FormProcessor
             else {
 
                 //clear all variants
-                $delete = new SQLDelete();
-                $delete->from = "product_variants";
+                $delete = SQLDelete::Table("product_variants");
                 $delete->where()->add("prodID", $this->prodID);
 
                 $db->query($delete)->free();
@@ -203,9 +200,8 @@ class ProductVariantsProcessor extends FormProcessor
     public function loadFormData(InputForm $form)
     {
 
-        $select = new SQLSelect();
+        $select = SQLSelect::Table(" product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ");
         $select->set("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
-        $select->from = " product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ";
         $select->where()->add("pv.prodID", $this->prodID);
 
         $query = new SelectQuery($select, "pvID");

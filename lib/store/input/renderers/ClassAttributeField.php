@@ -191,8 +191,7 @@ class ClassAttributeField extends DataIteratorField
 
     public function updateIterator() : void
     {
-        $sel = new SQLSelect();
-
+        $sel = SQLSelect::Table("product_class_attributes pca JOIN attributes attr ON attr.attrID=pca.attrID");
 
         $sel->set("pca.pcaID", "attr.name");
 
@@ -203,9 +202,7 @@ class ClassAttributeField extends DataIteratorField
         WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_prodID)", "pcavID");
         $sel->bind(":pacv_prodID", $this->prodID);
 
-        $sel->from = "product_class_attributes pca JOIN attributes attr ON attr.attrID=pca.attrID";
-
-        $sel->order_by = " pcaID ASC ";
+        $sel->order("pcaID" , OrderDirection::ASC);
 
         $sel->where()->add("pca.pclsID", $this->classID);
 

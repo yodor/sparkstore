@@ -26,7 +26,7 @@ class ProductCategoryPhotosBean extends OrderedDataBean
 
         $resultID = -1;
         $qry = $this->queryField("catID", $referenceID, 1);
-        $qry->stmt->order_by = " position ASC ";
+        $qry->stmt->order("position", OrderDirection::ASC);
         $qry->stmt->set($this->key());
         $qry->exec();
 

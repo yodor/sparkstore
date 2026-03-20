@@ -29,11 +29,11 @@ class SectionNavigation extends NavigationList
 
     public function createListIterator() : SelectQuery
     {
-        $select = new SQLSelect();
+        $select = SQLSelect::Table(" sections s");
         $select->set("s.secID, s.section_title");
-        $select->from = " sections s";
+
         $select->where()->add("s.home_visible", 1 );
-        $select->order_by = " s.position ASC ";
+        $select->order("s.position", OrderDirection::ASC);
 
         $this->item->setValueKey("secID");
         $this->item->setLabelKey("section_title");

@@ -57,13 +57,13 @@ class ImagesExporter extends ProductExporter {
             throw new Exception("Can not create export folder");
         }
 
-        $select = new SQLSelect();
-        $select->from = " product_photos  ";
+        $select = SQLSelect::Table("product_photos");
         $select->set("prodID");
         $select->set("ppID");
         $select->set("position");
 
-        $select->order_by = " prodID ASC, position ASC ";
+        $select->order("prodID", OrderDirection::ASC);
+        $select->order("position",OrderDirection::ASC);
 
         $qry = new SelectQuery($select);
         $qry->exec();
@@ -73,8 +73,7 @@ class ImagesExporter extends ProductExporter {
             $ppID = $result->get("ppID");
             $position = $result->get("position");
 
-            $select1 = new SQLSelect();
-            $select1->from = " product_photos ";
+            $select1 = SQLSelect::Table("product_photos");
             $select1->set("photo");
             $select1->where()->add("ppID", $ppID);
 
@@ -259,7 +258,7 @@ abstract class CSVProductExporter extends ProductExporter
 
     protected function processQuery(SelectQuery $query) : void
     {
-        $query->stmt->order_by = " update_date DESC ";
+        $query->stmt->order("update_date", OrderDirection::DESC);
     }
 
     public function getToolTipText() : string
@@ -546,7 +545,7 @@ class UpdateCSVExporter extends CSVProductExporter
 
     protected function processQuery(SelectQuery $query): void
     {
-        $query->stmt->order_by = " prodID DESC ";
+        $query->stmt->order("prodID", OrderDirection::DESC);
     }
 }
 

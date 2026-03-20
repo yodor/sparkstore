@@ -39,7 +39,7 @@ if (isset($_GET["orderID"])) {
 $qry = $orders->queryFull();
 
 $qry->stmt->where()->add("orderID", $orderID);
-$qry->stmt->limit = " 1 ";
+$qry->stmt->limit(1);
 $qry->exec();
 
 $page->setName(tr("Order Details").": ".$orderID);

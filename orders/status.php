@@ -30,7 +30,7 @@ class OrderStatusProcessor extends FormProcessor
         $qry = $orders->query();
         $qry->stmt->where()->add("order_identifier", $ticket);
         $qry->stmt->where()->add("client_identifier", $email);
-        $qry->stmt->limit = " 1 ";
+        $qry->stmt->limit(1);
         $qry->exec();
 
         if ($order_row = $qry->next()) {

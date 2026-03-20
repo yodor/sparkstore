@@ -25,19 +25,19 @@ $invoices = new InvoiceDetailsBean();
 
 $clients = new UsersBean();
 
-$sel = new SQLSelect();
+$sel = SQLSelect::Table(" orders o ");
 
 $sel->set("*");
 $sel->setAliasExpression(" (SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = o.orderID) ", "item_count");
-$sel->from = " orders o ";
+
 $sel->where()->add("o.userID", $page->getUserID());
-$sel->order_by = " 'Processing', 'Sent', 'Completed' ";
+$sel->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
 
 $view = new TableView(new SelectQuery($sel, "orderID"));
 
 // $view->setCaption($caption);
 
-$view->setDefaultOrder(" order_date DESC ");
+$view->setDefaultOrder(new OrderColumn("order_date", OrderDirection::DESC));
 
 $view->addColumn(new TableColumn("orderID", "Номер"));
 

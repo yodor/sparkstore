@@ -198,7 +198,7 @@ class ProductsList extends BeanList {
         SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "order_counter");
 
-        $qry->stmt->from = " products p ";
+        $qry->stmt->from(" products p ");
 
 
         $this->setIterator($qry);

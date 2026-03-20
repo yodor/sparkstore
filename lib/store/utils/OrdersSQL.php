@@ -11,7 +11,7 @@ class OrdersSQL extends SQLSelect
         $this->set("*");
         $this->setAliasExpression(" (SELECT GROUP_CONCAT('-oi-', oi.product) FROM  order_items oi WHERE oi.orderID=o.orderID) ", "items");
         $this->setAliasExpression(" (SELECT CONCAT_WS('--', u.fullname, u.email, u.phone) FROM users u WHERE u.userID=o.userID) ", "client");
-        $this->from = " orders o  ";
+        $this->from( " orders o  " );
 
     }
 }

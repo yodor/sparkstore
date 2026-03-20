@@ -126,8 +126,7 @@ abstract class NavigationList extends Container
     {
         $sellable = new SellableProducts();
 
-        $select = new SQLSelect();
-        $select->from = $sellable->getTableName();
+        $select = SQLSelect::Table($sellable->getTableName());
 
         //TODO: set required columns for ProductListItem only
         //Get required columns from ProductListItem instance
@@ -145,7 +144,8 @@ abstract class NavigationList extends Container
 
         $select->where()->addExpression("stock_amount > 0");
 
-        $select->limit = " $this->tapeItemsLimit ";
+        $select->limit($this->tapeItemsLimit);
+
         return $select;
     }
 
@@ -187,16 +187,16 @@ abstract class NavigationList extends Container
 
                 if ($total > 0) {
                     //set here
-                    $query->stmt->limit = " $this->tapeItemsLimit ";
+                    $query->stmt->limit($this->tapeItemsLimit);
                     //randomize results
                     if ($this->tapeItemsRandom) {
                         if ($total >= $this->tapeItemsLimit) {
                             $offset = mt_rand(0, $total - 4);
-                            $query->stmt->limit .= " OFFSET $offset";
+                            $query->stmt->limit($this->tapeItemsLimit, $offset);
                         }
                     }
                     //debug output
-//                    $query->stmt->setMeta("TapeIterator");
+                    //$query->stmt->setMeta("TapeIterator");
 
                     $this->item->getTape()->setIterator($query);
                     //tape iterator is set enable tape rendering

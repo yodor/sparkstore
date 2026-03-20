@@ -6,8 +6,8 @@ if (URL::Current()->contains("editID")) {
 else {
     $config = TemplateConfig::List(ProductClassesBean::class);
 
-    $sel = new SQLSelect();
-    $sel->from = " product_classes pc ";
+    $sel = SQLSelect::Table(" product_classes pc ");
+
     $sel->set("pc.pclsID", "pc.class_name");
     $sel->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
 FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AND pca.pclsID=pc.pclsID)", "class_attributes");

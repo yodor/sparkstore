@@ -57,7 +57,8 @@ class FilterDataInput extends DataInput {
         $name = $this->fieldName();
         $this->select->set($name);
         $this->select->where()->add($name , "NULL", " IS NOT ");
-        $this->select->order_by = " $name ASC ";
+        //check usage name should be sanitized
+        $this->select->order($name, OrderDirection::ASC);
         $this->select->group_by = " $name ";
 
         return new SelectQuery($this->select, $name);
@@ -126,7 +127,7 @@ class ProductAttributeFilter extends SelectFilter {
         $this->select->reset();
         $this->select->set("pcav.value", "attr.name");
 
-        $this->select->order_by = " value ASC ";
+        $this->select->order("value", OrderDirection::ASC);
         $this->select->group_by = " value ";
 
         $this->select->where()->add("attr.name" , $this->getName(), " LIKE ");
@@ -180,7 +181,7 @@ class ProductVariantFilter extends SelectFilter {
         $this->select->reset();
         $this->select->set("option_value");
 
-        $this->select->order_by = " vo.option_value ASC ";
+        $this->select->order("vo.option_value", OrderDirection::ASC);
         $this->select->group_by = " vo.option_value ";
 
         $this->select->where()->add("vo.option_name", $this->getName(), " LIKE ");
@@ -300,12 +301,13 @@ class ProductListFilterInputForm extends InputForm {
 
         $select = new SQLSelect();
         $select->set("attr.name");
-        $select->from = " ({$product_list->getSQL()}) as list 
-        JOIN product_class_attribute_values pcav ON pcav.prodID = list.prodID 
-        JOIN product_class_attributes pca ON pca.pcaID=pcav.pcaID 
-        JOIN attributes attr ON attr.attrID=pca.attrID";
+        $select->from(" ({$product_list->getSQL()}) as list ")
+            ->join("product_class_attribute_values pcav")->on("pcav.prodID = list.prodID")
+            ->join("product_class_attributes pca")->on("pca.pcaID=pcav.pcaID")
+            ->join("attributes attr")->on("attr.attrID=pca.attrID");
+
         $select->group_by = " attr.name ";
-        $select->order_by = " attr.attrID ASC ";
+        $select->order("attr.attrID", OrderDirection::ASC);
         SQLStatement::CopyBindings($select, $product_list);
         return $select;
     }
@@ -319,15 +321,15 @@ class ProductListFilterInputForm extends InputForm {
         $product_list->reset();
         $product_list->set("prodID", "pclsID");
 
-
         $select = new SQLSelect();
         $select->set("vo.option_name", "vo.option_value");
-        $select->from = " ({$product_list->getSQL()}) as list 
-        JOIN product_variants pv ON pv.prodID = list.prodID 
-        JOIN variant_options vo ON vo.voID=pv.voID 
-        ";
+        $select->from(" ({$product_list->getSQL()}) as list")
+            ->join("product_variants pv")->on("pv.prodID = list.prodID")
+            ->join("variant_options vo")->on("vo.voID = pv.voID");
+
         $select->group_by = " vo.option_name ";
-        $select->order_by = " vo.voID ASC ";
+
+        $select->order("vo.voID", OrderDirection::ASC);
 
         SQLStatement::CopyBindings($select, $product_list);
         return $select;

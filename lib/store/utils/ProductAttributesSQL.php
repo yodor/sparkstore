@@ -11,9 +11,9 @@ class ProductAttributesSQL extends SQLSelect
         $this->setAliasExpression("a.name", "attribute_name");
         $this->setAliasExpression("pcav.value", "attribute_value");
 
-        $this->from = " product_class_attribute_values pcav 
-                INNER JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
-                INNER JOIN attributes a ON a.attrID = pca.attrID";
+        $this->from("product_class_attribute_values pcav")
+            ->innerJoin("product_class_attributes pca")->on("pca.pcaID = pcav.pcaID")
+            ->innerJoin("attributes a")->on("a.attrID = pca.attrID");
     }
 
 }

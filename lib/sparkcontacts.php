@@ -18,7 +18,7 @@ $cfg->setSection("store_config");
 
 $cabean = new ContactAddressesBean();
 $qry = $cabean->queryFull();
-$qry->stmt->order_by = " position ASC ";
+$qry->stmt->order("position", OrderDirection::ASC);
 
 $num_addresses = $qry->count();
 

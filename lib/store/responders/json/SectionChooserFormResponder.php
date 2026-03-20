@@ -31,9 +31,8 @@ class SectionChooserFormResponder extends JSONFormResponder
         $this->prodID = (int)$_REQUEST["prodID"];
 
         //load selected sections into the form value
-        $select = new SQLSelect();
+        $select = SQLSelect::Table(" product_sections ps  ");
         $select->set("ps.prodID", "ps.secID");
-        $select->from = " product_sections ps  ";
         $select->where()->add("ps.prodID", $this->prodID);
 
         $query = new SelectQuery($select, "psID");
@@ -62,15 +61,12 @@ class SectionChooserFormResponder extends JSONFormResponder
             $db->transaction();
 
             //delete all sections of this product and insert posted sections only
-            $delete = new SQLDelete();
-            $delete->from = " product_sections ";
+            $delete = SQLDelete::Table("product_sections");
             $delete->where()->add("prodID", $this->prodID);
 
             $db->query($delete)->free();
 
-            $insert = new SQLInsert();
-            $insert->from = " product_sections ";
-
+            $insert = SQLInsert::Table("product_sections");
             $section_ids = $field->getValues();
 
             if (count($section_ids) > 0) {

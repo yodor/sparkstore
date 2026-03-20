@@ -10,7 +10,7 @@ $cmp->setListFields(array("name"=>"Name","unit"=>"Unit", "type"=>"Type"));
 $cmp->setBean(new AttributesBean());
 
 $cmp->initView();
-$cmp->getView()->setDefaultOrder(" name ASC ");
+$cmp->getView()->setDefaultOrder(new OrderColumn("name", OrderDirection::ASC));
 
 $cmp->getPage()->navigation()->clear();
 

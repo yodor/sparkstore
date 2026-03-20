@@ -20,7 +20,7 @@ class OrderItemsCell extends TableCell
         global $order_items;
 
         $qry = $order_items->queryField("orderID", $this->orderID);
-        $qry->stmt->order_by = " position ASC ";
+        $qry->stmt->order("position", OrderDirection::ASC);
         $qry->exec();
 
         echo "<div class='group order_items'>";

@@ -9,7 +9,7 @@ $cmp->setListFields(array("city"=>"City","address"=>"Address", "phone"=>"Phone",
 $cmp->setBean(new ContactAddressesBean());
 
 $cmp->initView();
-$cmp->getView()->setDefaultOrder(" caID ASC ");
+$cmp->getView()->setDefaultOrder(new OrderColumn("caID", OrderDirection::ASC));
 
 $cmp->getPage()->navigation()->clear();
 

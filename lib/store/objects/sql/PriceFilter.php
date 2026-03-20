@@ -20,10 +20,10 @@ class PriceFilter extends ClosureFilter {
                         if ($clause->getValue()>$value) {
                             $clause->setOperator("<=");
                             $opr = ">=";
-                            $select->order_by = "sell_price DESC";
+                            $select->order("sell_price", OrderDirection::DESC);
                         }
                         else {
-                            $select->order_by = "sell_price ASC";
+                            $select->order("sell_price", OrderDirection::ASC);
                         }
                         break;
                     }

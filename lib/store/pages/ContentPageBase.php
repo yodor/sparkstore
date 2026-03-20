@@ -71,8 +71,10 @@ class ContentPageBase extends StorePage
                     $query->stmt->bind(":page_class", "%$clsas%");
                 }
             }
-            $query->stmt->limit = " 1 ";
-            $query->stmt->order_by = " item_date DESC, {$this->bean->key()} DESC ";
+            $query->stmt->limit(1);
+            $query->stmt->order("item_date", OrderDirection::DESC);
+            $query->stmt->order($this->bean->key(), OrderDirection::DESC);
+
             $query->exec();
             if ($this->result = $query->nextResult()) {
 
@@ -115,7 +117,7 @@ class ContentPageBase extends StorePage
                 }
 
                 $query->stmt->where()->removeExpression($this->bean->key());
-                $query->stmt->limit = "";
+                $query->stmt->removeLimit();
 
                 //minimum visible and id
                 if ($query->stmt->where()->count()>1) {

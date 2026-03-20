@@ -61,12 +61,9 @@ class ProductsSQL extends SQLSelect
 
         $this->setAliasExpression("coalesce(sp.discount_percent,0)", "discount_percent");
 
-        $this->from = " products p  
-
-LEFT JOIN store_promos sp 
-ON ( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) ) 
-
-";
+        $this->from("products p")
+            ->leftJoin("store_promos sp")
+            ->on("( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) )");
 
         $this->where()->add("p.visible", 1);
     }

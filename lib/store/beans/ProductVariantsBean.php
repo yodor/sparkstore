@@ -30,9 +30,9 @@ class ProductVariantsBean extends DBTableBean
         $query->stmt->setAliasExpression("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
         $query->stmt->setAliasExpression("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");
 
-        $query->stmt->from = " product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ";
+        $query->stmt->from("product_variants pv")->join("variant_options vo")->on("vo.voID = pv.voID");
         $query->stmt->where()->add("pv.prodID", $prodID);
-        $query->stmt->order_by = "parent_product, parent_class, parentID, parent_position, position";
+        $query->stmt->orderList("parent_product, parent_class, parentID, parent_position, position");
         return $query;
     }
 
@@ -42,7 +42,7 @@ class ProductVariantsBean extends DBTableBean
         $query->stmt->set("pvp.pvpID");
         $query->stmt->where()->add("option_name", $option_name);
         $query->stmt->where()->add("option_value", $option_value);
-        $query->stmt->from .= " JOIN product_variant_photos pvp ON pvp.pvID = pv.pvID ";
+        $query->stmt->from()->join("product_variant_photos pvp")->on("pvp.pvID = pv.pvID ");
         return $query;
     }
 }

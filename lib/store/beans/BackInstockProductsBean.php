@@ -24,10 +24,9 @@ class BackInstockProductsBean extends DBTableBean
 
         try {
             //INSERT INTO backinstock_products (prodID) VALUES ($prodID) ON DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP
-            $insert = new SQLInsert();
-            $insert->from = "backinstock_products";
+            $insert = SQLInsert::Table("backinstock_products");
             $insert->set("prodID", $prodID);
-            $insert->on = " DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP ";
+            $insert->on(" DUPLICATE KEY UPDATE update_date=CURRENT_TIMESTAMP ");
             $query = new DBQuery();
             $query->exec($insert);
             $query->free();
@@ -43,8 +42,7 @@ class BackInstockProductsBean extends DBTableBean
         Debug::ErrorLog("Deleting from back in stock list for prodID: $prodID");
 
         try {
-            $delete = new SQLDelete();
-            $delete->from = "backinstock_products";
+            $delete = SQLDelete::Table("backinstock_products");
             $delete->where()->add("prodID", $prodID);
             $query = new DBQuery();
             $query->exec($delete);
