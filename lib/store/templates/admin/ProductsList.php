@@ -131,7 +131,7 @@ class ProductsList extends BeanListPage
 
         $this->keyword_search->getForm()->getInput("keyword")->getRenderer()->input()->setAttribute("placeholder", "Търси продукт");
         $this->keyword_search->getForm()->setColumns($search_fields);
-        $this->keyword_search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
+        $this->keyword_search->setMethod(FormRenderer::METHOD_GET);
 
         $this->initializeSearchForm();
 
@@ -190,7 +190,6 @@ class ProductsList extends BeanListPage
         )", "order_counter");
 
         $qry->stmt->from(" products p ");
-
 
         $this->setIterator($qry);
     }
@@ -298,7 +297,8 @@ class ProductsList extends BeanListPage
             if ($form->haveInput("filter_section")) {
                 $filter_section = $form->getInput("filter_section")->getValue();
                 if ($filter_section) {
-                    $this->query->stmt->having = " sections LIKE '%{$filter_section}%' ";
+                    $this->query->stmt->having = " sections LIKE :section";
+                    $this->query->stmt->bind(":section", "%{$filter_section}%");
                 }
             }
 
@@ -312,15 +312,20 @@ class ProductsList extends BeanListPage
             if ($form->haveInput("filter_class")) {
                 $filter_class = $form->getInput("filter_class")->getValue();
                 if ($filter_class) {
-                    $this->query->stmt->having = " class_name = '$filter_class'";
+                    //$this->query->stmt->where()->addExpression(" class_name LIKE :className");
+                    $this->query->stmt->having = "class_name = :filterClass";
+                    $this->query->stmt->bind(":filterClass", $filter_class);
                 }
             }
 
             if ($form->getInput("keyword")->getValue()) {
                 $clauses = $form->prepareClauseCollection("OR");
-                $this->query->stmt->having = $clauses->getSQL();
+                $clauses->copyTo($this->query->stmt->where());
+                //$this->query->stmt->having = $clauses->getSQL();
             }
         }
+
+        $this->query->stmt->setMeta("ProductListSelect");
 
         //serialize for product export
         if ($this->view instanceof TableView) {
