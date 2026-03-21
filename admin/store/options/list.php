@@ -46,6 +46,7 @@ if ($product_filter->isProcessed()) {
         }
     }
     else {
+
         $bean->select()->where()->add("pclsID" , null, "IS");
         $bean->select()->where()->add("prodID" , null, "IS");
     }
