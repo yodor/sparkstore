@@ -29,8 +29,8 @@ class SectionNavigation extends NavigationList
 
     public function createListIterator() : SelectQuery
     {
-        $select = SQLSelect::Table(" sections s");
-        $select->set("s.secID, s.section_title");
+        $select = SQLSelect::Table("sections s");
+        $select->set("s.secID", "s.section_title");
 
         $select->where()->match("s.home_visible", 1 );
         $select->order("s.position", OrderDirection::ASC);

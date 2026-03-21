@@ -47,7 +47,7 @@ while ($result = $qry->nextResult()) {
 //each category
 $select = SQLSelect::Table("product_categories pc");
 
-$select->set("pc.catID, pc.category_name");
+$select->set("pc.catID", "pc.category_name");
 $select->setAliasExpression("(SELECT group_concat(sp.ppID ORDER BY sp.prodID DESC SEPARATOR ';' LIMIT 6) FROM sellable_products sp WHERE sp.catID = pc.catID)", "product_photos");
 
 //echo $select->getSQL();
