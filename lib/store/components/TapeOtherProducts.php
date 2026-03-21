@@ -12,7 +12,7 @@ class TapeOtherProducts extends ProductsTape
         $qry = $bean->queryFull();
         $qry->stmt->orderRandom();
         $qry->stmt->group_by = " prodID ";
-        $qry->stmt->where()->add("stock_amount" , "0", " > ");
+        $qry->stmt->where()->expression("stock_amount > 0");
         $qry->stmt->limit($limit);
 
         $this->setCaption(tr("Други продукти"));

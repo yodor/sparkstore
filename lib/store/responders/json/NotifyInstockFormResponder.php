@@ -32,8 +32,8 @@ class NotifyInstockFormResponder extends JSONFormResponder
         $bean = new InstockSubscribersBean();
         $query = $bean->query("email", "prodID");
 
-        $query->stmt->where()->add("email", $email);
-        $query->stmt->where()->add("prodID", $this->sellable->getProductID());
+        $query->stmt->where()->match("email", $email);
+        $query->stmt->where()->match("prodID", $this->sellable->getProductID());
         $query->exec();
 
         if ($query->next()) {

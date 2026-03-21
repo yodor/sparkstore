@@ -49,7 +49,7 @@ class CategoryNavigation extends NavigationList
 
         $select = SQLSelect::Table(" product_categories pc ");
         $select->set("pc.catID, pc.category_name");
-        $select->where()->add("pc.parentID", $this->parentID);
+        $select->where()->match("pc.parentID", $this->parentID);
         $select->order("pc.lft", OrderDirection::ASC);
 
         $this->item->setValueKey($bean->key());

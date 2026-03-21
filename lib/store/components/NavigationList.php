@@ -142,7 +142,7 @@ abstract class NavigationList extends Container
         //do not rand here
         //$select->order_by = " RAND() ";
 
-        $select->where()->addExpression("stock_amount > 0");
+        $select->where()->expression("stock_amount > 0");
 
         $select->limit($this->tapeItemsLimit);
 

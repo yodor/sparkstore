@@ -14,7 +14,7 @@ $cmp = new BeanListPage();
 $bean = new VariantOptionsBean();
 
 $req = new BeanKeyCondition($bean, "list.php", array("option_name"));
-$bean->select()->where()->add("parentID" , $req->getID());
+$bean->select()->where()->match("parentID" , $req->getID());
 
 $cmp->getPage()->setName(tr("Parameters for option") . ": " . $req->getData("option_name"));
 

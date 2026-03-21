@@ -16,7 +16,7 @@ class ProductsGalleryAdd extends BeanEditorPage
         $this->setRequestCondition($rc);
         $this->page->setName(tr("Image").": ".tr("Product Gallery") . ": " . $rc->getData("product_name"));
 
-        $this->getBean()->select()->where()->addURLParameter($rc->getURLParameter());
+        $this->getBean()->select()->where()->matchURLParameter($rc->getURLParameter());
     }
 
     public function initView(): ?Component

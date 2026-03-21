@@ -63,7 +63,7 @@ class SellableItem extends SparkObject
         $qry = $bean->queryFull();
         $qry->setKey("prodID");
 
-        $qry->stmt->where()->add("prodID", $prodID);
+        $qry->stmt->where()->match("prodID", $prodID);
         $qry->stmt->group_by = "prodID";
         $qry->stmt->limit(1);
         //$qry->stmt->setMeta("SellableItem::Load");

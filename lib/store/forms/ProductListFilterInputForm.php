@@ -55,8 +55,9 @@ class FilterDataInput extends DataInput {
     protected function createQuery() : SelectQuery
     {
         $name = $this->fieldName();
+        //if (!InputSanitizer::SafeSQLColumn($name)) throw new Exception("Incorrect column name: $name");
         $this->select->set($name);
-        $this->select->where()->add($name , "NULL", " IS NOT ");
+        $this->select->where()->expression("$name IS NOT NULL");
         //check usage name should be sanitized
         $this->select->order($name, OrderDirection::ASC);
         $this->select->group_by = " $name ";
@@ -78,9 +79,7 @@ class FilterDataInput extends DataInput {
     //input name => val value posted
     public function appendWhereClause(ClauseCollection $where) : void
     {
-        $clause = new SQLClause();
-        $clause->setExpression($this->fieldName(), $this->getValue());
-        $where->append($clause);
+        $where->match($this->fieldName(), $this->getValue());
     }
 
 
@@ -130,7 +129,7 @@ class ProductAttributeFilter extends SelectFilter {
         $this->select->order("value", OrderDirection::ASC);
         $this->select->group_by = " value ";
 
-        $this->select->where()->add("attr.name" , $this->getName(), " LIKE ");
+        $this->select->where()->match("attr.name" , $this->getName(), " LIKE ");
 
         return new SelectQuery($this->select, "value");
     }
@@ -184,7 +183,7 @@ class ProductVariantFilter extends SelectFilter {
         $this->select->order("vo.option_value", OrderDirection::ASC);
         $this->select->group_by = " vo.option_value ";
 
-        $this->select->where()->add("vo.option_name", $this->getName(), " LIKE ");
+        $this->select->where()->match("vo.option_name", $this->getName(), " LIKE ");
 
         return new SelectQuery($this->select, "option_value");
     }

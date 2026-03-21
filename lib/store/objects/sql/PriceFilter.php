@@ -31,7 +31,7 @@ class PriceFilter extends ClosureFilter {
 
             }
 
-            $select->where()->add("sell_price", "$value", $opr);
+            $select->where()->match("sell_price", $value, $opr);
         };
         parent::__construct($title, $closure_price);
     }

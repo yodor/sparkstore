@@ -301,7 +301,7 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_brand")) {
                 $filter_brand = $form->getInput("filter_brand")->getValue();
                 if ($filter_brand) {
-                    $this->query->stmt->where()->add("p.brand_name", $filter_brand);
+                    $this->query->stmt->where()->match("p.brand_name", $filter_brand);
                 }
             }
 
@@ -315,7 +315,7 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_catID")) {
                 $filter_catID = $form->getInput("filter_catID")->getValue();
                 if ($filter_catID>0) {
-                    $this->query->stmt->where()->add("p.catID", $filter_catID);
+                    $this->query->stmt->where()->match("p.catID", $filter_catID);
                 }
             }
 

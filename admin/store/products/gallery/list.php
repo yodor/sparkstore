@@ -15,7 +15,7 @@ $rc = new BeanKeyCondition(new ProductsBean(), "../list.php", array("product_nam
 $page->setName(tr("Product Gallery") . ": " . $rc->getData("product_name"));
 
 $bean = new ProductPhotosBean();
-$bean->select()->where()->addURLParameter($rc->getURLParameter());
+$bean->select()->where()->matchURLParameter($rc->getURLParameter());
 
 $h_delete = new DeleteItemResponder($bean);
 

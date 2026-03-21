@@ -11,7 +11,7 @@ $cmp = new BeanEditorPage();
 $cmp->setRequestCondition($rc);
 
 $select = SQLSelect::Table(" product_variants pv JOIN variant_options opt ON opt.voID = pv.voID ");
-$select->where()->add("pvID", $rc->getID());
+$select->where()->match("pvID", $rc->getID());
 $select->set("option_name", "option_value");
 
 $query = new SelectQuery($select, "pvID");

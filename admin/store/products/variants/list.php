@@ -38,10 +38,10 @@ class ProductVariantsInputForm extends InputForm
 
         ///base options
         $query = $this->voptions->queryFull();
-        $query->stmt->where()->addExpression("pclsID IS NULL");
-        $query->stmt->where()->addExpression("parentID IS NULL");
-        $query->stmt->where()->addExpression("prodID IS NULL");
-        $query->stmt->where()->addExpression("option_value IS NULL");
+        $query->stmt->where()->expression("pclsID IS NULL");
+        $query->stmt->where()->expression("parentID IS NULL");
+        $query->stmt->where()->expression("prodID IS NULL");
+        $query->stmt->where()->expression("option_value IS NULL");
 
         $query->exec();
         while ($result = $query->nextResult()) {
@@ -58,10 +58,10 @@ class ProductVariantsInputForm extends InputForm
         $pclsID = (int)$product["pclsID"];
         if ($pclsID>0) {
             $query = $this->voptions->queryFull();
-            $query->stmt->where()->add("pclsID" , $pclsID);
-            $query->stmt->where()->addExpression("parentID IS NULL");
-            $query->stmt->where()->addExpression("option_value IS NULL");
-            $query->stmt->where()->addExpression("prodID IS NULL");
+            $query->stmt->where()->match("pclsID" , $pclsID);
+            $query->stmt->where()->expression("parentID IS NULL");
+            $query->stmt->where()->expression("option_value IS NULL");
+            $query->stmt->where()->expression("prodID IS NULL");
 
             $query->exec();
             while ($result = $query->nextResult()) {
@@ -77,10 +77,10 @@ class ProductVariantsInputForm extends InputForm
 
         ///options for this product
         $query = $this->voptions->queryFull();
-        $query->stmt->where()->add("prodID" , $prodID);
-        $query->stmt->where()->addExpression("parentID IS NULL");
-        $query->stmt->where()->addExpression("option_value IS NULL");
-        $query->stmt->where()->addExpression("pclsID IS NULL");
+        $query->stmt->where()->match("prodID" , $prodID);
+        $query->stmt->where()->expression("parentID IS NULL");
+        $query->stmt->where()->expression("option_value IS NULL");
+        $query->stmt->where()->expression("pclsID IS NULL");
 
         $query->exec();
         while ($result = $query->nextResult()) {
@@ -101,7 +101,7 @@ class ProductVariantsInputForm extends InputForm
         $input->setValidator($validator);
 
         $query_parameters = $this->voptions->queryFull();
-        $query_parameters->stmt->where()->add("parentID" , $parentID);
+        $query_parameters->stmt->where()->match("parentID" , $parentID);
 
         $cf3 = new CheckField($input);
         $cf3->setArrayKeyFieldName("voID");
@@ -157,10 +157,10 @@ class ProductVariantsProcessor extends FormProcessor
                 //echo "<pre>Posted IDS: ".print_r($posted_voIDs)."</pre>";
 
                 $delete = SQLDelete::Table("product_variants");
-                $delete->where()->add("prodID", $this->prodID);
+                $delete->where()->match("prodID", $this->prodID);
 
                 $idlist = $delete->where()->bindList($posted_voIDs);
-                $delete->where()->addExpression("voID NOT IN ($idlist)");
+                $delete->where()->expression("voID NOT IN ($idlist)");
 
                 $db->query($delete)->free();
 
@@ -180,7 +180,7 @@ class ProductVariantsProcessor extends FormProcessor
 
                 //clear all variants
                 $delete = SQLDelete::Table("product_variants");
-                $delete->where()->add("prodID", $this->prodID);
+                $delete->where()->match("prodID", $this->prodID);
 
                 $db->query($delete)->free();
             }
@@ -198,7 +198,7 @@ class ProductVariantsProcessor extends FormProcessor
 
         $select = SQLSelect::Table(" product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ");
         $select->set("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
-        $select->where()->add("pv.prodID", $this->prodID);
+        $select->where()->match("pv.prodID", $this->prodID);
 
         $query = new SelectQuery($select, "pvID");
         $query->exec();

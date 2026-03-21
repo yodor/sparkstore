@@ -75,7 +75,7 @@ class ImagesExporter extends ProductExporter {
 
             $select1 = SQLSelect::Table("product_photos");
             $select1->set("photo");
-            $select1->where()->add("ppID", $ppID);
+            $select1->where()->match("ppID", $ppID);
 
             $qry1 = new SelectQuery($select1);
             $qry1->exec();
@@ -214,7 +214,7 @@ abstract class CSVProductExporter extends ProductExporter
 
         if (isset($_GET["filter_catID"])) {
             $catID = (int)$_GET["filter_catID"];
-            $query->stmt->where()->add("catID", $catID);
+            $query->stmt->where()->match("catID", $catID);
         }
         return $query->stmt;
     }

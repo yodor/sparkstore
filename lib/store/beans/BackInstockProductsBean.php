@@ -43,7 +43,7 @@ class BackInstockProductsBean extends DBTableBean
 
         try {
             $delete = SQLDelete::Table("backinstock_products");
-            $delete->where()->add("prodID", $prodID);
+            $delete->where()->match("prodID", $prodID);
             $query = new DBQuery();
             $query->exec($delete);
             $query->free();

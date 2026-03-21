@@ -17,7 +17,7 @@ $cmp->getPage()->setName(tr("Входни етикети към клас: ").$cl
 
 $sel = SQLSelect::Table(" product_class_attributes pca LEFT JOIN attributes attr ON attr.attrID = pca.attrID ");
 $sel->set("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
-$sel->where()->add("pca.pclsID", $req->getID());
+$sel->where()->match("pca.pclsID", $req->getID());
 $cmp->setIterator(new SelectQuery($sel, "pcaID"));
 
 

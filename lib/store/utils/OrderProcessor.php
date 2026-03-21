@@ -233,7 +233,7 @@ class OrderProcessor
             try {
                 $update = SQLUpdate::Table("products p");
                 $update->column("p.stock_amount")->set("p.stock_amount - :amount")->bind(":amount", $amount);
-                $update->where()->add("p.prodID", $prodID);
+                $update->where()->match("p.prodID", $prodID);
 
                 $query = new DBQuery();
                 $query->exec($update);
@@ -246,7 +246,7 @@ class OrderProcessor
             try {
                 $update = SQLUpdate::Table("product_view_log pvl");
                 $update->column("pvl.order_counter")->set("pvl.order_counter + :amount")->bind(":amount", $amount);
-                $update->where()->add("pvl.prodID", $prodID);
+                $update->where()->match("pvl.prodID", $prodID);
 
                 $query = new DBQuery();
                 $query->exec($update);

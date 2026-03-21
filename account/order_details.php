@@ -34,7 +34,7 @@ if (isset($_GET["orderID"])) {
 }
 $qry = $orders->queryFull();
 
-$qry->stmt->where()->add("orderID", $orderID)->add("userID", $userID);
+$qry->stmt->where()->match("orderID", $orderID)->match("userID", $userID);
 $qry->stmt->limit(1);
 if (!($order = $qry->next())){
     Session::set("alert", "Няма достъп до тази поръчка");

@@ -204,7 +204,7 @@ class ClassAttributeField extends DataIteratorField
 
         $sel->order("pcaID" , OrderDirection::ASC);
 
-        $sel->where()->add("pca.pclsID", $this->classID);
+        $sel->where()->match("pca.pclsID", $this->classID);
 
         $this->setIterator(new SelectQuery($sel, "pcaID"));
     }

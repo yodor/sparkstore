@@ -27,7 +27,7 @@ class OptionsList extends BeanList
         //$bean->select()->fields()->setExpression("(SELECT GROUP_CONCAT(pcls.class_name) FROM product_classes pcls WHERE pcls.pclsID = variant_options.pclsID)", "class_name");
 
         //only options not their parameters
-        $bean->select()->where()->add("parentID", null, " IS ");
+        $bean->select()->where()->match("parentID", null);
 
         //set query to reference bean->select() so changes to select are reflected to the other users - used in responders set position (getMaxPosition()) etc
         $this->setIterator(new SelectQuery($bean->select(), $bean->key(), $bean->getTableName()));
@@ -92,7 +92,7 @@ class OptionsList extends BeanList
                 Session::SetAlert("Requested product is not accessible");
             }
 
-            $this->query->stmt->where()->add("pclsID", null, "IS");
+            $this->query->stmt->where()->match("pclsID", null);
         }
         else {
 
@@ -120,15 +120,15 @@ class OptionsList extends BeanList
                 catch (Exception $e) {
                     Session::SetAlert("Requested product class is not accessible");
                 }
-                $this->query->stmt->where()->add("prodID", null, "IS");
+                $this->query->stmt->where()->match("prodID", null);
 
 
             }
             //neither prodID nor pclsID - show only top level options
             else {
                 $this->config->clearNavigation = true;
-                $this->query->stmt->where()->add("pclsID", null, "IS");
-                $this->query->stmt->where()->add("prodID", null, "IS");
+                $this->query->stmt->where()->match("pclsID", null);
+                $this->query->stmt->where()->match("prodID", null);
             }
 
         }

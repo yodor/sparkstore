@@ -59,7 +59,7 @@ class OrderConfirmationAdminMailer extends Mailer
 
         $order_items = new OrderItemsBean();
         $qry = $order_items->query("product", "position", "qty", "price");
-        $qry->stmt->where()->add("orderID", $orderID);
+        $qry->stmt->where()->match("orderID", $orderID);
         $qry->stmt->order("position", OrderDirection::ASC);
         $qry->exec();
 

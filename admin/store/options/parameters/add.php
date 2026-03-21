@@ -6,8 +6,8 @@ include_once("store/beans/VariantOptionsBean.php");
 $cmp = new BeanEditorPage();
 $bean = new VariantOptionsBean();
 $req = new BeanKeyCondition($bean, "list.php", array("option_name", "pclsID", "prodID"));
-$bean->select()->where()->add("parentID", $req->getID());
-$bean->select()->where()->add("option_name", $req->getData("option_name"));
+$bean->select()->where()->match("parentID", $req->getID());
+$bean->select()->where()->match("option_name", $req->getData("option_name"));
 
 $title = tr("Add parameter to option");
 if (isset($_GET["editID"])) {

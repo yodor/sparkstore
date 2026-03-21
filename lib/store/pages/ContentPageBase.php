@@ -61,13 +61,13 @@ class ContentPageBase extends StorePage
 
             $query = $this->bean->query($this->bean->key(), "item_title", "content", "keywords", "item_date");
             $query->stmt->setAliasExpression("( photo IS NOT NULL )", "have_photo");
-            $query->stmt->where()->add("visible", 1);
+            $query->stmt->where()->match("visible", 1);
             if ($this->id > 0) {
-                $query->stmt->where()->add($this->bean->key(), $this->id);
+                $query->stmt->where()->match($this->bean->key(), $this->id);
             }
             else {
                 foreach ($this->page_class as $clsas) {
-                    $query->stmt->where()->addExpression("keywords LIKE :page_class");
+                    $query->stmt->where()->expression("keywords LIKE :page_class");
                     $query->stmt->where()->bind(":page_class", "%$clsas%");
                 }
             }
@@ -113,7 +113,8 @@ class ContentPageBase extends StorePage
                 $query->stmt->where()->removeExpression("keywords");
 
                 foreach ($page_class as $class) {
-                    $query->stmt->where()->add("keywords", "%$class%", " LIKE ", " AND ");
+                    $query->stmt->where()->expression("keywords LIKE :keyword_class");
+                    $query->stmt->where()->bind(":keyword_class", "%$class%");
                 }
 
                 $query->stmt->where()->removeExpression($this->bean->key());

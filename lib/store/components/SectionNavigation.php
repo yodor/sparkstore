@@ -32,7 +32,7 @@ class SectionNavigation extends NavigationList
         $select = SQLSelect::Table(" sections s");
         $select->set("s.secID, s.section_title");
 
-        $select->where()->add("s.home_visible", 1 );
+        $select->where()->match("s.home_visible", 1 );
         $select->order("s.position", OrderDirection::ASC);
 
         $this->item->setValueKey("secID");
@@ -51,7 +51,7 @@ class SectionNavigation extends NavigationList
     {
         $sectionName = $this->item->getLabel();
         $this->tapeProducts->where()->removeExpression("product_sections");
-        $this->tapeProducts->where()->addExpression("product_sections LIKE :section_name");
+        $this->tapeProducts->where()->expression("product_sections LIKE :section_name");
         $this->tapeProducts->where()->bind(":section_name", "%$sectionName%");
 
         return new SelectQuery($this->tapeProducts, "prodID");

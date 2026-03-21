@@ -9,7 +9,7 @@ $cmp = new BeanEditorPage();
 $title = tr("Add Option");
 
 $bean = new VariantOptionsBean();
-$bean->select()->where()->add("parentID" , " NULL ", " IS ");
+$bean->select()->where()->expression("parentID IS NULL");
 
 $prodID = -1;
 $pclsID = -1;
@@ -21,7 +21,7 @@ $products = new ProductsBean();
 if ($prodID>0) {
     try {
         $product_data = $products->getByID($prodID, "product_name");
-        $bean->select()->where()->add("prodID", $prodID);
+        $bean->select()->where()->match("prodID", $prodID);
         $title .= " - " . tr("Products") . ": " . $product_data["product_name"];
     }
     catch (Exception $e) {
@@ -38,7 +38,7 @@ else {
     if ($pclsID > 0) {
         try {
             $class_data = $classes->getByID($pclsID, "class_name");
-            $bean->select()->where()->add("pclsID", $pclsID);
+            $bean->select()->where()->match("pclsID", $pclsID);
             $title .= " - " . tr("Class") . ": " . $class_data["class_name"];
         }
         catch (Exception $e) {

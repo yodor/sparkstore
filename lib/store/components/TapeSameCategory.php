@@ -22,7 +22,7 @@ class TapeSameCategory extends ProductsTape
 
 //        $qry = $this->bean->queryFull();
 //        $qry->select->where()->add("catID", $catID);
-        $qry->stmt->where()->add("stock_amount" , "0", " > ");
+        $qry->stmt->where()->expression("stock_amount > 0");
         $qry->stmt->orderRandom();
         $qry->stmt->group_by = " prodID ";
         $qry->stmt->limit($limit);

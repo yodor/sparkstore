@@ -40,7 +40,7 @@ if (URL::Current()->contains("editID")) {
             $newName = $transactor->getValue("option_name");
             $update = SQLUpdate::Table($transactor->getBean()->getTableName());
             $update->set("option_name", $newName);
-            $update->where()->add("parentID", $transactor->getEditID());
+            $update->where()->match("parentID", $transactor->getEditID());
             $db->query($update)->free();
         }
         catch (Exception $e) {

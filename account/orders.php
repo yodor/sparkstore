@@ -30,7 +30,7 @@ $sel = SQLSelect::Table(" orders o ");
 $sel->set("*");
 $sel->setAliasExpression(" (SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = o.orderID) ", "item_count");
 
-$sel->where()->add("o.userID", $page->getUserID());
+$sel->where()->match("o.userID", $page->getUserID());
 $sel->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
 
 $view = new TableView(new SelectQuery($sel, "orderID"));

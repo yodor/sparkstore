@@ -22,11 +22,12 @@ class AttributeFilter extends ClosureFilter {
             $filterName = "F_".Spark::Hash($input->getName());
             $select->from()->innerJoin("product_attributes $filterName")->on("$filterName.prodID = sellable_products.prodID");
 
-            $select->where()->add("$filterName.attribute_name", $input->getName());
-            $select->where()->add("$filterName.attribute_value", $value, $opr);
+            $select->where()->match("$filterName.attribute_name", $input->getName());
+            //autobind
+            $select->where()->match("$filterName.attribute_value", $value, $opr);
 
             //echo $select->debugSQL();
-//            $select->setMeta("AttrubuteFilter Query");
+            $select->setMeta("AttrubuteFilter Query");
         };
 
         parent::__construct($title, $attributeClosure);

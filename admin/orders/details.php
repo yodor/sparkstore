@@ -38,7 +38,7 @@ if (isset($_GET["orderID"])) {
 }
 $qry = $orders->queryFull();
 
-$qry->stmt->where()->add("orderID", $orderID);
+$qry->stmt->where()->match("orderID", $orderID);
 $qry->stmt->limit(1);
 $qry->exec();
 

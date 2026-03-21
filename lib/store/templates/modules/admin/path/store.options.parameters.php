@@ -21,7 +21,7 @@ if (URL::Current()->contains("editID")) {
 
             //setting parentID means it is a parameter and not the option itself
             $transactor->assignInsertValue("parentID", Template::Condition()->getID());
-            $bean->select()->where()->add("parentID", Template::Condition()->getID());
+            $bean->select()->where()->match("parentID", Template::Condition()->getID());
 
             //copy the option name to this parameter
             $transactor->assignInsertValue("option_name", Template::Condition()->getData("option_name"));
@@ -31,14 +31,14 @@ if (URL::Current()->contains("editID")) {
             $pclsID = Template::Condition()->getData("pclsID");
             if ($pclsID>0) {
                 $transactor->assignInsertValue("pclsID", $pclsID);
-                $bean->select()->where()->add("pclsID", $pclsID);
+                $bean->select()->where()->match("pclsID", $pclsID);
             }
 
             //copy prodID - if set - parent is product specific option
             $prodID = Template::Condition()->getData("prodID");
             if ($prodID>0) {
                 $transactor->assignInsertValue("prodID", $prodID);
-                $bean->select()->where()->add("pclsID", $prodID);
+                $bean->select()->where()->match("pclsID", $prodID);
             }
 
             if ($bean instanceof OrderedDataBean) {
@@ -61,7 +61,7 @@ else {
 
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
             //limit bean queries - max position selector etc
-            $content->getBean()->select()->where()->add("parentID" , Template::Condition()->getID());
+            $content->getBean()->select()->where()->match("parentID" , Template::Condition()->getID());
 
             //changes to bean->select do not reflect to content->iterator after next call
             $content->setIterator($content->getBean()->queryFull());
