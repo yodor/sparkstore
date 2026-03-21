@@ -8,7 +8,7 @@ include_once("store/beans/ProductsBean.php");
 include_once("store/utils/CheckStockState.php");
 include_once("objects/events/BeanFormEditorEvent.php");
 include_once("objects/events/BeanTransactorEvent.php");
-
+include_once('db/DBExpression.php');
 
 
 class ProductsListAdd extends BeanEditorPage
@@ -32,7 +32,7 @@ $closure = function(BeanFormEditorEvent $event) {
         if (!($editor instanceof BeanFormEditor)) throw new Exception("Event source is not BeanFormEditor");
 
         $transactor = $editor->getTransactor();
-        $transactor->assignInsertValue("insert_date", "now()");
+        $transactor->assignInsertValue("insert_date", new DBExpression("now()"));
     }
 };
 SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver($closure));

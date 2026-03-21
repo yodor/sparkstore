@@ -156,8 +156,8 @@ class ProductAttributeFilter extends SelectFilter {
 
         $name = mb_ereg_replace("_", " ", $name);
 
-        $clause->setExpression("product_attributes LIKE :nameValue");
-        $clause->bind(":nameValue", "%$name:$value%");
+        $clause->setExpression("product_attributes LIKE :AttributeNameValue");
+        $clause->bind(":AttributeNameValue", "%$name:$value%");
         $where->append($clause);
     }
     public function appendHavingClause(ClauseCollection $having) : void
@@ -211,8 +211,8 @@ class ProductVariantFilter extends SelectFilter {
 
         $name = mb_ereg_replace("_", " ", $name);
 
-        $clause->setExpression("(product_variants LIKE :nameValue)");
-        $clause->bind(":nameValue", "%$name:$value%");
+        $clause->setExpression("(product_variants LIKE :VariantNameValue)");
+        $clause->bind(":VariantNameValue", "%$name:$value%");
         $where->append($clause);
     }
     public function appendHavingClause(ClauseCollection $having) : void
@@ -232,7 +232,7 @@ class ProductListFilterInputForm extends InputForm {
     /**
      * @var SQLSelect
      */
-    protected $select = NULL;
+    protected ?SQLSelect $select = NULL;
 
     const GROUP_VARIANTS = "variants";
     const GROUP_ATTRIBUTES = "attributes";
@@ -298,7 +298,6 @@ class ProductListFilterInputForm extends InputForm {
         $product_list->reset();
         $product_list->set("prodID", "pclsID");
 
-
         $select = new SQLSelect();
         $select->set("attr.name");
         $select->from(" ({$product_list->getSQL()}) as list ")
@@ -308,7 +307,7 @@ class ProductListFilterInputForm extends InputForm {
 
         $select->group_by = " attr.name ";
         $select->order("attr.attrID", OrderDirection::ASC);
-        SQLStatement::CopyBindings($select, $product_list);
+
         return $select;
     }
 
@@ -331,7 +330,6 @@ class ProductListFilterInputForm extends InputForm {
 
         $select->order("vo.voID", OrderDirection::ASC);
 
-        SQLStatement::CopyBindings($select, $product_list);
         return $select;
     }
 

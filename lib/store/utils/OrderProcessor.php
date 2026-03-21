@@ -227,13 +227,12 @@ class OrderProcessor
         return $this->orderID;
     }
 
-    protected function updateCounterStock(int $prodID, int $amount=1)
+    protected function updateCounterStock(int $prodID, int $amount=1) : void
     {
         if ($this->manage_stock_amount) {
             try {
                 $update = SQLUpdate::Table("products p");
-                $update->setExpression("p.stock_amount","p.stock_amount - :amount");
-                $update->bind(":amount", $amount);
+                $update->column("p.stock_amount")->set("p.stock_amount - :amount")->bind(":amount", $amount);
                 $update->where()->add("p.prodID", $prodID);
 
                 $query = new DBQuery();
@@ -246,8 +245,7 @@ class OrderProcessor
         else if($this->manage_order_counter) {
             try {
                 $update = SQLUpdate::Table("product_view_log pvl");
-                $update->setExpression("pvl.order_counter", "pvl.order_counter + :amount");
-                $update->bind(":amount", $amount);
+                $update->column("pvl.order_counter")->set("pvl.order_counter + :amount")->bind(":amount", $amount);
                 $update->where()->add("pvl.prodID", $prodID);
 
                 $query = new DBQuery();

@@ -58,7 +58,7 @@ class RegisterClientFormProcessor extends FormProcessor
             //registration requires activation email
             $urow["confirmed"] = 0;
 
-            $urow["date_signup"] = "now()";
+            $urow["date_signup"] = new DBExpression("now()");
             $urow["confirm_code"] = $confirm_code;
 
             $userID = $users->insert($urow);

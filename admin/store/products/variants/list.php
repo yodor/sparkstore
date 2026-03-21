@@ -159,23 +159,19 @@ class ProductVariantsProcessor extends FormProcessor
                 $delete = SQLDelete::Table("product_variants");
                 $delete->where()->add("prodID", $this->prodID);
 
-                $idlist = $delete->bindList($posted_voIDs);
+                $idlist = $delete->where()->bindList($posted_voIDs);
                 $delete->where()->addExpression("voID NOT IN ($idlist)");
 
                 $db->query($delete)->free();
 
-                //insert non-existing IDs - multi-insert initialized value to []
-                $col_prodID = new SQLColumn("prodID", []);
-                $col_voID = new SQLColumn("voID", []);
+                $insert = SQLInsert::Table("product_variants");
+                $col_prodID = $insert->columnArray("prodID");
+                $col_voID = $insert->columnArray("voID");
 
                 foreach ($posted_voIDs as $idx=>$voID) {
                     $col_prodID->addValue($this->prodID);
                     $col_voID->addValue($voID);
                 }
-
-                $insert = SQLInsert::Table("product_variants");
-                $insert->setColumn($col_prodID);
-                $insert->setColumn($col_voID);
 
                 $db->query($insert)->free();
 

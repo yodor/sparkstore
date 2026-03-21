@@ -8,7 +8,7 @@ class FreeOrderProcessor extends PaymentProcessor
     protected function processOrderImpl($orderID, $order_row)
     {
 
-        $transaction_time = "now()";
+        $transaction_time = time();
         //
         $reference = Authenticator::RandomToken(16);
 

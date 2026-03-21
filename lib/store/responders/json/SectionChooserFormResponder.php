@@ -72,16 +72,13 @@ class SectionChooserFormResponder extends JSONFormResponder
             if (count($section_ids) > 0) {
 
                 //initialize columns with automatic bindings :prodID, :secID - empty arrays - to hold prodID, secID,
-                $colProdID = new SQLColumn("prodID", []);
-                $colSecID = new SQLColumn("secID", []);
+                $colProdID = $insert->columnArray("prodID");
+                $colSecID = $insert->columnArray("secID");
 
                 foreach ($section_ids as $idx=>$secID) {
                     $colProdID->addValue($this->prodID);
                     $colSecID->addValue($secID);
                 }
-
-                $insert->setColumn($colProdID);
-                $insert->setColumn($colSecID);
 
                 $db->query($insert)->free();
             }

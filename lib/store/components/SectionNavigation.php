@@ -52,7 +52,7 @@ class SectionNavigation extends NavigationList
         $sectionName = $this->item->getLabel();
         $this->tapeProducts->where()->removeExpression("product_sections");
         $this->tapeProducts->where()->addExpression("product_sections LIKE :section_name");
-        $this->tapeProducts->bind(":section_name", "%$sectionName%");
+        $this->tapeProducts->where()->bind(":section_name", "%$sectionName%");
 
         return new SelectQuery($this->tapeProducts, "prodID");
     }

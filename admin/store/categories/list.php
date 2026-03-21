@@ -6,7 +6,14 @@ $cmp = new NestedSetViewPage();
 
 $cmp->getPage()->navigation()->clear();
 
-$cmp->setBean(new ProductCategoriesBean());
+$bean = new ProductCategoriesBean();
+
+//if (isset($_GET["reconstruct"]))
+//{
+//    $bean->reconstructNestedSet();
+//}
+
+$cmp->setBean($bean);
 $cmp->setListFields(array("category_name"=>"Category Name"));
 
 $view = $cmp->initView();

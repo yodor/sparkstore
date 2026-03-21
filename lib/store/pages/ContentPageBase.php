@@ -68,7 +68,7 @@ class ContentPageBase extends StorePage
             else {
                 foreach ($this->page_class as $clsas) {
                     $query->stmt->where()->addExpression("keywords LIKE :page_class");
-                    $query->stmt->bind(":page_class", "%$clsas%");
+                    $query->stmt->where()->bind(":page_class", "%$clsas%");
                 }
             }
             $query->stmt->limit(1);
@@ -117,7 +117,7 @@ class ContentPageBase extends StorePage
                 }
 
                 $query->stmt->where()->removeExpression($this->bean->key());
-                $query->stmt->removeLimit();
+                $query->stmt->limitClear();
 
                 //minimum visible and id
                 if ($query->stmt->where()->count()>1) {

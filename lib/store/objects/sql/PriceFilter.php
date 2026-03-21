@@ -15,19 +15,20 @@ class PriceFilter extends ClosureFilter {
             $iterator = $select->where()->iterator();
 
             while ($clause = $iterator->next()) {
-                if ($clause instanceof SQLClause) {
-                    if (strcmp($clause->getExpression(), "sell_price") === 0) {
-                        if ($clause->getValue()>$value) {
-                            $clause->setOperator("<=");
-                            $opr = ">=";
-                            $select->order("sell_price", OrderDirection::DESC);
-                        }
-                        else {
-                            $select->order("sell_price", OrderDirection::ASC);
-                        }
-                        break;
+                if (!$clause instanceof SQLClause) continue;
+
+                if (strcmp($clause->getExpression(), "sell_price") === 0) {
+                    if ($clause->getValue()>$value) {
+                        $clause->setOperator("<=");
+                        $opr = ">=";
+                        $select->order("sell_price", OrderDirection::DESC);
                     }
+                    else {
+                        $select->order("sell_price", OrderDirection::ASC);
+                    }
+                    break;
                 }
+
             }
 
             $select->where()->add("sell_price", "$value", $opr);
