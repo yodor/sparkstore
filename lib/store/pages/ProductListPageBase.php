@@ -325,7 +325,7 @@ class ProductListPageBase extends ProductPageBase
             $this->select->unset("category_name");
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
         }
-
+        //$this->select->setMeta("ProductsView");
         $this->view->setIterator(new SelectQuery($this->select, "prodID"));
 
         //construct category tree for the products that will be listed
@@ -346,6 +346,7 @@ class ProductListPageBase extends ProductPageBase
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
+        //$aggregateSelect->setMeta("TreeView");
         if ($this->treeViewAggregateSelect) {
             $this->treeView->setIterator(new SelectQuery($aggregateSelect, $this->product_categories->key()));
         }

@@ -289,9 +289,9 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("min-chars", "3");
         $ksc->getForm()->getInput("keyword")->setID("search-keyword");
 
-        $ksc->getForm()->getRenderer()->setAttribute("method", "get");
-        $ksc->getForm()->getRenderer()->setAttribute("action", new ProductListURL());
-        $ksc->getForm()->getRenderer()->setAttribute("aria-label", "Product Search Form");
+        $ksc->setMethod(FormRenderer::METHOD_GET);
+        $ksc->setAction(new ProductListURL());
+        $ksc->setAttribute("aria-label", "Product Search Form");
 
         $ksc->getButton("search")->setContents("");
         $ksc->getButton("search")->setComponentClass("");
@@ -300,8 +300,6 @@ class StorePageBase extends SparkPage
         $ksc->getButton("clear")->setContents("");
         $ksc->getButton("clear")->setComponentClass("");
         $ksc->getButton("clear")->setAttribute("aria-label", "Clear Search");
-
-        $ksc->setMethod(FormRenderer::METHOD_GET);
 
         $this->keyword_search = $ksc;
 
