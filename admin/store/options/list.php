@@ -22,7 +22,7 @@ $classes = new ProductClassesBean();
 $products = new ProductsBean();
 
 $bean = new VariantOptionsBean();
-$bean->select()->where()->add("parentID" , " NULL ", " IS ");
+$bean->select()->where()->add("parentID" , null, "IS");
 $pclsID = -1;
 
 $product_filter = new GETProcessor("Продукт", "prodID");
@@ -46,8 +46,8 @@ if ($product_filter->isProcessed()) {
         }
     }
     else {
-        $bean->select()->where()->add("pclsID" , " NULL ", " IS ");
-        $bean->select()->where()->add("prodID" , " NULL ", " IS ");
+        $bean->select()->where()->add("pclsID" , null, "IS");
+        $bean->select()->where()->add("prodID" , null, "IS");
     }
 }
 else {
@@ -69,8 +69,8 @@ else {
         }
     }
     else {
-        $bean->select()->where()->add("pclsID" , " NULL ", " IS ");
-        $bean->select()->where()->add("prodID" , " NULL ", " IS ");
+        $bean->select()->where()->add("pclsID" , null, "IS");
+        $bean->select()->where()->add("prodID" , null, "IS");
     }
 }
 
