@@ -9,11 +9,11 @@ class OrderListSQL extends SQLSelect
 
         //select additional the items and client - allow search
         $select = SQLSelect::Table(" orders o ");
-        $select->set("*");
-        $select->setAliasExpression(" (SELECT GROUP_CONCAT('-oi-', oi.product) FROM  order_items oi WHERE oi.orderID=o.orderID) ", "items");
-        $select->setAliasExpression(" (SELECT CONCAT_WS('--', u.fullname, u.email, u.phone) FROM users u WHERE u.userID=o.userID) ", "client");
+        $select->columns("*");
+        $select->alias(" (SELECT GROUP_CONCAT('-oi-', oi.product) FROM  order_items oi WHERE oi.orderID=o.orderID) ", "items");
+        $select->alias(" (SELECT CONCAT_WS('--', u.fullname, u.email, u.phone) FROM users u WHERE u.userID=o.userID) ", "client");
 
-        $this->set("derived.*");
+        $this->columns("derived.*");
 
         $this->from("( ".$select->getSQL()." ) as derived" );
 

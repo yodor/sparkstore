@@ -27,7 +27,7 @@ class OrderStatusProcessor extends FormProcessor
         $ticket = $form->getInput("ticket")->getValue();
         $email = $form->getInput("email")->getValue();
 
-        $qry = $orders->query();
+        $qry = $orders->queryFull();
         $qry->stmt->where()->match("order_identifier", $ticket);
         $qry->stmt->where()->match("client_identifier", $email);
         $qry->stmt->limit(1);

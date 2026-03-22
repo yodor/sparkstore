@@ -8,10 +8,10 @@ else {
 
     $sel = SQLSelect::Table(" product_classes pc ");
 
-    $sel->set("pc.pclsID", "pc.class_name");
-    $sel->setAliasExpression("(SELECT group_concat(a.name SEPARATOR '<BR>') 
+    $sel->columns("pc.pclsID", "pc.class_name");
+    $sel->alias("(SELECT group_concat(a.name SEPARATOR '<BR>') 
 FROM product_class_attributes pca JOIN attributes a WHERE a.attrID=pca.attrID AND pca.pclsID=pc.pclsID)", "class_attributes");
-    $sel->setAliasExpression("(select group_concat(
+    $sel->alias("(select group_concat(
 concat(
 opt.option_name, 
 '<BR>[',

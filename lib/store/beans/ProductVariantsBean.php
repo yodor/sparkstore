@@ -25,10 +25,10 @@ class ProductVariantsBean extends DBTableBean
 
         $query = $this->queryFull();
         $query->stmt->reset();
-        $query->stmt->set("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
-        $query->stmt->setAliasExpression("(SELECT position FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_position");
-        $query->stmt->setAliasExpression("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
-        $query->stmt->setAliasExpression("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");
+        $query->stmt->columns("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
+        $query->stmt->alias("(SELECT position FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_position");
+        $query->stmt->alias("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
+        $query->stmt->alias("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");
 
         $query->stmt->from("product_variants pv")->join("variant_options vo")->on("vo.voID = pv.voID");
         $query->stmt->where()->match("pv.prodID", $prodID);
@@ -39,7 +39,7 @@ class ProductVariantsBean extends DBTableBean
     public function queryVariantPhotos(int $prodID, string $option_name, string $option_value) : SelectQuery
     {
         $query = $this->queryProduct($prodID);
-        $query->stmt->set("pvp.pvpID");
+        $query->stmt->columns("pvp.pvpID");
         $query->stmt->where()->match("option_name", $option_name);
         $query->stmt->where()->match("option_value", $option_value);
         $query->stmt->from()->join("product_variant_photos pvp")->on("pvp.pvID = pv.pvID ");

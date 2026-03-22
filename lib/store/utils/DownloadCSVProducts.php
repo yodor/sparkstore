@@ -58,9 +58,9 @@ class ImagesExporter extends ProductExporter {
         }
 
         $select = SQLSelect::Table("product_photos");
-        $select->set("prodID");
-        $select->set("ppID");
-        $select->set("position");
+        $select->columns("prodID");
+        $select->columns("ppID");
+        $select->columns("position");
 
         $select->order("prodID", OrderDirection::ASC);
         $select->order("position",OrderDirection::ASC);
@@ -74,7 +74,7 @@ class ImagesExporter extends ProductExporter {
             $position = $result->get("position");
 
             $select1 = SQLSelect::Table("product_photos");
-            $select1->set("photo");
+            $select1->columns("photo");
             $select1->where()->match("ppID", $ppID);
 
             $qry1 = new SelectQuery($select1);
@@ -236,7 +236,7 @@ abstract class CSVProductExporter extends ProductExporter
             Debug::ErrorLog("Using Deserialized ProductListSelect");
         }
 
-        $select->set("prodID");
+        $select->columns("prodID");
 
 
         $query = new SelectQuery($select);

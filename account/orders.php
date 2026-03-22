@@ -25,15 +25,14 @@ $invoices = new InvoiceDetailsBean();
 
 $clients = new UsersBean();
 
-$sel = SQLSelect::Table(" orders o ");
+$query = $orders->queryFull();
 
-$sel->set("*");
-$sel->setAliasExpression(" (SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = o.orderID) ", "item_count");
+$query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orderID)", "item_count");
 
-$sel->where()->match("o.userID", $page->getUserID());
-$sel->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
+$query->stmt->where()->match("userID", $page->getUserID());
+$query->stmt->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
 
-$view = new TableView(new SelectQuery($sel, "orderID"));
+$view = new TableView($query);
 
 // $view->setCaption($caption);
 

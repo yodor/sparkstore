@@ -60,7 +60,7 @@ class ContentPageBase extends StorePage
             if (count($this->page_class)==0 && $this->id < 1) throw new Exception("Parameter required");
 
             $query = $this->bean->query($this->bean->key(), "item_title", "content", "keywords", "item_date");
-            $query->stmt->setAliasExpression("( photo IS NOT NULL )", "have_photo");
+            $query->stmt->alias("( photo IS NOT NULL )", "have_photo");
             $query->stmt->where()->match("visible", 1);
             if ($this->id > 0) {
                 $query->stmt->where()->match($this->bean->key(), $this->id);

@@ -141,7 +141,7 @@ class ProductsList extends BeanListPage
         }
 
         $qry = $this->bean->query();
-        $qry->stmt->set(
+        $qry->stmt->columns(
                 "p.prodID",
                         "p.product_name",
                         "p.brand_name",
@@ -151,17 +151,17 @@ class ProductsList extends BeanListPage
                         "p.stock_amount",
                         );
 
-        $qry->stmt->setAliasExpression("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
-        $qry->stmt->setAliasExpression("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
+        $qry->stmt->alias("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
+        $qry->stmt->alias("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
 
-        $qry->stmt->setAliasExpression("(SELECT 
+        $qry->stmt->alias("(SELECT 
         GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
         FROM product_class_attribute_values pcav 
         JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
         JOIN attributes a ON a.attrID = pca.attrID
         WHERE pcav.prodID = p.prodID )", "product_attributes");
 
-        $qry->stmt->setAliasExpression("(SELECT 
+        $qry->stmt->alias("(SELECT 
     GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
     (SELECT 
         CONCAT(vo.option_name, ':', GROUP_CONCAT(vo.option_value ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR ';')) as label,
@@ -172,20 +172,20 @@ class ProductsList extends BeanListPage
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->stmt->setAliasExpression("(
+        $qry->stmt->alias("(
         SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
         )", "class_name");
 
-        $qry->stmt->setAliasExpression("(
+        $qry->stmt->alias("(
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 
 
-        $qry->stmt->setAliasExpression("(
+        $qry->stmt->alias("(
         SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "view_counter");
 
-        $qry->stmt->setAliasExpression("(
+        $qry->stmt->alias("(
         SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
         )", "order_counter");
 
@@ -205,7 +205,7 @@ class ProductsList extends BeanListPage
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
 
-        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
+        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->table()));
         $rend->getItemRenderer()->setValueKey("catID");
         $rend->getItemRenderer()->setLabelKey("category_name");
 
@@ -297,8 +297,8 @@ class ProductsList extends BeanListPage
             if ($form->haveInput("filter_section")) {
                 $filter_section = $form->getInput("filter_section")->getValue();
                 if ($filter_section) {
-                    $this->query->stmt->having = " sections LIKE :section";
-                    $this->query->stmt->bind(":section", "%{$filter_section}%");
+                    $this->query->stmt->having(" sections LIKE :filter_section");
+                    $this->query->stmt->bind(":filter_section", "%$filter_section%");
                 }
             }
 
@@ -312,18 +312,15 @@ class ProductsList extends BeanListPage
             if ($form->haveInput("filter_class")) {
                 $filter_class = $form->getInput("filter_class")->getValue();
                 if ($filter_class) {
-                    if ($this->query->stmt->having) {
-                        $this->query->stmt->having.=" AND ";
-                    }
-                    $this->query->stmt->having .= "class_name = :filterClass";
-                    $this->query->stmt->bind(":filterClass", $filter_class);
+                    $this->query->stmt->having("class_name = :filter_class");
+                    $this->query->stmt->bind(":filter_class", $filter_class);
                 }
             }
 
             if ($form->getInput("keyword")->getValue()) {
                 $clauses = $form->prepareClauseCollection("OR");
                 $clauses->copyTo($this->query->stmt->where());
-                //$this->query->stmt->having = $clauses->getSQL();
+
             }
         }
 

@@ -9,10 +9,11 @@ $rc = new BeanKeyCondition(new ProductVariantsBean(), "../list.php");
 $cmp = new GalleryViewPage();
 $cmp->setRequestCondition($rc);
 
-$select = SQLSelect::Table(" product_variants pv JOIN variant_options opt ON opt.voID = pv.voID ");
+$select = new SQLSelect();
+$select->from("product_variants pv")->join("variant_options opt")->on("opt.voID = pv.voID ");
 
 $select->where()->match("pvID", $rc->getID());
-$select->set("option_name", "option_value");
+$select->columns("option_name", "option_value");
 
 $query = new SelectQuery($select, "pvID");
 $query->exec();

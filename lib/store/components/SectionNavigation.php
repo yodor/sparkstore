@@ -13,7 +13,7 @@ class SectionNavigation extends NavigationList
 
     public function createImagesColumn(SQLSelect $select): void
     {
-        $select->setAliasExpression(
+        $select->alias(
             "(SELECT 
             GROUP_CONCAT( CONCAT(sb.sbID,'|',sb.link) SEPARATOR ',')  
             FROM section_banners sb 
@@ -30,7 +30,7 @@ class SectionNavigation extends NavigationList
     public function createListIterator() : SelectQuery
     {
         $select = SQLSelect::Table("sections s");
-        $select->set("s.secID", "s.section_title");
+        $select->columns("s.secID", "s.section_title");
 
         $select->where()->match("s.home_visible", 1 );
         $select->order("s.position", OrderDirection::ASC);

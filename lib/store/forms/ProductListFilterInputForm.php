@@ -56,7 +56,7 @@ class FilterDataInput extends DataInput {
     {
         $name = $this->fieldName();
         //if (!InputSanitizer::SafeSQLColumn($name)) throw new Exception("Incorrect column name: $name");
-        $this->select->set($name);
+        $this->select->columns($name);
         $this->select->where()->expression("$name IS NOT NULL");
         //check usage name should be sanitized
         $this->select->order($name, OrderDirection::ASC);
@@ -124,7 +124,7 @@ class ProductAttributeFilter extends SelectFilter {
     protected function createQuery() : SelectQuery
     {
         $this->select->reset();
-        $this->select->set("pcav.value", "attr.name");
+        $this->select->columns("pcav.value", "attr.name");
 
         $this->select->order("value", OrderDirection::ASC);
         $this->select->group_by = " value ";
@@ -178,7 +178,7 @@ class ProductVariantFilter extends SelectFilter {
     {
 
         $this->select->reset();
-        $this->select->set("option_value");
+        $this->select->columns("option_value");
 
         $this->select->order("vo.option_value", OrderDirection::ASC);
         $this->select->group_by = " vo.option_value ";
@@ -295,10 +295,10 @@ class ProductListFilterInputForm extends InputForm {
     {
         $product_list = clone $this->select;
         $product_list->reset();
-        $product_list->set("prodID", "pclsID");
+        $product_list->columns("prodID", "pclsID");
 
         $select = new SQLSelect();
-        $select->set("attr.name");
+        $select->columns("attr.name");
         $select->from(" ({$product_list->getSQL()}) as list ")
             ->join("product_class_attribute_values pcav")->on("pcav.prodID = list.prodID")
             ->join("product_class_attributes pca")->on("pca.pcaID=pcav.pcaID")
@@ -317,10 +317,10 @@ class ProductListFilterInputForm extends InputForm {
     {
         $product_list = clone $this->select;
         $product_list->reset();
-        $product_list->set("prodID", "pclsID");
+        $product_list->columns("prodID", "pclsID");
 
         $select = new SQLSelect();
-        $select->set("vo.option_name", "vo.option_value");
+        $select->columns("vo.option_name", "vo.option_value");
         $select->from(" ({$product_list->getSQL()}) as list")
             ->join("product_variants pv")->on("pv.prodID = list.prodID")
             ->join("variant_options vo")->on("vo.voID = pv.voID");

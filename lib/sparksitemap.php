@@ -7,10 +7,10 @@ include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
 
 $bean = new SellableProducts();
-$qry = $bean->query();
-$qry->stmt->reset();
-$qry->stmt->set("prodID", "product_name", "update_date");
-$qry->stmt->setAliasExpression("(SELECT GROUP_CONCAT(pp.ppID SEPARATOR ';') FROM product_photos pp WHERE pp.prodID=sellable_products.prodID ORDER BY pp.position ASC)", "photos");
+
+$qry = $bean->query("prodID", "product_name", "update_date");
+
+$qry->stmt->alias("(SELECT GROUP_CONCAT(pp.ppID SEPARATOR ';') FROM product_photos pp WHERE pp.prodID=sellable_products.prodID ORDER BY pp.position ASC)", "photos");
 $qry->stmt->group_by = " prodID ";
 
 $qry->exec();
@@ -47,8 +47,8 @@ while ($result = $qry->nextResult()) {
 //each category
 $select = SQLSelect::Table("product_categories pc");
 
-$select->set("pc.catID", "pc.category_name");
-$select->setAliasExpression("(SELECT group_concat(sp.ppID ORDER BY sp.prodID DESC SEPARATOR ';' LIMIT 6) FROM sellable_products sp WHERE sp.catID = pc.catID)", "product_photos");
+$select->columns("pc.catID", "pc.category_name");
+$select->alias("(SELECT group_concat(sp.ppID ORDER BY sp.prodID DESC SEPARATOR ';' LIMIT 6) FROM sellable_products sp WHERE sp.catID = pc.catID)", "product_photos");
 
 //echo $select->getSQL();
 $query = new SelectQuery($select);

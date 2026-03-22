@@ -63,7 +63,7 @@ class ProductClassAttributeInputForm extends InputForm
         $input = $this->getInput("attrID");
 
         $select = SQLSelect::Table("attributes");
-        $select->set("attrID", "name");
+        $select->columns("attrID", "name");
         $select->where()->expression("attrID not in (SELECT attrID FROM product_class_attributes WHERE pclsID = :pclsID)");
         $select->where()->bind(":pclsID", $pclsID);
 

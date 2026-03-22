@@ -109,7 +109,7 @@ $cmp->setBean($bean);
 
 $cmp->setListFields(array("voID"=>"ID", "position"=>"Position", "option_name"=>"Option Name", "parameters"=>"Parameters"));
 $query = $bean->queryFull();
-$query->stmt->setAliasExpression("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
+$query->stmt->alias("(SELECT GROUP_CONCAT(vopt.option_value ORDER BY vopt.position ASC SEPARATOR ';' ) FROM variant_options vopt WHERE vopt.parentID = variant_options.voID )", "parameters");
 $cmp->setIterator($query);
 
 

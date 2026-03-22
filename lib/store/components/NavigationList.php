@@ -126,7 +126,7 @@ abstract class NavigationList extends Container
     {
         $sellable = new SellableProducts();
 
-        $select = SQLSelect::Table($sellable->getTableName());
+        $select = SQLSelect::Table($sellable->table());
 
         //TODO: set required columns for ProductListItem only
         //Get required columns from ProductListItem instance
@@ -134,7 +134,7 @@ abstract class NavigationList extends Container
         $columns = ProductsTape::GetDefaultItemRenderer()->collectDataKeys();
         $present = $sellable->ensureColumns($columns);
 
-        $select->set(...$present);
+        $select->columns(...$present);
 
         $select->unset($this->item->getValueKey());
         $select->unset($this->item->getLabelKey());

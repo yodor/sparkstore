@@ -29,7 +29,7 @@ class CategoryNavigation extends NavigationList
      */
     public function createImagesColumn(SQLSelect $select) : void
     {
-        $select->setAliasExpression(
+        $select->alias(
             "(SELECT 
             GROUP_CONCAT(pcp.pcpID SEPARATOR ',') 
             FROM product_category_photos pcp 
@@ -48,7 +48,7 @@ class CategoryNavigation extends NavigationList
         $bean = new ProductCategoriesBean();
 
         $select = SQLSelect::Table(" product_categories pc ");
-        $select->set("pc.catID", "pc.category_name");
+        $select->columns("pc.catID", "pc.category_name");
         $select->where()->match("pc.parentID", $this->parentID);
         $select->order("pc.lft", OrderDirection::ASC);
 

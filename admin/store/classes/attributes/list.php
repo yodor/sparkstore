@@ -15,8 +15,9 @@ $className = $bean->getValue($req->getID(), "class_name");
 
 $cmp->getPage()->setName(tr("Входни етикети към клас: ").$className);
 
-$sel = SQLSelect::Table(" product_class_attributes pca LEFT JOIN attributes attr ON attr.attrID = pca.attrID ");
-$sel->set("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
+$sel = new SQLSelect();
+$sel->from("product_class_attributes pca")->leftJoin("attributes attr")->on("attr.attrID = pca.attrID");
+$sel->columns("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
 $sel->where()->match("pca.pclsID", $req->getID());
 $cmp->setIterator(new SelectQuery($sel, "pcaID"));
 

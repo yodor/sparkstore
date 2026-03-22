@@ -230,7 +230,7 @@ class ProductListPageBase extends ProductPageBase
 
         //default - all categories not filtered or aggregated
         $treeSelect = $this->product_categories->selectTree(array("category_name"));
-        $treeQry = new SelectQuery($treeSelect, $this->product_categories->key(), $this->product_categories->getTableName());
+        $treeQry = new SelectQuery($treeSelect, $this->product_categories->key(), $this->product_categories->table());
         $this->treeView->setIterator($treeQry);
 
         //default products select all products from all categories
@@ -323,7 +323,7 @@ class ProductListPageBase extends ProductPageBase
             //unset - will use catID and category name from selectChildNodesWith
             $this->select->unset("catID");
             $this->select->unset("category_name");
-            $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->getTableName(), $nodeID, array("catID", "category_name"));
+            $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->table(), $nodeID, array("catID", "category_name"));
         }
         //$this->select->setMeta("ProductsView");
         $this->view->setIterator(new SelectQuery($this->select, "prodID"));
@@ -337,12 +337,13 @@ class ProductListPageBase extends ProductPageBase
         foreach ($columnNamesCopy as $idx=>$name) {
             $products_tree->unset($name);
         }
-        $products_tree->set("sellable_products.prodID");
-        $products_tree->set("sellable_products.catID");
+        $products_tree->column("sellable_products.prodID");
+        $products_tree->column("sellable_products.catID");
         //echo $products_tree->getSQL();
 
-        $products_tree = $products_tree->getAsDerived();
-        $products_tree->set("relation.prodID", "relation.catID");
+        $products_tree = $products_tree->getAsDerived("relation");
+        $products_tree->column("relation.prodID");
+        $products_tree->column("relation.catID");
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);

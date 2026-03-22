@@ -7,7 +7,7 @@ class ProductsSQL extends SQLSelect
     {
         parent::__construct();
 
-        $this->set(
+        $this->columns(
 
             "p.prodID", "p.catID", "p.brand_name",
              "p.product_name", "p.product_description", "p.seo_description",
@@ -15,16 +15,16 @@ class ProductsSQL extends SQLSelect
             "p.insert_date", "p.update_date", "p.stock_amount"
         );
 
-        $this->setAliasExpression("(
+        $this->alias("(
         SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
         )", "class_name");
 
-        $this->setAliasExpression("(
+        $this->alias("(
         SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
         )", "category_name");
 
         //this item sections
-        $this->setAliasExpression("(
+        $this->alias("(
         SELECT GROUP_CONCAT(s.section_title ORDER BY s.position ASC SEPARATOR '|') FROM product_sections ps JOIN sections s ON s.secID = ps.secID WHERE ps.prodID = p.prodID
         )", "product_sections");
 
@@ -36,30 +36,30 @@ class ProductsSQL extends SQLSelect
 //        JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID
 //        JOIN attributes a ON a.attrID=pca.attrID
 //        WHERE pcav.prodID = p.prodID)", "product_attributes");
-        $this->setAliasExpression("(SELECT 
+        $this->alias("(SELECT 
         GROUP_CONCAT(CONCAT(pa.attribute_name,':',CAST(pa.attribute_value AS CHAR)) SEPARATOR '|')
         FROM product_attributes pa WHERE pa.prodID = p.prodID)", "product_attributes");
 
         //this item variants
-        $this->setAliasExpression("(SELECT 
+        $this->alias("(SELECT 
         GROUP_CONCAT( CONCAT(vo.option_name,':', vo.option_value) ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR '|') as variants
         FROM product_variants pv 
         LEFT JOIN variant_options vo ON vo.voID=pv.voID
         WHERE pv.prodID=p.prodID )", "product_variants");
 
         //this item photo
-        $this->setAliasExpression("(SELECT 
+        $this->alias("(SELECT 
         pp.ppID 
         FROM product_photos pp 
         WHERE pp.prodID=p.prodID  
         ORDER BY position ASC LIMIT 1)", "ppID");
 
-        $this->setAliasExpression("(      
+        $this->alias("(      
                 if ( p.promo_price>0, p.promo_price, p.price - (p.price * (coalesce(sp.discount_percent, 0) / 100.0))  )
         )",
         "sell_price");
 
-        $this->setAliasExpression("coalesce(sp.discount_percent,0)", "discount_percent");
+        $this->alias("coalesce(sp.discount_percent,0)", "discount_percent");
 
         $this->from("products p")
             ->leftJoin("store_promos sp")

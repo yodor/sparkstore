@@ -29,7 +29,7 @@ class ProductInputFormBase extends InputForm
         $bean1 = new ProductCategoriesBean();
         $rend = $field->getRenderer();
 
-        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->getTableName()));
+        $rend->setIterator(new SelectQuery($bean1->selectTree(array("category_name")), $bean1->key(), $bean1->table()));
         $rend->getItemRenderer()->setValueKey("catID");
         $rend->getItemRenderer()->setLabelKey("category_name");
 

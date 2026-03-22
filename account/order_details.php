@@ -132,7 +132,7 @@ echo "<div class='column details'>";
                 echo "</div>"; //line
 
                 $qry = $items->queryField("orderID", $orderID);
-                $qry->stmt->set( "prodID", "itemID", "price", "qty", "product");
+                $qry->stmt->columns( "prodID", "itemID", "price", "qty", "product");
                 $qry->exec();
 
                 $pos = 0;

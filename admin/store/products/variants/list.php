@@ -196,8 +196,9 @@ class ProductVariantsProcessor extends FormProcessor
     public function loadFormData(InputForm $form)
     {
 
-        $select = SQLSelect::Table(" product_variants pv JOIN variant_options vo ON vo.voID = pv.voID ");
-        $select->set("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
+        $select = new SQLSelect();
+        $select->from("product_variants pv")->join("variant_options vo")->on("vo.voID = pv.voID ");
+        $select->columns("vo.voID", "vo.option_name", "vo.option_value", "vo.parentID");
         $select->where()->match("pv.prodID", $this->prodID);
 
         $query = new SelectQuery($select, "pvID");

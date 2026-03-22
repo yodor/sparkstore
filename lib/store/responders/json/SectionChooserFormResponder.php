@@ -32,7 +32,7 @@ class SectionChooserFormResponder extends JSONFormResponder
 
         //load selected sections into the form value
         $select = SQLSelect::Table(" product_sections ps  ");
-        $select->set("ps.prodID", "ps.secID");
+        $select->columns("ps.prodID", "ps.secID");
         $select->where()->match("ps.prodID", $this->prodID);
 
         $query = new SelectQuery($select, "psID");

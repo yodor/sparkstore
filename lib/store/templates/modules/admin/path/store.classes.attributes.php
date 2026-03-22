@@ -31,7 +31,7 @@ else {
     $config->listFields = array("pcaID"=>"ID", "name"=>"Входен Етикет");
 
     $sel = SQLSelect::Table(" product_class_attributes pca LEFT JOIN attributes attr ON attr.attrID = pca.attrID");
-    $sel->set("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
+    $sel->columns("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
     $sel->where()->match("pca.pclsID", Template::Condition()->getID());
 
     $config->iterator = new SelectQuery($sel, "pcaID");
