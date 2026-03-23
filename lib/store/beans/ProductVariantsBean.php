@@ -23,9 +23,7 @@ class ProductVariantsBean extends DBTableBean
     public function queryProduct(int $prodID) : SelectQuery
     {
 
-        $query = $this->queryFull();
-        $query->stmt->reset();
-        $query->stmt->columns("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
+        $query = $this->query("pv.pvID", "pv.prodID", "pv.variant_price", "vo.voID", "vo.option_name", "vo.option_value", "vo.parentID", "vo.position");
         $query->stmt->alias("(SELECT position FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_position");
         $query->stmt->alias("(SELECT pclsID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_class");
         $query->stmt->alias("(SELECT prodID FROM variant_options vo1 WHERE vo1.voID = vo.parentID)", "parent_product");

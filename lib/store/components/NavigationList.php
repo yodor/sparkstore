@@ -136,8 +136,8 @@ abstract class NavigationList extends Container
 
         $select->columns(...$present);
 
-        $select->unset($this->item->getValueKey());
-        $select->unset($this->item->getLabelKey());
+        $select->columns()->unset($this->item->getValueKey());
+        $select->columns()->unset($this->item->getLabelKey());
 
         //do not rand here
         //$select->order_by = " RAND() ";

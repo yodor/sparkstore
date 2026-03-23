@@ -14,7 +14,7 @@ class TapeSameCategory extends ProductsTape
         $categories = new ProductCategoriesBean();
 
         $select = clone $bean->select();
-        $select->setPrefix("sellable_products");
+        $select->columns()->setPrefix("sellable_products");
         $select = $categories->selectChildNodesWith($select, "sellable_products", $sellable->getCategoryID());
 
 //        echo $select->getSQL();

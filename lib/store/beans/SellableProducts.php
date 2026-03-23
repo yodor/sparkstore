@@ -37,7 +37,7 @@ class SellableProducts extends DBViewBean
 
         parent::__construct($table_name);
 
-        $this->select->reset();
+        $this->select->columns()->reset();
         $this->select->columns(...$this->columnNames());
         $this->prkey = "prodID";
     }

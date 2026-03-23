@@ -123,13 +123,13 @@ class ProductAttributeFilter extends SelectFilter {
 
     protected function createQuery() : SelectQuery
     {
-        $this->select->reset();
+        $this->select->columns()->reset();
         $this->select->columns("pcav.value", "attr.name");
 
         $this->select->order("value", OrderDirection::ASC);
         $this->select->group_by = " value ";
 
-        $this->select->where()->match("attr.name" , $this->getName(), " LIKE ");
+        $this->select->where()->match("attr.name" , $this->getName());
 
         return new SelectQuery($this->select, "value");
     }
@@ -177,7 +177,7 @@ class ProductVariantFilter extends SelectFilter {
     protected function createQuery() : SelectQuery
     {
 
-        $this->select->reset();
+        $this->select->columns()->reset();
         $this->select->columns("option_value");
 
         $this->select->order("vo.option_value", OrderDirection::ASC);
@@ -294,7 +294,7 @@ class ProductListFilterInputForm extends InputForm {
     protected function attributesSelect() : SQLSelect
     {
         $product_list = clone $this->select;
-        $product_list->reset();
+        $product_list->columns()->reset();
         $product_list->columns("prodID", "pclsID");
 
         $select = new SQLSelect();
@@ -316,7 +316,7 @@ class ProductListFilterInputForm extends InputForm {
     protected function variantSelect() : SQLSelect
     {
         $product_list = clone $this->select;
-        $product_list->reset();
+        $product_list->columns()->reset();
         $product_list->columns("prodID", "pclsID");
 
         $select = new SQLSelect();

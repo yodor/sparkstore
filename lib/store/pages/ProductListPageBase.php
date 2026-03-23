@@ -222,7 +222,7 @@ class ProductListPageBase extends ProductPageBase
             throw new Exception("List bean is not set");
         }
         $this->select = clone $this->bean->select();
-        $this->select->setPrefix("sellable_products");
+        $this->select->columns()->setPrefix("sellable_products");
 
 
         $search_fields = array("product_name", "attribute_value");
@@ -273,7 +273,7 @@ class ProductListPageBase extends ProductPageBase
             }
         }
 
-        $columnNamesCopy = $this->select->columnNames();
+        $columnNamesCopy = $this->select->columns()->names();
 
         $iterator = $this->property_filter->iterator();
         while ($filter = $iterator->next()) {
@@ -321,8 +321,8 @@ class ProductListPageBase extends ProductPageBase
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
             //unset - will use catID and category name from selectChildNodesWith
-            $this->select->unset("catID");
-            $this->select->unset("category_name");
+            $this->select->columns()->unset("catID");
+            $this->select->columns()->unset("category_name");
             $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->table(), $nodeID, array("catID", "category_name"));
         }
         //$this->select->setMeta("ProductsView");
@@ -335,7 +335,7 @@ class ProductListPageBase extends ProductPageBase
         //do not clear all fields here as filters might have appended dynamic columns for using in having clause
         //select only fields needed in the treeView iterator and remove non-needed columns
         foreach ($columnNamesCopy as $idx=>$name) {
-            $products_tree->unset($name);
+            $products_tree->columns()->unset($name);
         }
         $products_tree->column("sellable_products.prodID");
         $products_tree->column("sellable_products.catID");
