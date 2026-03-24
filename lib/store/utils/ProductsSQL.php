@@ -65,7 +65,7 @@ class ProductsSQL extends SQLSelect
             ->leftJoin("store_promos sp")
             ->on("( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) )");
 
-        $this->where()->match("p.visible", 1);
+        $this->where()->expression("p.visible = 1");
     }
 
 }
