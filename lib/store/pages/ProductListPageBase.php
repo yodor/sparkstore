@@ -44,7 +44,7 @@ class ProductListPageBase extends ProductPageBase
     protected GETProcessor $category_filter;
 
     protected bool $treeViewAggregateSelect = true;
-    protected bool $treeViewAggregateSelectCount = true;
+    protected bool $treeViewAggregateSelectCount = false;
 
     protected Container $aside;
     protected Container $main;
