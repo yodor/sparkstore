@@ -44,7 +44,7 @@ class ProductListPageBase extends ProductPageBase
     protected GETProcessor $category_filter;
 
     protected bool $treeViewAggregateSelect = true;
-    protected bool $treeViewAggregateSelectCount = false;
+    protected bool $treeViewAggregateSelectCount = true;
 
     protected Container $aside;
     protected Container $main;
@@ -346,13 +346,14 @@ class ProductListPageBase extends ProductPageBase
         foreach ($columnNamesCopy as $idx=>$name) {
             $products_tree->columns()->unset($name);
         }
-        //$products_tree->column("sellable_products.prodID");
-        //$products_tree->column("sellable_products.catID");
+
         $products_tree->alias("DISTINCT sellable_products.catID", "catID");
+        //for counting aggregated
+        $products_tree->column("sellable_products.prodID");
 
         $products_tree = $products_tree->getAsDerived("relation");
-        $products_tree->column("relation.prodID");
-        $products_tree->column("relation.catID");
+//        $products_tree->column("relation.prodID");
+//        $products_tree->column("relation.catID");
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
