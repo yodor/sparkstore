@@ -318,28 +318,37 @@ class ProductListPageBase extends ProductPageBase
         //clone the main products select here to keep the tree siblings visible
         $products_tree = clone $this->select;
 
+        //!execute in "late lookup" mode
+        $products_lookup = clone $this->select;
+        $products_lookup->columns()->reset();
+        //Lookup - inner select - no heavy columns here
+        $products_lookup->column($this->bean->table().".".$this->bean->key());
+
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
             //unset - will use catID and category name from selectChildNodesWith
-            $this->select->columns()->unset("catID");
-            $this->select->columns()->unset("category_name");
-            $this->select = $this->product_categories->selectChildNodesWith($this->select, $this->bean->table(), $nodeID, array("catID", "category_name"));
+            $products_lookup = $this->product_categories->selectChildNodesWith($products_lookup, $this->bean->table(), $nodeID, array("catID", "category_name"));
         }
-        //$this->select->setMeta("ProductsView");
+
+        //set the select as late lookup
+        $this->select->lateLookup = $products_lookup;
+        $this->select->lateLookupTable = $this->bean->table();
+        $this->select->lateLookupKey = $this->bean->key();
+
         $this->view->setIterator(new SelectQuery($this->select, "prodID"));
 
         //construct category tree for the products that will be listed
         //keep same grouping as the products list
-        $products_tree->group_by = $this->select->group_by;
+        //$products_tree->group_by = $this->select->group_by;
 
         //do not clear all fields here as filters might have appended dynamic columns for using in having clause
         //select only fields needed in the treeView iterator and remove non-needed columns
         foreach ($columnNamesCopy as $idx=>$name) {
             $products_tree->columns()->unset($name);
         }
-        $products_tree->column("sellable_products.prodID");
-        $products_tree->column("sellable_products.catID");
-        //echo $products_tree->getSQL();
+        //$products_tree->column("sellable_products.prodID");
+        //$products_tree->column("sellable_products.catID");
+        $products_tree->alias("DISTINCT sellable_products.catID", "catID");
 
         $products_tree = $products_tree->getAsDerived("relation");
         $products_tree->column("relation.prodID");
@@ -347,7 +356,7 @@ class ProductListPageBase extends ProductPageBase
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
-        //$aggregateSelect->setMeta("TreeView");
+
         if ($this->treeViewAggregateSelect) {
             $this->treeView->setIterator(new SelectQuery($aggregateSelect, $this->product_categories->key()));
         }
