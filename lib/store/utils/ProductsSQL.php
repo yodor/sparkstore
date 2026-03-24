@@ -15,27 +15,11 @@ class ProductsSQL extends SQLSelect
             "p.insert_date", "p.update_date", "p.stock_amount"
         );
 
-        $this->alias("(
-        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
-        )", "class_name");
-
-        $this->alias("(
-        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
-        )", "category_name");
-
         //this item sections
         $this->alias("(
         SELECT GROUP_CONCAT(s.section_title ORDER BY s.position ASC SEPARATOR '|') FROM product_sections ps JOIN sections s ON s.secID = ps.secID WHERE ps.prodID = p.prodID
         )", "product_sections");
 
-
-//        //this item attributes
-//        $this->fields()->setExpression("(SELECT
-//        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY pca.pcaID ASC SEPARATOR '|')
-//        FROM product_class_attribute_values pcav
-//        JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID
-//        JOIN attributes a ON a.attrID=pca.attrID
-//        WHERE pcav.prodID = p.prodID)", "product_attributes");
         $this->alias("(SELECT 
         GROUP_CONCAT(CONCAT(pa.attribute_name,':',CAST(pa.attribute_value AS CHAR)) SEPARATOR '|')
         FROM product_attributes pa WHERE pa.prodID = p.prodID)", "product_attributes");
@@ -61,11 +45,19 @@ class ProductsSQL extends SQLSelect
 
         $this->alias("coalesce(sp.discount_percent,0)", "discount_percent");
 
-        $this->from("products p")
-            ->leftJoin("store_promos sp")
-            ->on("( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) )");
+        $this->column("pc.category_name");
+        $this->column("pcls.class_name");
 
-        $this->where()->match("p.visible", 1);
+        $this->from("products p")
+            ->leftJoin("product_classes pcls")->on("pcls.pclsID = p.pclsID")
+            ->leftJoin("product_categories pc")->on("pc.catID = p.catID")
+            ->leftJoin("store_promos sp")
+                ->on("( sp.targetID = p.catID AND sp.target='Category' AND NOW() BETWEEN sp.start_date AND sp.end_date )");
+
+
+        $this->where()->expression("p.visible = 1");
+//        echo $this->getSQL();
+
     }
 
 }
