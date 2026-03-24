@@ -192,25 +192,28 @@ class ClassAttributeField extends DataIteratorField
     public function updateIterator() : void
     {
         $sel = new SQLSelect();
-        $sel->from("product_class_attributes pca")->join("attributes attr")->on("attr.attrID=pca.attrID");
 
         $sel->columns("pca.pcaID", "attr.name");
 
-        //TODO bind prodID
-        $sel->alias("(SELECT pcav.value FROM product_class_attribute_values pcav 
-        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_value_prodID)", $this->dataInput->getName());
+        $sel->from("product_class_attributes pca")->join("attributes attr")->on("attr.attrID=pca.attrID")
+            ->leftJoin("product_class_attribute_values pcav")->on("pcav.pcaID = pca.pcaID")->and("pcav.prodID = :prodID");
 
-        $sel->alias("(SELECT pcav.pcavID FROM product_class_attribute_values pcav 
-        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_pcavID_prodID)", "pcavID");
+        $sel->columns("pcav.value AS {$this->dataInput->getName()}", "pcav.pcavID AS pcavID");
 
-        $sel->bind(":pacv_value_prodID", $this->prodID);
-        $sel->bind(":pacv_pcavID_prodID", $this->prodID);
+        //$sel->alias("(SELECT pcav.value FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_value_prodID)", $this->dataInput->getName());
+        //$sel->alias("(SELECT pcav.pcavID FROM product_class_attribute_values pcav WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_pcavID_prodID)", "pcavID");
 
-        $sel->order("pcaID" , OrderDirection::ASC);
+        //$sel->bind(":pacv_value_prodID", $this->prodID);
+        //$sel->bind(":pacv_pcavID_prodID", $this->prodID);
+        $sel->bind(":prodID", $this->prodID);
+
+        $sel->order("pca.pcaID" , OrderDirection::ASC);
 
         $sel->where()->match("pca.pclsID", $this->classID);
 
-        $sel->setMeta("ProductClassAttributes");
+//        $sel->setMeta("ProductClassAttributes");
+//        Debug::ErrorLog($sel->getSQL());
+
         $this->setIterator(new SelectQuery($sel, "pcaID"));
     }
 
