@@ -15,13 +15,13 @@ class ProductsSQL extends SQLSelect
             "p.insert_date", "p.update_date", "p.stock_amount"
         );
 
-        $this->alias("(
-        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
-        )", "class_name");
-
-        $this->alias("(
-        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
-        )", "category_name");
+//        $this->alias("(
+//        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
+//        )", "class_name");
+//
+//        $this->alias("(
+//        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
+//        )", "category_name");
 
         //this item sections
         $this->alias("(
@@ -52,7 +52,7 @@ class ProductsSQL extends SQLSelect
         pp.ppID 
         FROM product_photos pp 
         WHERE pp.prodID=p.prodID  
-        ORDER BY position ASC LIMIT 1)", "ppID");
+        ORDER BY pp.position ASC LIMIT 1)", "ppID");
 
         $this->alias("(      
                 if ( p.promo_price>0, p.promo_price, p.price - (p.price * (coalesce(sp.discount_percent, 0) / 100.0))  )
@@ -61,9 +61,13 @@ class ProductsSQL extends SQLSelect
 
         $this->alias("coalesce(sp.discount_percent,0)", "discount_percent");
 
+        $this->columns("pcls.class_name", "pc.category_name");
+
         $this->from("products p")
+            ->leftJoin("product_classes pcls")->on("pcls.pclsID = p.pclsID")
+            ->leftJoin("product_categories pc")->on("pc.catID = p.catID")
             ->leftJoin("store_promos sp")
-            ->on("( sp.targetID = p.catID AND sp.target='Category' AND (sp.start_date <= NOW() AND sp.end_date >= NOW()) )");
+            ->on("( sp.targetID = p.catID AND sp.target='Category' AND CURRENT_TIMESTAMP() BETWEEN sp.start_date AND sp.end_date )");
 
         $this->where()->expression("p.visible = 1");
     }
