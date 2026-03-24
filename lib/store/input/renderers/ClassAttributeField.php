@@ -191,21 +191,26 @@ class ClassAttributeField extends DataIteratorField
 
     public function updateIterator() : void
     {
-        $sel = SQLSelect::Table("product_class_attributes pca JOIN attributes attr ON attr.attrID=pca.attrID");
+        $sel = new SQLSelect();
+        $sel->from("product_class_attributes pca")->join("attributes attr")->on("attr.attrID=pca.attrID");
 
         $sel->columns("pca.pcaID", "attr.name");
 
         //TODO bind prodID
         $sel->alias("(SELECT pcav.value FROM product_class_attribute_values pcav 
-        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_prodID)", $this->dataInput->getName());
+        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_value_prodID)", $this->dataInput->getName());
+
         $sel->alias("(SELECT pcav.pcavID FROM product_class_attribute_values pcav 
-        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_prodID)", "pcavID");
-        $sel->bind(":pacv_prodID", $this->prodID);
+        WHERE pcav.pcaID=pca.pcaID AND pcav.prodID=:pacv_pcavID_prodID)", "pcavID");
+
+        $sel->bind(":pacv_value_prodID", $this->prodID);
+        $sel->bind(":pacv_pcavID_prodID", $this->prodID);
 
         $sel->order("pcaID" , OrderDirection::ASC);
 
         $sel->where()->match("pca.pclsID", $this->classID);
 
+        $sel->setMeta("ProductClassAttributes");
         $this->setIterator(new SelectQuery($sel, "pcaID"));
     }
 
