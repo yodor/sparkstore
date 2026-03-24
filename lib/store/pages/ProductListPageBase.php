@@ -306,8 +306,8 @@ class ProductListPageBase extends ProductPageBase
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("OR");
             $cc->copyTo($this->select->where());
             $this->select->from()->leftJoin("product_attributes pa")->on("pa.prodID = sellable_products.prodID");
-            $this->select->group_by = " prodID ";
-            //echo $this->select->getSQL();
+            $this->select->group_by = " sellable_products.prodID ";
+//            echo $this->select->getSQL();
             //filter
             $filter = new ActiveFilterItem(array("filter", "keyword"), tr("Search for"), $keyword);
             $this->filtersList->filter()->items()->append($filter);
