@@ -32,6 +32,8 @@ class ProductsBean extends DBTableBean
   KEY `insert_date` (`insert_date`),
   KEY `visible` (`visible`),
   KEY `pclsID` (`pclsID`),
+  KEY `idx_cat_visible` (`visible`,`catID`),
+  FULLTEXT KEY `idx_product_name_ft` (`product_name`),
   CONSTRAINT `products_ibfk_4` FOREIGN KEY (`brand_name`) REFERENCES `brands` (`brand_name`) ON UPDATE CASCADE,
   CONSTRAINT `products_ibfk_5` FOREIGN KEY (`catID`) REFERENCES `product_categories` (`catID`) ON UPDATE CASCADE,
   CONSTRAINT `products_ibfk_6` FOREIGN KEY (`pclsID`) REFERENCES `product_classes` (`pclsID`) ON UPDATE CASCADE

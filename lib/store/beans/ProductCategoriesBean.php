@@ -12,12 +12,13 @@ class ProductCategoriesBean extends NestedSetBean
   `rgt` int(11) unsigned NOT NULL,
   `category_seotitle` text DEFAULT NULL,
   `category_seodescription` varchar(512) DEFAULT NULL,
-  `category_description` text DEFAULT NULL,
   PRIMARY KEY (`catID`),
   KEY `category_name` (`category_name`),
   KEY `parentID` (`parentID`),
   KEY `lft` (`lft`),
-  KEY `rgt` (`rgt`)
+  KEY `rgt` (`rgt`),
+  KEY `idx_nested_set` (`lft`,`rgt`),
+  KEY `idx_tree_render` (`lft`,`rgt`,`catID`,`category_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci
 ";
 
