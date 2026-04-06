@@ -115,7 +115,7 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {
-            $main_photo->setName($this->sellable->getTitle());
+            //$main_photo->setName($this->sellable->getTitle());
 
             $width = $this->item->getGallery()->getPhotoWidth();
             $height = $this->item->getGallery()->getPhotoHeight();

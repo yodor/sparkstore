@@ -79,16 +79,16 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
             $image_popup->addClassName("item");
             $image_popup->setAttribute("draggable", "false");
 
-            //$image_popup->setTitle($this->sellable->getTitle());
-            //use list-relation targeting items in the image_gallery container
-//            $this->image_popup->setListRelation("ProductGallery");
-
             $image = $image_popup->image();
             $image->setPhotoSize($this->width, $this->height);
             $image->setUseSizeAttributes(true);
 
-            $image->setAttribute("alt", "Main view ".($pos+1)." of"." ".$this->sellable->getTitle());
+            //set alt only most important + src
+            //alt and src are most important for seo. if there are product variants / colors / append them here
+            $imageTitle = "View ".($pos+1)." of ".$this->sellable->getTitle();
 
+            $image->setAttribute("alt", $imageTitle);
+            $image->getStorageItem()->setName($this->sellable->getTitle());
 
             if ($pos>0) {
                 $image->setAttribute("loading", "lazy");

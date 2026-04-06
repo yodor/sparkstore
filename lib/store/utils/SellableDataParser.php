@@ -170,7 +170,6 @@ class SellableDataParser
         $urls = array();
         foreach ($photos as $si) {
             if ($si instanceof StorageItem) {
-                $si->setName($item->getTitle());
                 $urls[] = $si->hrefFull()->fullURL()->toString();
             }
         }

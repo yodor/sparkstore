@@ -131,9 +131,9 @@ class ProductsList extends BeanList {
             "class_name",
             "p.brand_name",
             "p.prodID",
-            "sections",
-            "product_attributes",
-            "product_variants",
+            "section_title",
+//            "product_attributes",
+//            "product_variants",
             "p.price"
         );
 
@@ -161,7 +161,7 @@ class ProductsList extends BeanList {
         );
 
         $qry->stmt->alias("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
-        $qry->stmt->alias("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
+        //$qry->stmt->alias("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
 
         $qry->stmt->alias("(SELECT 
         GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
@@ -181,24 +181,21 @@ class ProductsList extends BeanList {
     GROUP BY vo.option_name
     ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
 
-        $qry->stmt->alias("(
-        SELECT pcls.class_name FROM product_classes pcls WHERE pcls.pclsID = p.pclsID LIMIT 1
-        )", "class_name");
-
-        $qry->stmt->alias("(
-        SELECT pc.category_name FROM product_categories pc WHERE pc.catID = p.catID LIMIT 1
-        )", "category_name");
 
 
-        $qry->stmt->alias("(
-        SELECT pvl.view_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
-        )", "view_counter");
 
-        $qry->stmt->alias("(
-        SELECT pvl.order_counter FROM product_view_log pvl WHERE pvl.prodID = p.prodID LIMIT 1
-        )", "order_counter");
+        $qry->stmt->columns("pcls.class_name", "pc.category_name", "pvl.order_counter", "pvl.view_counter");
 
-        $qry->stmt->from(" products p ");
+        $qry->stmt->alias("GROUP_CONCAT(DISTINCT s.section_title SEPARATOR '<BR>')", "sections");
+
+        $qry->stmt->from(" products p ")
+            ->leftJoin("product_classes pcls")->on("pcls.pclsID = p.pclsID")
+            ->leftJoin("product_categories pc")->on("pc.catID = p.catID")
+            ->leftJoin("product_view_log pvl")->on("pvl.prodID = p.prodID")
+            ->leftJoin("product_sections ps")->on("ps.prodID = p.prodID")
+            ->leftJoin("sections s")->on("s.secID = ps.secID");
+
+        $qry->stmt->group_by = " p.prodID ";
 
 
         $this->setIterator($qry);
@@ -308,8 +305,9 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_section")) {
                 $filter_section = $form->getInput("filter_section")->getValue();
                 if ($filter_section) {
-                    $this->query->stmt->having("sections LIKE :filter_section");
-                    $this->query->stmt->bind(":filter_section", "%$filter_section%");
+                    $this->query->stmt->where()->match("section_title", $filter_section);
+//                    $this->query->stmt->having(" sections LIKE :filter_section");
+//                    $this->query->stmt->bind(":filter_section", "%$filter_section%");
                 }
             }
 
@@ -323,16 +321,19 @@ class ProductsList extends BeanList {
             if ($form->haveInput("filter_class")) {
                 $filter_class = $form->getInput("filter_class")->getValue();
                 if ($filter_class) {
-                    $this->query->stmt->having("class_name = :filter_class");
-                    $this->query->stmt->bind(":filter_class", $filter_class);
+                    $this->query->stmt->where()->match("class_name", $filter_class);
+//                    $this->query->stmt->bind(":filter_class", );
                 }
             }
 
             if ($form->getInput("keyword")->getValue()) {
                 $clauses = $form->prepareClauseCollection("OR");
-                $this->query->stmt->having($clauses->getSQL());
+                $clauses->copyTo($this->query->stmt->where());
+
             }
         }
+
+        $this->query->stmt->setMeta("ProductListSelect");
 
         //serialize for product export
         if ($this->cmp instanceof TableView) {

@@ -305,7 +305,9 @@ class ProductListPageBase extends ProductPageBase
             $keyword = $this->keyword_search->getForm()->getInput("keyword")->getValue();
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("OR");
             $cc->copyTo($this->select->where());
+            //bean->table, bean->key
             $this->select->from()->leftJoin("product_attributes pa")->on("pa.prodID = sellable_products.prodID");
+            //bean->table, bean->key
             $this->select->group_by = " sellable_products.prodID ";
 //            echo $this->select->getSQL();
             //filter
@@ -315,45 +317,46 @@ class ProductListPageBase extends ProductPageBase
 
         //filters end
 
-        //clone the main products select here to keep the tree siblings visible
+
+        //1. create the main products list - filters applied - full columns present
+        //2. construct late-lookup clone and set aggregation column only/primary key
+        //3. attach the late-lookup to the main select for pagination and actual rendering at AbstractResultView
         $products_tree = clone $this->select;
 
         //!execute in "late lookup" mode
         $products_lookup = clone $this->select;
         $products_lookup->columns()->reset();
-        //Lookup - inner select - no heavy columns here
+        //Lookup - inner select - no heavy columns here filtering of products and paging on this select
         $products_lookup->column($this->bean->table().".".$this->bean->key());
 
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
-            //unset - will use catID and category name from selectChildNodesWith
-            $products_lookup = $this->product_categories->selectChildNodesWith($products_lookup, $this->bean->table(), $nodeID, array("catID", "category_name"));
+            //will lateLookup on (child.catID added from selectChildNodesWith) and $this->bean->table().".".$this->bean->key()
+            $products_lookup = $this->product_categories->selectChildNodesWith($products_lookup, $this->bean->table(), $nodeID, []);
         }
+        //echo $products_lookup->debugSQL();
 
-        //set the select as late lookup
+        //set the select as late lookup - pager will use this select to join the lateLookupTable on the lateLookupKey
+        //copying the column from the main select($this->select)
         $this->select->lateLookup = $products_lookup;
         $this->select->lateLookupTable = $this->bean->table();
         $this->select->lateLookupKey = $this->bean->key();
 
-        $this->view->setIterator(new SelectQuery($this->select, "prodID"));
+        $this->view->setIterator(new SelectQuery($this->select, $this->bean->key(),$this->bean->table()));
 
-        //construct category tree for the products that will be listed
-        //keep same grouping as the products list
-        //$products_tree->group_by = $this->select->group_by;
 
         //do not clear all fields here as filters might have appended dynamic columns for using in having clause
         //select only fields needed in the treeView iterator and remove non-needed columns
         foreach ($columnNamesCopy as $idx=>$name) {
             $products_tree->columns()->unset($name);
         }
-
+        //again no heavy column matching on ($this->product_categories) catID and if counting ($this->bean)sellable_products.prodID
         $products_tree->alias("DISTINCT sellable_products.catID", "catID");
         //for counting aggregated
         $products_tree->column("sellable_products.prodID");
 
+        //transfer bindings too
         $products_tree = $products_tree->getAsDerived("relation");
-//        $products_tree->column("relation.prodID");
-//        $products_tree->column("relation.catID");
 
         //needs getAsDerived - sets grouping and ordering on the returned select, suitable as treeView iterator
         $aggregateSelect = $this->product_categories->selectTreeRelation($products_tree, "relation", "prodID", array("category_name"), $this->treeViewAggregateSelectCount);
@@ -362,7 +365,7 @@ class ProductListPageBase extends ProductPageBase
             $this->treeView->setIterator(new SelectQuery($aggregateSelect, $this->product_categories->key()));
         }
 
-        ////
+        ////breadcrumbs
         if ($nodeID>0) {
             $this->loadCategoryPath($nodeID);
             if (count($this->category_path) > 0) {
@@ -370,8 +373,10 @@ class ProductListPageBase extends ProductPageBase
             }
         }
 
+        //cleanup treeview links
         $this->processTreeViewURL();
 
+        //enable filters if any
         if ($this->filters instanceof ProductListFilter) {
             if ($this->filtersList->filter()->items()->count() > 0) {
                 $this->filtersList->setRenderEnabled(true);
