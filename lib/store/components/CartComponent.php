@@ -153,7 +153,7 @@ class CartListItem extends Container {
         $this->actRemove->setContents("&#8855;");
         $this->actRemove->setTitle("Remove");
         $removeURL = new URL("cart.php");
-        $removeURL->add(new URLParameter("remove"));
+        $removeURL->add(new URLParameter("remove", true));
         $removeURL->add(new DataParameter("item"));
         $this->actRemove->setURL($removeURL);
 
@@ -191,7 +191,7 @@ class CartListItem extends Container {
         $this->actDecrement->setContents("&#8854;");
         $this->actDecrement->setTitle(tr("Decrease quantity"));
         $decURL = new URL("cart.php");
-        $decURL->add(new URLParameter("decrement"));
+        $decURL->add(new URLParameter("decrement", true));
         $decURL->add(new DataParameter("item"));
         $this->actDecrement->setURL($decURL);
         $tdQty->items()->append($this->actDecrement);
@@ -206,7 +206,7 @@ class CartListItem extends Container {
         $this->actIncrement->setContents("&#8853;");
         $this->actIncrement->setTitle(tr("Increase quantity"));
         $incURL = new URL("cart.php");
-        $incURL->add(new URLParameter("increment"));
+        $incURL->add(new URLParameter("increment", true));
         $incURL->add(new DataParameter("item"));
         $this->actIncrement->setURL($incURL);
         $tdQty->items()->append($this->actIncrement);

@@ -8,7 +8,7 @@ include_once("store/utils/cart/ICartListener.php");
 class Cart
 {
     /**
-     * @var array of CartEntry
+     * @var array<CartEntry>
      */
     protected array $items = array();
 
@@ -18,6 +18,9 @@ class Cart
 
     protected array $data = array();
 
+    /**
+     * @var array<ICartListener>
+     */
     protected array $cartListeners = array();
 
     protected $discountProcessor = NULL;
@@ -28,11 +31,11 @@ class Cart
     protected static ?Cart $instance = NULL;
     protected static ?string $session_key = NULL;
 
-    const SESSION_KEY = "spark_cart";
+    const string SESSION_KEY = "spark_cart";
 
-    const VERSION = "2.0";
+    const string VERSION = "2.0";
 
-    const NOTE_MAX_LENGTH = 255;
+    const int NOTE_MAX_LENGTH = 255;
 
     static public function Instance(): Cart
     {
@@ -49,7 +52,7 @@ class Cart
 
                 if ($cart instanceof Cart) {
                     Debug::ErrorLog("de-serialize success - calling delivery option initialization");
-                    //check correctnes of keys in cart
+                    //check correctness of keys in cart
                     $cart->check();
                     $cart->getDelivery()->initialize();
                     $cart->store();
@@ -103,7 +106,7 @@ class Cart
         $this->cartListeners = array();
     }
 
-    protected function check()
+    protected function check() : void
     {
         foreach ($this->items as $itemHash => $cartEntry) {
             $currentHash = $cartEntry->getItem()->hash();
