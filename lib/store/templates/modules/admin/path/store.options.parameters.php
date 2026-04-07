@@ -42,8 +42,6 @@ if (URL::Current()->contains("editID")) {
             }
 
             if ($bean instanceof OrderedDataBean) {
-//                $selectMax = clone $bean->select();
-//                $selectMax->where()->add("parentID", Template::Condition()->getID());
                 $maxPosition = $bean->getMaxPosition() + 1;
                 $transactor->assignInsertValue("position", $maxPosition);
             }

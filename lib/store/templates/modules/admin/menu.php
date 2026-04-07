@@ -44,10 +44,10 @@ $menu->append($content);
 $config = new MenuItem("Config", "config");
 $content->append($config);
 
-$baseConfig = new MenuItem("Базови", "base.php", "list");
+$baseConfig = new MenuItem("Base", "base.php", "list");
 $config->append($baseConfig);
 
-$mrktConfig = new MenuItem("Маркетинг", "marketing.php", "list");
+$mrktConfig = new MenuItem("Marketing", "marketing.php", "list");
 $config->append($mrktConfig);
 
 //

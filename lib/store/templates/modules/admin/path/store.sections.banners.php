@@ -2,29 +2,45 @@
 include_once("store/beans/SectionsBean.php");
 Template::Condition( new BeanKeyCondition(new SectionsBean(), Module::PathURL("/store/sections"), array("section_title")) );
 
-
-$config = null;
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(SectionBannersBean::class, PhotoForm::class);
-    $config->observer = TemplateConfig::WrapObserver(
-        function(TemplateEvent $event) use($config) {
-            if (!$event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) return;
-            $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
-            $event->getSource()->editor()->getForm()->addInput($field);
 
-        }, $config->observer);
+    $config = TemplateConfig::Editor(SectionBannersBean::class, PhotoForm::class);
+
+    //Signal TemplateContent to use Template::Condition during setup() call to add match() on the default bean->select,
+    //by doing so subsequent query() calls of the bean would return filtered data for the iterators
+
+    //Signal BeanEditor to use TemplateCondition during initialize() call to assign insert value to the transactor
+    $config->useCondition = true;
+
+    $config->observer = function(TemplateEvent $event) use($config) {
+
+        $content = $event->getSource();
+        if (!($content instanceof BeanEditor)) throw new Exception("Incorrect event source - expected BeanEditor");
+
+        if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
+            $config->title = tr("Banner") .": ". Template::Condition()->getData("section_title");
+        }
+        else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
+            $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
+            $content->editor()->getForm()->addInput($field);
+        }
+
+    };
 }
 else {
     $config = TemplateConfig::Gallery(SectionBannersBean::class);
+
+    //Signal TemplateContent to use Template::Condition during setup() call to add match() on the default bean->select,
+    //by doing so subsequent query() calls of the bean would return filtered data for the iterators
+    $config->useCondition = true;
+
+    $config->observer = function(TemplateEvent $event) use($config) {
+
+        $content = $event->getSource();
+        if (!($content instanceof BeanGallery)) throw new Exception("Incorrect event source - expected BeanGallery");
+
+        if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
+            $config->title = tr("Banners Gallery") .": " . Template::Condition()->getData("section_title");
+        }
+    };
 }
-
-//
-$config->observer = TemplateConfig::WrapObserver(
-    function(TemplateEvent $event) use($config) {
-
-//        $cmp->getPage()->setName(tr("Banners Gallery") . ": " . $rc->getData("section_title"));
-
-        if (!$event->isEvent(TemplateEvent::CONTENT_SETUP)) return;
-        $config->title .= " - " . Template::Condition()->getData("section_title");
-
-    }, $config->observer);
