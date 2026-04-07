@@ -6,12 +6,12 @@ if (URL::Current()->contains("editID")) {
     //
     $config = TemplateConfig::Editor(VariantOptionsBean::class, VariantParameterInputForm::class);
 
-    $config->observer = function(TemplateEVent $event) use($config) {
+    $config->observer = function(TemplateEVent $event) {
         $content = $event->getSource();
         if (!($content instanceof BeanEditor)) throw new Exception("Incorrect event source - expected BeanEditor");
 
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
-            $config->title = tr("Parameter editor for option") . ": " . Template::Condition()->getData("option_name");
+            $content->config()->title = tr("Parameter editor for option") . ": " . Template::Condition()->getData("option_name");
         }
         else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
 
@@ -53,7 +53,7 @@ else {
     $config = TemplateConfig::List(VariantOptionsBean::class);
     $config->listFields = array("voID"=>"ID", "position"=>"Position", "option_value"=>"Parameter Name");
 
-    $config->observer = function(TemplateEvent $event) use($config) {
+    $config->observer = function(TemplateEvent $event)  {
         $content = $event->getSource();
         if (!($content instanceof BeanList)) throw new Exception("Content is not BeanList");
 
@@ -64,7 +64,7 @@ else {
             //changes to bean->select do not reflect to content->iterator after next call
             $content->setIterator($content->getBean()->queryFull());
 
-            $config->title = tr("Parameters for option") . ": " . Template::Condition()->getData("option_name");
+            $content->config()->title = tr("Parameters for option") . ": " . Template::Condition()->getData("option_name");
 
         }
     };

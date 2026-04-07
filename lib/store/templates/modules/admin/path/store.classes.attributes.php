@@ -5,22 +5,17 @@ Template::Condition( new BeanKeyCondition(new ProductClassesBean(), Module::Path
 if (URL::Current()->contains("editID")) {
     $config = TemplateConfig::Editor(ProductClassAttributesBean::class, ProductClassAttributeInputForm::class);
 
-    $config->observer = function(TemplateEvent $event) use ($config) {
+    $config->useCondition = true;
+
+    $config->observer = function(TemplateEvent $event) {
         $content = $event->getSource();
         if (!($content instanceof BeanEditor)) throw new Exception("Incorrect content class");
 
-        if ($event->isEvent(TemplateEvent::CONTENT_CREATED)) {
+        if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
             $className = Template::Condition()->getData("class_name");
-            $config->title = "Изберете входен етикет за добавяне към клас: " . $className;
-        }
-        else if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
+            $content->config()->title = "Изберете входен етикет за добавяне към клас: " . $className;
             $content->getForm()->setProductClassID(Template::Condition()->getID());
         }
-        else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
-            $transactor = $content->editor()->getTransactor();
-            $transactor->assignInsertValue("pclsID", Template::Condition()->getID());
-        }
-
     };
 
 
@@ -36,13 +31,12 @@ else {
 
     $config->iterator = new SelectQuery($sel, "pcaID");
 
-    $config->observer = function(TemplateEvent $event) use ($config) {
+    $config->observer = function(TemplateEvent $event) {
         $content = $event->getSource();
         if (!($content instanceof BeanList)) throw new Exception("Event source if not TemplateContent");
 
-        if ($event->isEvent(TemplateEvent::CONTENT_CREATED)) {
-            $className = Template::Condition()->getData("class_name");
-            $config->title = "Входни етикети към клас: ".$className;
+        if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
+            $content->config()->title = "Входни етикети към клас: ".Template::Condition()->getData("class_name");
         }
         else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
 

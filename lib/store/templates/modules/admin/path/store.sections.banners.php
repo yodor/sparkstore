@@ -12,17 +12,13 @@ if (URL::Current()->contains("editID")) {
     //Signal BeanEditor to use TemplateCondition during initialize() call to assign insert value to the transactor
     $config->useCondition = true;
 
-    $config->observer = function(TemplateEvent $event) use($config) {
+    $config->observer = function(TemplateEvent $event) {
 
         $content = $event->getSource();
         if (!($content instanceof BeanEditor)) throw new Exception("Incorrect event source - expected BeanEditor");
 
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
-            $config->title = tr("Banner") .": ". Template::Condition()->getData("section_title");
-        }
-        else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
-            $field = DataInputFactory::Create(InputType::TEXT, "link", "Link", 0);
-            $content->editor()->getForm()->addInput($field);
+            $content->config()->title = tr("Banner") .": ". Template::Condition()->getData("section_title");
         }
 
     };
@@ -42,5 +38,6 @@ else {
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
             $config->title = tr("Banners Gallery") .": " . Template::Condition()->getData("section_title");
         }
+
     };
 }
