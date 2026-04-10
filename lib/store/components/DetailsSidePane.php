@@ -69,9 +69,9 @@ class CartButton extends Action
         $this->items()->append($this->_title);
     }
 
-    protected function processAttributes(): void
+    protected function finalize(): void
     {
-        parent::processAttributes();
+        parent::finalize();
         $this->_title->setContents($this->getTitle());
     }
 

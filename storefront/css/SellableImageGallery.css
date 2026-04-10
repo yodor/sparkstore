@@ -65,16 +65,20 @@
     position: absolute;
     top: calc(100cqw/2);
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
+    width: 1.67em;
+    /*height: 1.67em;*/
     background: rgba(0,0,0,0.2);
     color: white;
-    font-size: 30px;
+    font-size: 2.4em;
     text-align: center;
-    line-height: 50px;
+    line-height: 1.67em;
     cursor: pointer;
     /*border-radius: 50%;*/
     transition: background 0.3s;
+
+    font-family: "Monospaced", monospace;
+
+    box-sizing:border-box;
 }
 .SellableImageGallery .nav-arrow:hover { background: rgba(0,0,0,0.8); }
 .SellableImageGallery .nav-arrow.prev {

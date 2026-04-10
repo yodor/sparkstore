@@ -4,6 +4,66 @@ include_once("components/renderers/items/DataIteratorItem.php");
 include_once("store/beans/ProductClassAttributesBean.php");
 include_once("store/beans/ProductClassAttributeValuesBean.php");
 
+class ClassAttributeInlineScript extends InlineScript implements IPageComponent
+{
+
+    protected function finalize(): void
+    {
+        parent::finalize();
+        $name = $this->getName();
+        //prodID
+        $prodID = $this->getID();
+
+        $code = <<<JS
+function changeClass(pclsID)
+{
+    let req = new JSONRequest();
+    req.setResponder("ClassAttributeFieldResponder");
+    req.setFunction("render");
+    req.setParameter("classID", pclsID);
+    req.setParameter("prodID", "{$prodID}");
+
+    req.onSuccess = function(result) {
+
+        const field = document.querySelector(".InputComponent[field='{$name}'] .ClassAttributeField");
+        //no scripts will be parsed or added
+        field.innerHTML = result.response.contents;
+
+        const event = new SparkEvent(SparkEvent.DOM_UPDATED);
+        event.source = field;
+        document.dispatchEvent(event);
+    };
+
+    req.start();
+}
+
+onPageLoad(function () {
+    console.log("Adding class changed handler");
+
+    document.querySelectorAll("[name='pclsID']").forEach((input) => {
+        input.addEventListener('change', (event) => {
+            const target = event.target;
+            let handleEvent = false;
+            if (target instanceof HTMLSelectElement) {
+                handleEvent = true;
+            }
+            else if (target instanceof HTMLInputElement && target.type === 'radio' && target.checked) {
+                handleEvent = true;
+            }
+
+            if (handleEvent) {
+                changeClass(target.value);
+            }
+        });
+    });
+
+});
+JS;
+        $this->setCode($code);
+
+        parent::finalize();
+    }
+}
 class ClassAttributeItem extends DataIteratorItem
 {
 
@@ -44,18 +104,14 @@ class ClassAttributeItem extends DataIteratorItem
     {
         parent::setData($data);
         $this->attributeName->setContents($this->label);
-
-
     }
 
-    protected function processAttributes(): void
+    protected function finalize(): void
     {
-        parent::processAttributes();
+        parent::finalize();
         $this->removeAttribute("name");
 
         $this->attributeValue->setAttribute("value", $this->value);
-
-
 
         if ($this->parent instanceof DataIteratorField) {
 
@@ -76,11 +132,10 @@ class ClassAttributeItem extends DataIteratorItem
             $this->foreignKey->setName("fk_" . $this->attributeValue->getName());
             //already set in id ?
             $prKey = $this->parent->getIterator()->key();
-            $this->foreignKey->setValue($prKey . ":" . $this->getID());
+            $this->foreignKey->setValue($prKey . ":" . $this->getDataID());
 
         }
     }
-
 
 }
 
@@ -128,6 +183,8 @@ class ClassAttributeField extends DataIteratorField
     protected int $classID = -1;
     protected int $prodID = -1;
 
+    protected ClassAttributeInlineScript $script;
+
     public static function Create(string $name, string $label, bool $required) : ArrayDataInput
     {
         $dataInput = new ArrayDataInput($name, $label, $required);
@@ -164,11 +221,15 @@ class ClassAttributeField extends DataIteratorField
 
         //set initial iterator - without pclsID set will list all attributes for all classes
         //$this->updateIterator();
+
+        $this->script = new ClassAttributeInlineScript();
     }
 
-    protected function processAttributes(): void
+    protected function finalize(): void
     {
-        parent::processAttributes();
+        parent::finalize();
+        $this->script->setID($this->prodID);
+        $this->script->setName($this->dataInput->getName());
         $this->updateIterator();
 
     }
@@ -218,71 +279,13 @@ class ClassAttributeField extends DataIteratorField
     }
 
 
-
     public function renderImpl(): void
     {
-
         if ($this->classID < 1) {
-
             echo tr("Select product class first");
             return;
         }
-
         parent::renderImpl();
-
-    }
-
-
-    public function render(): void
-    {
-        parent::render();
-        ?>
-        <script type='text/javascript'>
-            function changeClass(pclsID)
-            {
-                let req = new JSONRequest();
-                req.setResponder("ClassAttributeFieldResponder");
-                req.setFunction("render");
-                req.setParameter("classID", pclsID);
-                req.setParameter("prodID", <?php echo $this->prodID;?>);
-
-                req.onSuccess = function(result) {
-
-                    const field = document.querySelector(".InputComponent[field='<?php echo $this->dataInput->getName();?>'] .ClassAttributeField");
-                    //no scripts will be parsed or added
-                    field.innerHTML = result.response.contents;
-
-                    const event = new SparkEvent(SparkEvent.DOM_UPDATED);
-                    event.source = field;
-                    document.dispatchEvent(event);
-                };
-
-                req.start();
-            }
-
-            onPageLoad(function () {
-                console.log("Adding class changed handler");
-
-                document.querySelectorAll("[name='pclsID']").forEach((input) => {
-                    input.addEventListener('change', (event) => {
-                        const target = event.target;
-                        let handleEvent = false;
-                        if (target instanceof HTMLSelectElement) {
-                            handleEvent = true;
-                        }
-                        else if (target instanceof HTMLInputElement && target.type === 'radio' && target.checked) {
-                            handleEvent = true;
-                        }
-
-                        if (handleEvent) {
-                            changeClass(target.value);
-                        }
-                    });
-                });
-
-            });
-        </script>
-        <?php
     }
 
 }

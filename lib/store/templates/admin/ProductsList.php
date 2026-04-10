@@ -9,60 +9,66 @@ include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 include_once("store/responders/json/ImportUpdateFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
-include_once("components/PageScript.php");
+include_once("components/InlineScript.php");
 include_once("store/beans/ProductViewLogBean.php");
 
-class ScrollTopCookiesScript extends PageScript
+class ScrollTopCookiesScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
-        document.querySelectorAll("[action='Edit']").forEach((element)=>{
-            element.addEventListener("click", (event)=>{
-                Cookies.set('scrollTop', window.scrollTop, { expires: 0 });
-            });
-        })
-        
-        let scrollTop = Cookies.get('scrollTop');
-        
-        if (scrollTop) {
-            window.scrollTo(0, scrollTop);
-            Cookies.remove('scrollTop');
-        }
+        $code = <<<JS
+document.querySelectorAll("[action='Edit']").forEach((element)=>{
+    element.addEventListener("click", (event)=>{
+        Cookies.set('scrollTop', window.scrollTop, { expires: 0 });
+    });
+})
+
+let scrollTop = Cookies.get('scrollTop');
+
+if (scrollTop) {
+    window.scrollTo(0, scrollTop);
+    Cookies.remove('scrollTop');
+}
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 
-class SectionChooserScript extends PageScript
+class SectionChooserScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
-        function showSectionChooserForm(prodID)
-        {
-            let section_chooser = new JSONFormDialog();
-            section_chooser.setTitle("Изберете секции: ");
-            section_chooser.setResponder("SectionChooserFormResponder");
-            section_chooser.getJSONRequest().setParameter("prodID", prodID);
-            section_chooser.show();
-        }
+        $code = <<<JS
+function showSectionChooserForm(prodID)
+{
+    let section_chooser = new JSONFormDialog();
+    section_chooser.setTitle("Изберете секции: ");
+    section_chooser.setResponder("SectionChooserFormResponder");
+    section_chooser.getJSONRequest().setParameter("prodID", prodID);
+    section_chooser.show();
+}
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 
-class ImportUpdateScript extends PageScript
+class ImportUpdateScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
-        function showImportUpdateDialog()
-        {
-            let import_dialog = new JSONFormDialog();
-            import_dialog.setTitle("Изберете файл: ");
-            import_dialog.setResponder("ImportUpdateFormResponder");
-            import_dialog.show();
-        }
+        $code = <<<JS
+function showImportUpdateDialog()
+{
+    let import_dialog = new JSONFormDialog();
+    import_dialog.setTitle("Изберете файл: ");
+    import_dialog.setResponder("ImportUpdateFormResponder");
+    import_dialog.show();
+}
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 

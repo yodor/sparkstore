@@ -45,9 +45,9 @@ class SummaryItem extends Container
 
         $this->items()->append($this->value);
     }
-    protected function processAttributes(): void
+    protected function finalize(): void
     {
-        parent::processAttributes();
+        parent::finalize();
         if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $priceLabel = $this->value->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             if ($priceLabel instanceof PriceLabel) {
@@ -248,9 +248,9 @@ class CartListItem extends Container {
         $this->items()->append($tdLineTotal);
 
     }
-    protected function processAttributes(): void
+    protected function finalize(): void
     {
-        parent::processAttributes();
+        parent::finalize();
         if (!$this->cartComponent->isModifyEnabled()) {
             $this->actRemove->setContents(($this->position+1));
             $this->actRemove->setTagName("span");

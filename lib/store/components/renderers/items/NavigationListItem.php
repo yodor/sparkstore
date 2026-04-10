@@ -4,7 +4,7 @@ include_once("components/Action.php");
 include_once("components/Image.php");
 include_once("storage/StorageItem.php");
 include_once("store/components/ProductsTape.php");
-include_once("components/InlinePageScript.php");
+include_once("components/InlineScript.php");
 
 enum BannerEffect : int
 {
@@ -13,13 +13,14 @@ enum BannerEffect : int
     case FADE = 2;
 
 }
-class FadeEffectScript extends InlinePageScript
+class FadeEffectScript extends InlineScript
 {
 
-    public function code(): string
+    protected function finalize(): void
     {
+        $this->enableOnPageLoad();
         $name = $this->getName();
-        return <<<JS
+        $code = <<<JS
 let fader = new ImageFader();
 fader.setClass(".NavigationListItem");
 fader.setName("$name");
@@ -29,16 +30,19 @@ fader.initialize();
 // fader.setupFadeDelayed(3000);
 fader.setupFade();
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 
-class SlideEffectScript extends InlinePageScript
+class SlideEffectScript extends InlineScript
 {
 
-    public function code(): string
+    protected function finalize(): void
     {
+        $this->enableOnPageLoad();
         $name = $this->getName();
-        return <<<JS
+        $code = <<<JS
 let slider = new ImageSlider();
 slider.setClass(".NavigationListItem");
 slider.setName("$name");
@@ -47,6 +51,8 @@ slider.viewportClass = ".viewport";
 slider.autoplayEnabled = false;
 slider.initialize();
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 

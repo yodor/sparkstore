@@ -9,7 +9,7 @@ class GTMViewItemEvent extends GTMCommand
         $this->setType("view_item");
 
     }
-    public function setSellable(SellableItem $sellable)
+    public function setSellable(SellableItem $sellable) : void
     {
         $this->addParameter("currency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         $this->addParameter("value", $sellable->getPriceInfo()->getSellPrice());

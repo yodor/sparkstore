@@ -10,14 +10,14 @@ include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 include_once("store/responders/json/ImportUpdateFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
-include_once("components/PageScript.php");
+include_once("components/InlineScript.php");
 include_once("store/beans/ProductViewLogBean.php");
 
-class ScrollTopCookiesScript extends PageScript
+class ScrollTopCookiesScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
+        $code = <<<JS
         document.querySelectorAll("[action='Edit']").forEach((element)=>{
             element.addEventListener("click", (event)=>{
                 Cookies.set('scrollTop', window.scrollTop, { expires: 0 });
@@ -31,14 +31,16 @@ class ScrollTopCookiesScript extends PageScript
             Cookies.remove('scrollTop');
         }
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 
-class SectionChooserScript extends PageScript
+class SectionChooserScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
+        $code = <<<JS
         function showSectionChooserForm(prodID)
         {
             let section_chooser = new JSONFormDialog();
@@ -48,14 +50,16 @@ class SectionChooserScript extends PageScript
             section_chooser.show();
         }
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 
-class ImportUpdateScript extends PageScript
+class ImportUpdateScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
+        $code = <<<JS
         function showImportUpdateDialog()
         {
             let import_dialog = new JSONFormDialog();
@@ -64,6 +68,8 @@ class ImportUpdateScript extends PageScript
             import_dialog.show();
         }
 JS;
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 

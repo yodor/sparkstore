@@ -131,21 +131,21 @@ class StorePageBase extends SparkPage
                 $cmd = new GTMCommand();
                 $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
                 $cmd->setType($googleID_ads);
-                $this->head()->addScript($cmd->script());
+                $this->head()->addScript($cmd);
             }
 
             if ($googleID_analytics) {
                 $cmd = new GTMCommand();
                 $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
                 $cmd->setType($googleID_analytics);
-                $this->head()->addScript($cmd->script());
+                $this->head()->addScript($cmd);
             }
 
             //any page conversion
             $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
             if ($conversionID) {
                 $cmd = new GTMConversionCommand($conversionID);
-                $this->head()->addScript($cmd->script());
+                $this->head()->addScript($cmd);
             }
         }
 
@@ -287,7 +287,7 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("autocomplete", "off");
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("min-chars", "3");
-        $ksc->getForm()->getInput("keyword")->setID("search-keyword");
+        $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("id", "search-keyword");
 
         $ksc->setMethod(FormRenderer::METHOD_GET);
         $ksc->setAction(new ProductListURL());

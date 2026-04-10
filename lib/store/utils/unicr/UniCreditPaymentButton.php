@@ -1,107 +1,108 @@
 <?php
 include_once("store/utils/CreditPaymentButton.php");
 include_once("store/utils/unicr/UniCreditProductFormResponder.php");
-include_once("components/PageScript.php");
+include_once("components/InlineScript.php");
 
-class UniCreditDialogScript extends PageScript
+class UniCreditDialogScript extends InlineScript implements IPageComponent
 {
-    public function code() : string
+    protected function finalize() : void
     {
-        return <<<JS
-            const uniDialog = new JSONFormDialog();
+        $code = <<<JS
+const uniDialog = new JSONFormDialog();
 
-            function showUniCreditDialog()
-            {
-                uniDialog.setResponder("UniCreditProductFormResponder");
-                uniDialog.setTitle("Kупи на кредит");
-                uniDialog.processSubmitResult = processSubmit;
-                uniDialog.processRenderResult = processRender;
-                uniDialog.buttons.querySelector("[action='confirm']").innerText = "Продължи";
-                uniDialog.show();
+function showUniCreditDialog()
+{
+    uniDialog.setResponder("UniCreditProductFormResponder");
+    uniDialog.setTitle("Kупи на кредит");
+    uniDialog.processSubmitResult = processSubmit;
+    uniDialog.processRenderResult = processRender;
+    uniDialog.buttons.querySelector("[action='confirm']").innerText = "Продължи";
+    uniDialog.show();
 
-            }
+}
 
-            function calculateMonthly()
-            {
-                let req = new JSONRequest();
-                req.setResponder(uniDialog.getJSONRequest().getResponder());
-                //console.log("Submitting form");
-                req.setFunction("calculateMonthly");
+function calculateMonthly()
+{
+    let req = new JSONRequest();
+    req.setResponder(uniDialog.getJSONRequest().getResponder());
+    //console.log("Submitting form");
+    req.setFunction("calculateMonthly");
 
-                let installmentCount = uniDialog.element.querySelector("SELECT[name='installmentCount']").value;
- 
-                let initialPayment = uniDialog.element.querySelector("INPUT[name='initialPayment']").value;
+    let installmentCount = uniDialog.element.querySelector("SELECT[name='installmentCount']").value;
 
-                req.setParameter("installmentCount", installmentCount);
-                req.setParameter("initialPayment", initialPayment);
+    let initialPayment = uniDialog.element.querySelector("INPUT[name='initialPayment']").value;
 
-                req.onSuccess = function(result) {
-                    let response = result.response;
-                    if (response.contents) {
-                        uniDialog.element.querySelector(".notice").innerHTML = response.contents;
-                        loadResponseValues(response);
-                    }
-                    else {
-                        showAlert(response.message);
-                    }
-                };
-                uniDialog.element.querySelector(".notice").innerHTML = uniDialog.loader;
+    req.setParameter("installmentCount", installmentCount);
+    req.setParameter("initialPayment", initialPayment);
 
-                req.start();
-            }
+    req.onSuccess = function(result) {
+        let response = result.response;
+        if (response.contents) {
+            uniDialog.element.querySelector(".notice").innerHTML = response.contents;
+            loadResponseValues(response);
+        }
+        else {
+            showAlert(response.message);
+        }
+    };
+    uniDialog.element.querySelector(".notice").innerHTML = uniDialog.loader;
 
-            function loadResponseValues(result)
-            {
-                const form = uniDialog.element.querySelector("FORM");
+    req.start();
+}
 
-                form.monthlyPayment.value = result.monthlyPayment;
-                form.installmentCount.value = result.installmentCount;
-                form.initialPayment.value = result.initialPayment;
-            }
+function loadResponseValues(result)
+{
+    const form = uniDialog.element.querySelector("FORM");
 
-            function processRender(result) {
-                let response = result.response;
-                uniDialog.loadContent(response.contents);
-            }
+    form.monthlyPayment.value = result.monthlyPayment;
+    form.installmentCount.value = result.installmentCount;
+    form.initialPayment.value = result.initialPayment;
+}
 
-            /**
-            * 
-            * @param result {JSONRequestResult}
-            * @param form_name {string}
-            */
-            function processSubmit(result, form_name) {
-                let response = result.response;
+function processRender(result) {
+    let response = result.response;
+    uniDialog.loadContent(response.contents);
+}
 
-                if (response.redirect) {
+/**
+* 
+* @param result {JSONRequestResult}
+* @param form_name {string}
+*/
+function processSubmit(result, form_name) {
+    let response = result.response;
 
-                    let form = document.createElement("form");
-                    form.setAttribute("id", "redirectForm");
-                    form.setAttribute("method", "post");
-                    form.setAttribute("action", response.redirect);
+    if (response.redirect) {
 
-                    // Create an input element for Full Name
-                    let data = document.createElement("input");
-                    data.setAttribute("type", "hidden");
-                    data.setAttribute("name", "suosId");
-                    data.setAttribute("value", response.suosId);
+        let form = document.createElement("form");
+        form.setAttribute("id", "redirectForm");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", response.redirect);
 
-                    form.appendChild(data);
+        // Create an input element for Full Name
+        let data = document.createElement("input");
+        data.setAttribute("type", "hidden");
+        data.setAttribute("name", "suosId");
+        data.setAttribute("value", response.suosId);
 
-                    document.body.appendChild(form);
-                    form.submit();
+        form.appendChild(data);
 
-                }
-                else if (response.contents) {
-                    uniDialog.loadContent(response.contents);
-                    showAlert(response.message);
-                }
-                else {
-                    uniDialog.remove();
-                    showAlert(response.message);
-                }
-            }
+        document.body.appendChild(form);
+        form.submit();
+
+    }
+    else if (response.contents) {
+        uniDialog.loadContent(response.contents);
+        showAlert(response.message);
+    }
+    else {
+        uniDialog.remove();
+        showAlert(response.message);
+    }
+}
 JS;
-
+        $this->setCode($code);
+        parent::finalize();
     }
 }
 class UniCreditPaymentButton extends CreditPaymentButton
@@ -116,6 +117,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
         try {
             $this->handler = new UniCreditProductFormResponder($item);
             $this->enabled = true;
+            new UniCreditDialogScript();
         }
         catch (Exception $e) {
             $this->enabled = false;
@@ -125,7 +127,7 @@ class UniCreditPaymentButton extends CreditPaymentButton
 
         //template
 
-        new UniCreditDialogScript();
+
 
     }
 

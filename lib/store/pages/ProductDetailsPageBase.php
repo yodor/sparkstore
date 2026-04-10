@@ -62,12 +62,12 @@ class ProductDetailsPageBase extends ProductPageBase
         $conversionID = $config->get(GTMConvParam::VIEW_PDP->value);
         if ($conversionID) {
             $cmd = new GTMConversionCommand($conversionID);
-            $this->head()->addScript($cmd->script());
+            $this->head()->addScript($cmd);
         }
 
         $viewItemEvent = new GTMViewItemEvent();
         $viewItemEvent->setSellable($this->sellable);
-        $this->head()->addScript($viewItemEvent->script());
+        $this->head()->addScript($viewItemEvent);
     }
 
     /**

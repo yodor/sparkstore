@@ -63,7 +63,7 @@ class ProductListPageBase extends ProductPageBase
         $conversionID = $config->get(GTMConvParam::VIEW_PLP->value);
         if ($conversionID) {
             $cmd = new GTMConversionCommand($conversionID);
-            $this->head()->addScript($cmd->script());
+            $this->head()->addScript($cmd);
         }
 
         $this->setSellableProducts($this->createSellableProducts());
