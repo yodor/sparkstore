@@ -133,7 +133,6 @@ class ProductPhoto extends Action implements IDataResultConsumer
         $this->setComponentClass("photo");
 
         $this->image = new Image();
-        $this->image->setAttribute("loading", "lazy");
         $this->image->setAttribute("itemprop", "image");
         $this->image->setStorageItem(new StorageItem());
 
@@ -200,6 +199,17 @@ class ProductPhoto extends Action implements IDataResultConsumer
             $this->discountLabel->setRenderEnabled(true);
         }
 
+        //$this->image->setAttribute("pos", $this->item->getPosition());
+        $this->image->removeAttribute("fetchpriority");
+        $this->image->removeAttribute("loading");
+
+        if ($this->item->getPosition()<2) {
+            $this->image->setAttribute("fetchpriority","high");
+            $this->image->setAttribute("loading", "eager");
+        }
+        else {
+            $this->image->setAttribute("loading", "lazy");
+        }
     }
 
     public function collectDataKeys(): array
