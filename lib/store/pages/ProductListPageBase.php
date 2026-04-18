@@ -334,7 +334,6 @@ class ProductListPageBase extends ProductPageBase
             //will lateLookup on (child.catID added from selectChildNodesWith) and $this->bean->table().".".$this->bean->key()
             $products_lookup = $this->product_categories->selectChildNodesWith($products_lookup, $this->bean->table(), $nodeID, []);
         }
-        //echo $products_lookup->debugSQL();
 
         //set the select as late lookup - pager will use this select to join the lateLookupTable on the lateLookupKey
         //copying the column from the main select($this->select)

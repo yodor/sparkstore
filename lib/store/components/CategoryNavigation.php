@@ -24,7 +24,7 @@ class CategoryNavigation extends NavigationList
     /**
      * Add group_concat column containing the image IDs and return the column name
      * @param SQLSelect $select
-     * @return string
+     * @return void
      * @throws Exception
      */
     public function createImagesColumn(SQLSelect $select) : void
