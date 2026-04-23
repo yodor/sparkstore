@@ -64,8 +64,10 @@ class CategoryNavigation extends NavigationList
 
     public function createTapeIterator() : ?SelectQuery
     {
-        $tape_select = $this->iterator->bean()->selectChildNodesWith($this->tapeProducts, "sellable_products", $this->item->getValue(), array($this->item->getValueKey(), $this->item->getLabelKey()));
-        return new SelectQuery($tape_select, "prodID");
+        $tape_select = $this->iterator->bean()->selectChildNodesWith($this->tapeProducts, "sellable_products", $this->item->getValue(), []);
+        $query = new SelectQuery($tape_select, "prodID", "sellable_products");
+        $query->execLateLookup = true;
+        return $query;
     }
 
 }

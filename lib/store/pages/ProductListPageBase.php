@@ -314,36 +314,21 @@ class ProductListPageBase extends ProductPageBase
             $filter = new ActiveFilterItem(array("filter", "keyword"), tr("Search for"), $keyword);
             $this->filtersList->filter()->items()->append($filter);
         }
-
         //filters end
 
-
-        //1. create the main products list - filters applied - full columns present
-        //2. construct late-lookup clone and set aggregation column only/primary key
-        //3. attach the late-lookup to the main select for pagination and actual rendering at AbstractResultView
-        $products_tree = clone $this->select;
-
-        //!execute in "late lookup" mode
-        $products_lookup = clone $this->select;
-        $products_lookup->columns()->reset();
-        //Lookup - inner select - no heavy columns here filtering of products and paging on this select
-        $products_lookup->column($this->bean->table().".".$this->bean->key());
-
+        $products_list = clone $this->select;
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {
             //will lateLookup on (child.catID added from selectChildNodesWith) and $this->bean->table().".".$this->bean->key()
-            $products_lookup = $this->product_categories->selectChildNodesWith($products_lookup, $this->bean->table(), $nodeID, []);
+            $products_list = $this->product_categories->selectChildNodesWith($products_list, $this->bean->table(), $nodeID, []);
         }
 
-        //set the select as late lookup - pager will use this select to join the lateLookupTable on the lateLookupKey
-        //copying the column from the main select($this->select)
-        $this->select->lateLookup = $products_lookup;
-        $this->select->lateLookupTable = $this->bean->table();
-        $this->select->lateLookupKey = $this->bean->key();
+        $query = new SelectQuery($products_list, $this->bean->key(),$this->bean->table());
+        $query->execLateLookup = true;
+        $this->view->setIterator($query);
+        //products list end
 
-        $this->view->setIterator(new SelectQuery($this->select, $this->bean->key(),$this->bean->table()));
-
-
+        $products_tree = clone $this->select;
         //do not clear all fields here as filters might have appended dynamic columns for using in having clause
         //select only fields needed in the treeView iterator and remove non-needed columns
         foreach ($columnNamesCopy as $idx=>$name) {
