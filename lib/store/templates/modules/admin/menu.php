@@ -28,7 +28,7 @@ $store->append($item);
 $item = new MenuItem("Products", "products");
 $store->append($item);
 
-$item = new MenuItem("Promotions", "promotions");
+$item = new MenuItem("Promotions", "promos");
 $store->append($item);
 //
 
