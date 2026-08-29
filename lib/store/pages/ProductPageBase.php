@@ -62,6 +62,7 @@ class ProductPageBase extends StorePage
         $this->sections = new SectionsBean();
         $this->breadcrumb = new BreadcrumbList();
 
+        $this->head()->addCanonicalParameter("page");
     }
 
     public function initialize() : void
