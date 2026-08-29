@@ -38,7 +38,7 @@ class OrderStatusRequestResponder extends RequestResponder
     protected function processImpl() : void
     {
 
-        $db = DBConnections::CreateDriver();
+        $db = DBManager::Driver();
 
         try {
 

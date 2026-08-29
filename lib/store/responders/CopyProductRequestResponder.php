@@ -54,7 +54,7 @@ class CopyProductRequestResponder extends RequestResponder
     protected function processImpl() : void
     {
 
-        $db = DBConnections::CreateDriver();
+        $db = DBManager::Driver();
 
         try {
             $cbrow = $this->bean->getByID($this->item_id);

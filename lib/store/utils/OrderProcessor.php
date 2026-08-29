@@ -67,7 +67,7 @@ class OrderProcessor
 
         Debug::ErrorLog("Using userID='$userID'");
 
-        $db = DBConnections::CreateDriver();
+        $db = DBManager::Driver();
 
         $this->orderID = -1;
 
