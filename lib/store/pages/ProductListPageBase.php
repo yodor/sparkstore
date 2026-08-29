@@ -130,7 +130,7 @@ class ProductListPageBase extends ProductPageBase
         $categoryURL = new CategoryURL();
         $categoryParameters = $categoryURL->getParameterNames();
         $this->head()->addCanonicalParameter(...$categoryParameters);
-
+        $this->head()->addCanonicalParameter("page");
 
     }
 
