@@ -36,6 +36,7 @@ $qry = $orders->queryFull();
 
 $qry->stmt->where()->match("orderID", $orderID)->match("userID", $userID);
 $qry->stmt->limit(1);
+$qry->exec();
 if (!($order = $qry->next())){
     Session::set("alert", "Няма достъп до тази поръчка");
     header("Location: orders.php");
@@ -59,15 +60,17 @@ echo "<div class='column details'>";
 
         echo "<a class='ColorButton' action='print' href='javascript:window.print();'>".tr("Print")."</a>";
 
+        echo "<BR><BR>";
+
         echo "<div class='group'>";
 
             echo "<div class='item order_num'>";
-            echo "<label>" . tr("Номер на поръчка") . "</label>";
+            echo "<span class='label'>" . tr("Номер на поръчка") . "</span>";
             echo "<span>" . $orderID . "</span>";
             echo "</div>";
 
             echo "<div class='item order_date'>";
-            echo "<label>" . tr("Дата") . "</label>";
+            echo "<span class='label'>" . tr("Дата") . "</span>";
             echo "<span>" . $order["order_date"] . "</span>";
             echo "</div>";
 
@@ -78,17 +81,17 @@ echo "<div class='column details'>";
             $option = $courier->getSelectedOption();
 
             echo "<div class='item delivery_courier'>";
-            echo "<label>" . tr("Куриер") . "</label>";
+            echo "<span class='label'>" . tr("Куриер") . "</span>";
             echo "<span>" . $courier->getTitle() . "</span>";
             echo "</div>";
 
             echo "<div class='item delivery_option'>";
-            echo "<label>" . tr("Начин на доставка") . "</label>";
+            echo "<span class='label'>" . tr("Начин на доставка") . "</span>";
             echo "<span>" . $option->getTitle() . "</span>";
             echo "</div>";
 
             echo "<div class='item delivery_address'>";
-            echo "<label>" . tr("Адрес за доставка") . "</label>";
+            echo "<span class='label'>" . tr("Адрес за доставка") . "</span>";
 
             if ($option->getID() == DeliveryOption::USER_ADDRESS) {
                 try {
@@ -107,12 +110,12 @@ echo "<div class='column details'>";
             echo "</div>";
 
             echo "<div class='item require_invoice'>";
-            echo "<label>" . tr("Фактуриране") . "</label>";
+            echo "<span class='label'>" . tr("Фактуриране") . "</span>";
             echo "<span>" . (($order["require_invoice"] > 0) ? tr("Да") : tr("Не")) . "</span>";
             echo "</div>";
 
             echo "<div class='item status'>";
-            echo "<label>" . tr("Състояние") . "</label>";
+            echo "<span class='label'>" . tr("Състояние") . "</span>";
             echo "<span>" . tr($order["status"]) . "</span>";
             echo "</div>";
 
@@ -171,17 +174,17 @@ echo "<div class='column details'>";
 
         echo "<div class='group total'>";
             echo "<div class='item products_total'>";
-                echo "<label>" . tr("Продукти общо") . "</label>";
+                echo "<span class='label'>" . tr("Продукти общо") . "</span>";
                 echo "<span>" . formatPrice($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0) + $order["discount_amount"]) . "</span>";
             echo "</div>";
 
             echo "<div class='item discount_amount'>";
-                echo "<label>" . tr("Отстъпки") . "</label>";
+                echo "<span class='label'>" . tr("Отстъпки") . "</span>";
                 echo "<span>" . formatPrice($order["discount_amount"]) . "</span>";
             echo "</div>";
 
             echo "<div class='item delivey_price'>";
-                echo "<label>" . tr("Доставка") . "</label>";
+                echo "<span class='label'>" . tr("Доставка") . "</span>";
                 echo "<span>";
                     $delivery_price = $order["delivery_price"];
                     if ($order["delivery_price"]>0) {
@@ -196,7 +199,7 @@ echo "<div class='column details'>";
                 echo "</span>";
             echo "</div>";
             echo "<div class='item order_total'>";
-                echo "<label>" . tr("Поръчка общо") . "</label>";
+                echo "<span class='label'>" . tr("Поръчка общо") . "</span>";
                 echo "<span>" . formatPrice($order["total"]) . "</span>";
             echo "</div>";
         echo "</div>"; //group

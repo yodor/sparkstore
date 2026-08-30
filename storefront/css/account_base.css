@@ -25,7 +25,7 @@
     border:1px solid #eaeaea;
     padding:1.5em;
     text-align:left;
-    max-width:430px;
+    /*max-width:430px;*/
 }
 .account .panel .FormRenderer {
     width:100%;
@@ -197,6 +197,9 @@
 }
 .order_details .group .item {
     line-height:150%;
+}
+.order_details .group .item.photo {
+    min-width:64px;
 }
 .order_details .group.total {
     text-align:right;

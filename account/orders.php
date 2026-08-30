@@ -30,7 +30,7 @@ $query = $orders->queryFull();
 $query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orderID)", "item_count");
 
 $query->stmt->where()->match("userID", $page->getUserID());
-$query->stmt->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
+//$query->stmt->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));
 
 $view = new TableView($query);
 
