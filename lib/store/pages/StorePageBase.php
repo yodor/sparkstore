@@ -467,7 +467,7 @@ class StorePageBase extends SparkPage
     protected function createLogo(string $href = "") : Component
     {
         if (!$href) {
-            $href = Spark::Get(Config::LOCAL)."/home.php";
+            $href = Spark::Get(Config::LOCAL)."/";
         }
         $link = new Action();
         $link->setTagName("a");

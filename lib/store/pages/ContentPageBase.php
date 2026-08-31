@@ -83,7 +83,7 @@ class ContentPageBase extends StorePage
         }
         catch (Exception $e) {
             Session::SetAlert($e->getMessage());
-            header("Location: ".Spark::Get(Config::LOCAL)."/home.php");
+            header("Location: ".Spark::Get(Config::LOCAL)."/");
             exit;
         }
 
