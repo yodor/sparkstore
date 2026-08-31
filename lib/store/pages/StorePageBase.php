@@ -259,7 +259,7 @@ class StorePageBase extends SparkPage
     {
 
         $main_menu = $this->menu_bar->getMenu();
-        $main_menu->selectActive(array(MenuItemList::MATCH_FULL,MenuItemList::MATCH_PARTIAL));
+        $main_menu->selectActive(array(MenuItemList::MATCH_FULL,MenuItemList::MATCH_SCRIPT));
 
     }
 
