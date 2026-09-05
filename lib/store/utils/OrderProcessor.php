@@ -108,8 +108,12 @@ class OrderProcessor
                 $qry->exec();
                 if ($ekont_address = $qry->next()) {
                     $order["delivery_address"] = $ekont_address["office"];
+                    $qry->free();
                 }
-                else throw new Exception("Недостъпен адрес за доставка");
+                else {
+                    throw new Exception("Недостъпен адрес за доставка");
+                }
+
             }
             else {
                 throw new Exception("Недостъпен начин на доставка");
@@ -132,6 +136,8 @@ class OrderProcessor
 
             $order_total = $order_total + ( ($option->getPrice()>0) ? $option->getPrice() : 0);
             $order["total"] = $order_total;
+
+            Debug::ErrorLog("Going to insert orderID: {$this->orderID} - for clientID: $userID");
 
             $this->orderID = $orders->insert($order, $db);
             if ($this->orderID < 1) throw new Exception("Unable to insert order: " . $db->getError());
@@ -218,6 +224,9 @@ class OrderProcessor
             Debug::ErrorLog("OrderProcessor::createOrder() completed for orderID='{$this->orderID}' ... ");
         }
         catch (Exception $e) {
+
+            Debug::ErrorLog("Exception for orderID='{$this->orderID}' ... ".$e->getTraceAsString());
+
             $this->orderID = -1;
             $db->rollback();
 

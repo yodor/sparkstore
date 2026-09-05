@@ -43,9 +43,9 @@ try {
     exit;
 }
 catch (Exception $e) {
-    Session::SetAlert(tr("Възникна грешка при обработка на Вашата поръчка.") . "<BR>" . tr("Details") . ": " . $e->getMessage());
+    Session::SetAlert(tr("Възникна грешка при обработка на Вашата поръчка.") . "<BR>" . tr("Details") . ": " . $e->getMessage()."-".$e->getTraceAsString());
     try {
-        $oem = new OrderErrorAdminMailer($e->getMessage());
+        $oem = new OrderErrorAdminMailer($e->getMessage()."-".$e->getTraceAsString());
         $oem->send();
     }
     catch (Exception $oeme) {
