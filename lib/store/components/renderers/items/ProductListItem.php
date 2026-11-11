@@ -69,8 +69,10 @@ class ProductDetails extends Action implements IDataResultConsumer
         }
 
         $availability = "https://schema.org/OutOfStock";
+        $this->priceLabel->setAttribute("no_stock");
         if ($this->data["stock_amount"]>0) {
             $availability = "https://schema.org/InStock";
+            $this->priceLabel->removeAttribute("no_stock");
         }
         $validity = date("Y-m-d", strtotime("+1 year"));
 
