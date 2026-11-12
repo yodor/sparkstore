@@ -57,51 +57,20 @@ class CopyProductRequestResponder extends RequestResponder
         $db = DBManager::Driver();
 
         try {
+            $db->transaction();
+
             $cbrow = $this->bean->getByID($this->item_id);
 
             //copy the product
-            unset($cbrow["prodID"]);
+            unset($cbrow[$this->bean->key()]);
             $lastID = $this->bean->insert($cbrow, $db);
             if ($lastID < 1) throw new Exception("Unable to copy the product: " . $db->getError());
 
-            //copy attributes
-            $pa = new ProductFeaturesBean();
-            $qry = $pa->queryField("prodID", $this->item_id);
-            $qry->exec();
-            while ($parow = $qry->next()) {
-                unset($parow[$pa->key()]);
-                $parow["prodID"] = $lastID;
-                if (!$pa->insert($parow, $db)) throw new Exception("Unable to copy features: " . $db->getError());
-            }
-            //copy photos
-            $pp = new ProductPhotosBean();
-            $qry = $pp->queryField("prodID", $this->item_id);
-            $qry->exec();
-            while ($pprow = $qry->next()) {
-                unset($pprow[$pp->key()]);
-                $pprow["prodID"] = $lastID;
-                // var_dump($pprow);
-                $lastppID = $pp->insert($pprow, $db);
-                if ($lastppID < 1) throw new Exception("Unable to copy photo: " . $db->getError());
-            }
-
-            $ca = new ClassAttributeValuesBean();
-            $qry = $ca->queryField("prodID", $this->item_id);
-            $qry->exec();
-            while ($carow = $qry->next()) {
-                unset($carow[$ca->key()]);
-                $carow["prodID"] = $lastID;
-
-                $lastcaID = $ca->insert($carow, $db);
-                if ($lastcaID < 1) throw new Exception("Unable to copy class attibutes: " . $db->getError());
-            }
+            $this->copyRows(new ProductFeaturesBean(), $lastID, $db, "Unable to copy features");
+            $this->copyRows(new ProductPhotosBean(), $lastID, $db, "Unable to copy photo");
+            $this->copyRows(new ClassAttributeValuesBean(), $lastID, $db, "Unable to copy class attributes");
 
             $db->commit();
-            $success = TRUE;
-            Session::SetAlert(tr("Продуктът е копиран успешно.") . tr("Кликнете") . " <a href='add.php?editID=$lastID&catID={$cbrow["catID"]}'>" . tr("тук") . "</a> " . tr("за редактиране"));
-
-            header("Location: {$this->cancel_url}");
-            exit;
         }
         catch (Exception $e) {
 
@@ -109,6 +78,39 @@ class CopyProductRequestResponder extends RequestResponder
             throw $e;
         }
 
+        Session::SetAlert(tr("Продуктът е копиран успешно.") . tr("Кликнете") . " <a href='add.php?editID=$lastID&catID={$cbrow["catID"]}'>" . tr("тук") . "</a> " . tr("за редактиране"));
+
+        header("Location: {$this->cancel_url}");
+        exit;
+    }
+
+    /**
+     * Copy all rows of '$bean' referencing the source product to product '$prodID'.
+     * All columns are selected (queryField alone selects only the key and prodID) and the rows are
+     * fetched completely before inserting: the query result is unbuffered and the inserts need the
+     * same (transaction) connection.
+     * @param DBTableBean $bean
+     * @param int $prodID
+     * @param DBDriver $db
+     * @param string $error
+     * @return void
+     * @throws Exception
+     */
+    protected function copyRows(DBTableBean $bean, int $prodID, DBDriver $db, string $error) : void
+    {
+        $qry = $bean->queryField("prodID", (string)$this->item_id, 0, ...$bean->columnNames());
+        $qry->exec();
+
+        $rows = array();
+        while ($row = $qry->next()) {
+            unset($row[$bean->key()]);
+            $row["prodID"] = $prodID;
+            $rows[] = $row;
+        }
+
+        foreach ($rows as $row) {
+            if ($bean->insert($row, $db) < 1) throw new Exception($error . ": " . $db->getError());
+        }
     }
 
 }
