@@ -8,10 +8,12 @@ $page->navigation()->clear();
 
 
 
-$current = new SparkFile("logo");
+$current = new SparkFile();
+$current->setFilename("logo");
 $current->setPath(Spark::Get(Config::CACHE_PATH));
 
-$origin_file = new SparkFile(Spark::Get(StoreConfig::LOGO_NAME));
+$origin_file = new SparkFile();
+$origin_file->setFilename(Spark::Get(StoreConfig::LOGO_NAME));
 $origin_file->setPath(Spark::Get(StoreConfig::LOGO_PATH));
 
 $image_input = DataInputFactory::Create(InputType::SESSION_IMAGE, "logo", "Upload logo image (450px x 90px)", 1);
