@@ -211,7 +211,7 @@ class UniCreditServiceStub {
 
         // NOTE: Added in cURL 7.19.1. Available since PHP 5.3.2. Requires CURLOPT_VERBOSE to be on to have an effect.
         //curl_setopt($request, CURLOPT_FAILONERROR, true);          // извежда допълнителна информация ако върнатия статус код е по-голям или равен на 400
-        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);      // верификация на сървърен сертификат, само за тестови постановки
+        //curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);    // верификация на сървърен сертификат, само за тестови постановки
         //curl_setopt($request, CURLOPT_HEADER, true);               // извежда информация за изпратените header-и
         //curl_setopt($request, CURLOPT_VERBOSE, true);              // извежда допълнителна информация за заявката
         //curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);          // верификация на локален сертификат, само за тестови постановки

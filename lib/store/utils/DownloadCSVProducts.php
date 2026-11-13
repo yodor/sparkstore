@@ -116,6 +116,8 @@ class ImagesExporter extends ProductExporter {
         $file->setFilename($zipName);
 
         $resp = new SparkHTTPResponse();
+        //admin export - never stored by browsers or proxies
+        $resp->setCacheControl("private, no-store");
         $resp->sendFile($file);
 
         ignore_user_abort(true);

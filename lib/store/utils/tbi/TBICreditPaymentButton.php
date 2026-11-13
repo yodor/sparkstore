@@ -39,7 +39,6 @@ class TBICreditPaymentButton extends CreditPaymentButton
         $ch = curl_init();
 
         if (!$ch) throw new Exception("cURL initialization failed");
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 6);
@@ -1011,7 +1010,6 @@ class TBICreditPaymentButton extends CreditPaymentButton
             </style>
             <?php
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, 'https://tbibank.support/function/getparameters.php?cid=' . $unicid);
             $paramstbi = json_decode(curl_exec($ch), true);
