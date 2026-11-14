@@ -9,9 +9,18 @@ $config->searchField = array("fullname", "email", "phone");
 $config->clearNavigation = true;
 
 $config->observer = function (TemplateEvent $event) {
-    if (!$event->isEvent(TemplateEvent::CONTENT_SETUP)) return;
     $content = $event->getSource();
     if (!($content instanceof BeanList)) throw new Exception("Incorrect event source - expecting BeanList");
-    $content->setAddEnabled(false);
-    $content->setEditEnabled(false);
+
+    if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
+        $content->setAddEnabled(false);
+        $content->setEditEnabled(false);
+    }
+    else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
+        //entered by visitors - shown as text
+        foreach (array("fullname", "phone", "email", "query") as $column) {
+            $cell = $content->tableView()->getColumn($column)->getCellRenderer();
+            if ($cell instanceof TableCell) $cell->setEscapeContents(true);
+        }
+    }
 };

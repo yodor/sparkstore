@@ -26,6 +26,11 @@ $config->observer = function (TemplateEvent $event) {
     }
     else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
         $view = $content->tableView();
+        //entered by the clients - shown as text
+        foreach (array("fullname", "email", "phone") as $column) {
+            $cell = $view->getColumn($column)->getCellRenderer();
+            if ($cell instanceof TableCell) $cell->setEscapeContents(true);
+        }
         $view->getColumn("date_signup")->setCellRenderer(new DateCell());
         $view->getColumn("last_active")->setCellRenderer(new DateCell());
         $view->getColumn("counter")->setCellRenderer(new NumericCell("%01.0f"));
