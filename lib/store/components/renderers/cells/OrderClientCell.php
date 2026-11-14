@@ -13,24 +13,25 @@ class OrderClientCell extends TableCell
         $this->clients = new UsersBean();
     }
 
+    /**
+     * Client data from the row ('client' = "fullname--email--phone" from OrderListSQL) - one query per row only
+     * when the row does not have it
+     * @var array|null
+     */
+    protected ?array $client = null;
+
     protected function renderImpl(): void
     {
-
-        $client = $this->clients->getByID($this->userID, "fullname", "email", "phone");
+        $client = $this->client ?? $this->clients->getByID($this->userID, "fullname", "email", "phone");
 
         echo "<div class='group client_data'>";
-        echo "<div class='item fullname'>";
-        echo "<label>" . tr("Име") . "</label>";
-        echo "<span>" . $client["fullname"] . "</span>";
-        echo "</div>";
-        echo "<div class='item email'>";
-        echo "<label>" . tr("E-Mail") . "</label>";
-        echo "<span>" . $client["email"] . "</span>";
-        echo "</div>";
-        echo "<div class='item phone'>";
-        echo "<label>" . tr("Телефон") . "</label>";
-        echo "<span>" . $client["phone"] . "</span>";
-        echo "</div>";
+        foreach (array("fullname" => tr("Име"), "email" => tr("E-Mail"), "phone" => tr("Телефон")) as $key => $label) {
+            echo "<div class='item $key'>";
+            echo "<label>" . $label . "</label>";
+            //entered by the client
+            echo "<span>" . htmlspecialchars((string)($client[$key] ?? "")) . "</span>";
+            echo "</div>";
+        }
         echo "</div>";
     }
 
@@ -40,6 +41,12 @@ class OrderClientCell extends TableCell
         parent::setData($data);
 
         $this->userID = (int)$data["userID"];
+
+        $this->client = null;
+        if (isset($data["client"])) {
+            $parts = explode("--", (string)$data["client"]);
+            $this->client = array("fullname" => $parts[0] ?? "", "email" => $parts[1] ?? "", "phone" => $parts[2] ?? "");
+        }
 
     }
 

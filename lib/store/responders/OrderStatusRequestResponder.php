@@ -2,9 +2,15 @@
 include_once("responders/RequestResponder.php");
 
 include_once("store/mailers/OrderStatusMailer.php");
+include_once("store/beans/OrdersBean.php");
 
 class OrderStatusRequestResponder extends RequestResponder
 {
+
+    /**
+     * Statuses an order can be set to
+     */
+    const array STATUSES = array(OrdersBean::STATUS_PROCESSING, OrdersBean::STATUS_SENT, OrdersBean::STATUS_COMPLETED, OrdersBean::STATUS_CANCELED);
 
     protected int $orderID = -1;
     protected string $status = "";
@@ -32,7 +38,8 @@ class OrderStatusRequestResponder extends RequestResponder
         $this->orderID = (int)$this->url->get("orderID")->value();
 
         if (!$this->url->contains("status")) throw new Exception("Order status not passed");
-        $this->status = $this->url->get("status")->value();
+        $this->status = (string)$this->url->get("status")->value();
+        if (!in_array($this->status, OrderStatusRequestResponder::STATUSES, true)) throw new Exception("Incorrect order status");
     }
 
     protected function processImpl() : void
@@ -58,7 +65,7 @@ class OrderStatusRequestResponder extends RequestResponder
 
             $db->commit();
 
-            Session::set("alert", tr("Статусът на поръчката беше обновен") . "<BR>" . tr("Потвърждаващ e-mail беше изпратен на клиента"));
+            Session::SetAlert(tr("Статусът на поръчката беше обновен") . "<BR>" . tr("Потвърждаващ e-mail беше изпратен на клиента"));
 
         }
         catch (Exception $e) {
@@ -69,4 +76,17 @@ class OrderStatusRequestResponder extends RequestResponder
 
     }
 
+    /**
+     * Item action setting the order of the row to '$status'
+     * @param string $title
+     * @param string $status
+     * @return Action
+     */
+    public function createStatusAction(string $title, string $status) : Action
+    {
+        $action = parent::createAction($title);
+        $action->getURL()->add(new DataParameter("orderID"));
+        $action->getURL()->add(new URLParameter("status", $status));
+        return $action;
+    }
 }

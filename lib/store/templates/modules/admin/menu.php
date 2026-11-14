@@ -19,6 +19,12 @@ $store->append(new MenuItem("Products", "products"));
 $store->append(new MenuItem("Promotions", "promos"));
 
 $orders = new MenuItem("Orders", "orders");
+$orders->append(new MenuItem("Активни", "active"));
+$orders->append(new MenuItem("Изпратени", "sent"));
+$orders->append(new MenuItem("Завършени", "completed"));
+$orders->append(new MenuItem("Отказани", "canceled"));
+$orders->append(new MenuItem("Всички", "all"));
+$orders->append(new MenuItem("Доставки", "delivery"));
 $clients = new MenuItem("Clients", "clients");
 
 $menu->prepend($clients);
