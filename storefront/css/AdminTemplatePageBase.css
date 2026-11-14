@@ -38,3 +38,158 @@ body[path='/store/products'] .actions .Action[action='import_update'] {
 body[path='/store/products'] .Cell .ImageList .Image {
     max-height: 64px;
 }
+
+/* carried over from the old admin (AdminPage_base.css) */
+
+/* products list: search and filters in one row, export actions as round buttons */
+body[path='/store/products'] .actions .Action[action='google_merchant'],
+body[path='/store/products'] .actions .Action[action='full'],
+body[path='/store/products'] .actions .Action[action='images'],
+body[path='/store/products'] .actions .Action[action='export_update'],
+body[path='/store/products'] .actions .Action[action='import_update'] {
+    border-radius: 50%;
+    border-color: black;
+    border-style: solid;
+}
+
+/* product and category editors - wide text fields */
+.FormRenderer[name*='ProductInputForm'] .InputField.TextField INPUT[name='product_name'],
+.FormRenderer[name='ProductCategoryInputForm'] .InputField.TextField INPUT {
+    width: 50em;
+    max-width: 100%;
+}
+.FormRenderer[name*='ProductInputForm'] .InputField.TextArea TEXTAREA,
+.FormRenderer[name='ProductCategoryInputForm'] .InputField.TextArea TEXTAREA {
+    width: 50em;
+    max-width: 100%;
+    height: 6em;
+}
+
+/* product class attributes */
+.FormRenderer[layout="VBox"][name] .ClassAttributeField .FieldElements {
+    grid-template-columns: auto 1fr;
+}
+.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_value'] {
+    min-width: 300px;
+}
+.DataIteratorField {
+    box-sizing: border-box;
+    padding: 20px;
+}
+.DataIteratorField .Caption {
+    text-align: right;
+}
+.DataIteratorItem.SourceAttributeItem {
+    margin-bottom: 10px;
+}
+.DataIteratorItem.SourceAttributeItem .SourceAttributeValue {
+    background-color: white;
+    border-top: 1px solid #b7b7b7;
+    border-left: 1px solid #b7b7b7;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    margin: 0;
+    padding: 0.2em;
+    width: 100%;
+}
+
+.FormRenderer[name='SectionChooserForm'] SELECT {
+    min-height: 100px;
+    min-width: 250px;
+}
+FORM[name='MarketingConfigForm'] .InputField.TextField INPUT {
+    flex-grow: 1;
+}
+
+.group .item .label:after {
+    content: ": ";
+}
+.group .FormValueList .item .label:after {
+    content: "";
+}
+
+/* logo */
+body[path='/content/logo'] .logo_header {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+body[path='/content/logo'] .logo_header LABEL {
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    display: inline-block;
+}
+body[path='/content/logo'] .logo_header IMG {
+    display: block;
+    max-height: 90px;
+}
+body[path='/content/logo'] .logo_header .ColorButton {
+    margin-top: 1em;
+    display: inline-block;
+}
+
+/* order details */
+body[path='/orders/details'] .panel {
+    display: block;
+}
+body[path='/orders/details'] .panel.order_items .group {
+    display: block;
+}
+body[path='/orders/details'] .group {
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+}
+body[path='/orders/details'] .viewport {
+    display: table;
+    border-collapse: separate;
+    border: 1px solid #cccccc;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+body[path='/orders/details'] .viewport .line {
+    display: table-row;
+}
+body[path='/orders/details'] .viewport .line SPAN {
+    display: table-cell;
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid #cccccc;
+    text-align: center;
+}
+body[path='/orders/details'] .viewport .line .item {
+    display: table-cell;
+    vertical-align: middle;
+    border: 1px solid #cccccc;
+    padding: 5px;
+}
+body[path='/orders/details'] .viewport .line .item.pos,
+body[path='/orders/details'] .viewport .line .item.photo,
+body[path='/orders/details'] .viewport .line .item.qty {
+    text-align: center;
+}
+body[path='/orders/details'] .viewport .line .item.photo IMG {
+    min-width: 100px;
+    min-height: 100px;
+}
+body[path='/orders/details'] .viewport .line .item.price,
+body[path='/orders/details'] .viewport .line .item.amount {
+    text-align: right;
+}
+
+/* orders lists */
+body[path^='/orders/'] .TableView .Cell[column='order_date'],
+body[path^='/orders/'] .TableView .Cell[column='userID'] {
+    white-space: nowrap;
+}
+body[path='/orders/details'] .group .item LABEL:after {
+    content: ": ";
+}
+/* print and send confirmation have no icons - shown as text buttons */
+body[path='/orders/details'] .actions_title .Action:not([action='Back']):not([action='Help']) {
+    width: auto;
+    color: inherit;
+    padding: 0 0.7em;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}

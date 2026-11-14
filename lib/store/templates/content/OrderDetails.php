@@ -142,8 +142,12 @@ class OrderDetails extends TemplateContent
             echo "</div></div>";
 
             $deliveryPrice = (float)$order["delivery_price"];
+            $discount = (float)($order["discount_amount"] ?? 0);
             echo "<div class='group'>";
-            echo "<div class='item products_total'><label>" . tr("Продукти общо") . "</label><span>" . formatPrice($order["total"] - max($deliveryPrice, 0)) . "</span></div>";
+            echo "<div class='item products_total'><label>" . tr("Продукти общо") . "</label><span>" . formatPrice($order["total"] - max($deliveryPrice, 0) + $discount) . "</span></div>";
+            if ($discount > 0) {
+                echo "<div class='item discount_amount'><label>" . tr("Отстъпки") . "</label><span>" . formatPrice($discount) . "</span></div>";
+            }
             if ($deliveryPrice > 0) $deliveryText = formatPrice($deliveryPrice);
             else if ($deliveryPrice == 0) $deliveryText = tr("Безплатна");
             else $deliveryText = tr("Според тарифния план на куриера");
