@@ -1,2 +1,0 @@
-<?php
-TemplateFactory::RenderPage("ContentStoreConfig");

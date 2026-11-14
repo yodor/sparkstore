@@ -52,13 +52,11 @@ body[path='/store/products'] .actions .Action[action='import_update'] {
     border-style: solid;
 }
 
-/* product and category editors - wide text fields */
-.FormRenderer[name*='ProductInputForm'] .InputField.TextField INPUT[name='product_name'],
+/* category editor - wide text fields (the product editor keeps the default sizes, as in the old admin) */
 .FormRenderer[name='ProductCategoryInputForm'] .InputField.TextField INPUT {
     width: 50em;
     max-width: 100%;
 }
-.FormRenderer[name*='ProductInputForm'] .InputField.TextArea TEXTAREA,
 .FormRenderer[name='ProductCategoryInputForm'] .InputField.TextArea TEXTAREA {
     width: 50em;
     max-width: 100%;

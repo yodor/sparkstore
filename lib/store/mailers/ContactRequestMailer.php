@@ -46,7 +46,7 @@ class ContactRequestMailer extends Mailer
 
         $message .= "За достъп до заявките натиснете връзката по долу";
         $message .= "\r\n";
-        $contactsURL = new URL(Spark::Get(Config::ADMIN_LOCAL) . "/contact_requests/list.php");
+        $contactsURL = new URL(Spark::Get(Config::ADMIN_LOCAL) . "/contacts");
         $message .= "<a href='{$contactsURL->fullURL()}'>".tr("Списък заявки")."</a>";
         $message .= "\r\n";
 

@@ -1,9 +1,0 @@
-<?php
-include_once("components/templates/admin/FAQItemsListPage.php");
-include_once("beans/FAQItemsBean.php");
-
-$cmp = new FAQItemsListPage();
-
-$cmp->getPage()->navigation()->clear();
-
-$cmp->render();

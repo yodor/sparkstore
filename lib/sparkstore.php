@@ -28,9 +28,6 @@ Spark::Set("UNICREDIT_KEY_FILE", Spark::Get("CACHE_PATH")."/../certs/avalon_priv
 Spark::Set("UNICREDIT_CERT_FILE", Spark::Get("CACHE_PATH")."/../certs/avalon_cert.pem");
 //Spark::Set("TBI_UID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
-include_once("utils/TemplateFactory.php");
-TemplateFactory::AddTemplateLocation("class/templates/admin");
-TemplateFactory::AddTemplateLocation("store/templates/admin");
 
 
 //read local store settings and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
