@@ -1,69 +1,42 @@
 <?php
+//
+// admin module - store menu, included after the core menu.php: store sections first, then the core
+// menu (Content, Settings), contacts last
+//
 include_once("objects/events/TemplateEvent.php");
 include_once("utils/menu/MenuItem.php");
 
-$menu = new MenuItemList();
+$menu = SparkTemplateAdminPage::Menu() ?? new MenuItemList();
 
 $store = new MenuItem("Store", "store");
-$menu->append($store);
-//store
-$item = new MenuItem("Sections", "sections");
-$store->append($item);
-
-$item = new MenuItem("Brands", "brands");
-$store->append($item);
-
-$item = new MenuItem("Categories", "categories");
-$store->append($item);
-
-$item = new MenuItem("Classes", "classes");
-$store->append($item);
-
-$item = new MenuItem("Attributes", "attributes");
-$store->append($item);
-
-$item = new MenuItem("Options", "options");
-$store->append($item);
-
-$item = new MenuItem("Products", "products");
-$store->append($item);
-
-$item = new MenuItem("Promotions", "promos");
-$store->append($item);
-//
+$store->append(new MenuItem("Sections", "sections"));
+$store->append(new MenuItem("Brands", "brands"));
+$store->append(new MenuItem("Categories", "categories"));
+$store->append(new MenuItem("Classes", "classes"));
+$store->append(new MenuItem("Attributes", "attributes"));
+$store->append(new MenuItem("Options", "options"));
+$store->append(new MenuItem("Products", "products"));
+$store->append(new MenuItem("Promotions", "promos"));
 
 $orders = new MenuItem("Orders", "orders");
-$menu->append($orders);
-//
 $clients = new MenuItem("Clients", "clients");
-$menu->append($clients);
-//
-$content = new MenuItem("Content", "content");
-$menu->append($content);
-//
-$config = new MenuItem("Config", "config");
-$content->append($config);
 
-$baseConfig = new MenuItem("Base", "base.php", "list");
-$config->append($baseConfig);
+$menu->prepend($clients);
+$menu->prepend($orders);
+$menu->prepend($store);
 
-$mrktConfig = new MenuItem("Marketing", "marketing.php", "list");
-$config->append($mrktConfig);
+//store configuration under Content
+foreach ($menu->toArray() as $item) {
+    if ($item instanceof MenuItem && strcmp($item->getHref(), "content") === 0) {
+        $config = new MenuItem("Config", "config");
+        $config->append(new MenuItem("Base", "base", "list"));
+        $config->append(new MenuItem("Marketing", "marketing", "list"));
+        $item->prepend($config);
+    }
+}
 
-//
-$settings = new MenuItem("Settings", "settings");
-$menu->append($settings);
-
-$admins = new MenuItem("Admins", "admins");
-$settings->append($admins);
-
-$langs = new MenuItem("Languages", "languages");
-$settings->append($langs);
-//
 $contacts = new MenuItem("Contacts", "contacts");
+$contacts->append(new MenuItem("Addresses", "addresses", "code-class.png"));
 $menu->append($contacts);
-
-$addresses = new MenuItem("Addresses", "addresses", "code-class.png");
-$contacts->append($addresses);
 
 SparkTemplateAdminPage::SetMenu($menu);

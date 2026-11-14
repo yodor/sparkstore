@@ -1,2 +1,0 @@
-<?php
-$config = TemplateConfig::Password();

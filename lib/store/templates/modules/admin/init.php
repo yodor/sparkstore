@@ -1,7 +1,8 @@
 <?php
+//
+// admin module - store part, included after the core init.php
+//
+include_once("store/pages/AdminTemplatePageBase.php");
 
-$config = Module::Active();
-$config->pageClass = AdminTemplatePageBase::class;
-
-//reachable without login - every other path redirects to login before its path file runs
-$config->addPublicPath("login", "password");
+$module = Module::Active();
+$module->pageClass = AdminTemplatePageBase::class;
