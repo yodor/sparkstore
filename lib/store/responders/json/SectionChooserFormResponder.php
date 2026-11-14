@@ -6,6 +6,15 @@ include_once("store/beans/ProductSectionsBean.php");
 
 class SectionChooserFormResponder extends JSONFormResponder
 {
+
+    /**
+     * Early processing - everything is read from the request
+     */
+    public static function EarlyProcessing() : bool
+    {
+        return true;
+    }
+
     protected int $prodID = -1;
 
     public function __construct()

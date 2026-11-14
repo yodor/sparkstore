@@ -6,6 +6,15 @@ include_once("store/forms/ImportUpdateChooserForm.php");
 class ImportUpdateFormResponder extends JSONFormResponder
 {
 
+    /**
+     * Early processing - everything is read from the request
+     */
+    public static function EarlyProcessing() : bool
+    {
+        return true;
+    }
+
+
     public function __construct()
     {
         parent::__construct();

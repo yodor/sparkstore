@@ -32,6 +32,8 @@ foreach ($menu->toArray() as $item) {
         $config->append(new MenuItem("Base", "base", "list"));
         $config->append(new MenuItem("Marketing", "marketing", "list"));
         $item->prepend($config);
+        $item->append(new MenuItem("Photo Gallery", "photogallery"));
+        $item->append(new MenuItem("Logo", "logo"));
     }
 }
 
