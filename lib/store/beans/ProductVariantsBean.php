@@ -43,4 +43,25 @@ class ProductVariantsBean extends DBTableBean
         $query->stmt->from()->join("product_variant_photos pvp")->on("pvp.pvID = pv.pvID ");
         return $query;
     }
+
+    /**
+     * Display name of variant '$pvID': "<option name> - <option value>"
+     * @param int $pvID
+     * @return string Empty string if the variant does not exist
+     * @throws Exception
+     */
+    public function variantName(int $pvID) : string
+    {
+        $query = $this->query("vo.option_name", "vo.option_value");
+        $query->stmt->from("product_variants pv")->join("variant_options vo")->on("vo.voID = pv.voID");
+        $query->stmt->where()->match("pv.pvID", $pvID);
+        $query->stmt->limit(1);
+        $query->exec();
+        $name = "";
+        if ($result = $query->nextResult()) {
+            $name = $result->get("option_name") . " - " . $result->get("option_value");
+        }
+        $query->free();
+        return $name;
+    }
 }
