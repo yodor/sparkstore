@@ -127,17 +127,6 @@ class ProductDetailsItem extends Container implements IHeadContents
         return $result;
     }
 
-    public static function CleanCacheEntry(int $prodID) : void
-    {
-
-        $componentEntryName = basename(ProductURL::$urlProduct)."-".ProductDetailsItem::class."--".$prodID;
-        $entryName = ProductDetailsItem::class . "-" . Spark::Hash($componentEntryName);
-
-        $cacheEntry = CacheFactory::PageCacheEntry($entryName);
-        $cacheEntry->remove();
-
-    }
-
     /**
      * Post CTOR initialization. Call before startRender of page class
      * @return void

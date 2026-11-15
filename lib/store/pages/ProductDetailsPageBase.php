@@ -54,6 +54,9 @@ class ProductDetailsPageBase extends ProductPageBase
 
         $this->item = $this->createDetailsItem();
 
+        //one address per product: /products/<prodID>/<current name slug>/ - other addresses get a 301
+        $this->redirectCanonical($this->item->getURL());
+
         $this->_main->content()->setTagName("main");
         $this->_main->content()->setRole("main");
 

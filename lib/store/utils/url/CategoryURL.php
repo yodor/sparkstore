@@ -8,14 +8,10 @@ class CategoryURL extends ProductListURL
     public function __construct(?URL $other=null)
     {
         parent::__construct();
-        if (Spark::GetBoolean(StoreConfig::CATEGORY_ITEM_SLUG)) {
-            $this->fromString(Spark::Get(Config::LOCAL).self::$urlCategorySlug);
-            $this->add(new PathParameter("catID", "catID", false));
-            $this->add(new PathParameter("category_name", "category_name", true));
-        }
-        else {
-            $this->add(new DataParameter("catID"));
-        }
+        //<LOCAL>/products/category/<catID>/<category name slug>/ (products/.htaccess -> list.php?catID=)
+        $this->fromString(Spark::Get(Config::LOCAL).self::$urlCategorySlug);
+        $this->add(new PathParameter("catID", "catID", false));
+        $this->add(new PathParameter("category_name", "category_name", true));
 
         if (!is_null($other)) {
             $this->copyParametersFrom($other, false);

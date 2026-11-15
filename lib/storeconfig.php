@@ -45,17 +45,6 @@ class StoreConfig {
     const string DEFAULT_CURRENCY_SYMBOL = "DEFAULT_CURRENCY_SYMBOL";
 
     /**
-     * Slugify product links
-     * Default(bool): true
-     */
-    const string PRODUCT_ITEM_SLUG = "PRODUCT_ITEM_SLUG";
-    /**
-     * Slugify category links
-     * Default(bool): true
-     */
-    const string CATEGORY_ITEM_SLUG = "CATEGORY_ITEM_SLUG";
-
-    /**
      * Show double prices - convert from default currency to DOUBLE_PRICE_CURRENCY using DOUBLE_PRICE_RATE
      * Default(bool): false
      */

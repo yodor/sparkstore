@@ -18,8 +18,6 @@ Spark::Set(StoreConfig::DOUBLE_PRICE_RATE, (1/1.95583));
 
 //slugified URLs
 Spark::Set(Config::STORAGE_ITEM_SLUG, TRUE);
-Spark::Set(StoreConfig::CATEGORY_ITEM_SLUG, TRUE);
-Spark::Set(StoreConfig::PRODUCT_ITEM_SLUG, TRUE);
 
 Spark::Set(StoreConfig::ORDER_EMAIL, Spark::Get(Config::DEFAULT_SERVICE_EMAIL));
 
@@ -30,7 +28,7 @@ Spark::Set("UNICREDIT_CERT_FILE", Spark::Get("CACHE_PATH")."/../certs/avalon_cer
 
 
 
-//read local store settings and override ie ORDER_EMAIL, DEFAULT_CURRENCY, PRODUCT_ITEM_SLUG etc
+//read local store settings and override ie ORDER_EMAIL, DEFAULT_CURRENCY etc
 if (file_exists(APP_PATH."/config/store.php")) {
     include_once(APP_PATH."/config/store.php");
 }
