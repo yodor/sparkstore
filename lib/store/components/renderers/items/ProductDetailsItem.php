@@ -106,7 +106,9 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->initDescriptionTab($this->tabs);
         $this->initHowToOrderTab($this->tabs);
 
-        $this->setCacheable(true);
+        //not cached: measured on the live bookshop it renders as fast uncached (~0.09 s), and price / stock
+        //must be current - a site can still enable it with setCacheable(true)
+        $this->setCacheable(false);
     }
 
     public function getGallery() : SellableImageGallery
