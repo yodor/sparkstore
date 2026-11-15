@@ -62,7 +62,10 @@ class ProductPageBase extends StorePage
         $this->sections = new SectionsBean();
         $this->breadcrumb = new BreadcrumbList();
 
-        $this->head()->addCanonicalParameter("page");
+        //the canonical address keeps the page from the second page on (?page=2 ...) - page 1 has none
+        if ((int)($_GET[Paginator::KEY_PAGE] ?? 0) > 1) {
+            $this->head()->addCanonicalParameter(Paginator::KEY_PAGE);
+        }
     }
 
     public function initialize() : void
