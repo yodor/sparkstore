@@ -6,6 +6,7 @@ include_once("iterators/SelectQuery.php");
 
 include_once("store/components/renderers/items/NavigationListItem.php");
 include_once("store/beans/SellableProducts.php");
+include_once("store/responders/json/NavigationTapeResponder.php");
 
 abstract class NavigationList extends Container
 {
@@ -49,6 +50,31 @@ abstract class NavigationList extends Container
     //If this is false captions will be rendered only - even if not tape items or images
     public bool $disableEmptyItems = true;
 
+    /**
+     * Items rendered with their product tape in the page - the tapes of the following items are loaded when
+     * they scroll into view (NavigationTapeResponder, storefront/js/NavigationTapes.js). -1: all tapes in the page.
+     * @var int
+     */
+    public int $eagerItems = -1;
+
+    /**
+     * Index of this list in the page responder
+     * @var int
+     */
+    protected int $listIndex = -1;
+
+    /**
+     * One responder for all navigation lists of the page
+     * @var NavigationTapeResponder|null
+     */
+    protected static ?NavigationTapeResponder $tapeResponder = null;
+
+    /**
+     * Wraps one tape in the responder output - <div class='TapeResult' item='<value>'>
+     * @var Container|null
+     */
+    protected ?Container $tapeResult = null;
+
     public function __construct()
     {
         parent::__construct(false);
@@ -84,6 +110,11 @@ abstract class NavigationList extends Container
             $this->createImagesColumn($select);
         };
         $this->setCacheable(true);
+
+        if (is_null(NavigationList::$tapeResponder)) {
+            NavigationList::$tapeResponder = new NavigationTapeResponder();
+        }
+        $this->listIndex = NavigationList::$tapeResponder->addList($this);
     }
 
     public function getCacheName() : string
@@ -195,6 +226,57 @@ abstract class NavigationList extends Container
         return $query->table() ? $query->table() . "." . $query->key() : $query->key();
     }
 
+    /**
+     * Set up the tape of the current item: up to tapeItemsLimit (random) products, read by key
+     * @return int number of tape products - 0 disables the tape
+     */
+    protected function prepareTape() : int
+    {
+        $total = 0;
+        $query = ($this->createTapeIterator)();
+        //one query picks the keys, the tape then reads those rows (replaces COUNT + random OFFSET)
+        if ($query instanceof SelectQuery) {
+            $keys = $this->randomKeys($query);
+            $total = count($keys);
+            if ($total > 0) {
+                //same query restricted to the picked keys - reads only those rows
+                $query->stmt->limitClear();
+                $query->stmt->where()->expression($this->qualifiedKey($query) . " IN (" . implode(",", $keys) . ")");
+                $query->execLateLookup = false;
+                $this->item->getTape()->setIterator($query);
+            }
+        }
+        $this->item->getTape()->setRenderEnabled($total > 0);
+        return $total;
+    }
+
+    /**
+     * Render the tapes of the items with value in '$values' (NavigationTapeResponder) - each wrapped in
+     * <div class='TapeResult' item='<value>'>, empty for an item without products. Unknown values are ignored.
+     * @param array<string> $values
+     * @return void
+     */
+    public function renderTapes(array $values) : void
+    {
+        if (is_null($this->tapeResult)) {
+            $this->tapeResult = new Container(false);
+            $this->tapeResult->setComponentClass("TapeResult");
+        }
+
+        $this->iterator->exec();
+        while ($result = $this->iterator->next()) {
+            $this->item->setData($result);
+            $value = (string)$this->item->getValue();
+            if (!in_array($value, $values, true)) continue;
+
+            $this->prepareTape();
+            $this->tapeResult->setAttribute("item", $value);
+            $this->tapeResult->items()->clear();
+            $this->tapeResult->items()->append($this->item->getTape());
+            $this->tapeResult->render();
+        }
+    }
+
     protected function renderItems() : void
     {
         //element like sections, categories other collections that might have images/banners and/or related products/items to show
@@ -210,38 +292,23 @@ abstract class NavigationList extends Container
             //update any previous rendering state
             $this->item->setRenderEnabled(true);
 
-            //for each element of the NavigationList
-            $query = ($this->createTapeIterator)();
-
-            //total items for ProductsTape to render
-            $total = -1;
-
-            //we want tape items - one query picks up to tapeItemsLimit random keys, the tape then reads
-            //those rows by primary key (replaces COUNT + random OFFSET: two scans per item)
-            if ($query instanceof SelectQuery) {
-                $keys = $this->randomKeys($query);
-                $total = count($keys);
-                if ($total > 0) {
-                    //same query restricted to the picked keys - reads only those rows
-                    $query->stmt->limitClear();
-                    $query->stmt->where()->expression($this->qualifiedKey($query) . " IN (" . implode(",", $keys) . ")");
-                    $query->execLateLookup = false;
-
-                    $this->item->getTape()->setIterator($query);
-                    //tape iterator is set enable tape rendering
-                    $this->item->getTape()->setRenderEnabled(true);
+            //tapes after the first eagerItems are loaded when they scroll into view
+            if ($this->eagerItems >= 0 && $position >= $this->eagerItems) {
+                $this->item->getTape()->setRenderEnabled(false);
+                if (($this->createTapeIterator)() instanceof SelectQuery) {
+                    $this->item->setLazyTape(NavigationList::$tapeResponder->getName(), $this->listIndex);
+                }
+                else {
+                    $this->item->clearLazyTape();
+                    if ($this->item->bannersCount() < 1 && $this->disableEmptyItems) continue;
                 }
             }
-
-            //tape iterator is empty or no iterator at all created
-            if ($total < 1) {
-                //NavigationListItem might have images/banners - disable only tape items
-                $this->item->getTape()->setRenderEnabled(false);
+            else {
+                $this->item->clearLazyTape();
+                $total = $this->prepareTape();
+                //no rendering for this NavigationListItem skip position update too
+                if ($total < 1 && $this->item->bannersCount() < 1 && $this->disableEmptyItems) continue;
             }
-
-            //no rendering for this NavigationListItem skip position update too
-            if ($total<1 && $this->item->bannersCount()<1 && $this->disableEmptyItems) continue;
-
 
             //render the NavigationListItem
             $this->item->render();

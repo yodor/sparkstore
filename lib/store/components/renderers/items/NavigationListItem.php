@@ -66,6 +66,7 @@ class NavigationListItem extends DataIteratorItem
     protected StorageItem $si;
 
     protected ProductsTape $tape;
+    protected Component $tapePlaceholder;
 
     protected Container $banners;
     protected Container $viewport;
@@ -123,9 +124,16 @@ class NavigationListItem extends DataIteratorItem
         $this->image->setStorageItem($this->si);
 
         $this->tape = new ProductsTape();
-        $this->tape->setCacheable(true);
+        //random products - every render is different, a cache entry would never be read again
+        $this->tape->setCacheable(false);
         $this->tape->getCaptionComponent()->setRenderEnabled(false);
         $this->items()->append($this->tape);
+
+        //stands in for the tape until it is loaded (NavigationList::$eagerItems)
+        $this->tapePlaceholder = new Component(false);
+        $this->tapePlaceholder->setComponentClass("TapePlaceholder");
+        $this->tapePlaceholder->setRenderEnabled(false);
+        $this->items()->append($this->tapePlaceholder);
 
     }
 
@@ -135,6 +143,7 @@ class NavigationListItem extends DataIteratorItem
         $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/js/SwipeListener.js";
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageSlider.js";
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageFader.js";
+        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/NavigationTapes.js";
         return $arr;
     }
 
@@ -223,6 +232,26 @@ class NavigationListItem extends DataIteratorItem
         $this->tape->setClassName("item {$this->label}");
         $this->tape->setSchemaDescription($this->label);
 
+    }
+
+    /**
+     * Render a placeholder instead of the tape - storefront/js/NavigationTapes.js loads the tape through
+     * '$responder' when the item scrolls into view
+     * @param string $responder responder name
+     * @param int $listIndex index of the navigation list in the responder
+     * @return void
+     */
+    public function setLazyTape(string $responder, int $listIndex) : void
+    {
+        $this->tapePlaceholder->setAttribute("responder", $responder);
+        $this->tapePlaceholder->setAttribute("list", (string)$listIndex);
+        $this->tapePlaceholder->setAttribute("item", (string)$this->getValue());
+        $this->tapePlaceholder->setRenderEnabled(true);
+    }
+
+    public function clearLazyTape() : void
+    {
+        $this->tapePlaceholder->setRenderEnabled(false);
     }
 
     public function getTape() : ProductsTape

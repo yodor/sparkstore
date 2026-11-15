@@ -111,3 +111,7 @@ ImageFader moves the first as last during initialize*/
 }
 
 /*fading banners*/
+/* keeps the place of a tape that is loaded later - no jump when it arrives */
+.NavigationListItem .TapePlaceholder {
+    min-height: 22em;
+}
