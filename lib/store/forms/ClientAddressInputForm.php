@@ -50,17 +50,4 @@ class ClientAddressInputForm extends InputForm
     {
         return $this->fast_order;
     }
-//    public function renderPlain()
-//    {
-//        echo "<div class='ClientAddressList'>";
-//
-//        foreach ($this->getInputs() as $index => $field) {
-//            echo "<div class='address_item'>";
-//            echo "<label>" . tr($field->getLabel()) . ": </label>";
-//            echo "<span>" . strip_tags(stripslashes($field->getValue())) . "</span>";
-//            echo "</div>";
-//        }
-//
-//        echo "</div>";
-//    }
 }

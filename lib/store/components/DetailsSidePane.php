@@ -225,11 +225,14 @@ class DetailsSidePane extends Container
         $grp = new SidePaneGroup();
         $grp->setClassName("caption");
 
-        $grp->buffer()->start();
-        echo "<div class='item product_name'>";
-        echo "<h1 class='value'>". $this->sellable->getTitle() . "</h1>";
-        echo "</div>";
-        $grp->buffer()->end();
+        $item = new Container(false);
+        $item->setComponentClass("item product_name");
+        $title = new Component(false);
+        $title->setTagName("h1");
+        $title->setComponentClass("value");
+        $title->setText($this->sellable->getTitle());
+        $item->items()->append($title);
+        $grp->items()->append($item);
 
         $this->items()->append($grp);
     }

@@ -1,6 +1,6 @@
 <?php
 include_once("components/Container.php");
-include_once("components/ClosureComponent.php");
+include_once("components/LabelSpan.php");
 include_once("components/Image.php");
 include_once("storage/StorageItem.php");
 include_once("store/beans/OrdersBean.php");
@@ -10,40 +10,6 @@ include_once("store/forms/ClientAddressInputForm.php");
 include_once("store/forms/InvoiceDetailsInputForm.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/utils/url/ProductURL.php");
-
-/**
- * One labelled value of an order: <div class='item <name>'><span class='label'>..</span><span>..</span></div>
- */
-class OrderViewField extends Container
-{
-    protected Component $label;
-    protected Component $value;
-
-    public function __construct(string $name, string $label)
-    {
-        parent::__construct(false);
-        $this->setComponentClass("item " . $name);
-
-        $this->label = new Component(false);
-        $this->label->setTagName("span");
-        $this->label->setComponentClass("label");
-        $this->label->setText(tr($label));
-        $this->items()->append($this->label);
-
-        $this->value = new Component(false);
-        $this->value->setTagName("span");
-        $this->value->setComponentClass("");
-        $this->items()->append($this->value);
-    }
-
-    /**
-     * @return Component the value - setText() for data, setContents() for prepared HTML
-     */
-    public function value() : Component
-    {
-        return $this->value;
-    }
-}
 
 /**
  * Order details shown in the admin (order details page) and to the client (account order details):
@@ -112,21 +78,37 @@ class OrderView extends Container
         return $group;
     }
 
-    protected function field(Container $group, string $name, string $label) : OrderViewField
+    /**
+     * A labelled value: <div class='item <name>'><span class='label'>..</span><span>..</span></div>
+     * @param Container $group
+     * @param string $name
+     * @param string $label translated with tr()
+     * @return Component the value - setText() for data, setContents() for prepared HTML
+     */
+    protected function field(Container $group, string $name, string $label) : Component
     {
-        $field = new OrderViewField($name, $label);
+        $field = new LabelSpan();
+        $field->setComponentClass("item " . $name);
+        $field->label()->setText(tr($label));
         $group->items()->append($field);
-        return $field;
+        $this->lastField = $field;
+        return $field->span();
     }
+
+    /**
+     * The LabelSpan created by the last field() call - for appending more components to it
+     * @var LabelSpan|null
+     */
+    protected ?LabelSpan $lastField = null;
 
     protected function createSummary() : Container
     {
         $order = $this->order;
         $group = $this->group("summary");
 
-        $this->field($group, "order_num", "Номер на поръчка")->value()->setText((string)$order["orderID"]);
-        $this->field($group, "order_date", "Дата")->value()->setText((string)$order["order_date"]);
-        $this->field($group, "status", "Състояние")->value()->setText(tr((string)$order["status"]));
+        $this->field($group, "order_num", "Номер на поръчка")->setText((string)$order["orderID"]);
+        $this->field($group, "order_date", "Дата")->setText((string)$order["order_date"]);
+        $this->field($group, "status", "Състояние")->setText(tr((string)$order["status"]));
 
         $delivery = new Delivery();
         $delivery->setSelectedCourier($order["delivery_courier"]);
@@ -134,41 +116,39 @@ class OrderView extends Container
         $courier->setSelectedOption($order["delivery_option"]);
         $option = $courier->getSelectedOption();
 
-        $this->field($group, "delivery_courier", "Куриер")->value()->setText($courier->getTitle());
-        $this->field($group, "delivery_option", "Начин на доставка")->value()->setText($option->getTitle());
+        $this->field($group, "delivery_courier", "Куриер")->setText($courier->getTitle());
+        $this->field($group, "delivery_option", "Начин на доставка")->setText($option->getTitle());
 
         $address = $this->field($group, "delivery_address", "Адрес за доставка");
         if ($option->getID() == DeliveryOption::USER_ADDRESS) {
-            //the address form prints its values (tags stripped) - InputForm::renderPlain
-            $xml = (string)$order["delivery_address"];
-            $address->items()->append(new ClosureComponent(function () use ($xml) {
-                try {
-                    $form = new ClientAddressInputForm();
-                    $form->unserializeXML($xml);
-                    $form->renderPlain();
-                }
-                catch (Exception $e) {
-                    echo Spark::AttributeValue($e->getMessage());
-                }
-            }, false));
+            try {
+                $form = new ClientAddressInputForm();
+                $form->unserializeXML((string)$order["delivery_address"]);
+                $this->lastField->items()->append($form->CreatePlainRenderer());
+            }
+            catch (Exception $e) {
+                $address->setText($e->getMessage());
+            }
         }
         else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
-            $address->value()->setComponentClass("ClientAddressList");
-            $address->value()->setContents(nl2br(Spark::AttributeValue((string)$order["delivery_address"])));
+            $address->setComponentClass("ClientAddressList");
+            $address->setContents(nl2br(Spark::AttributeValue((string)$order["delivery_address"])));
         }
 
         $invoice = $this->field($group, "require_invoice", "Фактуриране");
-        $invoice->value()->setText(($order["require_invoice"] > 0) ? tr("Да") : tr("Не"));
+        $invoice->setText(($order["require_invoice"] > 0) ? tr("Да") : tr("Не"));
         if ($this->invoiceDetailsEnabled && $order["require_invoice"] > 0) {
-            $userID = (int)$order["userID"];
-            $invoice->items()->append(new ClosureComponent(function () use ($userID) {
-                $invoices = new InvoiceDetailsBean();
-                $result = $invoices->getByRef("userID", $userID, $invoices->key());
-                if (!$result) return;
+            $invoices = new InvoiceDetailsBean();
+            try {
+                //throws when the client has no invoice details (deleted since the order)
+                $result = $invoices->getByRef("userID", (int)$order["userID"], $invoices->key());
                 $form = new InvoiceDetailsInputForm();
                 $form->loadBeanData($result[$invoices->key()], $invoices);
-                $form->renderPlain();
-            }, false));
+                $this->lastField->items()->append($form->CreatePlainRenderer());
+            }
+            catch (Exception $e) {
+                Debug::ErrorLog("Invoice details of order {$order["orderID"]}: " . $e->getMessage());
+            }
         }
 
         return $group;
@@ -252,16 +232,16 @@ class OrderView extends Container
         $deliveryPrice = (float)$order["delivery_price"];
         $discount = (float)($order["discount_amount"] ?? 0);
 
-        $this->field($group, "products_total", "Продукти общо")->value()->setContents(formatPrice($order["total"] - max($deliveryPrice, 0) + $discount));
+        $this->field($group, "products_total", "Продукти общо")->setContents(formatPrice($order["total"] - max($deliveryPrice, 0) + $discount));
         if ($discount > 0) {
-            $this->field($group, "discount_amount", "Отстъпки")->value()->setContents(formatPrice($discount));
+            $this->field($group, "discount_amount", "Отстъпки")->setContents(formatPrice($discount));
         }
         //formatPrice() returns HTML (currency entity) - the other texts are escaped
         if ($deliveryPrice > 0) $deliveryText = formatPrice($deliveryPrice);
         else if ($deliveryPrice == 0) $deliveryText = Spark::AttributeValue(tr("Безплатна"));
         else $deliveryText = Spark::AttributeValue(tr("Според тарифния план на куриера"));
-        $this->field($group, "delivey_price", "Доставка")->value()->setContents($deliveryText);
-        $this->field($group, "order_total", "Поръчка общо")->value()->setContents(formatPrice($order["total"]));
+        $this->field($group, "delivey_price", "Доставка")->setContents($deliveryText);
+        $this->field($group, "order_total", "Поръчка общо")->setContents(formatPrice($order["total"]));
 
         return $group;
     }
@@ -270,7 +250,7 @@ class OrderView extends Container
     {
         $group = $this->group("note");
         $note = $this->field($group, "order_note", "Бележка към поръчката");
-        $note->value()->setContents(nl2br(Spark::AttributeValue((string)$this->order["note"])));
+        $note->setContents(nl2br(Spark::AttributeValue((string)$this->order["note"])));
         $group->setRenderEnabled(trim((string)$this->order["note"]) !== "");
         return $group;
     }

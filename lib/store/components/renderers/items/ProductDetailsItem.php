@@ -206,26 +206,28 @@ class ProductDetailsItem extends Container implements IHeadContents
         $features = new ProductFeaturesBean();
         $qry = $features->queryField("prodID", $this->sellable->getProductID());
         $qry->stmt->columns("feature");
-        $num = $qry->count();
+        $qry->exec();
 
-        if ($num) {
-
-            $qry->exec();
-
-            $tab = new DetailsTab();
-            $tab->setCaption(tr("Свойства"));
-            $tab->addClassName("features");
-            $tab->getContent()->buffer()->start();
-            echo "<ul>";
-            while ($data = $qry->nextResult()) {
-                echo "<li>";
-                echo $data->get("feature");
-                echo "</li>";
-            }
-            echo "</ul>";
-            $tab->getContent()->buffer()->end();
-            $tabs->items()->append($tab);
+        $list = new Container(false);
+        $list->setTagName("ul");
+        $list->setComponentClass("");
+        while ($data = $qry->nextResult()) {
+            $item = new Component(false);
+            $item->setTagName("li");
+            $item->setComponentClass("");
+            $item->setText((string)$data->get("feature"));
+            $list->items()->append($item);
         }
+        $qry->free();
+
+        //only products with features get the tab
+        if ($list->items()->count() < 1) return;
+
+        $tab = new DetailsTab();
+        $tab->setCaption(tr("Свойства"));
+        $tab->addClassName("features");
+        $tab->getContent()->items()->append($list);
+        $tabs->items()->append($tab);
 
     }
 

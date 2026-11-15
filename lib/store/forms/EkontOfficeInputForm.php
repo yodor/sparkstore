@@ -15,20 +15,5 @@ class EkontOfficeInputForm extends InputForm
 
     }
 
-    public function renderPlain(): void
-    {
-        echo "<div class='InvoiceDetailsList'>";
-
-        foreach ($this->inputs() as $index => $field) {
-            echo "<div class='address_item'>";
-            echo "<label>" . tr($field->getLabel()) . ": </label>";
-            $value = strip_tags(stripslashes($field->getValue()));
-            $value = str_replace("\r\n", "<BR>", $value);
-            echo "<span>" . $value . "</span>";
-            echo "</div>";
-        }
-
-        echo "</div>";
-    }
 
 }

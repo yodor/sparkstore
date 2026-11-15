@@ -1,7 +1,8 @@
 <?php
 include_once("templates/TemplateContent.php");
 include_once("storage/SparkFile.php");
-include_once("components/ClosureComponent.php");
+include_once("components/Image.php");
+include_once("components/Action.php");
 include_once("forms/renderers/FormRenderer.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/InputForm.php");
@@ -80,28 +81,51 @@ class LogoEditor extends TemplateContent
         $restoreURL = $this->pathURL();
         $restoreURL->add(new URLParameter(LogoEditor::KEY_RESTORE, "1"));
 
-        $previews = new ClosureComponent(function () use ($current, $origin, $restoreURL) {
-            if ($current->exists()) {
-                echo "<div class='logo_header current'>";
-                echo "<label>" . tr("Current logo") . "</label>";
-                echo "<img src='data:{$current->getMIME()};base64,{$current->getBase64()}'>";
-                echo "</div>";
-            }
-            if ($origin->exists()) {
-                echo "<div class='logo_header origin'>";
-                echo "<label>" . tr("Origin logo") . "</label>";
-                echo "<img src='data:{$origin->getMIME()};base64,{$origin->getBase64()}'>";
-                if ($current->exists()) {
-                    echo "<a class='ColorButton' action='submit' href='$restoreURL'>" . tr("Restore") . "</a>";
-                }
-                echo "</div>";
-            }
-            echo "<hr>";
-        });
-
         $this->cmp = new Container(false);
-        $this->cmp->items()->append($previews);
+        if ($current->exists()) {
+            $this->cmp->items()->append($this->preview("current", tr("Current logo"), $current));
+        }
+        if ($origin->exists()) {
+            $originPreview = $this->preview("origin", tr("Origin logo"), $origin);
+            if ($current->exists()) {
+                $restore = new Action("submit", $restoreURL->toString());
+                $restore->setClassName("ColorButton");
+                $restore->setContents(tr("Restore"));
+                $originPreview->items()->append($restore);
+            }
+            $this->cmp->items()->append($originPreview);
+        }
+        $line = new Component(false);
+        $line->setTagName("hr");
+        $line->setComponentClass("");
+        $line->setClosingTagRequired(false);
+        $this->cmp->items()->append($line);
         $this->cmp->items()->append(new FormRenderer($this->form));
+    }
+
+    /**
+     * <div class='logo_header <name>'><label>..</label><img src='data:..'></div>
+     * @param string $name
+     * @param string $label
+     * @param SparkFile $file
+     * @return Container
+     */
+    protected function preview(string $name, string $label, SparkFile $file) : Container
+    {
+        $preview = new Container(false);
+        $preview->setComponentClass("logo_header " . $name);
+
+        $caption = new Component(false);
+        $caption->setTagName("label");
+        $caption->setComponentClass("");
+        $caption->setText($label);
+        $preview->items()->append($caption);
+
+        $image = new Image();
+        $image->setAttribute("src", "data:" . $file->getMIME() . ";base64," . $file->getBase64());
+        $preview->items()->append($image);
+
+        return $preview;
     }
 
     protected function getContentTitle(): string
