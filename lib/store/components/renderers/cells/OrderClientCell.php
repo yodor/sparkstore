@@ -29,7 +29,7 @@ class OrderClientCell extends TableCell
             echo "<div class='item $key'>";
             echo "<label>" . $label . "</label>";
             //entered by the client
-            echo "<span>" . htmlspecialchars((string)($client[$key] ?? "")) . "</span>";
+            echo "<span>" . Spark::AttributeValue((string)($client[$key] ?? "")) . "</span>";
             echo "</div>";
         }
         echo "</div>";

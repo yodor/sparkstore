@@ -126,16 +126,18 @@ body[path='/content/logo'] .logo_header .ColorButton {
 }
 
 /* order details */
-body[path='/orders/details'] .panel {
-    display: block;
-}
-body[path='/orders/details'] .panel.order_items .group {
-    display: block;
-}
-body[path='/orders/details'] .group {
+body[path='/orders/details'] .OrderView .group {
     display: inline-block;
     vertical-align: top;
     padding: 10px;
+}
+body[path='/orders/details'] .OrderView .group.order_items,
+body[path='/orders/details'] .OrderView .group.total,
+body[path='/orders/details'] .OrderView .group.note {
+    display: block;
+}
+body[path='/orders/details'] .OrderView .group .item {
+    padding: 2px 0;
 }
 body[path='/orders/details'] .viewport {
     display: table;
@@ -179,7 +181,7 @@ body[path^='/orders/'] .TableView .Cell[column='order_date'],
 body[path^='/orders/'] .TableView .Cell[column='userID'] {
     white-space: nowrap;
 }
-body[path='/orders/details'] .group .item LABEL:after {
+body[path='/orders/details'] .OrderView .group .item .label:after {
     content: ": ";
 }
 /* print and send confirmation have no icons - shown as text buttons */

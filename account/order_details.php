@@ -1,215 +1,45 @@
 <?php
 include_once("class/pages/AccountPage.php");
-
-include_once("store/beans/ClientAddressesBean.php");
-include_once("store/beans/CourierAddressesBean.php");
-include_once("store/beans/InvoiceDetailsBean.php");
-include_once("store/beans/OrderItemsBean.php");
-include_once("store/beans/OrdersBean.php");
-include_once("store/forms/ClientAddressInputForm.php");
+include_once("store/components/order/OrderView.php");
+include_once("components/Action.php");
 
 $page = new AccountPage();
 $page->setTitle(tr("Детайли за поръчка"));
+$page->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/print.css");
 
-
-$page->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL)."/css/print.css");
-
-$courier_addresses = new CourierAddressesBean();
-$client_addresses = new ClientAddressesBean();
-$invoices = new InvoiceDetailsBean();
-$items = new OrderItemsBean();
-$orders = new OrdersBean();
-
-$clients = new UsersBean();
-
-$sel = new SQLSelect();
-
-$userID = $page->getUserID();
-$orderID = -1;
-
-$order = NULL;
-
-if (isset($_GET["orderID"])) {
-    $orderID = (int)$_GET["orderID"];
-}
-$qry = $orders->queryFull();
-
-$qry->stmt->where()->match("orderID", $orderID)->match("userID", $userID);
-$qry->stmt->limit(1);
-$qry->exec();
-if (!($order = $qry->next())){
-    Session::set("alert", "Няма достъп до тази поръчка");
+//only orders of the logged in client
+$view = new OrderView();
+if (!$view->setOrder((int)($_GET["orderID"] ?? -1), $page->getUserID())) {
+    Session::SetAlert(tr("Няма достъп до тази поръчка"));
     header("Location: orders.php");
     exit;
 }
 
+$column = new Container(false);
+$column->setComponentClass("column details");
+
+$caption = new Component(false);
+$caption->setTagName("h1");
+$caption->setComponentClass("Caption");
+$caption->setText($page->getTitle());
+$column->items()->append($caption);
+
+$panel = new Container(false);
+$panel->setComponentClass("panel");
+$column->items()->append($panel);
+
+$back = new Action("back", "javascript:window.history.back();");
+$back->setClassName("ColorButton");
+$back->setContents(tr("<<"));
+$panel->items()->append($back);
+
+$print = new Action("print", "javascript:window.print();");
+$print->setClassName("ColorButton");
+$print->setContents(tr("Print"));
+$panel->items()->append($print);
+
+$panel->items()->append($view);
 
 $page->startRender();
-
-
-
-
-echo "<div class='column details'>";
-
-    echo "<h1 class='Caption'>" . $page->getTitle() . "</h1>";
-
-
-    echo "<div class='panel'>";
-
-        echo "<a class='ColorButton' action='back' href='javascript:window.history.back();'>".tr("<<")."</a>";
-
-        echo "<a class='ColorButton' action='print' href='javascript:window.print();'>".tr("Print")."</a>";
-
-        echo "<BR><BR>";
-
-        echo "<div class='group'>";
-
-            echo "<div class='item order_num'>";
-            echo "<span class='label'>" . tr("Номер на поръчка") . "</span>";
-            echo "<span>" . $orderID . "</span>";
-            echo "</div>";
-
-            echo "<div class='item order_date'>";
-            echo "<span class='label'>" . tr("Дата") . "</span>";
-            echo "<span>" . $order["order_date"] . "</span>";
-            echo "</div>";
-
-            $delivery = new Delivery();
-            $delivery->setSelectedCourier($order["delivery_courier"]);
-            $courier = $delivery->getSelectedCourier();
-            $courier->setSelectedOption($order["delivery_option"]);
-            $option = $courier->getSelectedOption();
-
-            echo "<div class='item delivery_courier'>";
-            echo "<span class='label'>" . tr("Куриер") . "</span>";
-            echo "<span>" . $courier->getTitle() . "</span>";
-            echo "</div>";
-
-            echo "<div class='item delivery_option'>";
-            echo "<span class='label'>" . tr("Начин на доставка") . "</span>";
-            echo "<span>" . $option->getTitle() . "</span>";
-            echo "</div>";
-
-            echo "<div class='item delivery_address'>";
-            echo "<span class='label'>" . tr("Адрес за доставка") . "</span>";
-
-            if ($option->getID() == DeliveryOption::USER_ADDRESS) {
-                try {
-                    $caform = new ClientAddressInputForm();
-                    $caform->unserializeXML($order["delivery_address"]);
-                    $caform->renderPlain();
-                }
-                catch (Exception $e) {
-                    echo $e->getMessage();
-                }
-            }
-            else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
-                echo "<div class='ClientAddressList'>" . str_replace("\r\n", "<BR>", $order["delivery_address"]) . "</div>";
-            }
-
-            echo "</div>";
-
-            echo "<div class='item require_invoice'>";
-            echo "<span class='label'>" . tr("Фактуриране") . "</span>";
-            echo "<span>" . (($order["require_invoice"] > 0) ? tr("Да") : tr("Не")) . "</span>";
-            echo "</div>";
-
-            echo "<div class='item status'>";
-            echo "<span class='label'>" . tr("Състояние") . "</span>";
-            echo "<span>" . tr($order["status"]) . "</span>";
-            echo "</div>";
-
-        echo "</div>"; //group
-
-        echo "<div class='group order_items'>";
-
-            echo "<div class='viewport'>";
-
-                echo "<div class='line heading'>";
-                    echo "<span>" . tr("Поз.") . "</span>";
-                    echo "<span></span>";
-                    echo "<span>" . tr("Продукт") . "</span>";
-                    echo "<span>" . tr("Количество") . "</span>";
-                    echo "<span>" . tr("Ед.цена") . "</span>";
-                    echo "<span>" . tr("Сума") . "</span>";
-                echo "</div>"; //line
-
-                $qry = $items->queryField("orderID", $orderID);
-                $qry->stmt->columns( "prodID", "itemID", "price", "qty", "product");
-                $qry->exec();
-
-                $pos = 0;
-                while ($item = $qry->next()) {
-                    $pos++;
-                    echo "<div class='line'>";
-                    echo "<div class='item pos'>$pos</div>";
-
-
-                    $prodID = $item["prodID"];
-
-                    $productURL = new ProductURL();
-                    $productURL->setProductID($prodID);
-
-                    echo "<a class='item photo' href='{$productURL->fullURL()}'>";
-                    $href = StorageItem::Image($item["itemID"], get_class($items), 100, -1);
-                    echo "<img src='$href'>";
-                    echo "</a>";
-
-                    echo "<div class='item product'>";
-
-                    $details = explode("//", $item["product"]);
-                    foreach ($details as $index => $value) {
-                        echo $value . "<BR>";
-                    }
-                    echo "</div>";
-                    echo "<div class='item qty'>" . $item["qty"] . "</div>";
-                    echo "<div class='item price'>" . sprintf("%0.2f лв.", $item["price"]) . "</div>";
-                    echo "<div class='item amount'>" . sprintf("%0.2f лв.", ($item["qty"] * $item["price"])) . "</div>";
-                    echo "</div>";
-                }
-
-            echo "</div>"; //viewport
-        echo "</div>"; //group
-
-
-        echo "<div class='group total'>";
-            echo "<div class='item products_total'>";
-                echo "<span class='label'>" . tr("Продукти общо") . "</span>";
-                echo "<span>" . formatPrice($order["total"] - (($order["delivery_price"]>0) ? $order["delivery_price"] : 0) + $order["discount_amount"]) . "</span>";
-            echo "</div>";
-
-            echo "<div class='item discount_amount'>";
-                echo "<span class='label'>" . tr("Отстъпки") . "</span>";
-                echo "<span>" . formatPrice($order["discount_amount"]) . "</span>";
-            echo "</div>";
-
-            echo "<div class='item delivey_price'>";
-                echo "<span class='label'>" . tr("Доставка") . "</span>";
-                echo "<span>";
-                    $delivery_price = $order["delivery_price"];
-                    if ($order["delivery_price"]>0) {
-                        echo formatPrice($order["delivery_price"]);
-                    }
-                    else if ($order["delivery_price"]==0) {
-                        echo tr("Безплатна");
-                    }
-                    else {
-                        echo tr("Според тарифния план на куриера");
-                    }
-                echo "</span>";
-            echo "</div>";
-            echo "<div class='item order_total'>";
-                echo "<span class='label'>" . tr("Поръчка общо") . "</span>";
-                echo "<span>" . formatPrice($order["total"]) . "</span>";
-            echo "</div>";
-        echo "</div>"; //group
-
-    echo "</div>";//panel
-
-
-
-echo "</div>";//column
-
-
-
+$column->render();
 $page->finishRender();
