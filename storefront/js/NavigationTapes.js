@@ -75,7 +75,7 @@ class NavigationTapes {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+onPageLoad(function () {
     if (!("IntersectionObserver" in window)) return;
     document.navigationTapes = new NavigationTapes();
     document.navigationTapes.initialize();

@@ -44,6 +44,12 @@ class ProductListPageBase extends ProductPageBase
     protected GETProcessor $category_filter;
 
     protected bool $treeViewAggregateSelect = true;
+    /**
+     * Show the number of products next to each category of the tree. Costly on large catalogs: the tree
+     * query then carries one row per product (30K products: about 0.16 s instead of 0.01 s) - keep the
+     * component cache of the tree enabled (setCacheable) when this is on.
+     * @var bool
+     */
     protected bool $treeViewAggregateSelectCount = true;
 
     protected Container $aside;
@@ -89,6 +95,7 @@ class ProductListPageBase extends ProductPageBase
 
         //Initialize product categories tree
         $treeView = new NestedSetTreeView();
+        //component cache: cheap without product counts, needed with them ($treeViewAggregateSelectCount)
         $treeView->setCacheable(true);
 
         $treeView->setName("products_tree");
@@ -108,6 +115,9 @@ class ProductListPageBase extends ProductPageBase
 
 
         $this->view = new ItemView();
+        //component cache: measured on the live bookshop the cached list renders in about half the time
+        //(0.09 s instead of 0.17-0.21 s). Prices and stock in lists can be up to PAGE_CACHE_TTL old -
+        //the product page itself is not cached.
         $this->view->setCacheable(true);
         
         $this->view->setItemRenderer(new ProductListItem());
