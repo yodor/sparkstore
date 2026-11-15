@@ -158,6 +158,43 @@ abstract class NavigationList extends Container
         return $this->iterator;
     }
 
+    /**
+     * Up to tapeItemsLimit keys of the tape query - random ones if tapeItemsRandom
+     * @param SelectQuery $query
+     * @return array<int>
+     */
+    protected function randomKeys(SelectQuery $query) : array
+    {
+        $select = clone $query->stmt;
+        $select->columns()->reset();
+        $select->column($this->qualifiedKey($query));
+        $select->orderClear();
+        if ($this->tapeItemsRandom) $select->order("RAND()");
+        $select->limit($this->tapeItemsLimit);
+
+        $keys = array();
+        $lookup = new SelectQuery($select, $query->key());
+        $lookup->exec();
+        while ($row = $lookup->next()) {
+            $keys[] = (int)$row[$query->key()];
+        }
+        $lookup->free();
+        return $keys;
+    }
+
+    /**
+     * The key column of the query as selected (with its table or alias prefix) - unambiguous in joins
+     * @param SelectQuery $query
+     * @return string
+     */
+    protected function qualifiedKey(SelectQuery $query) : string
+    {
+        foreach ($query->stmt->columns()->names() as $name) {
+            if ($name === $query->key() || str_ends_with($name, "." . $query->key())) return $name;
+        }
+        return $query->table() ? $query->table() . "." . $query->key() : $query->key();
+    }
+
     protected function renderItems() : void
     {
         //element like sections, categories other collections that might have images/banners and/or related products/items to show
@@ -179,31 +216,22 @@ abstract class NavigationList extends Container
             //total items for ProductsTape to render
             $total = -1;
 
-            //we want tape items
+            //we want tape items - one query picks up to tapeItemsLimit random keys, the tape then reads
+            //those rows by primary key (replaces COUNT + random OFFSET: two scans per item)
             if ($query instanceof SelectQuery) {
-
-                $total = $query->count();
-
+                $keys = $this->randomKeys($query);
+                $total = count($keys);
                 if ($total > 0) {
-                    //set here
-                    $query->stmt->limit($this->tapeItemsLimit);
-                    //randomize results
-                    if ($this->tapeItemsRandom) {
-                        if ($total >= $this->tapeItemsLimit) {
-                            $offset = mt_rand(0, $total - 4);
-                            $query->stmt->limit($this->tapeItemsLimit, $offset);
-                        }
-                    }
-                    //debug output
-                    //$query->stmt->setMeta("TapeIterator");
+                    //same query restricted to the picked keys - reads only those rows
+                    $query->stmt->limitClear();
+                    $query->stmt->where()->expression($this->qualifiedKey($query) . " IN (" . implode(",", $keys) . ")");
+                    $query->execLateLookup = false;
 
                     $this->item->getTape()->setIterator($query);
                     //tape iterator is set enable tape rendering
                     $this->item->getTape()->setRenderEnabled(true);
                 }
-
             }
-
 
             //tape iterator is empty or no iterator at all created
             if ($total < 1) {
