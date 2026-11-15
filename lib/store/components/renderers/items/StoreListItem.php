@@ -28,7 +28,7 @@ class StoreDetails extends ProductDetails {
     public function setData(array $data) : void
     {
         parent::setData($data);
-        $this->brand->span()->setContents($this->data["brand_name"]);
+        $this->brand->span()->setText((string)$this->data["brand_name"]);
     }
     public function collectDataKeys(): array
     {

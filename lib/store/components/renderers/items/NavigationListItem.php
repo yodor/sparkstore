@@ -180,7 +180,7 @@ class NavigationListItem extends DataIteratorItem
         $this->action->setTitle($this->label);
         $this->action->getURL()->setData($data);
 
-        $this->span->setContents($this->label);
+        $this->span->setText($this->label);
 
         $this->viewport->items()->clear();
 

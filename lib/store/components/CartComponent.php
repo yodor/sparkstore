@@ -300,13 +300,13 @@ class CartListItem extends Container {
 
 
         //title
-        $title = $item->getTitle() . "<BR>";
+        $title = Spark::AttributeValue($item->getTitle()) . "<BR>";
         $variants = $item->getVariantNames();
         foreach ($variants as $idx=>$variantName) {
             $variantItem = $item->getVariant($variantName);
 
             if ($variantItem instanceof VariantItem) {
-                $title.= $variantName.": ".$variantItem->getSelected()."<BR>";
+                $title.= Spark::AttributeValue($variantName.": ".$variantItem->getSelected())."<BR>";
             }
         }
         $this->label->setContents($title);

@@ -558,7 +558,7 @@ class ProductListPageBase extends ProductPageBase
         $cmp->setTagName("h1");
         $cmp->setComponentClass("Caption");
         $cmp->setClassName("category_name");
-        $cmp->setContents($this->getTitle());
+        $cmp->setText($this->getTitle());
         $cmp->render();
 
         if ($this->description) {

@@ -109,7 +109,7 @@ class CheckoutPageBase extends StorePage
     protected function applyTitleDescription(): void
     {
         parent::applyTitleDescription();
-        $this->heading->setContents($this->getTitle());
+        $this->heading->setText($this->getTitle());
     }
 
     public function getCartComponent() : CartComponent

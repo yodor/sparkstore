@@ -24,13 +24,13 @@ class ActiveFilterItem extends Container
         $this->label = new Component(false);
         $this->label->setTagName("span");
         $this->label->setComponentClass("label");
-        $this->label->setContents($label);
+        $this->label->setText($label);
         $this->items()->append($this->label);
 
         $this->value = new Component(false);
         $this->value->setTagName("span");
         $this->value->setComponentClass("value");
-        $this->value->setContents($value);
+        $this->value->setText($value);
         $this->items()->append($this->value);
 
         $this->clear = new Component(false);

@@ -31,7 +31,7 @@ class ProductDetails extends Action implements IDataResultConsumer
         $this->title->setComponentClass("product_name");
         $this->title->setAttribute("itemprop", "name");
         $this->title->setTagName("h3");
-        $this->title->setContents($item->getTitle());
+        $this->title->setText($item->getTitle());
         $this->items()->append($this->title);
 
         //additional info like brand, author, publisher etc. - disabled by default
@@ -60,7 +60,7 @@ class ProductDetails extends Action implements IDataResultConsumer
     public function setData(array $data) : void
     {
         parent::setData($data);
-        $this->title->setContents($this->data["product_name"]);
+        $this->title->setText((string)$this->data["product_name"]);
 
         $this->priceLabel->setRenderEnabled(true);
         if ($this->data["sell_price"] < 1) {

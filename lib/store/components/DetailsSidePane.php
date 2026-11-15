@@ -29,8 +29,8 @@ class NameValueItem extends LabelSpan
     }
     public function setNameValue(string $name, string $value) : void
     {
-        $this->label->setContents($name);
-        $this->span->setContents($value);
+        $this->label->setText($name);
+        $this->span->setText($value);
     }
 }
 class NameValueList extends Container
@@ -72,7 +72,7 @@ class CartButton extends Action
     protected function finalize(): void
     {
         parent::finalize();
-        $this->_title->setContents($this->getTitle());
+        $this->_title->setText($this->getTitle());
     }
 
 }
@@ -309,7 +309,7 @@ class DetailsSidePane extends Container
                     $parameter->setAttribute("pos", $pos);
                     $parameter->setAttribute("value", $value);
                     $parameter->setAttribute("onClick","javascript:selectVariantParameter(this)");
-                    $parameter->setContents($option_value);
+                    $parameter->setText((string)$option_value);
                     $parameterList->items()->append($parameter);
                 }
 

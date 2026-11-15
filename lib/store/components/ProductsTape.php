@@ -96,7 +96,7 @@ class ProductsTape extends Container
     {
         $this->setAttribute("aria-label", $caption);
         $this->action->setAttribute("title", $caption);
-        $this->action->setContents($caption);
+        $this->action->setText($caption);
         $this->setSchemaDescription($caption);
     }
 
