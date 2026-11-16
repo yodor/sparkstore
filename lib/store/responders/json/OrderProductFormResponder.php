@@ -55,7 +55,10 @@ class OrderProductFormResponder extends JSONFormResponder
         }
 
         $mailer = new FastOrderAdminMailer($this->form, $this->sellable);
-        $mailer->send();
+        //the order is only this mail - the client must know when it did not go out
+        if (!$mailer->send()) {
+            throw new Exception(tr("Поръчката не беше изпратена. Моля, опитайте отново по-късно или ни се обадете."));
+        }
 
         $resp->message = tr("Поръчката Ви беше приета");
 

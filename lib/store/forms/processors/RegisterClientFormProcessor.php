@@ -65,7 +65,11 @@ class RegisterClientFormProcessor extends FormProcessor
             if ($userID<1) throw new Exception(tr("Неуспешна регистрация. Моля опитайте по късно или се свържете с нас."));
 
             $mailer = new RegisterCustomerActivationMailer($urow["fullname"], $urow["email"], $confirm_code);
-            $mailer->send();
+            if (!$mailer->send()) {
+                //without the activation mail the account cannot be activated - remove it so the client can register again
+                $users->delete($userID);
+                throw new Exception(tr("Писмото за активация не беше изпратено. Моля, опитайте отново по-късно или се свържете с нас."));
+            }
 
             //auto activate or RegisterCustomerActivationMailer
             //$users->activate($email, $confirm_code);

@@ -29,12 +29,13 @@ class FastOrderAdminMailer extends Mailer
         $message .= "Беше направена бърза поръчка на ". Spark::Get(Config::SITE_DOMAIN);
         $message .= "\r\n\r\n";
 
-        $message .= "Име: ".$form->getInput("fullname")->getValue();
+        //visitor text - escaped
+        $message .= "Име: ".Spark::AttributeValue((string)$form->getInput("fullname")->getValue());
         $message .= "\r\n";
-        $message .= "Телефон: ".$form->getInput("phone")->getValue();
+        $message .= "Телефон: ".Spark::AttributeValue((string)$form->getInput("phone")->getValue());
         $message .= "\r\n";
         if ($form->haveInput("address")) {
-            $message .= "Адрес: " . $form->getInput("address")->getValue();
+            $message .= "Адрес: " . Spark::AttributeValue((string)$form->getInput("address")->getValue());
             $message .= "\r\n";
         }
 
@@ -80,14 +81,17 @@ class FastOrderAdminMailer extends Mailer
 
         $result .= "<tr>";
         $result .= "<td>";
+        //a product without photos has no main photo
         $si = $item->getMainPhoto();
-        $src = new URL($si->hrefImage(256,256));
-        $result .= "<img src='{$src->fullURL()}'>";
+        if ($si) {
+            $src = new URL($si->hrefImage(256,256));
+            $result .= "<img src='{$src->fullURL()}'>";
+        }
         $result .= "</td>";
 
         $result .= "<td>";
 
-        $result .= "Продукт: ".$item->getTitle();
+        $result .= "Продукт: ".Spark::AttributeValue($item->getTitle());
         $result .= "\r\n";
         $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".Spark::Get(StoreConfig::DEFAULT_CURRENCY);
         if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
@@ -99,7 +103,7 @@ class FastOrderAdminMailer extends Mailer
             $options = $item->getVariantNames();
             foreach ($options as $idx=>$option_name) {
                 $vitem = $item->getVariant($option_name);
-                $result .= $vitem->getName().": ".$vitem->getSelected();
+                $result .= Spark::AttributeValue($vitem->getName()).": ".Spark::AttributeValue((string)$vitem->getSelected());
                 $result .= "\r\n";
             }
         }
@@ -107,6 +111,7 @@ class FastOrderAdminMailer extends Mailer
 
         $productURL = new ProductURL();
         $productURL->setProductID($item->getProductID());
+        $productURL->setProductName($item->getTitle());
         $result .= "<a href='{$productURL->fullURL()}'>Виж продукта</a>";
         $result .= "\r\n";
         $result .= "</td>";

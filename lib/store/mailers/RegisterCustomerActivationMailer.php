@@ -12,7 +12,7 @@ class RegisterCustomerActivationMailer extends Mailer
 
         $this->subject = "Успешна Регистрация";
 
-        $message = "Здравейте, $fullname\r\n\r\n";
+        $message = "Здравейте, " . Spark::AttributeValue($fullname) . "\r\n\r\n";
         $message .= "Изпращаме Ви това съобщение за да Ви уведомим че, регистрацията Ви на " . Spark::Get(Config::SITE_DOMAIN) . " е завършена успешно.";
         $message .= "\r\n\r\n";
 

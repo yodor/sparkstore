@@ -25,7 +25,10 @@ class VoucherFormResponder extends JSONFormResponder
 
         if ($this->form instanceof VoucherForm) {
             $mailer = new VoucherAdminMailer($this->form);
-            $mailer->send();
+            //the request is only this mail
+            if (!$mailer->send()) {
+                throw new Exception(tr("Заявката не беше изпратена. Моля, опитайте отново по-късно или ни се обадете."));
+            }
         }
 
         $resp->message = tr("Заявката Ви беще приета");

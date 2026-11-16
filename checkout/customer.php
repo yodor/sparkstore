@@ -19,7 +19,10 @@ class FastOrderProcessor extends FormProcessor {
         if ($form instanceof ClientAddressInputForm) {
             if ($form->isFastOrder()) {
                 $mailer = new FastOrderAdminMailer($form);
-                $mailer->send();
+                //the order is only this mail - keep the cart when it did not go out
+                if (!$mailer->send()) {
+                    throw new Exception(tr("Поръчката не беше изпратена. Моля, опитайте отново по-късно или ни се обадете."));
+                }
                 $cart->clear();
                 $cart->store();
                 header("Location: complete.php");
