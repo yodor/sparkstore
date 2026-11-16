@@ -12,3 +12,6 @@ if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 //guests: the cart, the fast order ('login' - a guest at confirm comes there) and its end. Every other path needs
 //a client.
 $module->addPublicPath("home", "cart", "login", "complete");
+
+//a guest at the cashier goes to the checkout login - a normal step, no alert
+$module->loginAlert = "";

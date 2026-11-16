@@ -11,3 +11,6 @@ if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 
 //reachable without login - every other path redirects to login before its path file runs
 $module->addPublicPath("login", "register", "register/complete", "activate", "password", "password/reset");
+
+//a client path without login (expired session, a link): the login page says why
+$module->loginAlert = "Моля, влезте в профила си";
