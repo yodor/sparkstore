@@ -35,7 +35,7 @@ class VoucherAdminMailer extends Mailer
         $message .= "\r\n\r\n";
 
 
-        $this->body = $this->templateMessage($message);
+        $this->body = $message; //send() wraps it in the HTML document
 
         Debug::ErrorLog ("Message contents prepared ...");
 

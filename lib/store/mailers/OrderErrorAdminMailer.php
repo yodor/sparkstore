@@ -21,7 +21,7 @@ class OrderErrorAdminMailer extends Mailer
         $message.= "\r\n";
         $message.= $error_text;
 
-        $this->body = $this->templateMessage($message);
+        $this->body = $message; //send() wraps it in the HTML document
 
     }
 

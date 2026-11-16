@@ -200,10 +200,8 @@ class OrderProcessor
                 $itemID = $order_items->insert($order_item, $db);
                 if ($itemID < 1) throw new Exception("Unable to insert order item: " . $db->getError());
 
-                if (!isset($amounts[$prodID])) {
-                    $amounts[$prodID] = $cartEntry->getQuantity();
-                }
-                $amounts[$prodID] = (int)$amounts[$prodID] + $cartEntry->getQuantity();
+                //ordered amount per product - several cart lines (variants) of one product add up
+                $amounts[$prodID] = (int)($amounts[$prodID] ?? 0) + $cartEntry->getQuantity();
 
                 $pos++;
             }
@@ -248,10 +246,11 @@ class OrderProcessor
                 $query->exec($update);
             }
             catch (Exception $e) {
-                Debug::ErrorLog("Unable to increment stock_amount: ".$e->getMessage());
+                Debug::ErrorLog("Unable to decrease stock_amount: ".$e->getMessage());
             }
         }
-        else if($this->manage_order_counter) {
+        //independent of the stock management
+        if ($this->manage_order_counter) {
             try {
                 $update = SQLUpdate::Table("product_view_log pvl");
                 $update->column("pvl.order_counter")->set("pvl.order_counter + :amount")->bind(":amount", $amount);

@@ -36,7 +36,7 @@ class OrderStatusMailer extends Mailer
         $message .= Spark::Get(Config::SITE_DOMAIN);
 
 
-        $this->body = $this->templateMessage($message);
+        $this->body = $message; //send() wraps it in the HTML document
 
     }
 

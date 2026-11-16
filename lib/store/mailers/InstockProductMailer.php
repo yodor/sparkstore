@@ -49,7 +49,7 @@ class InstockProductMailer extends Mailer
         $message .= "Поздрави,\r\n";
         $message .= Spark::Get(Config::SITE_DOMAIN);
 
-        $this->body = $this->templateMessage($message);
+        $this->body = $message; //send() wraps it in the HTML document
 
         Debug::ErrorLog ("Message contents prepared ...");
     }
