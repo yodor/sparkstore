@@ -47,9 +47,10 @@ class ContentPageBase extends StorePage
             $request_class = explode(";", $_GET["class"]);
         }
 
+        //plain names only (letters, digits, _ and -) - they go into css classes and links
         foreach ($request_class as $idx=>$class) {
-            $class = trim($class);
-            if (strlen($class)>0) {
+            $class = trim((string)$class);
+            if (preg_match("/^[\\p{L}\\p{N}_-]{1,64}$/u", $class)) {
                 $this->page_class[] = $class;
             }
         }
@@ -176,7 +177,7 @@ class ContentPageBase extends StorePage
 
             $this->menuQuery->exec();
 
-            $css_class = implode(" ", $this->page_class);
+            $css_class = Spark::AttributeValue(implode(" ", $this->page_class));
 
             echo "<div class='column side page_menu $css_class'>";
 
@@ -184,8 +185,8 @@ class ContentPageBase extends StorePage
             while ($menuItem = $this->menuQuery->nextResult()) {
                 $itemID = (int)$menuItem->get($this->bean->key());
                 $itemTitle = $menuItem->get("item_title");
-                $page_param = implode(";", $this->page_class);
-                echo "<a class='item' href='index.php?id=$itemID&page_class=$page_param' title='".Spark::AttributeValue($itemTitle)."'>";
+                $href = "index.php?id=$itemID&page_class=" . rawurlencode(implode(";", $this->page_class));
+                echo "<a class='item' href='" . Spark::AttributeValue($href) . "' title='".Spark::AttributeValue($itemTitle)."'>";
 
                 if ($menuItem->get("have_photo")) {
                     echo "<div class='photo'>";
@@ -193,7 +194,7 @@ class ContentPageBase extends StorePage
                     echo "<img src='$photo_href'>";
                     echo "</div>";
                 }
-                echo "<span>$itemTitle</span>";
+                echo "<span>" . Spark::AttributeValue((string)$itemTitle) . "</span>";
                 echo "</a>";
             }
             echo "</div>"; //menu_links
@@ -210,7 +211,7 @@ class ContentPageBase extends StorePage
 
         $this->renderPageMenu();
 
-        $css_class = implode(" ", $this->page_class);
+        $css_class = Spark::AttributeValue(implode(" ", $this->page_class));
 
         echo "<div class='column page_data $css_class'>";
     }

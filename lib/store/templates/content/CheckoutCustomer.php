@@ -25,6 +25,8 @@ class CheckoutCustomer extends CheckoutContent
 
         $page = $this->page();
         $page->getCartComponent()->setRenderEnabled(false);
+        //checkout.css styles this page as '.CheckoutPage.customer' - whatever its path is named
+        $page->body()->addClassName("customer");
 
         $this->form = new ClientAddressInputForm(true);
         $renderer = new FormRenderer($this->form);
