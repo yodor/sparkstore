@@ -1,4 +1,4 @@
 <?php
 $config = TemplateConfig::Factory();
-$config->contentClass = CheckoutCustomer::class;
+$config->contentClass = CheckoutGuest::class;
 $config->requireAuth = false;

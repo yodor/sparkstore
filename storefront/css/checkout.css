@@ -136,31 +136,31 @@
 .CheckoutPage.complete .label:after {
     content:": ";
 }
-.CheckoutPage.customer .section.main .content {
+.CheckoutPage.guest .section.main .content {
     text-align:center;
 }
-.CheckoutPage.customer .base {
+.CheckoutPage.guest .base {
     display:inline-flex;
     text-align:center;
     padding:0;
 
 }
 
-.CheckoutPage.customer .base .item {
+.CheckoutPage.guest .base .item {
     padding:1.5em;
     border:1px solid #cccccc;
     margin-bottom:1em;
     justify-items: center;
 
 }
-.CheckoutPage.customer .base .item .Caption {
+.CheckoutPage.guest .base .item .Caption {
     text-align:center;
     padding-top:0;
 }
-.CheckoutPage.customer .base .InputComponent {
+.CheckoutPage.guest .base .InputComponent {
     width:100%;
 }
-.CheckoutPage.customer .base .note {
+.CheckoutPage.guest .base .note {
     text-align:left;
     max-width:25em;
     margin-bottom:1em;

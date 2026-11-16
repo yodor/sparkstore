@@ -6,11 +6,11 @@ include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 
 /**
- * The 'login' path of the checkout - a guest at confirm comes here: a fast order (name and phone - only a mail to
- * the shop, no delivery) or the regular order (the account login, then back to confirm). A logged in client goes
- * to confirm.
+ * The 'guest' path of the checkout (the module loginPath) - a guest at confirm comes here: a fast order (name and
+ * phone - only a mail to the shop, no delivery) or the regular order (the account login, then back to confirm).
+ * A logged in client goes to confirm.
  */
-class CheckoutCustomer extends CheckoutContent
+class CheckoutGuest extends CheckoutContent
 {
     protected ?ClientAddressInputForm $form = null;
 
@@ -25,8 +25,6 @@ class CheckoutCustomer extends CheckoutContent
 
         $page = $this->page();
         $page->getCartComponent()->setRenderEnabled(false);
-        //checkout.css styles this page as '.CheckoutPage.customer' - whatever its path is named
-        $page->body()->addClassName("customer");
 
         $this->form = new ClientAddressInputForm(true);
         $renderer = new FormRenderer($this->form);

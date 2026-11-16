@@ -9,9 +9,10 @@ $module = Module::Active();
 if (!$module->pageClass) $module->pageClass = CheckoutTemplatePage::class;
 if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 
-//guests: the cart, the fast order ('login' - a guest at confirm comes there) and its end. Every other path needs
-//a client.
-$module->addPublicPath("home", "cart", "login", "complete");
+//guests: the cart, the guest page (fast order or the account login - every path that needs a client sends there)
+//and the end of the order
+$module->loginPath = "guest";
+$module->addPublicPath("home", "cart", "guest", "complete");
 
-//a guest at the cashier goes to the checkout login - a normal step, no alert
+//a guest at the cashier goes to the guest page - a normal step, no alert
 $module->loginAlert = "";
