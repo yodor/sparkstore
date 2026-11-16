@@ -47,11 +47,6 @@ echo "<div class='panel'>";
 $frend->render();
 echo "</div>";
 
-//echo "<h1 class='Caption'>" . tr("Парола за достъп") . "</h1>";
-//
-//echo "<a class='ColorButton' href='generate_password.php'>";
-//echo tr("Генерирай нова парола");
-//echo "</a>";
 
 echo "</div>";
 $page->finishRender();

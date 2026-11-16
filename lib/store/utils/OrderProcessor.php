@@ -9,6 +9,7 @@ include_once("store/beans/ClientAddressesBean.php");
 include_once("store/forms/DeliveryAddressForm.php");
 include_once("store/forms/ClientAddressInputForm.php");
 include_once("store/beans/ProductsBean.php");
+include_once("store/utils/CheckStockState.php");
 
 include_once("beans/ConfigBean.php");
 
@@ -238,12 +239,21 @@ class OrderProcessor
     {
         if ($this->manage_stock_amount) {
             try {
+                $products = new ProductsBean();
+                $old_stock_amount = (int)($products->getByID($prodID, "stock_amount")["stock_amount"] ?? 0);
+
+                //not below zero
                 $update = SQLUpdate::Table("products p");
-                $update->column("p.stock_amount")->set("p.stock_amount - :amount")->bind(":amount", $amount);
+                $update->column("p.stock_amount")->set("GREATEST(p.stock_amount - :amount, 0)")->bind(":amount", $amount);
                 $update->where()->match("p.prodID", $prodID);
 
                 $query = new DBQuery();
                 $query->exec($update);
+
+                //sold out by this order - the same stock state handling as a change in the admin product editor
+                $stock_amount = max($old_stock_amount - $amount, 0);
+                $check = new CheckStockState($prodID, "");
+                $check->process($stock_amount, $old_stock_amount);
             }
             catch (Exception $e) {
                 Debug::ErrorLog("Unable to decrease stock_amount: ".$e->getMessage());
