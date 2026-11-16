@@ -3,7 +3,16 @@ include_once("store/beans/InstockSubscribersBean.php");
 include_once("store/mailers/InstockProductMailer.php");
 include_once("store/beans/BackInstockProductsBean.php");
 include_once("store/utils/url/ProductURL.php");
+include_once("components/BeanFormEditor.php");
+include_once("objects/events/BeanFormEditorEvent.php");
 
+/**
+ * Stock amount change of a product, made in the admin product editor:
+ *  0 -> above 0: mails the in-stock subscribers (InstockProductMailer), removes them and adds the product to
+ *               the back in stock list (backinstock_products)
+ *  above 0 -> 0: removes the product from the back in stock list
+ * Observe() attaches it to a product editor.
+ */
 class CheckStockState
 {
     protected int $prodID = -1;
@@ -18,6 +27,46 @@ class CheckStockState
 
         $this->product_link = new ProductURL();
         $this->product_link->setProductID($this->prodID);
+        if ($product_name) {
+            $this->product_link->setProductName($product_name);
+        }
+    }
+
+    /**
+     * Watch a product editor: remember the stock amount loaded with the product and process the change after
+     * the product is saved. Nothing to do for a new product or a form without a 'stock_amount' input.
+     * An error here is logged - the product is already saved.
+     *
+     * @param BeanFormEditor $editor
+     * @return void
+     */
+    public static function Observe(BeanFormEditor $editor) : void
+    {
+        if (!$editor->getForm()->haveInput("stock_amount")) return;
+
+        //stock amount before the edit, -1 = not loaded (new product)
+        $old_stock_amount = -1;
+
+        SparkEventManager::register(BeanFormEditorEvent::class, new SparkObserver(function (BeanFormEditorEvent $event) use ($editor, &$old_stock_amount) {
+            if ($event->getSource() !== $editor) return;
+            $form = $editor->getForm();
+
+            if ($event->isEvent(BeanFormEditorEvent::FORM_BEAN_LOADED)) {
+                $old_stock_amount = (int)$form->getInput("stock_amount")->getValue();
+            }
+            else if ($event->isEvent(BeanFormEditorEvent::FORM_BEAN_TRANSACED)) {
+                $prodID = $editor->getEditID();
+                if ($prodID < 1 || $old_stock_amount < 0) return;
+                try {
+                    $product_name = $form->haveInput("product_name") ? (string)$form->getInput("product_name")->getValue() : "";
+                    $check = new CheckStockState($prodID, $product_name);
+                    $check->process((int)$form->getInput("stock_amount")->getValue(), $old_stock_amount);
+                }
+                catch (Exception $e) {
+                    Debug::ErrorLog("Stock state check failed for prodID: $prodID | " . $e->getMessage());
+                }
+            }
+        }));
     }
 
     public function notify() : void
