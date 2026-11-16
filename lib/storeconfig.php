@@ -20,10 +20,8 @@ class StoreConfig {
     const string LOGO_PATH = "LOGO_PATH";
 
     /**
-     * Admin email for receiving customer orders after checkout or fast orders.
-     * Default value equals DEFAULT_SERVICE_EMAIL, local configuration can can overwrite by
-     * setting ORDER_EMAIL in config/defaults.php or set config value in DB
-     * ConfigBean -> section 'store_config' -> value 'order_email'
+     * The shop's e-mail: receives orders (checkout, fast orders, vouchers) and the contact and product enquiries.
+     * Set in config/store.php, the admin value (Content → Config → Base, 'email_orders') wins when not empty.
      * Default(string): DEFAULT_SERVICE_EMAIL
      */
     const string ORDER_EMAIL = "ORDER_EMAIL";

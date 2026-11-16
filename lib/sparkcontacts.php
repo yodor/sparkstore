@@ -2,11 +2,12 @@
 include_once("class/pages/StorePage.php");
 
 include_once("store/beans/ContactAddressesBean.php");
-include_once("store/responders/json/ContactRequestFormResponder.php");
+include_once("store/responders/json/StoreContactFormResponder.php");
 
 $page = new StorePage();
 
-$contacts_handler = new ContactRequestFormResponder();
+//enquiry dialog - mailed to the shop (ORDER_EMAIL), nothing stored
+$contacts_handler = new StoreContactFormResponder();
 
 $page->setTitle(tr("Контакти"));
 //$page->startRender();
@@ -95,7 +96,7 @@ if ($maps_src || $num_addresses>0) {
     function showContactsForm()
     {
         let contacts_dialog = new JSONFormDialog();
-        contacts_dialog.setResponder("ContactRequestFormResponder");
+        contacts_dialog.setResponder("StoreContactFormResponder");
         contacts_dialog.setTitle("Изпрати запитване");
         contacts_dialog.show();
     }

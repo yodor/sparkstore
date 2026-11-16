@@ -1,53 +1,38 @@
 <?php
-include_once("responders/json/JSONFormResponder.php");
+include_once("store/responders/json/StoreContactFormResponder.php");
 include_once("store/utils/SellableItem.php");
+include_once("store/utils/url/ProductURL.php");
 include_once("store/forms/QueryProductForm.php");
-include_once("store/mailers/QueryProductMailer.php");
-include_once("beans/ConfigBean.php");
-include_once("objects/data/GTMConversionCommand.php");
 
-class QueryProductFormResponder extends JSONFormResponder
+/**
+ * Product enquiry (product page Query button) - sent to StoreConfig::ORDER_EMAIL like the contact enquiries,
+ * with a link to the product, its code and price. Reply-To the visitor's e-mail when given. Nothing is stored.
+ */
+class QueryProductFormResponder extends StoreContactFormResponder
 {
-    protected QueryProductMailer $mailer;
     protected SellableItem $sellable;
 
     public function __construct(SellableItem $sellable)
     {
         parent::__construct();
-        $this->mailer = new QueryProductMailer();
         $this->sellable = $sellable;
+
+        $productURL = new ProductURL();
+        $productURL->setProductID($sellable->getProductID());
+        $productURL->setProductName($sellable->getTitle());
+
+        $details = array(tr("Код") => (string)$sellable->getProductID());
+        $price = $sellable->getPriceInfo()->getSellPrice();
+        if ($price > 0) $details[tr("Цена")] = html_entity_decode(strip_tags(formatPrice($price)), ENT_QUOTES | ENT_HTML5, "UTF-8");
+        $this->setAbout($sellable->getTitle(), $productURL, $details);
+
+        $this->mailSubject = "Запитване за продукт на: " . Spark::Get(Config::SITE_DOMAIN);
+        $this->acceptedMessage = "Заявката Ви беше приета";
+        $this->conversionParam = GTMConvParam::QUERY_PRODUCT;
     }
 
     protected function createForm(): InputForm
     {
         return new QueryProductForm();
-    }
-
-
-    protected function onProcessSuccess(JSONResponse $resp): void
-    {
-        parent::onProcessSuccess($resp);
-        $prodID = $this->sellable->getProductID();
-        $email = "".$this->form->getInput("email")->getValue();
-        $phone = "".$this->form->getInput("phone")->getValue();
-        $name = $this->form->getInput("fullname")->getValue();
-        $query_text = $this->form->getInput("query")->getValue();
-
-        $this->mailer->setClient($phone, $email, $name);
-        $productURL = new ProductURL();
-        $productURL->setProductID($prodID);
-        $this->mailer->setProduct($this->sellable->getTitle(), $productURL->fullURL());
-        $this->mailer->setQueryText($query_text);
-        $this->mailer->prepareMessage();
-        $this->mailer->send();
-
-        $resp->message = tr("Заявката Ви беше приета");
-
-        $config = ConfigBean::Factory();
-        $config->setSection("marketing_config");
-        $conversionID = $config->get(GTMConvParam::QUERY_PRODUCT->value);
-        if ($conversionID) {
-            $resp->gtm = new GTMConversionCommand($conversionID);
-        }
     }
 }

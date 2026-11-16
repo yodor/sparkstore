@@ -1,7 +1,7 @@
 <?php
 //
 // admin module - store menu, included after the core menu.php: store sections first, then the core
-// menu (Content, Settings), contacts last
+// menu (Content, Settings); store configuration, photo gallery, logo and contact addresses under Content
 //
 include_once("objects/events/TemplateEvent.php");
 include_once("utils/menu/MenuItem.php");
@@ -40,11 +40,9 @@ foreach ($menu->toArray() as $item) {
         $item->prepend($config);
         $item->append(new MenuItem("Photo Gallery", "photogallery"));
         $item->append(new MenuItem("Logo", "logo"));
+        //contacts page addresses (enquiries are mailed, not stored)
+        $item->append(new MenuItem("Addresses", "addresses"));
     }
 }
-
-$contacts = new MenuItem("Contacts", "contacts");
-$contacts->append(new MenuItem("Addresses", "addresses", "code-class.png"));
-$menu->append($contacts);
 
 SparkTemplateAdminPage::SetMenu($menu);
