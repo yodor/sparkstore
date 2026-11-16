@@ -21,21 +21,26 @@
 
 }
 @media screen and (max-width: 768px) {
-    .order_details .viewport {
+    .order_details .viewport,
+    .orders_details .viewport {
         display:block;
     }
-    .order_details .viewport .line {
+    .order_details .viewport .line,
+    .orders_details .viewport .line {
         display:block;
     }
-    .order_details .viewport .line.heading {
+    .order_details .viewport .line.heading,
+    .orders_details .viewport .line.heading {
         display:none;
         border:0;
     }
 
-    .order_details .viewport .line.heading span:first-child {
+    .order_details .viewport .line.heading span:first-child,
+    .orders_details .viewport .line.heading span:first-child {
         display:inline-block;
     }
-    .order_details .viewport .line .item {
+    .order_details .viewport .line .item,
+    .orders_details .viewport .line .item {
         display:block;
         text-align:center;
     }

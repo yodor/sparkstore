@@ -129,6 +129,14 @@
 
 }
 
+/* account module: the current menu item, logout */
+.menu_links .item.selected {
+    border-bottom-color:var(--theme-accent, #333333);
+}
+.account_menu .logout {
+    margin-top:0.5em;
+}
+
 .group .item .label:after {
     content: ": ";
 }
@@ -187,24 +195,30 @@
 }
 
 
-.order_details .FormValueList  {
+.order_details .FormValueList,
+.orders_details .FormValueList {
     margin-top:10px;
     margin-bottom:10px;
 }
-.order_details .FormValueList .label {
+.order_details .FormValueList .label,
+.orders_details .FormValueList .label {
     display:none;
 
 }
-.order_details .group .item {
+.order_details .group .item,
+.orders_details .group .item {
     line-height:150%;
 }
-.order_details .group .item.photo {
+.order_details .group .item.photo,
+.orders_details .group .item.photo {
     min-width:64px;
 }
-.order_details .group.total {
+.order_details .group.total,
+.orders_details .group.total {
     text-align:right;
 }
 
-.order_details .ColorButton[action='print'] {
+.order_details .ColorButton[action='print'],
+.orders_details .ColorButton[action='print'] {
     float:right;
 }
