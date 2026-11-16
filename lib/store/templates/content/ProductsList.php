@@ -9,6 +9,7 @@ include_once("store/beans/ProductSectionsBean.php");
 include_once("store/beans/BrandsBean.php");
 include_once("store/responders/json/SectionChooserFormResponder.php");
 include_once("store/responders/json/ImportUpdateFormResponder.php");
+include_once("store/responders/CopyProductRequestResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
 include_once("components/InlineScript.php");
 include_once("store/beans/ProductViewLogBean.php");
@@ -77,6 +78,7 @@ class ProductsList extends BeanList {
 
     protected DownloadCSVProducts $dcsv_responder;
     protected ImportUpdateFormResponder $import_responder;
+    protected CopyProductRequestResponder $copy_responder;
 
     public function fillPageActions(ActionCollection $collection): void
     {
@@ -107,6 +109,9 @@ class ProductsList extends BeanList {
 
         new SectionChooserFormResponder();
         new SectionChooserScript();
+
+        //copy of a product with its features, photos and class attribute values
+        $this->copy_responder = new CopyProductRequestResponder();
 
         new ScrollTopCookiesScript();
 
@@ -365,6 +370,10 @@ class ProductsList extends BeanList {
         $act->append(Action::RowSeparator());
 
         $act->append(new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key()))));
+
+        $act->append(Action::RowSeparator());
+
+        $act->append($this->copy_responder->createAction("Copy"));
 
         $act->append(Action::RowSeparator());
 

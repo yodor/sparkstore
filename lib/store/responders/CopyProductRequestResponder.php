@@ -3,7 +3,9 @@ include_once("responders/RequestResponder.php");
 include_once("store/beans/ProductsBean.php");
 include_once("store/beans/ProductFeaturesBean.php");
 include_once("store/beans/ProductPhotosBean.php");
-include_once("store/beans/ClassAttributeValuesBean.php");
+include_once("store/beans/ProductClassAttributeValuesBean.php");
+include_once("store/beans/ProductSectionsBean.php");
+include_once("db/DBExpression.php");
 
 class CopyProductRequestResponder extends RequestResponder
 {
@@ -61,14 +63,21 @@ class CopyProductRequestResponder extends RequestResponder
 
             $cbrow = $this->bean->getByID($this->item_id);
 
-            //copy the product
+            //copy the product - a new product: dated now (update_date takes its default), counters from zero
             unset($cbrow[$this->bean->key()]);
+            unset($cbrow["update_date"]);
+            $cbrow["insert_date"] = new DBExpression("now()");
+            foreach (array("order_counter", "view_counter") as $counter) {
+                if (array_key_exists($counter, $cbrow)) $cbrow[$counter] = 0;
+            }
             $lastID = $this->bean->insert($cbrow, $db);
             if ($lastID < 1) throw new Exception("Unable to copy the product: " . $db->getError());
 
             $this->copyRows(new ProductFeaturesBean(), $lastID, $db, "Unable to copy features");
             $this->copyRows(new ProductPhotosBean(), $lastID, $db, "Unable to copy photo");
-            $this->copyRows(new ClassAttributeValuesBean(), $lastID, $db, "Unable to copy class attributes");
+            $this->copyRows(new ProductClassAttributeValuesBean(), $lastID, $db, "Unable to copy class attributes");
+            $this->copyRows(new ProductSectionsBean(), $lastID, $db, "Unable to copy sections");
+            //variants (product_variants, product options, variant photos) are not copied
 
             $db->commit();
         }
@@ -78,7 +87,10 @@ class CopyProductRequestResponder extends RequestResponder
             throw $e;
         }
 
-        Session::SetAlert(tr("Продуктът е копиран успешно.") . tr("Кликнете") . " <a href='add.php?editID=$lastID&catID={$cbrow["catID"]}'>" . tr("тук") . "</a> " . tr("за редактиране"));
+        //link to the editor of the copy (admin module path of the products list)
+        $editURL = Module::PathURL("/store/products");
+        $editURL->add(new URLParameter("editID", $lastID));
+        Session::SetAlert(tr("Продуктът е копиран успешно.") . " " . tr("Кликнете") . " <a href='{$editURL->toString()}'>" . tr("тук") . "</a> " . tr("за редактиране"));
 
         header("Location: {$this->cancel_url}");
         exit;
