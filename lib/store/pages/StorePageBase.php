@@ -27,6 +27,7 @@ include_once("store/beans/ProductCategoriesBean.php");
 
 include_once("store/utils/cart/Cart.php");
 include_once("beans/DynamicPagesBean.php");
+include_once("utils/url/DynamicPageURL.php");
 include_once("store/responders/json/VoucherFormResponder.php");
 include_once("store/utils/TawktoScript.php");
 
@@ -539,7 +540,7 @@ class StorePageBase extends SparkPage
         $query->stmt->where()->match("visible", 1);
         $query->exec();
         while ($result = $query->nextResult()) {
-            $linkButton = Button::Action($result->get("item_title"), new URL(Spark::Get(Config::LOCAL)."/pages/index.php?id=".$result->get("dpID")));
+            $linkButton = Button::Action($result->get("item_title"), DynamicPageURL::Page((int)$result->get("dpID"), (string)$result->get("item_title"))->toString());
             $linkButton->setComponentClass("item");
             $linkButton->setTitle($result->get("item_title"));
             $columnLinks->items()->append($linkButton);
@@ -596,7 +597,7 @@ class StorePageBase extends SparkPage
             "facebook"=>"",
             "instagram"=>"",
             "youtube"=>"",
-            "terms"=>Spark::Get(Config::LOCAL)."/pages/index.php?class=terms",
+            "terms"=>DynamicPageURL::Group("terms")->toString(),
             "contacts"=>Spark::Get(Config::LOCAL)."/contacts.php",
             "phone"=>"",
         );

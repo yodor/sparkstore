@@ -7,6 +7,7 @@ include_once("forms/InputForm.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 include_once("input/DataInputFactory.php");
+include_once("utils/url/DynamicPageURL.php");
 
 /**
  * Invoice wanted - the checkbox submits its form
@@ -119,7 +120,7 @@ class CheckoutConfirm extends CheckoutContent
         $section->button()->setRenderEnabled(false);
         $page->base()->items()->append($section);
 
-        $termsURL = new URL(Spark::Get(Config::LOCAL) . "/pages/index.php?page_class=terms");
+        $termsURL = DynamicPageURL::Group("terms");
         $note = new Component(false);
         $note->setComponentClass("acceptNote");
         $note->setContents("<i>" . Spark::AttributeValue(tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите")) . "&nbsp;" .

@@ -2,6 +2,7 @@
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
 include_once("input/validators/AnyValueValidator.php");
+include_once("utils/url/DynamicPageURL.php");
 
 class RegisterClientInputForm extends InputForm
 {
@@ -66,7 +67,7 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::HIDDEN, "token", "token", 0);
         $this->addInput($field);
 
-        $termsURL = new URL(Spark::Get(Config::LOCAL)."/pages/index.php?page_class=terms");
+        $termsURL = DynamicPageURL::Group("terms");
         $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Приемам <a href='{$termsURL->fullURL()}'>Общите условия</a>", 1);
         $this->addInput($field);
 
