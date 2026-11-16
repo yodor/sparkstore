@@ -8,7 +8,7 @@ include_once("store/utils/cart/Cart.php");
 /**
  * Page of the checkout module (StoreTemplatePage: the storefront look with the module path content).
  *
- * The layout of the checkout pages (CheckoutPageBase): the heading (page title), the cart, the navigation
+ * The layout of the checkout pages: the heading (page title), the cart, the navigation
  * buttons (left, center, right) and the 'base' container. CheckoutContent fills them through this page;
  * the component of any other content (error) goes into 'base'.
  * Body classes: 'CheckoutPage' (checkout.css) and the path ('delivery/option' → 'delivery_option').

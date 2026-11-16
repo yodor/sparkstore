@@ -21,6 +21,7 @@ class CheckoutCart extends CheckoutContent
         $page = $this->page();
 
         $page->getCartComponent()->setModifyEnabled(true);
+        //the module folder of this request (default /checkout/cart)
         $page->getCartComponent()->setPostURL(Module::PathURL("cart"));
         $page->getCartComponent()->initialize();
 

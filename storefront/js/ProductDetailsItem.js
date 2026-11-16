@@ -76,18 +76,23 @@ function addToCart(conversionID) {
     let current_url = new URL(window.location.href);
     let prodID = document.querySelector(".ProductDetailsItem")?.getAttribute("productID");
 
-    let url = new URL(document.Spark.LOCAL + "/checkout/cart.php", location.href);
-    url.searchParams.set("add", "");
-    url.searchParams.set("prodID", prodID);
-    url.searchParams.set("variant", encoded);
-
-    console.log(url.href);
-
     if (conversionID) {
         document.sparkGTM.emitConversion(conversionID);
     }
 
-    window.location.href = url.href;
+    //the cart of the checkout module takes changes only by POST
+    const form = document.createElement("form");
+    form.method = "post";
+    form.action = document.Spark.LOCAL + "/checkout/cart";
+    for (const [name, value] of Object.entries({cart: "add", prodID: prodID, variant: encoded})) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    form.submit();
 
 }
 

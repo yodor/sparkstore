@@ -125,7 +125,7 @@ class CartListHeading extends Container {
 }
 /**
  * POST form of one cart change (increment, decrement, remove) - a button with the item hash.
- * Used when CartComponent::setPostURL() is set (checkout module); the request: cart=<change>&item=<hash>
+ * The request (CheckoutCart): cart=<change>&item=<hash>
  */
 class CartActionForm extends Container {
 
@@ -196,10 +196,6 @@ class CartListItem extends Container {
         $this->actRemove->setAttribute("action", "remove");
         $this->actRemove->setContents("&#8855;");
         $this->actRemove->setTitle("Remove");
-        $removeURL = new URL("cart.php");
-        $removeURL->add(new URLParameter("remove", true));
-        $removeURL->add(new DataParameter("item"));
-        $this->actRemove->setURL($removeURL);
 
         $tdPosition = new Container(false);
         $tdPosition->setComponentClass("");
@@ -234,10 +230,6 @@ class CartListItem extends Container {
         $this->actDecrement->setAttribute("action", "decrement");
         $this->actDecrement->setContents("&#8854;");
         $this->actDecrement->setTitle(tr("Decrease quantity"));
-        $decURL = new URL("cart.php");
-        $decURL->add(new URLParameter("decrement", true));
-        $decURL->add(new DataParameter("item"));
-        $this->actDecrement->setURL($decURL);
         $tdQty->items()->append($this->actDecrement);
 
         $this->qty = new TextComponent();
@@ -249,10 +241,6 @@ class CartListItem extends Container {
         $this->actIncrement->setAttribute("action", "increment");
         $this->actIncrement->setContents("&#8853;");
         $this->actIncrement->setTitle(tr("Increase quantity"));
-        $incURL = new URL("cart.php");
-        $incURL->add(new URLParameter("increment", true));
-        $incURL->add(new DataParameter("item"));
-        $this->actIncrement->setURL($incURL);
         $tdQty->items()->append($this->actIncrement);
 
         $this->items()->append($tdQty);
@@ -291,9 +279,9 @@ class CartListItem extends Container {
         $tdLineTotal->items()->append($this->lineTotal);
         $this->items()->append($tdLineTotal);
 
-        //changes as POST forms - next to each link, the link itself is not rendered
+        //changes as POST forms in place of the actions - the actions only show the position (not modify enabled)
         $postURL = $parent->getPostURL();
-        if ($postURL instanceof URL && $parent->isModifyEnabled()) {
+        if ($parent->isModifyEnabled()) {
             foreach (array("remove" => $this->actRemove, "decrement" => $this->actDecrement, "increment" => $this->actIncrement) as $change => $action) {
                 $form = new CartActionForm($postURL, $change, $action->getContents(), $action->getTitle());
                 $this->forms[$change] = $form;
@@ -339,11 +327,7 @@ class CartListItem extends Container {
 
         $this->position = $position;
 
-        //position/remove
-        $data = array("item"=>$item->hash());
-        $this->actRemove->getURL()->setData($data);
-        $this->actIncrement->getURL()->setData($data);
-        $this->actDecrement->getURL()->setData($data);
+        //the forms of the changes
         foreach ($this->forms as $form) {
             $form->setItem($item->hash());
         }
@@ -395,10 +379,10 @@ class CartComponent extends Container implements IHeadContents
     protected bool $modify_enabled = false;
 
     /**
-     * Changes (increment, decrement, remove) as POST forms to this URL instead of GET links
-     * @var URL|null
+     * The changes (increment, decrement, remove) are POST forms to this URL - the cart of the checkout module
+     * @var URL
      */
-    protected ?URL $postURL = null;
+    protected URL $postURL;
 
     protected float $total = 0.0;
     protected float $order_total = 0.0;
@@ -408,6 +392,7 @@ class CartComponent extends Container implements IHeadContents
     public function __construct()
     {
         parent::__construct(false);
+        $this->postURL = new URL(Spark::Get(Config::LOCAL) . "/checkout/cart");
     }
 
 
@@ -424,16 +409,16 @@ class CartComponent extends Container implements IHeadContents
     }
 
     /**
-     * Send the changes as POST forms to '$url' (cart=<change>&item=<hash>)
-     * @param URL|null $url
+     * Send the changes as POST forms to '$url' (cart=<change>&item=<hash>) - default /checkout/cart
+     * @param URL $url
      * @return void
      */
-    public function setPostURL(?URL $url) : void
+    public function setPostURL(URL $url) : void
     {
         $this->postURL = $url;
     }
 
-    public function getPostURL() : ?URL
+    public function getPostURL() : URL
     {
         return $this->postURL;
     }

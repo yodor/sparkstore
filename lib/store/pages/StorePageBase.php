@@ -435,7 +435,7 @@ class StorePageBase extends SparkPage
         $container->items()->append($button_account);
 
         $button_cart = new Action();
-        $button_cart->getURL()->fromString(Spark::Get(Config::LOCAL) . "/checkout/cart.php");
+        $button_cart->getURL()->fromString(Spark::Get(Config::LOCAL) . "/checkout/cart");
         $button_cart->setAttribute("title", tr("Cart"));
         $button_cart->addClassName("button cart");
 
