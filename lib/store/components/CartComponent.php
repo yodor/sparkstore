@@ -507,7 +507,8 @@ class CartComponent extends Container implements IHeadContents
                 $selected_option = $selected_courier->getSelectedOption();
             }
 
-            if ($selected_option != NULL) {
+            //delivery: not in the cart editor (modify enabled) - only once a delivery is chosen, in the order steps
+            if ($selected_option != NULL && !$this->modify_enabled) {
 
                 $deliveryItem = new SummaryItem();
                 $deliveryItem->addClassName("delivery");

@@ -92,6 +92,16 @@ class CheckoutTemplatePage extends StoreTemplatePage
         return $this->navigation;
     }
 
+    /**
+     * The order processor of finalize - a site page class can return its own
+     * @return OrderProcessor
+     */
+    public static function OrderProcessor() : OrderProcessor
+    {
+        include_once("store/utils/OrderProcessor.php");
+        return new OrderProcessor();
+    }
+
     public function update(TemplateContent $content) : void
     {
         $config = $content->config();

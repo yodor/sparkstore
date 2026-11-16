@@ -6,8 +6,9 @@ include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 
 /**
- * Guest: a fast order (name and phone - only a mail to the shop) or the regular order (account login, then
- * back to confirm). A logged in client goes to confirm.
+ * The 'login' path of the checkout - a guest at confirm comes here: a fast order (name and phone - only a mail to
+ * the shop, no delivery) or the regular order (the account login, then back to confirm). A logged in client goes
+ * to confirm.
  */
 class CheckoutCustomer extends CheckoutContent
 {
@@ -44,7 +45,7 @@ class CheckoutCustomer extends CheckoutContent
         $note->setText(tr("Влезте в акаунта си или се регистрирайте."));
         $section->value()->items()->append($note);
         $section->button()->setContents(tr("Continue"));
-        $section->button()->setAttribute("href", Module::PathURL("login")->toString());
+        $section->button()->setAttribute("href", Spark::Get(Config::LOCAL) . "/account/login");
         $page->base()->items()->append($section);
     }
 

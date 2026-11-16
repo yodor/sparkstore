@@ -45,7 +45,8 @@ class CheckoutCart extends CheckoutContent
         $this->navigation(CheckoutTemplatePage::NAV_CENTER, tr("Продължи пазаруването"), "continue_shopping", $href);
 
         if ($cart->itemsCount() > 0) {
-            $this->navigation(CheckoutTemplatePage::NAV_RIGHT, tr("Каса"), "checkout", Module::PathURL("customer")->toString());
+            //the cashier: confirm opens what is missing (login, delivery ...)
+            $this->navigation(CheckoutTemplatePage::NAV_RIGHT, tr("Каса"), "checkout", Module::PathURL("confirm")->toString());
         }
     }
 
