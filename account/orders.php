@@ -4,30 +4,18 @@ include_once("class/pages/AccountPage.php");
 include_once("components/TableView.php");
 include_once("components/renderers/cells/DateCell.php");
 
-include_once("store/beans/ClientAddressesBean.php");
-include_once("store/beans/CourierAddressesBean.php");
-include_once("store/beans/InvoiceDetailsBean.php");
-include_once("store/beans/OrderItemsBean.php");
 include_once("store/beans/OrdersBean.php");
 
 
 $page = new AccountPage();
 $page->setTitle(tr("История на поръчките"));
 
-//invoke OrdersBean before OrderItemsBean to allow auto creation of the table structure
 $orders = new OrdersBean();
-$order_items = new OrderItemsBean();
-
-$courier_addresses = new CourierAddressesBean();
-$client_addresses = new ClientAddressesBean();
-$invoices = new InvoiceDetailsBean();
-
-
-$clients = new UsersBean();
 
 $query = $orders->queryFull();
 
-$query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orderID)", "item_count");
+//pieces of each order (the outer column needs its table name - inside the subquery 'orderID' is oi.orderID)
+$query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orders.orderID)", "item_count");
 
 $query->stmt->where()->match("userID", $page->getUserID());
 //$query->stmt->orderColumn(new OrderField("status", "Processing", "Sent", "Completed"));

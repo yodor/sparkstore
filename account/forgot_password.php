@@ -16,22 +16,24 @@ class ForgotPasswordProcessor extends FormProcessor
 
         if ($this->status != IFormProcessor::STATUS_OK) return;
 
-        $email = $form->getInput("email")->getValue();
+        $email = (string)$form->getInput("email")->getValue();
 
+        //the same answer for every e-mail - the page does not tell who is registered
+        //(unknown e-mail, failed send: logged only)
         try {
-
             $auth = SparkPage::Instance()->getAuthenticator();
             $random_pass = $auth->setRandomPassword($email);
 
             $loginURL = new URL(Spark::Get(Config::LOCAL)."/account/");
             $fpm = new ForgotPasswordMailer($email, $random_pass, $loginURL);
-            $fpm->send();
-
-            $this->setMessage(tr("Вашата нова парола беше изпратена на адрес") . ": $email");
+            if (!$fpm->send()) {
+                Debug::ErrorLog("Forgot password: the mail to '$email' was not sent");
+            }
         }
         catch (Exception $e) {
-            throw $e;
+            Debug::ErrorLog("Forgot password failed for '$email': " . $e->getMessage());
         }
+        $this->setMessage(tr("Ако този e-mail е регистриран, на него беше изпратена нова парола"));
     }
 }
 

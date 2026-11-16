@@ -139,15 +139,15 @@ class OrderView extends Container
         $invoice->setText(($order["require_invoice"] > 0) ? tr("Да") : tr("Не"));
         if ($this->invoiceDetailsEnabled && $order["require_invoice"] > 0) {
             $invoices = new InvoiceDetailsBean();
-            try {
-                //throws when the client has no invoice details (deleted since the order)
-                $result = $invoices->getByRef("userID", (int)$order["userID"], $invoices->key());
+            //none when the client deleted the invoice details since the order
+            $result = $invoices->getResult("userID", (string)(int)$order["userID"], $invoices->key());
+            if (is_array($result)) {
                 $form = new InvoiceDetailsInputForm();
                 $form->loadBeanData($result[$invoices->key()], $invoices);
                 $this->lastField->items()->append($form->CreatePlainRenderer());
             }
-            catch (Exception $e) {
-                Debug::ErrorLog("Invoice details of order {$order["orderID"]}: " . $e->getMessage());
+            else {
+                Debug::ErrorLog("Invoice details of order {$order["orderID"]}: none for the client");
             }
         }
 
