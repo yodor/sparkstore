@@ -52,8 +52,24 @@
     color: black;
     font-size: 1em;
 }
-.CartComponent .item [field='position'] A[action] {
+.CartComponent .item [field='position'] A[action],
+.CartComponent .item [field='position'] BUTTON[action] {
     color: red;
+}
+/* checkout module: the changes are POST forms - their buttons look like the links */
+.CartComponent .item FORM.cart_action {
+    /* the form has an action attribute too - not sized by the [action] rule */
+    display: contents;
+    font-size: inherit;
+    margin: 0;
+}
+.CartComponent .item BUTTON[action] {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: inherit;
 }
 
 .CartComponent .item [field] {

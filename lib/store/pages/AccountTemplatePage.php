@@ -1,25 +1,17 @@
 <?php
-include_once("class/pages/StorePage.php");
-include_once("templates/Template.php");
-include_once("templates/TemplateConfig.php");
+include_once("store/pages/StoreTemplatePage.php");
 include_once("utils/menu/MenuItemList.php");
 include_once("utils/menu/MenuItem.php");
 include_once("store/templates/content/AccountContent.php");
 
 /**
- * Page of the account module: the storefront look (the site StorePage) with the content of the module path.
- *
- * The path handling is the one of SparkTemplatePage - a StorePage can not extend it. It is to be shared when
- * the storefront pages move to the module engine (step 8 of the work plan).
+ * Page of the account module (StoreTemplatePage: the storefront look with the module path content).
  *
  * Layout: the 'columns' container - the account menu column (logged in clients) and the content columns.
  * AccountContent gives its columns, the component of any other content (error) is put in one column.
- * The body gets the path as a css class: 'orders/details' → 'orders_details'.
  */
-class AccountTemplatePage extends StorePage implements IObserver
+class AccountTemplatePage extends StoreTemplatePage
 {
-    protected string $path = "home";
-
     protected Container $columns;
 
     protected static ?MenuItemList $Menu = null;
@@ -27,18 +19,6 @@ class AccountTemplatePage extends StorePage implements IObserver
     public function __construct()
     {
         parent::__construct();
-
-        //the module authorized already - the page uses the same client context
-        $this->loginURL = Module::PathURL("login")->toString();
-
-        SparkEventManager::register(TemplateEvent::class, $this);
-        SparkEventManager::register(TemplateConfigEvent::class, $this);
-
-        $this->addParameterName("path");
-        //the module folder itself (/account/) is the 'home' path
-        if (isset($_GET["path"]) && trim((string)$_GET["path"], "/") !== "") {
-            $this->path = Template::FormatPath($_GET["path"], "/", true);
-        }
 
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/account.css");
         $this->body()->addClassName("account");
@@ -100,24 +80,6 @@ class AccountTemplatePage extends StorePage implements IObserver
         return $column;
     }
 
-    /**
-     * Load the configuration of the path - Template::PathConfig (SparkTemplatePage::initialize)
-     * @return void
-     */
-    public function initialize() : void
-    {
-        try {
-            Template::PathConfig($this->path);
-            $this->body->setAttribute("path", $this->path);
-            $this->body->addClassName(Template::FormatPath($this->path, "_", false));
-        }
-        catch (Exception $e) {
-            Debug::ErrorLog("PathConfig failed: " . $e->getMessage());
-            $message = $e->getMessage();
-            if (Debug::IsEnabled()) $message .= " - " . $e->getTraceAsString();
-            Template::ErrorConfig("Error:{$this->path}", $message);
-        }
-    }
 
     /**
      * Put the content columns in the page
@@ -142,27 +104,5 @@ class AccountTemplatePage extends StorePage implements IObserver
         $this->columns->items()->append(AccountContent::Column($config->title, $content->component()));
     }
 
-    /**
-     * Template::LoadContent() when the path config is ready, update() when the content processed its input
-     * (SparkTemplatePage::onEvent)
-     * @param SparkEvent $event
-     * @return void
-     * @throws Exception
-     */
-    public function onEvent(SparkEvent $event) : void
-    {
-        if ($event->isEvent(TemplateConfigEvent::UPDATE)) {
-            Template::LoadContent();
-        }
-        else if ($event->isEvent(TemplateEvent::CONTENT_INPUT_PROCESSED)) {
-            $content = $event->getSource();
-            if (!($content instanceof TemplateContent)) throw new Exception("Incorrect event source - expecting TemplateContent");
-            $this->update($content);
-        }
-    }
 
-    public function currentURL() : URL
-    {
-        return Module::PathURL("", parent::currentURL());
-    }
 }

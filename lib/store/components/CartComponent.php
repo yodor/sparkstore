@@ -9,6 +9,8 @@ include_once("store/utils/SellableItem.php");
 include_once("store/utils/cart/Cart.php");
 
 include_once("store/components/PriceLabel.php");
+include_once("input/renderers/Input.php");
+include_once("components/Button.php");
 
 class SummaryItem extends Container
 {
@@ -121,6 +123,42 @@ class CartListHeading extends Container {
 
     }
 }
+/**
+ * POST form of one cart change (increment, decrement, remove) - a button with the item hash.
+ * Used when CartComponent::setPostURL() is set (checkout module); the request: cart=<change>&item=<hash>
+ */
+class CartActionForm extends Container {
+
+    protected Input $item;
+    protected Button $button;
+
+    public function __construct(URL $postURL, string $change, string $contents, string $title)
+    {
+        parent::__construct(false);
+        $this->setTagName("form");
+        $this->setComponentClass("cart_action");
+        $this->setAttribute("method", "post");
+        $this->setAttribute("action", $postURL->toString());
+
+        $this->items()->append(new Input("hidden", "cart", $change));
+
+        $this->item = new Input("hidden", "item", "");
+        $this->items()->append($this->item);
+
+        $this->button = new Button(Button::TYPE_SUBMIT);
+        $this->button->setComponentClass("");
+        $this->button->setAttribute("action", $change);
+        $this->button->setAttribute("title", $title);
+        $this->button->setContents($contents);
+        $this->items()->append($this->button);
+    }
+
+    public function setItem(string $hash) : void
+    {
+        $this->item->setValue($hash);
+    }
+}
+
 class CartListItem extends Container {
 
     protected CartComponent $cartComponent;
@@ -131,6 +169,12 @@ class CartListItem extends Container {
     protected Action $actRemove;
 
     protected int $position = -1;
+
+    /**
+     * POST forms instead of the action links (CartComponent::setPostURL())
+     * @var array<string, CartActionForm>
+     */
+    protected array $forms = array();
 
     protected TextComponent $qty;
 
@@ -247,6 +291,18 @@ class CartListItem extends Container {
         $tdLineTotal->items()->append($this->lineTotal);
         $this->items()->append($tdLineTotal);
 
+        //changes as POST forms - next to each link, the link itself is not rendered
+        $postURL = $parent->getPostURL();
+        if ($postURL instanceof URL && $parent->isModifyEnabled()) {
+            foreach (array("remove" => $this->actRemove, "decrement" => $this->actDecrement, "increment" => $this->actIncrement) as $change => $action) {
+                $form = new CartActionForm($postURL, $change, $action->getContents(), $action->getTitle());
+                $this->forms[$change] = $form;
+                $cell = ($change === "remove") ? $tdPosition : $tdQty;
+                $cell->items()->insert($form, $cell->items()->indexOf($action));
+                $action->setRenderEnabled(false);
+            }
+        }
+
     }
     protected function finalize(): void
     {
@@ -288,6 +344,9 @@ class CartListItem extends Container {
         $this->actRemove->getURL()->setData($data);
         $this->actIncrement->getURL()->setData($data);
         $this->actDecrement->getURL()->setData($data);
+        foreach ($this->forms as $form) {
+            $form->setItem($item->hash());
+        }
 
         //image
         $url = $this->image->getURL();
@@ -295,7 +354,14 @@ class CartListItem extends Container {
             $url->setProductID($item->getProductID());
             $url->setProductName($item->getTitle());
         }
-        $this->image->image()->setStorageItem($item->getMainPhoto());
+        //a product without a photo: no image
+        $photo = $item->getMainPhoto();
+        if ($photo instanceof StorageItem) {
+            $this->image->image()->setStorageItem($photo);
+        }
+        else {
+            $this->image->setRenderEnabled(false);
+        }
 
 
 
@@ -328,6 +394,12 @@ class CartComponent extends Container implements IHeadContents
 
     protected bool $modify_enabled = false;
 
+    /**
+     * Changes (increment, decrement, remove) as POST forms to this URL instead of GET links
+     * @var URL|null
+     */
+    protected ?URL $postURL = null;
+
     protected float $total = 0.0;
     protected float $order_total = 0.0;
     protected float $delivery_price = 0.0;
@@ -349,6 +421,21 @@ class CartComponent extends Container implements IHeadContents
     public function setModifyEnabled(bool $mode) : void
     {
         $this->modify_enabled = $mode;
+    }
+
+    /**
+     * Send the changes as POST forms to '$url' (cart=<change>&item=<hash>)
+     * @param URL|null $url
+     * @return void
+     */
+    public function setPostURL(?URL $url) : void
+    {
+        $this->postURL = $url;
+    }
+
+    public function getPostURL() : ?URL
+    {
+        return $this->postURL;
     }
 
     public function isModifyEnabled() : bool
