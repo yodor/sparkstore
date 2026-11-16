@@ -34,7 +34,7 @@ class OrderConfirmationMailer extends Mailer
         $message .= "Изпращаме Ви това съобщение за да Ви уведомим, че поръчка Ви е приета за обработка. ";
         $message .= "\r\n\r\n";
 
-        $orderURL = new URL(Spark::Get(Config::LOCAL)."/account/order_details.php");
+        $orderURL = new URL(Spark::Get(Config::LOCAL)."/account/orders/details");
         $orderURL->add(new URLParameter("orderID", $orderID));
 
         $message .= "Можете да видите поръчката си в меню ";

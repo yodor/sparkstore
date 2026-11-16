@@ -266,7 +266,8 @@ class StorePageBase extends SparkPage
     public function __construct()
     {
         $this->auth = new UserAuthenticator();
-        $this->loginURL = Spark::Get(Config::LOCAL) . "/account/login.php";
+        //the account module (/account/<path>)
+        $this->loginURL = Spark::Get(Config::LOCAL) . "/account/login";
 
         parent::__construct();
 
@@ -422,7 +423,7 @@ class StorePageBase extends SparkPage
         $icon_contents = "<span class='icon'></span>";
 
         $button_account = new Action();
-        $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/login.php");
+        $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/login");
         $button_account->setAttribute("title", tr("Account"));
         $button_account->setClassName("button account");
         $button_account->setContents($icon_contents);

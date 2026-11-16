@@ -19,7 +19,7 @@ class RegisterCustomerActivationMailer extends Mailer
         $message .= "За да активирате Вашият профил проследете връзката за активация по долу.";
         $message .= "\r\n\r\n";
 
-        $activationURL = new URL(Spark::Get(Config::LOCAL)."/account/activate.php");
+        $activationURL = new URL(Spark::Get(Config::LOCAL)."/account/activate");
         $activationURL->add(new URLParameter("email", $email));
         $activationURL->add(new URLParameter("confirm_code", $confirm_code));
         $activationURL->add(new URLParameter("SubmitForm", "ActivateProfileInputForm"));
