@@ -29,9 +29,10 @@ class StoreConfig {
     const string ORDER_EMAIL = "ORDER_EMAIL";
 
     /**
-     * Admin email for receiving errors during ordering/checkout
+     * E-mail for receiving errors during ordering/checkout (OrderErrorAdminMailer) - set in config/store.php.
+     * Default(string): empty - the error goes to ORDER_EMAIL
      */
-    const string ORDER_ERROR_EMAIL = "ORDER_ADMIN_EMAIL";
+    const string ORDER_ERROR_EMAIL = "ORDER_ERROR_EMAIL";
 
     /**
      * ISO3 store currency

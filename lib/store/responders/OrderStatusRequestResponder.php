@@ -60,19 +60,30 @@ class OrderStatusRequestResponder extends RequestResponder
 
             if (!$bean->update($this->orderID, $update_row, $db)) throw new Exception("Unable to update this order: " . $db->getError());
 
-            $m = new OrderStatusMailer($this->orderID, $this->status);
-            $m->send();
-
             $db->commit();
-
-            Session::SetAlert(tr("Статусът на поръчката беше обновен") . "<BR>" . tr("Потвърждаващ e-mail беше изпратен на клиента"));
-
         }
         catch (Exception $e) {
-
             $db->rollback();
             throw $e;
         }
+
+        //the client is told after the status is saved - a mail failure does not undo the status
+        $alert = tr("Статусът на поръчката беше обновен");
+        try {
+            $mailer = new OrderStatusMailer($this->orderID, $this->status);
+            $sent = $mailer->send();
+        }
+        catch (Exception $e) {
+            error_log("OrderStatusMailer: orderID {$this->orderID}: " . $e->getMessage());
+            $sent = false;
+        }
+        if ($sent) {
+            $alert .= "<BR>" . tr("Потвърждаващ e-mail беше изпратен на клиента");
+        }
+        else {
+            $alert .= "<BR>" . tr("E-mail до клиента не беше изпратен");
+        }
+        Session::SetAlert($alert);
 
     }
 
