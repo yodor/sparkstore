@@ -109,6 +109,21 @@ class ProductPageBase extends StorePage
         $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 
+    /**
+     * The requested address, then the categories of the page from the current one to the top - a product or a
+     * category without its own menu item selects the item of its category or the closest parent category
+     */
+    protected function menuAddresses() : array
+    {
+        $addresses = parent::menuAddresses();
+        foreach (array_reverse($this->category_path) as $category) {
+            $url = new CategoryURL();
+            $url->setData($category);
+            $addresses[] = $url;
+        }
+        return $addresses;
+    }
+
     protected function fillBreadCrumb() : void
     {
         $actions = $this->constructPathActions();

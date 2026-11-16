@@ -17,6 +17,7 @@ include_once("forms/processors/FormProcessor.php");
 include_once("input/DataInputFactory.php");
 
 include_once("beans/MenuItemsBean.php");
+include_once("store/utils/url/StoreMenuLinks.php");
 include_once("store/beans/SectionsBean.php");
 
 include_once("auth/UserAuthenticator.php");
@@ -256,12 +257,18 @@ class StorePageBase extends SparkPage
 
     }
 
+    /**
+     * The addresses of the page for the selection of the main menu, the preferred first (MenuItemList::selectActive)
+     * @return array of URL|string
+     */
+    protected function menuAddresses() : array
+    {
+        return array(URL::Requested());
+    }
+
     protected function selectActiveMenu(): void
     {
-
-        $main_menu = $this->menu_bar->getMenu();
-        $main_menu->selectActive(array(MenuItemList::MATCH_FULL,MenuItemList::MATCH_SCRIPT));
-
+        $this->menu_bar->getMenu()->selectActive(...$this->menuAddresses());
     }
 
     public function __construct()
@@ -281,6 +288,8 @@ class StorePageBase extends SparkPage
 
         $factory = new BeanMenuFactory(new MenuItemsBean());
         $this->menu_bar = new MenuBar($factory->menu());
+        //the current addresses of the old products links
+        StoreMenuLinks::Resolve($this->menu_bar->getMenu());
         $this->menu_bar->setName("StorePage");
 
         $ksc = new KeywordSearch();
