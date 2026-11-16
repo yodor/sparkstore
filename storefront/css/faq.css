@@ -1,0 +1,22 @@
+/* faq module in the store look: the sections menu and the questions side by side (as news.css) */
+.FAQPage .section.main>.content {
+    display: grid;
+    grid-template-columns: 270px auto;
+    grid-column-gap: 1em;
+    margin-top: 1em;
+}
+.FAQPage .faq_sections .menu_links .item {
+    border-bottom: 2px solid #cccccc;
+    text-decoration: none;
+    color: inherit;
+}
+.FAQPage .column.qa .section_name {
+    font-size: 1.2em;
+}
+@media (max-width: 640px) {
+    .FAQPage .section.main>.content {
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        padding: 0.5em;
+    }
+}
