@@ -53,6 +53,13 @@ class RegisterClientInputForm extends InputForm
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
 
+        //the client sees what gets stored - checked here and before submit (RegisterForm.js)
+        $field = DataInputFactory::Create(InputType::PASSWORD, "password_repeat", "Повторете паролата", 1);
+        $field->setValidator(new AnyValueValidator());
+        $field->getRenderer()->setAttribute("autocomplete","off");
+        $field->getProcessor()->skip_transaction = TRUE;
+        $this->addInput($field);
+
         $field = DataInputFactory::Create(InputType::HIDDEN, "challenge", "challenge", 0);
         $this->addInput($field);
 
@@ -64,6 +71,23 @@ class RegisterClientInputForm extends InputForm
         $this->addInput($field);
 
 
+    }
+
+    /**
+     * The password and its repeat must match (both empty in the profile: the password is kept)
+     * @return void
+     * @throws Exception
+     */
+    public function validate() : void
+    {
+        parent::validate();
+
+        $password = (string)$this->getInput("password")->getValue();
+        $repeat = (string)$this->getInput("password_repeat")->getValue();
+        if (strcmp($password, $repeat) !== 0) {
+            $this->getInput("password_repeat")->setError(tr("Паролите не съвпадат"));
+            throw new Exception(tr("Паролите не съвпадат"));
+        }
     }
 
 }

@@ -3,6 +3,7 @@ include_once("store/templates/content/AccountContent.php");
 include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 include_once("beans/UsersBean.php");
+include_once("components/InlineScript.php");
 
 /**
  * Profile of the client - the registration form without the e-mail (not editable) and the terms.
@@ -26,6 +27,12 @@ class AccountProfile extends AccountContent
         $renderer->getSubmitButton()->setContents(tr("Запиши"));
 
         $this->addColumn(AccountContent::Column(tr("Клиентски профил"), $renderer));
+
+        //challenge of a new password, the repeat check; the password is optional here
+        $script = new InlineScript(true);
+        $name = json_encode($this->form->getName());
+        $script->setCode("const profile_form = new RegisterForm(); profile_form.passwordOptional = true; profile_form.setName($name); profile_form.initialize();");
+        $renderer->items()->append($script);
     }
 
     protected function loadUser() : void
@@ -35,8 +42,16 @@ class AccountProfile extends AccountContent
         $this->form->getInput("email")->setEditable(false);
         $this->form->getInput("email")->getRenderer()->input()?->setAttribute("readonly");
         $this->form->getInput("email")->getRenderer()->getAddonContainer()->items()->clear();
-        $this->form->getInput("password")->setValue("");
-        $this->form->getInput("password")->setRequired(false);
+        //an empty password keeps the current one
+        foreach (array("password", "password_repeat") as $name) {
+            $this->form->getInput($name)->setValue("");
+            $this->form->getInput($name)->setRequired(false);
+        }
+        $hint = $this->form->getInput("password")->getRenderer()->getAddonContainer();
+        $hint->items()->clear();
+        $text = new Component(false);
+        $text->setText(tr("Попълнете само при смяна на паролата - поне 6 символа"));
+        $hint->items()->append($text);
     }
 
     public function processInput() : void
