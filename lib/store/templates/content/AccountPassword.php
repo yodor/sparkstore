@@ -1,11 +1,13 @@
 <?php
 include_once("store/templates/content/AccountContent.php");
 include_once("store/forms/ForgotPasswordInputForm.php");
-include_once("mailers/ForgotPasswordMailer.php");
+include_once("store/beans/PasswordResetsBean.php");
+include_once("store/mailers/PasswordResetMailer.php");
+include_once("beans/UsersBean.php");
 
 /**
- * Forgotten password: a new password is sent to the e-mail.
- * The same answer for every e-mail - the page does not tell who is registered.
+ * Forgotten password: a one-time link to set a new password is sent to the e-mail (password/reset).
+ * The password is not changed here. The same answer for every e-mail - the page does not tell who is registered.
  */
 class AccountPassword extends AccountContent
 {
@@ -22,7 +24,7 @@ class AccountPassword extends AccountContent
         $panel = new Container(false);
         $panel->setComponentClass("");
         $panel->items()->append(AccountContent::Text(tr("Въведете Вашият email aдрес от момента на регистрация в сайта и натиснете бутон 'Изпрати'")));
-        $panel->items()->append(AccountContent::Text(tr("Вашата нова парола ще бъде изпратена на този адрес.")));
+        $panel->items()->append(AccountContent::Text(tr("Ще получите писмо с връзка за смяна на паролата.")));
         $panel->items()->append($renderer);
 
         $this->addColumn(AccountContent::Column(tr("Забравена парола"), $panel));
@@ -40,19 +42,31 @@ class AccountPassword extends AccountContent
         }
         if ($proc->getStatus() !== IFormProcessor::STATUS_OK) return;
 
-        $email = (string)$this->form->getInput("email")->getValue();
-        //unknown e-mail, failed send: logged only
+        $email = strtolower(trim((string)$this->form->getInput("email")->getValue()));
+        //unknown e-mail, too frequent requests, failed send: logged only
         try {
-            $random_pass = Module::Active()->getAuthenticator()->setRandomPassword($email);
-            $mailer = new ForgotPasswordMailer($email, $random_pass, Module::PathURL("login"));
-            if (!$mailer->send()) {
-                Debug::ErrorLog("Forgot password: the mail to '$email' was not sent");
+            $userID = (new UsersBean())->email2id($email);
+            if ($userID > 0) {
+                $token = (new PasswordResetsBean())->create($userID);
+                if (is_null($token)) {
+                    Debug::ErrorLog("Password reset: a link was sent to '$email' less than " . PasswordResetsBean::THROTTLE . "s ago - no new link");
+                }
+                else {
+                    $url = Module::PathURL("password/reset");
+                    $url->add(new URLParameter("token", $token));
+                    if (!(new PasswordResetMailer($email, $url))->send()) {
+                        Debug::ErrorLog("Password reset: the mail to '$email' was not sent");
+                    }
+                }
+            }
+            else {
+                Debug::ErrorLog("Password reset: '$email' is not registered");
             }
         }
         catch (Exception $e) {
-            Debug::ErrorLog("Forgot password failed for '$email': " . $e->getMessage());
+            Debug::ErrorLog("Password reset failed for '$email': " . $e->getMessage());
         }
-        $this->redirect("login", tr("Ако този e-mail е регистриран, на него беше изпратена нова парола"));
+        $this->redirect("login", tr("Ако този e-mail е регистриран, на него беше изпратена връзка за смяна на паролата"));
     }
 
     protected function getContentTitle() : string
