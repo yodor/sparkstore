@@ -58,6 +58,12 @@ class ProductListPageBase extends ProductPageBase
 
     protected array $remapGetParameters = array();
 
+    /**
+     * Address of this list without a category (the products module folder) - the promotions page sets its own
+     * @var string
+     */
+    protected string $listAddress = "";
+
 
     public function __construct()
     {
@@ -479,8 +485,11 @@ class ProductListPageBase extends ProductPageBase
      */
     public function currentURL() : URL
     {
-
-        $url = parent::currentURL();
+        //the query of the request without the module path - at the list address (/products/), not the script
+        $current = parent::currentURL();
+        $current->remove("path");
+        $url = new URL(($this->listAddress !== "") ? $this->listAddress : (new ProductListURL())->toString());
+        $url->copyParametersFrom($current);
 
         $nodeID = $this->treeView->getSelectedID();
         if ($nodeID>0) {

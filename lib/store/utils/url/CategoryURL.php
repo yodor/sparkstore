@@ -8,7 +8,7 @@ class CategoryURL extends ProductListURL
     public function __construct(?URL $other=null)
     {
         parent::__construct();
-        //<LOCAL>/products/category/<catID>/<category name slug>/ (products/.htaccess -> list.php?catID=)
+        //<LOCAL>/products/category/<catID>/<category name slug>/ (modules/products/.htaccess -> path category, catID)
         $this->fromString(Spark::Get(Config::LOCAL).self::$urlCategorySlug);
         $this->add(new PathParameter("catID", "catID", false));
         $this->add(new PathParameter("category_name", "category_name", true));

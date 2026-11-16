@@ -4,7 +4,7 @@ include_once("utils/url/URL.php");
 class ProductURL extends URL
 {
     /**
-     * Product pages: <LOCAL>/products/<prodID>/<product name slug>/ (products/.htaccess -> details.php?prodID=)
+     * Product pages: <LOCAL>/products/<prodID>/<product name slug>/ (modules/products/.htaccess -> path details, prodID)
      */
     public static string $urlProductSlug = "/products/";
 

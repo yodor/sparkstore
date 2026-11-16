@@ -3,11 +3,11 @@ include_once("utils/url/URL.php");
 
 class ProductListURL extends URL
 {
-    public static string $urlProductList = "/products/list.php";
+    public static string $urlProductList = "/products/";
 
     /**
      * Construct URL pointing to the default products list page
-     * LOCAL./products/list.php
+     * LOCAL./products/ (the products module)
      */
     public function __construct()
     {

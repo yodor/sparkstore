@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    #a product: <prodID>/<product name slug>/
+    RewriteRule ^([0-9]+)/(.*)$ index.php?path=/details&prodID=$1 [NC,QSA,L]
+    #a category: category/<catID>/<category name slug>/
+    RewriteRule ^category/([0-9]+)/(.*)$ index.php?path=/category&catID=$1 [NC,QSA,L]
+    #promotions of a category: promos/<catID>/<category name slug>/
+    RewriteRule ^promos/([0-9]+)/(.*)$ index.php?path=/promos&catID=$1 [NC,QSA,L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?path=/$1 [QSA,L]
+</IfModule>
