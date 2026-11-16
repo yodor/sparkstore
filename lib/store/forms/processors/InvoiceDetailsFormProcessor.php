@@ -1,34 +1,9 @@
 <?php
-include_once("forms/processors/FormProcessor.php");
-include_once("beans/DBTableBean.php");
-include_once("db/BeanTransactor.php");
+include_once("store/forms/processors/UserRowFormProcessor.php");
 
-class InvoiceDetailsFormProcessor extends FormProcessor
+/**
+ * @deprecated used by checkout until it moves to the module engine - UserRowFormProcessor
+ */
+class InvoiceDetailsFormProcessor extends UserRowFormProcessor
 {
-
-    protected int $userID = -1;
-
-    public function setUserID(int $userID) : void
-    {
-        $this->userID = $userID;
-    }
-
-
-    public function processImpl(InputForm $form) : void
-    {
-
-        parent::processImpl($form);
-
-        if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
-
-        if ($this->userID < 1) throw new Exception("Тази функция изисква регистрация");
-
-        $dbt = new BeanTransactor($this->bean, $this->editID);
-        $dbt->appendValue("userID", $this->userID);
-
-        $dbt->processForm($form);
-
-        $dbt->processBean();
-
-    }
 }
