@@ -22,6 +22,9 @@ class StoreModulePage extends StoreTemplatePage
     {
         parent::__construct();
 
+        //the store css of the pages that were StorePage scripts (.StorePage.contacts, .StorePage.home ...)
+        $this->body()->addClassName("StorePage");
+
         $look = StoreModulePage::$LOOK[Module::Active()->getName()] ?? array("", "");
         if ($look[0] !== "") $this->body()->addClassName($look[0]);
         if ($look[1] !== "") $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/" . $look[1]);
