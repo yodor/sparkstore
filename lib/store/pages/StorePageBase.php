@@ -273,6 +273,14 @@ class StorePageBase extends SparkPage
             }
         }
 
+        //the store default: 'Fallback Meta Description' of the store config (SparkStoreConfigForm)
+        if (!$this->description) {
+            $config = ConfigBean::Factory();
+            $config->setSection("store_config");
+            $this->description = (string)$config->get("meta_description");
+        }
+
+        //else the SEO settings of the site (core)
         parent::applyTitleDescription();
 
     }

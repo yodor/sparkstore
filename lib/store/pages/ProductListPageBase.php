@@ -380,7 +380,7 @@ class ProductListPageBase extends ProductPageBase
             if (count($this->category_path) > 0) {
                 $this->view->setName(array_reverse($this->category_path)[0]["category_name"]);
                 //one address per category: /products/category/<catID>/<current name slug>/ - others get a 301
-                $this->redirectCanonical($this->currentURL());
+                Module::RedirectCanonical($this->currentURL());
             }
         }
 
