@@ -375,6 +375,15 @@ class StorePageBase extends SparkPage
         $this->home_action->setURL(new ProductListURL());
     }
 
+    /**
+     * The keyword search of the header - a content can search its own items with it (setAction, setColumns)
+     * @return KeywordSearch|null
+     */
+    public function getKeywordSearch(): ?KeywordSearch
+    {
+        return $this->keyword_search;
+    }
+
     public function getMenuBar(): ?MenuBar
     {
         return $this->menu_bar;
