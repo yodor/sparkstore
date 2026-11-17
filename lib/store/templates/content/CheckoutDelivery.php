@@ -30,8 +30,8 @@ class CheckoutDelivery extends CheckoutContent
         $page->base()->addClassName("delivery_courier");
         $page->base()->items()->append($renderer);
 
-        $this->navigation(CheckoutTemplatePage::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
-        $this->navigation(CheckoutTemplatePage::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms.DeliveryCourier.submit();");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms.DeliveryCourier.submit();");
     }
 
     public function processInput() : void

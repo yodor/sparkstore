@@ -130,8 +130,8 @@ class CheckoutConfirm extends CheckoutContent
         //the cart for context - with the delivery of the chosen option
         $page->getCartComponent()->initialize();
 
-        $this->navigation(CheckoutTemplatePage::NAV_LEFT, tr("Назад"), "edit", Module::PathURL("cart")->toString());
-        $this->navigation(CheckoutTemplatePage::NAV_RIGHT, tr("Потвърди поръчка"), "checkout", "javascript:document.forms.OrderNoteInputForm.submit()");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", Module::PathURL("cart")->toString());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Потвърди поръчка"), "checkout", "javascript:document.forms.OrderNoteInputForm.submit()");
     }
 
     /**

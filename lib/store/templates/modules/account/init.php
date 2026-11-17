@@ -2,11 +2,14 @@
 //
 // account module - the client area of the store sites. Site init.php runs after it and may override.
 //
-include_once("store/pages/AccountTemplatePage.php");
+include_once("class/pages/StorePage.php");
+include_once("store/templates/content/AccountContent.php");
 include_once("auth/UserAuthenticator.php");
 
 $module = Module::Active();
-if (!$module->pageClass) $module->pageClass = AccountTemplatePage::class;
+//the site StorePage frame; the account layout is AccountContent
+if (!$module->pageClass) $module->pageClass = "StorePage";
+$module->addPageCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/account.css");
 if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 
 //reachable without login - every other path redirects to login before its path file runs

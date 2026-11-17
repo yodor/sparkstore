@@ -1,6 +1,6 @@
 <?php
 include_once("class/pages/StorePage.php");
-include_once("pages/ISelfProcessingPage.php");
+include_once("utils/IRequestProcessor.php");
 include_once("components/BreadcrumbList.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
@@ -10,7 +10,7 @@ include_once("store/utils/url/ProductSearchURL.php");
 
 include_once("store/beans/ProductViewLogBean.php");
 
-class ProductPageBase extends StorePage implements ISelfProcessingPage
+class ProductPageBase extends StorePage implements IRequestProcessor
 {
 
 
@@ -78,6 +78,15 @@ class ProductPageBase extends StorePage implements ISelfProcessingPage
     public function processInput() : void
     {
 
+    }
+
+    /**
+     * The page answered its request (IRequestProcessor) - the list pages: a keyword search was processed
+     * @return bool
+     */
+    public function isProcessed() : bool
+    {
+        return true;
     }
 
     public function setSellableProducts(DBTableBean $bean) : void

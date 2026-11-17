@@ -4,24 +4,111 @@ include_once("store/utils/cart/Cart.php");
 include_once("store/beans/ClientAddressesBean.php");
 include_once("store/beans/CourierAddressesBean.php");
 include_once("store/beans/InvoiceDetailsBean.php");
+include_once("store/components/CartComponent.php");
+include_once("store/components/CheckoutSections.php");
 
 /**
- * Content of the checkout module. Works on the page (CheckoutTemplatePage): its title, cart, navigation buttons
- * and 'base' container - the layout of the checkout pages.
+ * Content of the checkout module - the layout of the checkout pages in the store frame: the heading (the page
+ * title), the cart, the navigation buttons (left, center, right) and the 'base' container. The module look
+ * (body class CheckoutPage, checkout.css) is set by the checkout init.php.
  */
 abstract class CheckoutContent extends TemplateContent
 {
+    const string NAV_LEFT = "left";
+    const string NAV_CENTER = "center";
+    const string NAV_RIGHT = "right";
+
+    protected Component $heading;
+    protected CartComponent $ccmp;
+    protected Container $navigationBar;
+    protected Container $base;
+
     public function __construct()
     {
         parent::__construct();
         $this->cmp = new Container(false);
+
+        $this->heading = new Component(false);
+        $this->heading->setTagName("h1");
+        $this->heading->setComponentClass("Caption");
+        $this->cmp->items()->append($this->heading);
+
+        $this->ccmp = new CartComponent();
+        $this->cmp->items()->append($this->ccmp);
+
+        $this->navigationBar = new Container();
+        $this->navigationBar->setClassName("navigation");
+        $this->cmp->items()->append($this->navigationBar);
+
+        $this->base = new Container(false);
+        $this->base->setComponentClass("base");
+        $this->cmp->items()->append($this->base);
+
+        foreach (array(CheckoutContent::NAV_LEFT, CheckoutContent::NAV_CENTER, CheckoutContent::NAV_RIGHT) as $name) {
+            $button = new NavButton();
+            $button->setName($name);
+            $button->setClassName("disabled");
+            $this->navigationBar->items()->append($button);
+        }
     }
 
-    protected function page() : CheckoutTemplatePage
+    /**
+     * The checkout layout parts of this content (the cart, base, navigation buttons)
+     * @return CheckoutContent
+     */
+    protected function page() : CheckoutContent
     {
-        $page = SparkPage::Instance();
-        if (!($page instanceof CheckoutTemplatePage)) throw new Exception("Incorrect page - expecting CheckoutTemplatePage");
-        return $page;
+        return $this;
+    }
+
+    public function getCartComponent() : CartComponent
+    {
+        return $this->ccmp;
+    }
+
+    /**
+     * Navigation button NAV_LEFT, NAV_CENTER or NAV_RIGHT
+     * @param string $name
+     * @return Action
+     * @throws Exception
+     */
+    public function getAction(string $name) : Action
+    {
+        $cmp = $this->navigationBar->items()->getByName($name);
+        if ($cmp instanceof Action) {
+            return $cmp;
+        }
+        throw new Exception("Action '$name' does not exist");
+    }
+
+    public function base() : Container
+    {
+        return $this->base;
+    }
+
+    public function getNavigation() : Container
+    {
+        return $this->navigationBar;
+    }
+
+    /**
+     * The heading is the final page title
+     * @param SparkPage $page
+     * @return void
+     */
+    public function finalizeHead(SparkPage $page) : void
+    {
+        $this->heading->setText($page->getTitle());
+    }
+
+    /**
+     * The order processor of finalize - a site can return its own (a subclass of this content for finalize)
+     * @return OrderProcessor
+     */
+    public static function OrderProcessor() : OrderProcessor
+    {
+        include_once("store/utils/OrderProcessor.php");
+        return new OrderProcessor();
     }
 
     public function component() : Container
@@ -116,7 +203,7 @@ abstract class CheckoutContent extends TemplateContent
 
     /**
      * Navigation button: text, css class and target (a module path or javascript:)
-     * @param string $name CheckoutTemplatePage::NAV_LEFT / NAV_CENTER / NAV_RIGHT
+     * @param string $name CheckoutContent::NAV_LEFT / NAV_CENTER / NAV_RIGHT
      * @param string $text
      * @param string $className
      * @param string $href

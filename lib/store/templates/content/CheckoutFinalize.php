@@ -38,7 +38,7 @@ class CheckoutFinalize extends CheckoutContent
         }
 
         try {
-            $processor = CheckoutTemplatePage::OrderProcessor();
+            $processor = CheckoutContent::OrderProcessor();
             $processor->createOrder(Module::Active()->getUserID());
             $orderID = $processor->getOrderID();
         }

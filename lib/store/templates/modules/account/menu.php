@@ -1,9 +1,9 @@
 <?php
 //
-// account module - store menu. Site menu.php runs after it and extends AccountTemplatePage::Menu().
+// account module - store menu. Site menu.php runs after it and extends AccountContent::Menu().
 // Items: name, module path.
 //
-$menu = AccountTemplatePage::Menu();
+$menu = AccountContent::Menu();
 
 $menu->append(new MenuItem(tr("История на поръчките"), "orders"));
 $menu->append(new MenuItem(tr("Регистриран адрес"), "address"));

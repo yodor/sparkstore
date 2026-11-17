@@ -1,8 +1,8 @@
 <?php
 //
-// admin module - store part, included after the core init.php
+// admin module - store part, included after the core init.php: the store admin look
 //
-include_once("store/pages/AdminTemplatePageBase.php");
-
 $module = Module::Active();
-$module->pageClass = AdminTemplatePageBase::class;
+$module->addPageCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/AdminTemplatePageBase.css");
+//no zoom on phones
+$module->addPageMeta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0");
