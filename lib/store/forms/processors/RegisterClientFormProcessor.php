@@ -122,7 +122,7 @@ class RegisterClientFormProcessor extends FormProcessor
 
         $hash = new PasswordHash($password);
         //get authenticator from controller and check hmac with session token - valid one time
-        SparkPage::Instance()->getAuthenticator()->verifyTokenHMAC($hash, $client_hmac);
+        Module::Active()->getAuthenticator()->verifyTokenHMAC($hash, $client_hmac);
 
         //TODO: cpu expensive implement ratelimit
         return $hash->getValue();

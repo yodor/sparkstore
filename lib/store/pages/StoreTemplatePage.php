@@ -17,7 +17,6 @@ abstract class StoreTemplatePage extends StorePage implements IObserver
     {
         parent::__construct();
 
-        $this->loginURL = Module::PathURL(Module::Active()->loginPath)->toString();
         $this->pathBodyClass = true;
 
         $this->templateConstruct();

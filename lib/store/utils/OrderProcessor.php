@@ -48,7 +48,13 @@ class OrderProcessor
         return $this->orderID;
     }
 
-    public function createOrder()
+    /**
+     * Create the order of the cart for the client '$userID' (the authorized client of the checkout module)
+     * @param int $userID
+     * @return void
+     * @throws Exception
+     */
+    public function createOrder(int $userID)
     {
 
 
@@ -58,13 +64,10 @@ class OrderProcessor
         if (is_null($cart->getDelivery()->getSelectedCourier())) throw new Exception("Не сте избрали куриер");
         if (is_null($cart->getDelivery()->getSelectedCourier()->getSelectedOption())) throw new Exception("Не сте избрали адрес за доставка");
 
-        $page = StorePage::Instance();
-        if ($page->getUserID() < 1) {
+        if ($userID < 1) {
             Debug::ErrorLog("Login required ... ");
             throw new Exception("Изисква регистриран потребител");
         }
-
-        $userID = $page->getUserID();
 
         Debug::ErrorLog("Using userID='$userID'");
 

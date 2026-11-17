@@ -18,7 +18,7 @@ class CheckoutFinalize extends CheckoutContent
         if (strcmp((string)($_SERVER["REQUEST_METHOD"] ?? "GET"), "POST") !== 0) $this->redirect("confirm");
 
         $this->ensureCartItems();
-        $missing = CheckoutContent::MissingStep(SparkPage::Instance()->getUserID());
+        $missing = CheckoutContent::MissingStep(Module::Active()->getUserID());
         if ($missing !== "") $this->redirect($missing);
     }
 
@@ -39,7 +39,7 @@ class CheckoutFinalize extends CheckoutContent
 
         try {
             $processor = CheckoutTemplatePage::OrderProcessor();
-            $processor->createOrder();
+            $processor->createOrder(Module::Active()->getUserID());
             $orderID = $processor->getOrderID();
         }
         catch (Exception $e) {

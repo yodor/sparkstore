@@ -29,7 +29,7 @@ class CheckoutRowEditor extends CheckoutContent
         if (!($form instanceof InputForm)) throw new Exception("TemplateConfig formClass is not an InputForm");
         $this->form = $form;
 
-        $row = $this->bean->getResult("userID", (string)SparkPage::Instance()->getUserID(), $this->bean->key());
+        $row = $this->bean->getResult("userID", (string)Module::Active()->getUserID(), $this->bean->key());
         if (is_array($row)) {
             $this->editID = (int)$row[$this->bean->key()];
             $this->form->loadBeanData($this->editID, $this->bean);
@@ -71,7 +71,7 @@ class CheckoutRowEditor extends CheckoutContent
         $proc = new UserRowFormProcessor();
         $proc->setBean($this->bean);
         $proc->setEditID($this->editID);
-        $proc->setUserID(SparkPage::Instance()->getUserID());
+        $proc->setUserID(Module::Active()->getUserID());
         $this->form->setProcessor($proc);
 
         $proc->process($this->form);

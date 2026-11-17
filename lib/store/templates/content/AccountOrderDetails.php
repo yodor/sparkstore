@@ -13,7 +13,7 @@ class AccountOrderDetails extends AccountContent
         SparkPage::Instance()->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/print.css");
 
         $view = new OrderView();
-        if (!$view->setOrder((int)($_GET["orderID"] ?? -1), SparkPage::Instance()->getUserID())) {
+        if (!$view->setOrder((int)($_GET["orderID"] ?? -1), Module::Active()->getUserID())) {
             $this->redirect("orders", tr("Няма достъп до тази поръчка"));
         }
 

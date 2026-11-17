@@ -37,7 +37,7 @@ class AccountProfile extends AccountContent
 
     protected function loadUser() : void
     {
-        $this->form->loadBeanData(SparkPage::Instance()->getUserID(), new UsersBean());
+        $this->form->loadBeanData(Module::Active()->getUserID(), new UsersBean());
         //not editable - not loaded from the post; readonly shows it
         $this->form->getInput("email")->setEditable(false);
         $this->form->getInput("email")->getRenderer()->input()?->setAttribute("readonly");
@@ -59,7 +59,7 @@ class AccountProfile extends AccountContent
         parent::processInput();
 
         $proc = new RegisterClientFormProcessor();
-        $proc->setEditID(SparkPage::Instance()->getUserID());
+        $proc->setEditID(Module::Active()->getUserID());
         $proc->process($this->form);
 
         if ($proc->getStatus() == IFormProcessor::STATUS_OK) {

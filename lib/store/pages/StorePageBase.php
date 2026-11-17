@@ -56,6 +56,25 @@ class StorePageBase extends SparkPage
 
     public string $client_name = "";
 
+    /**
+     * The logged client of this request (UserAuthenticator) - null for a visitor
+     * @var AuthContext|null
+     */
+    protected ?AuthContext $client = null;
+
+    /**
+     * The logged client: the context of the module when it authorizes clients (account, checkout), else
+     * the UserAuthenticator session - no login is required here
+     * @return AuthContext|null
+     */
+    public static function ClientContext() : ?AuthContext
+    {
+        if (class_exists("Module", false) && Module::HasActive() && Module::Active()->getAuthenticator() instanceof UserAuthenticator) {
+            return Module::Active()->getAuthContext();
+        }
+        return (new UserAuthenticator())->authorize();
+    }
+
     protected ?PageSection $_header = null;
     protected ?PageSection $_menu = null;
     protected ?PageSection $_main = null;
@@ -274,14 +293,13 @@ class StorePageBase extends SparkPage
 
     public function __construct()
     {
-        $this->auth = new UserAuthenticator();
-        //the account module (/account/<path>)
-        $this->loginURL = Spark::Get(Config::LOCAL) . "/account/login";
-
         parent::__construct();
 
-        if ($this->context) {
-            $this->client_name = (string)$this->context->getData()->get(AuthContext::FULLNAME);
+        //the logged client - shown in the header (account button, name); the pages require no login,
+        //the account and checkout modules authorize their paths
+        $this->client = StorePageBase::ClientContext();
+        if ($this->client) {
+            $this->client_name = (string)$this->client->getData()->get(AuthContext::FULLNAME);
         }
 
         //template JSONFormDialog
@@ -448,7 +466,7 @@ class StorePageBase extends SparkPage
         $button_account->setAttribute("title", tr("Account"));
         $button_account->setClassName("button account");
         $button_account->setContents($icon_contents);
-        if ($this->context) {
+        if ($this->client) {
             $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/");
             $button_account->addClassName("logged");
         }

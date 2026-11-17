@@ -55,7 +55,7 @@ class CheckoutConfirm extends CheckoutContent
         Session::Remove("login.redirect");
 
         $cart = Cart::Instance();
-        $userID = SparkPage::Instance()->getUserID();
+        $userID = Module::Active()->getUserID();
 
         //no invoice details saved - no invoice (the checkbox opens the invoice step)
         if (!CheckoutContent::HaveRow(new InvoiceDetailsBean(), $userID) && $cart->getRequireInvoice()) {
@@ -161,7 +161,7 @@ class CheckoutConfirm extends CheckoutContent
         $cart->setRequireInvoice($require);
         $cart->store();
 
-        if ($require && !CheckoutContent::HaveRow(new InvoiceDetailsBean(), SparkPage::Instance()->getUserID())) {
+        if ($require && !CheckoutContent::HaveRow(new InvoiceDetailsBean(), Module::Active()->getUserID())) {
             $this->redirect("invoice");
         }
         $this->redirect("confirm");

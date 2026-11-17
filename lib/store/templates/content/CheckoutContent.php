@@ -101,7 +101,7 @@ abstract class CheckoutContent extends TemplateContent
      */
     protected function nextStep(string $next) : never
     {
-        $missing = CheckoutContent::MissingStep(SparkPage::Instance()->getUserID());
+        $missing = CheckoutContent::MissingStep(Module::Active()->getUserID());
         $this->redirect((strcmp($missing, $next) === 0) ? $next : "confirm");
     }
 

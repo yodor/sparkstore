@@ -1,4 +1,4 @@
-<?php
+ <?php
 include_once("templates/TemplateContent.php");
 include_once("components/Container.php");
 include_once("components/TextComponent.php");

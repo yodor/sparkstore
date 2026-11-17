@@ -17,7 +17,7 @@ class AccountOrders extends AccountContent
 
         //pieces of each order (the outer column needs its table name - inside the subquery 'orderID' is oi.orderID)
         $query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orders.orderID)", "item_count");
-        $query->stmt->where()->match("userID", SparkPage::Instance()->getUserID());
+        $query->stmt->where()->match("userID", Module::Active()->getUserID());
 
         $view = new TableView($query);
         $view->setDefaultOrder(new OrderColumn("order_date", OrderDirection::DESC));
