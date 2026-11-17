@@ -1,5 +1,6 @@
 <?php
 include_once("store/pages/ProductPageBase.php");
+include_once("store/utils/url/ProductSearchURL.php");
 
 include_once("components/NestedSetTreeView.php");
 include_once("components/renderers/items/TextTreeItem.php");
@@ -317,6 +318,11 @@ class ProductListPageBase extends ProductPageBase
 
         $this->keyword_search->processInput();
 
+        //a search on the list or a category goes to the search address (ProductSearchListPage - not indexed)
+        if ($this->keyword_search->isProcessed() && $this->listAddress === "") {
+            $this->redirectSearch();
+        }
+
         if ($this->keyword_search->isProcessed()) {
             $keyword = $this->keyword_search->getForm()->getInput("keyword")->getValue();
             $cc = $this->keyword_search->getForm()->prepareClauseCollection("OR");
@@ -418,6 +424,25 @@ class ProductListPageBase extends ProductPageBase
                 $this->filtersList->filter()->items()->append($filter);
             }
         }
+    }
+
+    /**
+     * 301 to the same search at the search address: /products/[list.php|index.php] → /products/search/,
+     * /products/category/<catID>/<slug>/ → /products/search/<catID>/<slug>/ - the query stays
+     * @return never
+     */
+    protected function redirectSearch() : never
+    {
+        $current = URL::Requested();
+        $path = $current->getScriptName();
+        $products = Spark::Get(Config::LOCAL) . ProductListURL::$urlProductList;
+        $rest = str_starts_with($path, $products) ? substr($path, strlen($products)) : "";
+        $rest = str_starts_with($rest, "category/") ? substr($rest, strlen("category/")) : "";
+
+        $url = new URL((new ProductSearchURL())->toString() . $rest);
+        $url->copyParametersFrom($current);
+        header("Location: " . $url->toString(), true, 301);
+        exit;
     }
 
     public function getParameterNames() : array

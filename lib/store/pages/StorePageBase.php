@@ -18,6 +18,7 @@ include_once("input/DataInputFactory.php");
 
 include_once("beans/MenuItemsBean.php");
 include_once("store/utils/url/StoreMenuLinks.php");
+include_once("store/utils/url/ProductSearchURL.php");
 include_once("store/beans/SectionsBean.php");
 
 include_once("auth/UserAuthenticator.php");
@@ -301,7 +302,8 @@ class StorePageBase extends SparkPage
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("id", "search-keyword");
 
         $ksc->setMethod(FormRenderer::METHOD_GET);
-        $ksc->setAction(new ProductListURL());
+        //the search of the products module (/products/search/ - not indexed)
+        $ksc->setAction(new ProductSearchURL());
         $ksc->setAttribute("aria-label", "Product Search Form");
 
         $ksc->getButton("search")->setContents("");
@@ -607,7 +609,7 @@ class StorePageBase extends SparkPage
             "instagram"=>"",
             "youtube"=>"",
             "terms"=>DynamicPageURL::Group("terms")->toString(),
-            "contacts"=>Spark::Get(Config::LOCAL)."/contacts.php",
+            "contacts"=>Spark::Get(Config::LOCAL)."/contacts",
             "phone"=>"",
         );
 

@@ -5,6 +5,7 @@ include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductURL.php");
+include_once("store/utils/url/ProductSearchURL.php");
 
 include_once("store/beans/ProductViewLogBean.php");
 
@@ -142,6 +143,7 @@ class ProductPageBase extends StorePage
         $link = new ProductListURL();
 
         if ($this->keyword_search->isProcessed()) {
+            $link = new ProductSearchURL();
             $current = URL::Current();
             foreach ($this->keyword_search->getForm()->inputNames() as $idx => $name) {
                 if ($current->contains($name)) {

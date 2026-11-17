@@ -5,7 +5,8 @@ $location = Spark::Get(Config::LOCAL);
 
 Spark::Set(StoreConfig::STORE_LOCAL, $location . "/storefront");
 Spark::Set(StoreConfig::LOGO_NAME, "logo_header.svg");
-Spark::Set(StoreConfig::LOGO_PATH, Spark::Get("INSTALL_PATH")."/storefront/images/");
+//the store default (sparkstore/storefront/images) - INSTALL_PATH was never set
+Spark::Set(StoreConfig::LOGO_PATH, dirname(__DIR__) . "/storefront/images/");
 
 Spark::Set(StoreConfig::DEFAULT_CURRENCY, "EUR");
 Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");

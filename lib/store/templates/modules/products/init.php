@@ -8,6 +8,7 @@
 //  /products/category/<catID>/<slug>/   a category                        ProductListPage
 //  /products/promos/[<catID>/<slug>/]   promotions                        ProductPromoListPage
 //  /products/<prodID>/<slug>/           a product                         ProductDetailsPage
+//  /products/search/[<catID>/<slug>/]   keyword search (noindex)          ProductSearchListPage
 //
 $module = Module::Active();
 if (!$module->pageClass) {
@@ -16,6 +17,7 @@ if (!$module->pageClass) {
 }
 $module->addPagePath("category", "ProductListPage", "class/pages/ProductListPage.php");
 $module->addPagePath("details", "ProductDetailsPage", "class/pages/ProductDetailsPage.php");
+$module->addPagePath("search", "ProductSearchListPage", "store/pages/ProductSearchListPage.php");
 $module->addPagePath("promos", "ProductPromoListPage", "store/pages/ProductPromoListPage.php");
 //the old script of a product - its page answers with 301 to the product address
 $module->addPagePath("details.php", "ProductDetailsPage", "class/pages/ProductDetailsPage.php");

@@ -15,7 +15,7 @@ class StoreConfig {
 
     /**
      * Header logo server-side path
-     * Default(string): INSTALL_PATH./storefront/images/
+     * Default(string): <sparkstore>/storefront/images/
      */
     const string LOGO_PATH = "LOGO_PATH";
 
