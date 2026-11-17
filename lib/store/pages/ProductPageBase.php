@@ -1,5 +1,6 @@
 <?php
 include_once("class/pages/StorePage.php");
+include_once("pages/ISelfProcessingPage.php");
 include_once("components/BreadcrumbList.php");
 include_once("store/components/renderers/items/ProductListItem.php");
 include_once("store/beans/SellableProducts.php");
@@ -9,7 +10,7 @@ include_once("store/utils/url/ProductSearchURL.php");
 
 include_once("store/beans/ProductViewLogBean.php");
 
-class ProductPageBase extends StorePage
+class ProductPageBase extends StorePage implements ISelfProcessingPage
 {
 
 

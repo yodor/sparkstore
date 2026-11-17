@@ -402,6 +402,29 @@ class StorePageBase extends SparkPage
     }
 
     /**
+     * The content of the module path in the main section: its columns (the items of a Container content) or
+     * its component
+     * @param TemplateContent $content
+     * @return void
+     */
+    public function setContent(TemplateContent $content) : void
+    {
+        $this->pageContent = $content;
+
+        $config = $content->config();
+        if ($config->title) $this->setTitle($config->title);
+
+        $component = $content->component();
+        if ($component instanceof Container) {
+            foreach ($component->items()->toArray() as $item) {
+                $this->items()->append($item);
+            }
+            return;
+        }
+        $this->items()->append($component);
+    }
+
+    /**
      * The keyword search of the header - a content can search its own items with it (setAction, setColumns)
      * @return KeywordSearch|null
      */

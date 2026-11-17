@@ -1,19 +1,19 @@
 <?php
-include_once("store/pages/StoreTemplatePage.php");
+include_once("class/pages/StorePage.php");
 include_once("store/components/CartComponent.php");
 include_once("store/components/CheckoutSections.php");
 include_once("store/templates/content/CheckoutContent.php");
 include_once("store/utils/cart/Cart.php");
 
 /**
- * Page of the checkout module (StoreTemplatePage: the storefront look with the module path content).
+ * Page of the checkout module (the site StorePage frame with the content of the module path).
  *
  * The layout of the checkout pages: the heading (page title), the cart, the navigation
  * buttons (left, center, right) and the 'base' container. CheckoutContent fills them through this page;
  * the component of any other content (error) goes into 'base'.
  * Body classes: 'CheckoutPage' (checkout.css) and the path ('delivery/option' → 'delivery_option').
  */
-class CheckoutTemplatePage extends StoreTemplatePage
+class CheckoutTemplatePage extends StorePage
 {
     const string NAV_LEFT = "left";
     const string NAV_CENTER = "center";
@@ -102,8 +102,9 @@ class CheckoutTemplatePage extends StoreTemplatePage
         return new OrderProcessor();
     }
 
-    public function update(TemplateContent $content) : void
+    public function setContent(TemplateContent $content) : void
     {
+        $this->pageContent = $content;
         $config = $content->config();
         if ($config->title) $this->setTitle($config->title);
 

@@ -7,10 +7,11 @@
 //  /logo           the logo image (the admin upload or the store default)    scripts/logo.php
 //  /sitemap.xml    the cached sitemap (createsitemap.php) or the live one; ?live=1 always live    scripts/sitemap.xml.php
 //
-include_once("store/pages/StoreModulePage.php");
+include_once("class/pages/StorePage.php");
 
 $module = Module::Active();
-$module->pageClass = StoreModulePage::class;
+//the site StorePage frame
+$module->pageClass = "StorePage";
 
 //the old root scripts
 $module->addRedirect("contacts.php", "contacts");

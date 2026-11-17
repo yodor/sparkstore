@@ -1,16 +1,16 @@
 <?php
-include_once("store/pages/StoreTemplatePage.php");
+include_once("class/pages/StorePage.php");
 include_once("utils/menu/MenuItemList.php");
 include_once("utils/menu/MenuItem.php");
 include_once("store/templates/content/AccountContent.php");
 
 /**
- * Page of the account module (StoreTemplatePage: the storefront look with the module path content).
+ * Page of the account module (the site StorePage frame with the content of the module path).
  *
  * Layout: the 'columns' container - the account menu column (logged in clients) and the content columns.
  * AccountContent gives its columns, the component of any other content (error) is put in one column.
  */
-class AccountTemplatePage extends StoreTemplatePage
+class AccountTemplatePage extends StorePage
 {
     protected Container $columns;
 
@@ -54,7 +54,7 @@ class AccountTemplatePage extends StoreTemplatePage
         $column->items()->append($links);
 
         //top level section of the path marks its item
-        $section = explode("/", Template::FormatPath($this->path, "/", false))[0] ?? "";
+        $section = explode("/", Template::FormatPath(Module::Active()->getPath(), "/", false))[0] ?? "";
 
         foreach (AccountTemplatePage::Menu()->toArray() as $item) {
             if (!($item instanceof MenuItem)) continue;
@@ -86,8 +86,9 @@ class AccountTemplatePage extends StoreTemplatePage
      * @param TemplateContent $content
      * @return void
      */
-    public function update(TemplateContent $content) : void
+    public function setContent(TemplateContent $content) : void
     {
+        $this->pageContent = $content;
         $config = $content->config();
         if ($config->title) $this->setTitle($config->title);
 
