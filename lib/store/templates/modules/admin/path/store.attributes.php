@@ -1,10 +1,10 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(AttributesBean::class, AttributeInputForm::class);
+    $config = BeanEditor::Configure(AttributesBean::class, AttributeInputForm::class);
 }
 else {
-    $config = TemplateConfig::List(AttributesBean::class);
+    $config = BeanList::Configure(AttributesBean::class);
     $config->listFields = array("name"=>"Name","unit"=>"Unit", "type"=>"Type");
     $config->clearNavigation = true;
 }

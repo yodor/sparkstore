@@ -3,11 +3,11 @@ include_once("store/beans/ContactAddressesBean.php");
 include_once("store/forms/ContactAddressInputForm.php");
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(ContactAddressesBean::class, ContactAddressInputForm::class);
+    $config = BeanEditor::Configure(ContactAddressesBean::class, ContactAddressInputForm::class);
     $config->title = tr("Contact Address");
 }
 else {
-    $config = TemplateConfig::List(ContactAddressesBean::class);
+    $config = BeanList::Configure(ContactAddressesBean::class);
     $config->title = tr("Contact Addresses");
     $config->listFields = array("city" => "City", "address" => "Address", "phone" => "Phone", "email" => "Email");
 

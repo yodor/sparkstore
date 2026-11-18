@@ -1,10 +1,10 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(ProductClassesBean::class, ProductClassInputForm::class);
+    $config = BeanEditor::Configure(ProductClassesBean::class, ProductClassInputForm::class);
 }
 else {
-    $config = TemplateConfig::List(ProductClassesBean::class);
+    $config = BeanList::Configure(ProductClassesBean::class);
 
     $sel = SQLSelect::Table(" product_classes pc ");
 

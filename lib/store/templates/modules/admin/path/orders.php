@@ -1,3 +1,3 @@
 <?php
-$config = TemplateConfig::Plain("Orders", tr("Orders Management"));
+$config = Plain::Configure("Orders", tr("Orders Management"));
 $config->clearNavigation = true;

@@ -1,10 +1,10 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(SectionsBean::class, SectionInputForm::class);
+    $config = BeanEditor::Configure(SectionsBean::class, SectionInputForm::class);
 }
 else {
-    $config = TemplateConfig::List(SectionsBean::class);
+    $config = BeanList::Configure(SectionsBean::class);
     $config->listFields = array("position"=>"#", "section_title"=>"Section");
 
     $config->observer = function(TemplateEvent $event) {

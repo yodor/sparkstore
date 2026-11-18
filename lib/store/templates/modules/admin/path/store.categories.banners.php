@@ -4,7 +4,7 @@ Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Module::P
 
 if (URL::Current()->contains("editID")) {
 
-    $config = TemplateConfig::Editor(ProductCategoryBannersBean::class, PhotoForm::class);
+    $config = BeanEditor::Configure(ProductCategoryBannersBean::class, PhotoForm::class);
     $config->useCondition = true;
 
     $config->observer = function(TemplateEvent $event) {
@@ -17,7 +17,7 @@ if (URL::Current()->contains("editID")) {
     };
 }
 else {
-    $config = TemplateConfig::Gallery(ProductCategoryBannersBean::class);
+    $config = BeanGallery::Configure(ProductCategoryBannersBean::class);
     $config->useCondition = true;
 
     $config->observer = function(TemplateEvent $event) {

@@ -9,11 +9,11 @@ Template::Condition(new BeanKeyCondition(new ProductVariantsBean(), Module::Path
 $variantName = (new ProductVariantsBean())->variantName((int)Template::Condition()->getID());
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(ProductVariantPhotosBean::class, PhotoForm::class);
+    $config = BeanEditor::Configure(ProductVariantPhotosBean::class, PhotoForm::class);
     $config->title = tr("Image") . ": " . $variantName;
 }
 else {
-    $config = TemplateConfig::Gallery(ProductVariantPhotosBean::class);
+    $config = BeanGallery::Configure(ProductVariantPhotosBean::class);
     $config->title = tr("Photo Gallery") . ": " . $variantName;
 }
 $config->useCondition = true;

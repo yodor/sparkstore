@@ -3,7 +3,7 @@ include_once("store/utils/CheckStockState.php");
 include_once("db/DBExpression.php");
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(ProductsBean::class, ProductInputForm::class);
+    $config = BeanEditor::Configure(ProductsBean::class, ProductInputForm::class);
 
     //sites change the form (formClass) and add their own handling with TemplateConfig::WrapObserver()
     $config->observer = function (TemplateEvent $event) {

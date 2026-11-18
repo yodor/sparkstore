@@ -1,10 +1,10 @@
 <?php
 
 if (URL::Current()->contains("editID")) {
-    $config = TemplateConfig::Editor(ProductCategoriesBean::class, ProductCategoryInputForm::class);
+    $config = BeanEditor::Configure(ProductCategoriesBean::class, ProductCategoryInputForm::class);
 }
 else {
-    $config = TemplateConfig::Tree(ProductCategoriesBean::class);
+    $config = BeanTree::Configure(ProductCategoriesBean::class);
 
     $config->listFields = array("category_name"=>"Category Name");
 

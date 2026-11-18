@@ -2,7 +2,7 @@
 $config = null;
 if (URL::Current()->contains("editID")) {
 
-    $config = TemplateConfig::Editor(VariantOptionsBean::class, VariantOptionInputForm::class);
+    $config = BeanEditor::Configure(VariantOptionsBean::class, VariantOptionInputForm::class);
 
     $config->observer = function(TemplateEvent $event) use($config) {
         $content = $event->getSource();

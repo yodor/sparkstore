@@ -5,7 +5,7 @@ Template::Condition(new BeanKeyCondition(new ProductsBean(), Module::PathURL("/s
 
 if (URL::Current()->contains("editID")) {
 
-    $config = TemplateConfig::Editor(ProductPhotosBean::class, PhotoForm::class);
+    $config = BeanEditor::Configure(ProductPhotosBean::class, PhotoForm::class);
     $config->useCondition = true;
 
     $config->observer = function(TemplateEVent $event)  {
@@ -21,7 +21,7 @@ if (URL::Current()->contains("editID")) {
 }
 else {
 
-    $config = TemplateConfig::Gallery(ProductPhotosBean::class);
+    $config = BeanGallery::Configure(ProductPhotosBean::class);
     $config->useCondition = true;
 
     $config->observer = function(TemplateEvent $event) {

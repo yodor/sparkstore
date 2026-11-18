@@ -4,7 +4,7 @@ Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Module::PathU
 
 if (URL::Current()->contains("editID")) {
     //
-    $config = TemplateConfig::Editor(VariantOptionsBean::class, VariantParameterInputForm::class);
+    $config = BeanEditor::Configure(VariantOptionsBean::class, VariantParameterInputForm::class);
 
     $config->observer = function(TemplateEVent $event) {
         $content = $event->getSource();
@@ -50,7 +50,7 @@ if (URL::Current()->contains("editID")) {
 
 }
 else {
-    $config = TemplateConfig::List(VariantOptionsBean::class);
+    $config = BeanList::Configure(VariantOptionsBean::class);
     $config->listFields = array("voID"=>"ID", "position"=>"Position", "option_value"=>"Parameter Name");
 
     $config->observer = function(TemplateEvent $event)  {

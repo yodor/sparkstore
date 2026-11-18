@@ -4,7 +4,7 @@ Template::Condition( new BeanKeyCondition(new SectionsBean(), Module::PathURL("/
 
 if (URL::Current()->contains("editID")) {
 
-    $config = TemplateConfig::Editor(SectionBannersBean::class, PhotoForm::class);
+    $config = BeanEditor::Configure(SectionBannersBean::class, PhotoForm::class);
 
     //Signal TemplateContent to use Template::Condition during setup() call to add match() on the default bean->select,
     //by doing so subsequent query() calls of the bean would return filtered data for the iterators
@@ -24,7 +24,7 @@ if (URL::Current()->contains("editID")) {
     };
 }
 else {
-    $config = TemplateConfig::Gallery(SectionBannersBean::class);
+    $config = BeanGallery::Configure(SectionBannersBean::class);
 
     //Signal TemplateContent to use Template::Condition during setup() call to add match() on the default bean->select,
     //by doing so subsequent query() calls of the bean would return filtered data for the iterators

@@ -8,7 +8,7 @@ include_once("components/renderers/cells/ActionsCell.php");
 //registered clients - list only, accounts are created by the clients themselves
 $bean = new UsersBean();
 
-$config = TemplateConfig::List(UsersBean::class);
+$config = BeanList::Configure(UsersBean::class);
 $config->title = tr("Clients");
 $config->iterator = $bean->query("email", "fullname", "userID", "phone", "last_active", "counter", "date_signup", "suspend");
 $config->listFields = array("fullname" => "Full Name", "email" => "Email", "phone" => "Phone",
