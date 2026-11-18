@@ -1,9 +1,5 @@
 @layer base {
 
-* {
-    font-family: "Montserrat", "Arial", sans-serif;
-}
-
 body {
 
     font-size:16px;
@@ -51,6 +47,8 @@ H2 A {
 /* store_base.css */
 
 :root {
+    /* the store font - the core '*' rule reads it (StorePageBase::$fontCSS loads it) */
+    --theme-font-family: "Montserrat", "Arial", sans-serif;
     --theme-accent: #ff6600;
     --theme-accent-light: #ff6600;
     --theme-accent-dark: #ff6600;
