@@ -44,6 +44,7 @@ include_once("store/utils/url/ProductListURL.php");
 include_once("objects/data/GTMConvParam.php");
 include_once("objects/data/GTMConversionCommand.php");
 include_once("objects/data/GTMConsentCommand.php");
+include_once("store/components/frame/StoreFrame.php");
 
 
 class StorePageBase extends SparkPage
@@ -82,6 +83,9 @@ class StorePageBase extends SparkPage
      */
     public static string $fontCSS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap";
 
+    /**
+     * The sections of the frame (StoreFrame - null when a site disabled one); the main section holds the content
+     */
     protected ?PageSection $_header = null;
     protected ?PageSection $_menu = null;
     protected ?PageSection $_main = null;
@@ -125,6 +129,10 @@ class StorePageBase extends SparkPage
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
         //the menu bar on phones and tablets
         $this->head()->addCSS(Spark::Get(Config::SPARK_LOCAL) . "/css/mobile/MenuBar.css", false, "(max-width: 1024px)");
+        //the css of the site for the frame (StoreFrame::Stylesheet - the site init)
+        foreach (StoreFrame::Stylesheets() as $href) {
+            $this->head()->addCSS($href);
+        }
 
 
 
@@ -365,63 +373,82 @@ class StorePageBase extends SparkPage
 
         $this->keyword_search = $ksc;
 
-        $this->_header = new PageSection();
-        $this->_header->addClassName("header");
-        $this->_header->content()->setTagName("header");
-        $this->_header->setAttribute("itemscope");
-        $this->_header->setAttribute("itemtype", "https://schema.org/WPHeader");
-
-        $this->_menu = new PageSection();
-        $this->_menu->addClassName("menu");
-
         $this->_main = new PageSection();
         $this->_main->addClassName("main");
 
-        $this->_cookies = new PageSection();
-        $this->_cookies->addClassName("cookies");
-        $this->_cookies->setTagName("aside");
-        $this->_cookies->setAttribute("aria-label","Cookie Consent Notification");
-        $this->_cookies->setAttribute("role", "dialog");
-        $this->_cookies->setAttribute("tabindex", "0");
+        //the sections of the frame (StoreFrame); a site StorePage that still overrides the old hooks builds them so
+        $this->_header = $this->frameSection(StoreFrame::HEADER, "initHeaderSection", function (StoreSection $section) {
+            $this->initHeaderSection($section->content());
+        });
 
-//        $this->_cookies->setAttribute("accepted", 0);
+        $this->_menu = $this->frameSection(StoreFrame::MENU, array("initMenuGroups", "createSearchMenuGroup", "createCustomerMenuGroup"), function (StoreSection $section) {
+            $section->content()->items()->append($this->menu_bar);
+            $menu_groups = new Container(false);
+            $menu_groups->setComponentClass("menu_groups");
+            $this->initMenuGroups($menu_groups);
+            $this->menu_bar->items()->append($menu_groups);
+        });
 
-        $this->_footer = new PageSection();
-        $this->_footer->addClassName("footer");
+        //after the content of every page
+        $this->_page_footer = $this->frameSection(StoreFrame::PAGE_FOOTER, "initPageFooterSection", function (StoreSection $section) {
+            $this->initPageFooterSection($section->content());
+        });
 
-        $this->_page_footer = new PageSection();
-        $this->_page_footer->addClassName("pageFooter");
-        $this->_page_footer->content()->setTagName("footer");
+        $this->_cookies = $this->frameSection(StoreFrame::COOKIES, "createCookiesInfoPanel", function (StoreSection $section) {
+            $section->content()->items()->append($this->createCookiesInfoPanel());
+        });
 
-        $this->initHeaderSection($this->_header->content());
-
-
-        $this->_menu->content()->items()->append($this->menu_bar);
-
-        $menu_groups = new Container(false);
-        $menu_groups->setComponentClass("menu_groups");
-        $this->initMenuGroups($menu_groups);
-        $this->menu_bar->items()->append($menu_groups);
-
-
-        //each page content is append with this section
-        $this->initPageFooterSection($this->_page_footer->content());
-
-        //cookies popup
-        $this->_cookies->content()->items()->append($this->createCookiesInfoPanel());
-
-
-        //page footer popup fixed
-        $this->initFooterSection($this->_footer->content());
-
+        //the fixed footer
+        $this->_footer = $this->frameSection(StoreFrame::FOOTER, "initFooterSection", function (StoreSection $section) {
+            $this->initFooterSection($section->content());
+        });
 
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
             $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");
         }
 
-        $this->home_action = new Action(tr("Products"));
-        $this->home_action->setURL(new ProductListURL());
+        $home = StoreFrame::GetHomeAction();
+        if (is_array($home)) {
+            $this->home_action = new Action($home[0]);
+            $this->home_action->setURL(new URL($home[1]));
+        }
+        else {
+            $this->home_action = new Action(tr("Products"));
+            $this->home_action->setURL(new ProductListURL());
+        }
+    }
+
+    /**
+     * The section '$name' of the frame, built - null when the site disabled it. A site page class that overrides
+     * one of '$hooks' (the hooks before the sections - initHeaderSection ...) builds it with '$legacy'.
+     * @param string $name
+     * @param string|array $hooks
+     * @param Closure $legacy
+     * @return StoreSection|null
+     * @throws Exception
+     */
+    protected function frameSection(string $name, string|array $hooks, Closure $legacy) : ?StoreSection
+    {
+        if (!StoreFrame::IsEnabled($name)) return null;
+        $section = StoreFrame::Section($name);
+        foreach ((array)$hooks as $hook) {
+            if ((new ReflectionMethod($this, $hook))->getDeclaringClass()->getName() !== StorePageBase::class) {
+                $legacy($section);
+                return $section;
+            }
+        }
+        $section->initialize($this);
+        return $section;
+    }
+
+    /**
+     * The logged client of this request - null for a visitor
+     * @return AuthContext|null
+     */
+    public function getClient() : ?AuthContext
+    {
+        return $this->client;
     }
 
     /**
@@ -489,8 +516,8 @@ class StorePageBase extends SparkPage
 
         echo "\n<!-- startRender StorePage-->\n";
 
-        $this->_header->render();
-        $this->_menu->render();
+        $this->_header?->render();
+        $this->_menu?->render();
 
 
         $this->_main->startRender();
@@ -505,10 +532,10 @@ class StorePageBase extends SparkPage
         $this->_main->spaceRight()->render();
         $this->_main->finishRender();
 
-        $this->_page_footer->render();
+        $this->_page_footer?->render();
 
-        $this->_cookies->render();
-        $this->_footer->render();
+        $this->_cookies?->render();
+        $this->_footer?->render();
 
 
         echo "\n";
@@ -518,49 +545,19 @@ class StorePageBase extends SparkPage
 
     }
 
+    /*
+     * The hooks before the sections (StoreFrame) - a site StorePage that overrides one of them builds that section
+     * itself (frameSection). Their defaults are the sections' own parts. To go when no site overrides them.
+     */
+
     protected function createSearchMenuGroup() : ?Container
     {
-        $container = new Container(false);
-        $container->setComponentClass("group search_pane");
-        $container->items()->append($this->keyword_search);
-        return $container;
+        return StoreMenu::SearchGroup($this->keyword_search);
     }
 
     protected function createCustomerMenuGroup() : ?Container
     {
-        $container = new Container(false);
-        $container->setComponentClass("group customer_pane");
-
-        $icon_contents = "<span class='icon'></span>";
-
-        $button_account = new Action();
-        $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/login");
-        $button_account->setAttribute("title", tr("Account"));
-        $button_account->setClassName("button account");
-        $button_account->setContents($icon_contents);
-        if ($this->client) {
-            $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/");
-            $button_account->addClassName("logged");
-        }
-
-        $container->items()->append($button_account);
-
-        $button_cart = new Action();
-        $button_cart->getURL()->fromString(Spark::Get(Config::LOCAL) . "/checkout/cart");
-        $button_cart->setAttribute("title", tr("Cart"));
-        $button_cart->addClassName("button cart");
-
-        $button_contents = $icon_contents;
-        $cart_items = Cart::Instance()->itemsCount();
-        if ($cart_items > 0) {
-            $button_cart->setAttribute("item_count", $cart_items);
-            $button_contents .= "<span class='items_dot'>$cart_items</span>";
-        }
-        $button_cart->setContents($button_contents);
-
-        $container->items()->append($button_cart);
-
-        return $container;
+        return StoreMenu::CustomerGroup($this->client instanceof AuthContext);
     }
 
     protected function initMenuGroups(Container $container): void
@@ -578,192 +575,31 @@ class StorePageBase extends SparkPage
 
     protected function createLogo(string $href = "") : Component
     {
-        if (!$href) {
-            $href = Spark::Get(Config::LOCAL)."/";
-        }
-        $link = new Action();
-        $link->setTagName("a");
-        $link->setAttribute("aria-label", "logo");
-        $link->setAttribute("title", "logo");
-
-        $link->setURL(new URL($href));
-        $link->setComponentClass("logo");
-        return $link;
+        return StoreHeader::Logo($href);
     }
 
     protected function createVideo(string $src = "") : Video
     {
-        if (!$src) {
-            $src = Spark::Get(Config::LOCAL)."/images/header_logo";
-        }
-        $video = new Video();
-        $video->setAttribute("autoplay");
-        $video->setAttribute("playsInline");
-        $video->setAttribute("muted");
-        $video->setAttribute("loop");
-        $video->setAttribute("preload", "auto");
-
-        $source_webm = new Source($src.".webm", 'video/webm');
-        $video->items()->append($source_webm);
-        $source_mp4 = new Source($src.".mp4", 'video/mp4');
-        $video->items()->append($source_mp4);
-
-        return $video;
+        return StoreHeader::Video($src);
     }
 
     protected function initHeaderSection(Container $container) : void
     {
-
-        $container->items()->append($this->createLogo());
-
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-
-        $marquee = new Marquee();
-        $marquee->setContents($cfg->get("marquee_text"));
-        $container->items()->append($marquee);
-
+        StoreFrame::Header()->fill($container, $this);
     }
 
     protected function initPageFooterSection(Container $container): void
     {
-        $columns = new Container(false);
-        $columns->setComponentClass("columns");
-        $container->items()->append($columns);
-
-        $columnVoucher = new Container(false);
-        $columnVoucher->setComponentClass("column voucher");
-        $columns->items()->append($columnVoucher);
-
-        if ($this->vouchers_enabled) {
-            $button = Button::ActionButton(tr("Купи ваучер"), "showVoucherForm()");
-            $columnVoucher->items()->append($button);
-        }
-
-        $columnLinks = new Container(false);
-        $columnLinks->setComponentClass("column page_links");
-        $columns->items()->append($columnLinks);
-
-        $dp = new DynamicPagesBean();
-        $query = $dp->query("item_title", "keywords", $dp->key());
-        $query->stmt->where()->expression("keywords LIKE '%footer_page%'"); //no binding
-        $query->stmt->where()->match("visible", 1);
-        $query->exec();
-        while ($result = $query->nextResult()) {
-            $linkButton = Button::Action($result->get("item_title"), DynamicPageURL::Page((int)$result->get("dpID"), (string)$result->get("item_title"))->toString());
-            $linkButton->setComponentClass("item");
-            $linkButton->setTitle($result->get("item_title"));
-            $columnLinks->items()->append($linkButton);
-        }
-
-
-        $cfg = ConfigBean::Factory();
-        $cfg->setSection("store_config");
-        $phone = $cfg->get("phone_text");
-        $phone = str_replace("\\r\\n", "<BR>", $phone);
-        $email = $cfg->get("email_text");
-        $email = str_replace("\\r\\n", "<BR>", $email);
-        $location = $cfg->get("address_text");
-        $location = str_replace("\\r\\n", "<BR>", $location);
-        $working_hours = $cfg->get("working_hours_text");
-        $working_hours = str_replace("\\r\\n", "<BR>", $working_hours);
-
-        $items = array("phone"=>$phone, "email"=>$email, "location"=>$location, "working_hours"=>$working_hours);
-
-        $columnAddress = new Container(false);
-        $columnAddress->setComponentClass("column address");
-        $columns->items()->append($columnAddress);
-
-        $space = new Container(false);
-        $space->setComponentClass("space");
-        $columnAddress->items()->append($space);
-
-        foreach ($items as $key=>$val) {
-            $item = new Container(false);
-            $item->setComponentClass("text");
-            $item->addClassName($key);
-            $space->items()->append($item);
-
-            $icon = new Component(false);
-            $icon->setComponentClass("icon");
-            $item->items()->append($icon);
-
-            $value = new Component(false);
-            $value->setComponentClass("value");
-            $item->items()->append($value);
-
-            $value->setContents($val);
-        }
-
+        StoreFrame::PageFooter()->fill($container, $this);
     }
 
     protected function initFooterSection(Container $container) : void
     {
-        $social = new Container(false);
-        $social->setComponentClass("social");
-        $container->items()->append($social);
-
-        $items = array(
-            "facebook"=>"",
-            "instagram"=>"",
-            "youtube"=>"",
-            "terms"=>DynamicPageURL::Group("terms")->toString(),
-            "contacts"=>Spark::Get(Config::LOCAL)."/contacts",
-            "phone"=>"",
-        );
-
-        $cfg = new ConfigBean();
-        $cfg->setSection("store_config");
-        $facebook_href = $cfg->get("facebook_url");
-        if ($facebook_href) {
-            $items["facebook"] = $facebook_href;
-        }
-        $instagram_href = $cfg->get("instagram_url");
-        if ($instagram_href) {
-            $items["instagram"] = $instagram_href;
-        }
-        $youtube_href = $cfg->get("youtube_url");
-        if ($youtube_href) {
-            $items["youtube"] = $youtube_href;
-        }
-        $phone = $cfg->get("phone_orders");
-        if ($phone) {
-            $items["phone"] = "tel:$phone";
-        }
-
-        foreach ($items as $name=>$href) {
-            if ($href) {
-                $item = Button::Action("", $href);
-                $item->setComponentClass("slot");
-                $item->addClassName($name);
-                $item->setTitle($name);
-                $social->items()->append($item);
-            }
-        }
-
-
+        StoreFrame::Footer()->fill($container, $this);
     }
 
     protected function createCookiesInfoPanel() : Container
     {
-        $container = new Container(false);
-        $container->setComponentClass("info");
-
-        $button = Button::Action(tr("Добре"), "javascript:document.sparkCookies.accept()");
-        $button->setComponentClass("ColorButton");
-
-        $container->items()->append($button);
-
-        $text = new TextComponent(tr("Сайтът използва '<i>бисквитки</i>', за да подобри услугите. Продължавайки разглеждането му автоматично се съгласявате с тяхното използване."));
-        $container->items()->append($text);
-
-        return $container;
+        return StoreCookies::InfoPanel();
     }
-
-
-
-
-
-
-
 }

@@ -2,7 +2,6 @@
 //
 // account module - the client area of the store sites. Site init.php runs after it and may override.
 //
-include_once("class/pages/StorePage.php");
 include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("auth/UserAuthenticator.php");
 

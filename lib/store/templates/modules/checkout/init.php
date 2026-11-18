@@ -2,7 +2,6 @@
 //
 // checkout module - the cart and the order of the store sites. Site init.php runs after it and may override.
 //
-include_once("class/pages/StorePage.php");
 include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("auth/UserAuthenticator.php");
 
