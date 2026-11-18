@@ -11,6 +11,7 @@ class StoreCookies extends StoreSection
     public function __construct()
     {
         parent::__construct();
+        $this->stylesheet = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/frame/StoreCookies.css";
         $this->addClassName("cookies");
         $this->setTagName("aside");
         $this->setAttribute("aria-label", "Cookie Consent Notification");

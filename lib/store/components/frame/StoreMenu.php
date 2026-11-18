@@ -18,6 +18,7 @@ class StoreMenu extends StoreSection
     public function __construct()
     {
         parent::__construct();
+        $this->stylesheet = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/frame/StoreMenu.css";
         $this->addClassName("menu");
     }
 

@@ -27,22 +27,22 @@ H2 A {
 
 @layer store {
 
-/* kept from the lower layers: their more specific rules won over the rules of this file before the cascade
-   layers - restated so they still win where they did (remove when this file is reworked) */
+/* the components' own look of their captions, contents and labels - the broad store rules of this file
+   ('.Caption', '.content', 'SPAN.label:after', '.BreadcrumbList .Action') would override it */
+
 .InputField > .Caption:first-child { color: black; padding: 5px; }
+
 .Dialog.JSONFormDialog .Inner .Content FORM .Caption { color: black; display: inline-block; font-size: 100%; text-transform: none; }
+
 .LoginFormRenderer .Caption { color: #517789; font-size: 1.5em; }
-.Dialog .Inner .Content { padding: 0.5em; }
+
 .DatedItem .content { padding-right: 1em; }
-.MenuBar[open] .ItemList .Item[have_submenu="1"] { padding-right: 0; padding-bottom: 0; }
-.MenuBar .ItemList.Submenu { background-color: white; height: fit-content; }
-.MenuBar .ItemList .Item.Hover { background-color: black; }
-.MenuBar[open] .ItemList .Item { align-items: flex-start; justify-content: flex-start; }
-.MenuBar > .ItemList > .Item[active="1"] > .Link { font-weight: bold; }
+
 .BreadcrumbList .BreadcrumbListItem .Action { text-transform: inherit; }
+
 .ResultViewFooter .page_info .label:after { content: ":"; }
+
 .ResultViewFooter .results_info .label:after { content: ":"; }
-.MenuBar[open] > .ItemList { height: auto; }
 
 /* store_base.css */
 
@@ -191,395 +191,17 @@ A.Caption:active {
     padding-bottom: 5em;
 }
 
-.section.header {
-
-}
-
-.section.header .content {
-    background-color:black;
-    white-space:nowrap;
-    position:relative;
-    display:flex;
-    flex-flow: row nowrap;
-
-    align-items:center;
-}
-
-.section.header .content .logo {
-
-    max-width:450px;
-    min-width:450px;
-    width:450px;
-
-    height:90px;
-
-    background-image:url("../../logo");
-    background-repeat:no-repeat;
-    background-position:center center;
-    background-size: cover;
-
-    background-origin:content-box;
-    box-sizing:border-box;
-
-    text-decoration:none;
-}
-
-.section.header .content .Marquee {
-
-    background-color:inherit;
-    color:grey;
-
-    font-size: 48px;
-    text-transform:uppercase;
-    flex-grow: 1;
-}
-
 /**/
 
 /* footer */
 
 /**/
 
-.section.footer {
-    /*position: sticky;*/
-    position: fixed;
-    width: 100%;
-    z-index:10;
-
-    bottom:0;
-
-
-
-}
-
-.section.footer .content {
-    background-color:black;
-    color:white;
-
-    text-align:center;
-    box-shadow:0px -2px 4px  rgba(0,0,0,0.5);
-    position:relative;
-    padding:0.5em;
-}
-
-.section.footer .content .social {
-
-    box-sizing:border-box;
-    text-align:center;
-
-    display:flex;
-    flex-direction: row;
-    flex-wrap:nowrap;
-    gap:1em;
-    justify-content: center;
-}
-
-.section.footer .content .social A {
-    text-decoration: none;
-    color:white;
-    filter:invert(1);
-}
-
-.section.footer .content .social A:hover {
-    text-decoration: underline;
-}
-
-.section.footer .content .social .slot {
-
-
-    background-position:center center;
-    background-repeat:no-repeat;
-
-    background-size:cover;
-    width:36px;
-    height:36px;
-
-}
-
-.section.footer .content .social .slot.facebook {
-    background-image:url("../images/facebook_icon.svg");
-
-}
-
-.section.footer .content .social .slot.instagram {
-    background-image:url("../images/instagram_icon.svg");
-
-}
-
-.section.footer .content .social .slot.contacts {
-    background-image:url("../images/mail_icon.svg");
-
-}
-
-.section.footer .content .social .slot.youtube {
-    background-image:url("../images/youtube_icon.svg");
-
-}
-
-.section.footer .content .social .slot.phone {
-    background-image:url("../images/phone_icon.svg");
-
-}
-
-.section.footer .content .social .slot.terms {
-    background-image:url("../images/document_icon.svg");
-
-}
-
-.section.cookies {
-    position: fixed;
-    z-index: 11;
-
-    bottom: 3.25em;
-
-    background-color:rgba(1.0,0.0,0.0,0.8);
-
-    display:none;
-
-    width:100%;
-    max-width:100%;
-}
-
-.section.cookies[accepted="true"] {
-    display:none;
-}
-
-.section.cookies[accepted="false"] {
-    display:grid;
-}
-
-.section.cookies .content {
-
-    padding:60px;
-
-}
-
-.section.cookies .content .info {
-
-    color:white;
-
-}
-
-.section.cookies .content .info .ColorButton {
-    float:right;
-}
-
 /**/
 
 /* menu */
 
 /**/
-
-.section.menu {
-    position: sticky;
-    top:0;
-    z-index:10;
-    border-top: 1px solid transparent;
-
-}
-
-.section.menu.sticky {
-    border-top:0;
-}
-
-.section.menu.sticky .content {
-    box-shadow:0px 2px 4px  rgba(0,0,0,0.5);
-
-}
-
-.section.menu .content {
-
-    background-repeat:repeat-y;
-    box-sizing:border-box;
-    position:relative;
-    background-color:#e6e6e6;
-}
-
-.section.menu .menu_groups {
-    display:flex;
-    align-items: center;
-    justify-content: right;
-    flex-grow:1;
-    /*min-width:0;*/
-}
-
-.section.menu .menu_groups:empty {
-    display:none;
-}
-
-.section.menu .group {
-    display:flex;
-    align-items: center;
-    justify-content: left;
-}
-
-.section.menu .group.search_pane {
-    flex-grow:1;
-    container-type: inline-size;
-    min-width:180px;
-}
-
-.section.menu .group.search_pane .KeywordSearch {
-    margin:0;
-
-    border-top: 1px solid #b7b7b7;
-    border-left: 1px solid #b7b7b7;
-    border-right: 1px solid #dcdcdc;
-    border-bottom: 1px solid #dcdcdc;
-    background-color:white;
-
-    display:inline-flex;
-    align-items: center;
-    justify-content: left;
-    flex-grow:1;
-
-}
-
-.section.menu .group.search_pane .KeywordSearch .InputLabel {
-    display:none;
-}
-
-.section.menu .group.search_pane .KeywordSearch .InputField {
-    /*flex-direction:row;*/
-    flex-grow:1;
-}
-
-.section.menu .group.search_pane .KeywordSearch .InputField INPUT {
-    border:none;
-    flex-grow:1;
-    outline-offset: 3px;
-    margin-left:5px;
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine {
-    justify-content: center;
-    min-width:64px;
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
-    display:none;
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons .ColorButton {
-
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons * {
-    outline:none;
-    box-shadow: none;
-
-
-    width:28px;
-    height:30px;
-
-    min-width:28px;
-    min-height:30px;
-
-    max-width:28px;
-    max-height:30px;
-
-    overflow:hidden;
-    border:0;
-    margin:0;
-
-    padding:0;
-
-    background-position:center center;
-    background-size:80%;
-    background-repeat:no-repeat;
-    background-color:transparent;
-    filter: var(--theme-filter-colorize-gray) invert(100%);
-
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action="search"] {
-    background-image:url("../images/search_icon.svg");
-}
-
-.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action="clear"] {
-    background-image:url("../images/search_clear.svg");
-}
-
-.section.menu .group.customer_pane {
-
-    white-space:nowrap;
-    gap:0.5em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-}
-
-.section.menu .group.customer_pane .button {
-
-    width:32px;
-    height:32px;
-
-    display:inline-block;
-    vertical-align: top;
-    /*border:1px solid red;*/
-
-    cursor:pointer;
-
-    position:relative;
-    text-decoration: none;
-}
-
-.section.menu .group.customer_pane .button .icon {
-    filter: invert(0.5);
-    display:inline-block;
-    width:100%;
-    height:100%;
-    background-repeat:no-repeat;
-    background-position:center center;
-    background-size: contain;
-}
-
-.section.menu .group.customer_pane .button.account .icon {
-    background-image:url("../images/user_icon.svg");
-}
-
-.section.menu .group.customer_pane .button.account.logged {
-
-}
-
-.section.menu .group.customer_pane .button.account.logged:after {
-    display:inline-block;
-    width:10px;
-    height:10px;
-    background-color: var(--theme-accent);
-    content:" ";
-    border-radius:15px;
-    bottom:0;
-    right:0;
-    position:absolute;
-}
-
-.section.menu .group.customer_pane .button.cart {
-
-}
-
-.section.menu .group.customer_pane .button.cart .icon {
-    background-image: url("../images/cart.svg");
-}
-
-.section.menu .group.customer_pane .button.cart[item_count] .icon {
-    filter: var(--theme-filter-checkout-icon);
-}
-
-.section.menu .group.customer_pane .button.cart .items_dot {
-    border-radius:15px;
-    font-size:60%;
-    font-weight:bold;
-    background-color:black;
-    color:white;
-    position:absolute;
-    right:-0.8em;
-    top:-0.5em;
-    padding:0.25em;
-    width:15px;
-    height:15px;
-    display:inline-block;
-    text-align:center;
-}
 
 .main .full .space.left {
     /*background-color:#e6e6e6;*/
@@ -1017,99 +639,6 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
     max-width:100%;
 }
 
-.section.pageFooter {
-
-
-
-}
-
-.section.pageFooter .content {
-    background-color:#4d4d4d;
-    color:white;
-}
-
-.pageFooter .columns {
-    display:table;
-    width:100%;
-    min-height:200px;
-    margin-bottom:48px;
-}
-
-.pageFooter .columns .column {
-    display:table-cell;
-    width:33%;
-    min-width:33%;
-    text-align:center;
-    vertical-align: middle;
-    font-size:1.2em;
-    line-height:180%;
-}
-
-.pageFooter .columns .column.address {
-
-
-}
-
-.pageFooter .columns .column.address  .space {
-    font-size:0.9em;
-    line-height:150%;
-    padding-top:2em;
-    padding-bottom:1em;
-    text-align:left;
-    display:inline-block;
-}
-
-.pageFooter .columns .column.address .text {
-    display:block;
-    text-align:left;
-    min-height:2em;
-    vertical-align: top;
-    margin-bottom:1.5em;
-}
-
-.pageFooter .columns .column.address .text .icon {
-    display:inline-block;
-    width:2em;
-    height:2em;
-    background-size:85%;
-    filter: var(--theme-filter-checkout-icon);
-    background-repeat:no-repeat;
-    vertical-align: top;
-    background-position: center center;
-
-}
-
-.pageFooter .columns .column.address .text .value {
-    display:inline-block;
-    padding-left:0.5em;
-}
-
-.pageFooter .columns .column.address .text.phone .icon {
-    background-image: url("../images/footer_phone.svg");
-}
-
-.pageFooter .columns .column.address .text.email .icon {
-    background-image:url("../images/footer_mail.svg");
-}
-
-.pageFooter .columns .column.address .text.location .icon {
-    background-image:url("../images/footer_location.svg");
-}
-
-.pageFooter .columns .column.address .text.working_hours .icon {
-    background-image:url("../images/footer_clock.svg");
-}
-
-.pageFooter .columns .column.page_links .item {
-    display:block;
-    color:white;
-    text-decoration:none;
-}
-
-.pageFooter .columns .column.page_links .item:hover {
-    text-decoration:underline;
-}
-
 .contacts .section.main .content {
     min-height:800px;
 }
@@ -1218,91 +747,34 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 
 /* store_menu.css */
 
-.MenuBar {
-    height:50px;
-}
-
-.MenuBar[open] .ItemList {
-
-}
-
-.MenuBar .ItemList {
-    background-color:#e6e6e6;
-    height: 100%;
-    justify-content: space-evenly;
-}
-
-.MenuBar .ItemList .Item {
-    padding:0;
-    margin:0;
-
-    padding-left:1.5em;
-    padding-right:1.5em;
-
-    box-sizing:border-box;
-
-    background-color:inherit;
-
-    justify-content: center;
-    align-items:center;
-}
-
-.MenuBar .ItemList .Item .Link {
-    font-weight:normal;
-    text-transform:uppercase;
-    font-size:110%;
-}
-
-.MenuBar .ItemList .Item.Hover {
-    background-color:inherit;
-}
-
-.MenuBar .ItemList .Item.Hover .Link {
-    color:black;
-}
-
-.MenuBar .ItemList .Item.Hover {
-    border-top:5px solid transparent;
-    border-bottom:5px solid var(--theme-accent);
-}
-
-.MenuBar .ItemList .Item[active="1"] .Link {
-    font-weight:bold;
-}
-
-.MenuBar .ItemList .Item[active="1"] {
-    border-top:5px solid transparent;
-    border-bottom:5px solid var(--theme-accent);
-}
-
 /*mobile*/
-
-.MenuBar[open] .ItemList .Item {
-    padding-top:0.5em;
-    padding-bottom:0.5em;
-}
 
 /* store_mobile.css */
 
 @media screen and (max-width: 1200px) {
-.home .section.main .banner IMG {
+    .home .section.main .banner IMG {
         width:100%;
     }
-.StorePage.contacts .section.main .content {
+
+    .StorePage.contacts .section.main .content {
         text-align:center;
     }
-.StorePage.contacts .section.main .content .Caption {
+
+    .StorePage.contacts .section.main .content .Caption {
         text-align:center;
     }
-.StorePage.contacts .section.main .content .columns .column.addresses {
+
+    .StorePage.contacts .section.main .content .columns .column.addresses {
         display:block;
         text-align:center;
         margin-top:20px;
     }
-.StorePage.contacts .section.main .content .columns .column.addresses {
+
+    .StorePage.contacts .section.main .content .columns .column.addresses {
         text-align:center;
     }
-.StorePage.contacts .section.main .content .columns .column.addresses .details {
+
+    .StorePage.contacts .section.main .content .columns .column.addresses .details {
         display:inline-block;
         text-align:left;
         margin-top:0;
@@ -1310,58 +782,49 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
         min-width:300px;
 
     }
-.StorePage.contacts .section.main .content .columns .column.map {
+
+    .StorePage.contacts .section.main .content .columns .column.map {
         display:block;
         width:100%;
         box-sizing:border-box;
     }
-.StorePage.contacts .section.main .content .columns .column.map .panel.map {
+
+    .StorePage.contacts .section.main .content .columns .column.map .panel.map {
         display:block;
         width:100%;
         box-sizing:border-box;
     }
-.StorePage.contacts .section.main .content .columns {
+
+    .StorePage.contacts .section.main .content .columns {
         display:block;
         box-sizing:border-box;
     }
-.StorePage.contacts .section.main .content .BeanFormEditor {
+
+    .StorePage.contacts .section.main .content .BeanFormEditor {
         width:100%;
     }
-.StorePage.contacts .section.main .content .BeanFormEditor .FormRenderer {
+
+    .StorePage.contacts .section.main .content .BeanFormEditor .FormRenderer {
         width:100%;
     }
-.StorePage.contacts .section.main .content FORM .InputField.TextArea TEXTAREA {
+
+    .StorePage.contacts .section.main .content FORM .InputField.TextArea TEXTAREA {
         max-width:800px;
         min-width:100%;
         width:100%;
     }
-.section {
+
+    .section {
         grid-template-columns: auto 100% auto;
     }
 }
 
 /*logo space + marque*/
 
-@media screen and (max-width: 900px) {
-.section.header .content {
-        flex-flow: column;
-    }
-}
-
 /*logo space*/
 
 @media screen and (max-width: 450px) {
-.section.header .content .logo {
-        max-width:inherit;
-        width: 100%;
-        min-width: inherit;
-        background-size:contain;
-        height:7vh;
-    }
-.section.header .content .Marquee {
-        font-size: 28px;
-    }
-.products {
+    .products {
         text-align:center;
     }
 }
@@ -1369,34 +832,40 @@ body.mce_browser .FormRenderer .SubmitLine .Buttons {
 /*products tape, category navigation*/
 
 @media screen and (max-width: 640px) {
-.ProductsTape UL {
+    .ProductsTape UL {
         grid-template-columns: repeat(2, minmax(0, calc(100cqw)));
     }
 }
 
 @media screen and (max-width: 1184px) {
-.main_content.container {
+    .main_content.container {
         padding:20px;
     }
-.JSONFormDialog .Inner {
+
+    .JSONFormDialog .Inner {
         width:100%;
         height:100%;
     }
-.JSONFormDialog .Content {
+
+    .JSONFormDialog .Content {
         flex-grow: 1;
     }
-.JSONFormDialog FORM {
+
+    .JSONFormDialog FORM {
         align-content: stretch;
         align-self: stretch;
         flex-grow:1;
     }
-.JSONFormDialog FORM .InputComponent[field="query"] {
+
+    .JSONFormDialog FORM .InputComponent[field="query"] {
         flex-grow:1;
     }
-.JSONFormDialog FORM .InputComponent[field="query"] .InputField.TextArea {
+
+    .JSONFormDialog FORM .InputComponent[field="query"] .InputField.TextArea {
         flex-grow:1;
     }
-.JSONFormDialog FORM .InputComponent[field="query"] .InputField.TextArea TEXTAREA {
+
+    .JSONFormDialog FORM .InputComponent[field="query"] .InputField.TextArea TEXTAREA {
         height:100%;
     }
 }

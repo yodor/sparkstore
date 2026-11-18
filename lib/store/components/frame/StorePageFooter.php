@@ -15,6 +15,7 @@ class StorePageFooter extends StoreSection
     public function __construct()
     {
         parent::__construct();
+        $this->stylesheet = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/frame/StorePageFooter.css";
         $this->addClassName("pageFooter");
         $this->content()->setTagName("footer");
     }

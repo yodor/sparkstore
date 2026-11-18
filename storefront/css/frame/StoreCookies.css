@@ -1,0 +1,43 @@
+@layer store {
+
+/* the cookies of the store frame (StoreCookies) - from store.css */
+
+.section.cookies {
+    position: fixed;
+    z-index: 11;
+
+    bottom: 3.25em;
+
+    background-color:rgba(1.0,0.0,0.0,0.8);
+
+    display:none;
+
+    width:100%;
+    max-width:100%;
+}
+
+.section.cookies[accepted="true"] {
+    display:none;
+}
+
+.section.cookies[accepted="false"] {
+    display:grid;
+}
+
+.section.cookies .content {
+
+    padding:60px;
+
+}
+
+.section.cookies .content .info {
+
+    color:white;
+
+}
+
+.section.cookies .content .info .ColorButton {
+    float:right;
+}
+
+}

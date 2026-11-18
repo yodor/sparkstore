@@ -1,0 +1,288 @@
+@layer store {
+
+/* the menu of the store frame (StoreMenu) - from store.css */
+
+/* the menu bar component's own layout of the submenus and of the open (phone) menu - the broad
+   '.MenuBar .ItemList' / '.Item' rules of this file below would override it */
+.MenuBar[open] .ItemList .Item[have_submenu="1"] { padding-right: 0; padding-bottom: 0; }
+
+.MenuBar .ItemList.Submenu { background-color: white; height: fit-content; }
+
+.MenuBar[open] .ItemList .Item { align-items: flex-start; justify-content: flex-start; }
+
+.MenuBar[open] > .ItemList { height: auto; }
+
+.section.menu {
+    position: sticky;
+    top:0;
+    z-index:10;
+    border-top: 1px solid transparent;
+
+}
+
+.section.menu.sticky {
+    border-top:0;
+}
+
+.section.menu.sticky .content {
+    box-shadow:0px 2px 4px  rgba(0,0,0,0.5);
+
+}
+
+.section.menu .content {
+
+    background-repeat:repeat-y;
+    box-sizing:border-box;
+    position:relative;
+    background-color:#e6e6e6;
+}
+
+.section.menu .menu_groups {
+    display:flex;
+    align-items: center;
+    justify-content: right;
+    flex-grow:1;
+    /*min-width:0;*/
+}
+
+.section.menu .menu_groups:empty {
+    display:none;
+}
+
+.section.menu .group {
+    display:flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.section.menu .group.search_pane {
+    flex-grow:1;
+    container-type: inline-size;
+    min-width:180px;
+}
+
+.section.menu .group.search_pane .KeywordSearch {
+    margin:0;
+
+    border-top: 1px solid #b7b7b7;
+    border-left: 1px solid #b7b7b7;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    background-color:white;
+
+    display:inline-flex;
+    align-items: center;
+    justify-content: left;
+    flex-grow:1;
+
+}
+
+.section.menu .group.search_pane .KeywordSearch .InputLabel {
+    display:none;
+}
+
+.section.menu .group.search_pane .KeywordSearch .InputField {
+    /*flex-direction:row;*/
+    flex-grow:1;
+}
+
+.section.menu .group.search_pane .KeywordSearch .InputField INPUT {
+    border:none;
+    flex-grow:1;
+    outline-offset: 3px;
+    margin-left:5px;
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine {
+    justify-content: center;
+    min-width:64px;
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .TextSpace {
+    display:none;
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons .ColorButton {
+
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons * {
+    outline:none;
+    box-shadow: none;
+
+
+    width:28px;
+    height:30px;
+
+    min-width:28px;
+    min-height:30px;
+
+    max-width:28px;
+    max-height:30px;
+
+    overflow:hidden;
+    border:0;
+    margin:0;
+
+    padding:0;
+
+    background-position:center center;
+    background-size:80%;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    filter: var(--theme-filter-colorize-gray) invert(100%);
+
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action="search"] {
+    background-image:url("../../images/search_icon.svg");
+}
+
+.section.menu .group.search_pane .KeywordSearch .SubmitLine .Buttons button[action="clear"] {
+    background-image:url("../../images/search_clear.svg");
+}
+
+.section.menu .group.customer_pane {
+
+    white-space:nowrap;
+    gap:0.5em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+}
+
+.section.menu .group.customer_pane .button {
+
+    width:32px;
+    height:32px;
+
+    display:inline-block;
+    vertical-align: top;
+    /*border:1px solid red;*/
+
+    cursor:pointer;
+
+    position:relative;
+    text-decoration: none;
+}
+
+.section.menu .group.customer_pane .button .icon {
+    filter: invert(0.5);
+    display:inline-block;
+    width:100%;
+    height:100%;
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: contain;
+}
+
+.section.menu .group.customer_pane .button.account .icon {
+    background-image:url("../../images/user_icon.svg");
+}
+
+.section.menu .group.customer_pane .button.account.logged {
+
+}
+
+.section.menu .group.customer_pane .button.account.logged:after {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    background-color: var(--theme-accent);
+    content:" ";
+    border-radius:15px;
+    bottom:0;
+    right:0;
+    position:absolute;
+}
+
+.section.menu .group.customer_pane .button.cart {
+
+}
+
+.section.menu .group.customer_pane .button.cart .icon {
+    background-image: url("../../images/cart.svg");
+}
+
+.section.menu .group.customer_pane .button.cart[item_count] .icon {
+    filter: var(--theme-filter-checkout-icon);
+}
+
+.section.menu .group.customer_pane .button.cart .items_dot {
+    border-radius:15px;
+    font-size:60%;
+    font-weight:bold;
+    background-color:black;
+    color:white;
+    position:absolute;
+    right:-0.8em;
+    top:-0.5em;
+    padding:0.25em;
+    width:15px;
+    height:15px;
+    display:inline-block;
+    text-align:center;
+}
+
+.MenuBar {
+    height:50px;
+}
+
+.MenuBar[open] .ItemList {
+
+}
+
+.MenuBar .ItemList {
+    background-color:#e6e6e6;
+    height: 100%;
+    justify-content: space-evenly;
+}
+
+.MenuBar .ItemList .Item {
+    padding:0;
+    margin:0;
+
+    padding-left:1.5em;
+    padding-right:1.5em;
+
+    box-sizing:border-box;
+
+    background-color:inherit;
+
+    justify-content: center;
+    align-items:center;
+}
+
+.MenuBar .ItemList .Item .Link {
+    font-weight:normal;
+    text-transform:uppercase;
+    font-size:110%;
+}
+
+.MenuBar .ItemList .Item.Hover {
+    background-color:inherit;
+}
+
+.MenuBar .ItemList .Item.Hover .Link {
+    color:black;
+}
+
+.MenuBar .ItemList .Item.Hover {
+    border-top:5px solid transparent;
+    border-bottom:5px solid var(--theme-accent);
+}
+
+.MenuBar .ItemList .Item[active="1"] .Link {
+    font-weight:bold;
+}
+
+.MenuBar .ItemList .Item[active="1"] {
+    border-top:5px solid transparent;
+    border-bottom:5px solid var(--theme-accent);
+}
+
+.MenuBar[open] .ItemList .Item {
+    padding-top:0.5em;
+    padding-bottom:0.5em;
+}
+
+}

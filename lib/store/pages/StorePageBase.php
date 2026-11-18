@@ -403,6 +403,14 @@ class StorePageBase extends SparkPage
             $this->initFooterSection($section->content());
         });
 
+        //the stylesheets of the sections (after the store css)
+        foreach (array($this->_header, $this->_menu, $this->_page_footer, $this->_cookies, $this->_footer) as $section) {
+            if (!($section instanceof StoreSection)) continue;
+            foreach ($section->stylesheets() as $href) {
+                $this->head()->addCSS($href);
+            }
+        }
+
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
             $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");

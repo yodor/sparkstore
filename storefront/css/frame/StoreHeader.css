@@ -1,0 +1,68 @@
+@layer store {
+
+/* the header of the store frame (StoreHeader) - from store.css */
+
+.section.header {
+
+}
+
+.section.header .content {
+    background-color:black;
+    white-space:nowrap;
+    position:relative;
+    display:flex;
+    flex-flow: row nowrap;
+
+    align-items:center;
+}
+
+.section.header .content .logo {
+
+    max-width:450px;
+    min-width:450px;
+    width:450px;
+
+    height:90px;
+
+    background-image:url("../../../logo");
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: cover;
+
+    background-origin:content-box;
+    box-sizing:border-box;
+
+    text-decoration:none;
+}
+
+.section.header .content .Marquee {
+
+    background-color:inherit;
+    color:grey;
+
+    font-size: 48px;
+    text-transform:uppercase;
+    flex-grow: 1;
+}
+
+@media screen and (max-width: 900px) {
+    .section.header .content {
+        flex-flow: column;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .section.header .content .logo {
+        max-width:inherit;
+        width: 100%;
+        min-width: inherit;
+        background-size:contain;
+        height:7vh;
+    }
+
+    .section.header .content .Marquee {
+        font-size: 28px;
+    }
+}
+
+}

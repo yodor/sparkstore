@@ -19,6 +19,7 @@ class StoreHeader extends StoreSection
     public function __construct()
     {
         parent::__construct();
+        $this->stylesheet = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/frame/StoreHeader.css";
         $this->addClassName("header");
         $this->content()->setTagName("header");
         $this->setAttribute("itemscope");
