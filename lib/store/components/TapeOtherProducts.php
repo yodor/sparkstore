@@ -1,6 +1,7 @@
 <?php
 include_once("store/components/ProductsTape.php");
 include_once("store/beans/SellableProducts.php");
+include_once("store/utils/url/ProductListURL.php");
 
 class TapeOtherProducts extends ProductsTape
 {

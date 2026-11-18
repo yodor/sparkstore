@@ -1,6 +1,8 @@
 <?php
 include_once("store/beans/ContactAddressesBean.php");
 include_once("store/forms/ContactAddressInputForm.php");
+include_once("templates/content/BeanEditor.php");
+include_once("templates/content/BeanList.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(ContactAddressesBean::class, ContactAddressInputForm::class);

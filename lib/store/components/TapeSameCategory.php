@@ -2,6 +2,7 @@
 include_once("store/components/ProductsTape.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/beans/ProductCategoriesBean.php");
+include_once("store/utils/url/CategoryURL.php");
 
 class TapeSameCategory extends ProductsTape
 {

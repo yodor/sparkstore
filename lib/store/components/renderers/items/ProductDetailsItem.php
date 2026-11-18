@@ -17,6 +17,7 @@ include_once("store/utils/unicr/UniCreditPaymentButton.php");
 include_once("store/components/SellableImageGallery.php");
 include_once("store/components/DetailsSidePane.php");
 include_once("store/utils/url/ProductURL.php");
+include_once("utils/script/LDJsonScript.php");
 
 class DetailsTab extends Container
 {

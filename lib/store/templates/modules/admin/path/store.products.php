@@ -1,6 +1,10 @@
 <?php
 include_once("store/utils/CheckStockState.php");
 include_once("db/DBExpression.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductsBean.php");
+include_once("store/forms/ProductInputForm.php");
+include_once("store/templates/modules/admin/content/ProductsList.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(ProductsBean::class, ProductInputForm::class);

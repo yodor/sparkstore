@@ -1,4 +1,8 @@
 <?php
+include_once("forms/InputForm.php");
+include_once("input/DataInputFactory.php");
+include_once("input/validators/NumericValidator.php");
+include_once("input/validators/EmptyValueValidator.php");
 
 class VoucherForm extends InputForm {
     public function __construct()

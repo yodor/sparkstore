@@ -4,6 +4,8 @@ include_once("responders/ToggleFieldResponder.php");
 include_once("components/renderers/cells/DateCell.php");
 include_once("components/renderers/cells/NumericCell.php");
 include_once("components/renderers/cells/ActionsCell.php");
+include_once("templates/content/BeanList.php");
+include_once("components/TableColumn.php");
 
 //registered clients - list only, accounts are created by the clients themselves
 $bean = new UsersBean();

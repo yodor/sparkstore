@@ -1,6 +1,7 @@
 <?php
 include_once("responders/json/JSONFormResponder.php");
 include_once("store/forms/ImportUpdateChooserForm.php");
+include_once("store/beans/ProductsBean.php");
 
 
 class ImportUpdateFormResponder extends JSONFormResponder

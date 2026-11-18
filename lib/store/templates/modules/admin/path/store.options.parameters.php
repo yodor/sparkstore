@@ -1,5 +1,8 @@
 <?php
 include_once("store/beans/VariantOptionsBean.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/forms/VariantParameterInputForm.php");
+include_once("templates/content/BeanList.php");
 Template::Condition(new BeanKeyCondition(new VariantOptionsBean(), Module::PathURL("/store/options"), array("option_name", "pclsID", "prodID")));
 
 if (URL::Current()->contains("editID")) {

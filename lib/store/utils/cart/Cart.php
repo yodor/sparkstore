@@ -31,6 +31,24 @@ class Cart
     protected static ?Cart $instance = NULL;
     protected static ?string $session_key = NULL;
 
+    /**
+     * The discount of the site cart (Cart::SetDefaultDiscount() - the site init), else none (ZeroDiscount)
+     * @var IDiscountProcessor|null
+     */
+    protected static ?IDiscountProcessor $defaultDiscount = NULL;
+
+    /**
+     * The discount processor of the site cart - set in the site init (class/templates/init.php), applied to the
+     * cart of the session when it is first used in the request
+     * @param IDiscountProcessor $processor
+     * @return void
+     */
+    public static function SetDefaultDiscount(IDiscountProcessor $processor) : void
+    {
+        self::$defaultDiscount = $processor;
+        if (self::$instance instanceof Cart) self::$instance->setDiscount($processor);
+    }
+
     const string SESSION_KEY = "spark_cart";
 
     const string VERSION = "2.0";
@@ -73,6 +91,10 @@ class Cart
         }
 
 
+
+        if (self::$defaultDiscount instanceof IDiscountProcessor) {
+            $cart->setDiscount(self::$defaultDiscount);
+        }
 
         self::$instance = $cart;
 

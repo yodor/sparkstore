@@ -3,6 +3,7 @@ include_once("input/renderers/DataIteratorField.php");
 include_once("components/renderers/items/DataIteratorItem.php");
 include_once("store/beans/ProductClassAttributesBean.php");
 include_once("store/beans/ProductClassAttributeValuesBean.php");
+include_once("input/ArrayDataInput.php");
 
 class ClassAttributeInlineScript extends InlineScript implements IPageComponent
 {

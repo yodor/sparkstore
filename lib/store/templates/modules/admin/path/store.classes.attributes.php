@@ -1,5 +1,9 @@
 <?php
 include_once("store/beans/ProductClassesBean.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductClassAttributesBean.php");
+include_once("store/forms/ProductClassAttributeInputForm.php");
+include_once("templates/content/BeanList.php");
 Template::Condition( new BeanKeyCondition(new ProductClassesBean(), Module::PathURL("/store/classes"), array("class_name")) );
 
 if (URL::Current()->contains("editID")) {

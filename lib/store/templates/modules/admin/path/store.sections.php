@@ -1,4 +1,9 @@
 <?php
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/SectionsBean.php");
+include_once("store/forms/SectionInputForm.php");
+include_once("templates/content/BeanList.php");
+include_once("templates/TemplateBeanContent.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(SectionsBean::class, SectionInputForm::class);

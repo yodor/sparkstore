@@ -9,6 +9,7 @@ include_once("components/TextComponent.php");
 include_once("objects/SparkMap.php");
 include_once("objects/sql/ClosureFilter.php");
 include_once("sql/SQLSelect.php");
+include_once("store/utils/url/ProductListURL.php");
 
 
 class ActiveFilterItem extends Container

@@ -1,5 +1,13 @@
 <?php
 include_once("objects/data/GTMConvParam.php");
+include_once("components/LabelSpan.php");
+include_once("store/utils/unicr/UniCreditPaymentButton.php");
+include_once("store/utils/tbi/TBICreditPaymentButton.php");
+include_once("store/utils/tbi/TBIFusionPaymentButton.php");
+include_once("store/responders/json/QueryProductFormResponder.php");
+include_once("store/responders/json/NotifyInstockFormResponder.php");
+include_once("store/responders/json/OrderProductFormResponder.php");
+include_once("store/components/PriceLabel.php");
 
 class SidePaneGroup extends Container
 {

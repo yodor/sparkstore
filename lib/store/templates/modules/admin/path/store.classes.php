@@ -1,4 +1,9 @@
 <?php
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductClassesBean.php");
+include_once("store/forms/ProductClassInputForm.php");
+include_once("templates/content/BeanList.php");
+include_once("templates/TemplateBeanContent.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(ProductClassesBean::class, ProductClassInputForm::class);

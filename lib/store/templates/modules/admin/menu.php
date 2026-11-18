@@ -5,6 +5,7 @@
 //
 include_once("objects/events/TemplateEvent.php");
 include_once("utils/menu/MenuItem.php");
+include_once("pages/SparkTemplateAdminPage.php");
 
 $menu = SparkTemplateAdminPage::Menu() ?? new MenuItemList();
 

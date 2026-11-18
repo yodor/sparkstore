@@ -1,5 +1,9 @@
 <?php
 include_once("store/beans/ProductCategoriesBean.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductCategoryBannersBean.php");
+include_once("forms/PhotoForm.php");
+include_once("templates/content/BeanGallery.php");
 Template::Condition( new BeanKeyCondition(new ProductCategoriesBean(), Module::PathURL("/store/categories"), array("category_name")) );
 
 if (URL::Current()->contains("editID")) {

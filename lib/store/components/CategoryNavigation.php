@@ -1,5 +1,8 @@
 <?php
 include_once("store/components/NavigationList.php");
+include_once("store/beans/ProductCategoryPhotosBean.php");
+include_once("store/beans/ProductCategoriesBean.php");
+include_once("store/utils/url/CategoryURL.php");
 
 class CategoryNavigation extends NavigationList
 {

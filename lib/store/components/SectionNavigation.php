@@ -2,6 +2,7 @@
 include_once("store/components/NavigationList.php");
 include_once("store/beans/SectionsBean.php");
 include_once("store/beans/SectionBannersBean.php");
+include_once("store/utils/url/ProductListURL.php");
 
 class SectionNavigation extends NavigationList
 {

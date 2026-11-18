@@ -5,6 +5,8 @@ include_once("beans/UsersBean.php");
 include_once("auth/PasswordHash.php");
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
+include_once("forms/processors/FormProcessor.php");
+include_once("forms/processors/IFormProcessor.php");
 
 /**
  * New password from the link of the password reset mail (?token=). The link works once and for

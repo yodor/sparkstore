@@ -11,6 +11,7 @@ include_once("store/utils/cart/Cart.php");
 include_once("store/components/PriceLabel.php");
 include_once("input/renderers/Input.php");
 include_once("components/Button.php");
+include_once("store/utils/url/ProductURL.php");
 
 class SummaryItem extends Container
 {

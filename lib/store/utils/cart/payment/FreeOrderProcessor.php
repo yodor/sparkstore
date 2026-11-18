@@ -1,6 +1,8 @@
 <?php
 include_once("cart/PaymentProcessor.php");
 include_once("Authenticator.php");
+include_once("store/utils/cart/payment/PaymentProcessor.php");
+include_once("store/utils/cart/payment/PaymentResult.php");
 
 class FreeOrderProcessor extends PaymentProcessor
 {

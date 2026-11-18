@@ -1,5 +1,9 @@
 <?php
 include_once("store/beans/ProductsBean.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductPhotosBean.php");
+include_once("forms/PhotoForm.php");
+include_once("templates/content/BeanGallery.php");
 
 Template::Condition(new BeanKeyCondition(new ProductsBean(), Module::PathURL("/store/products"), array("product_name")));
 

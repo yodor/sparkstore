@@ -1,4 +1,10 @@
 <?php
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/BrandsBean.php");
+include_once("store/forms/BrandInputForm.php");
+include_once("templates/content/BeanList.php");
+include_once("components/renderers/cells/BooleanCell.php");
+include_once("components/renderers/cells/ImageCell.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(BrandsBean::class, BrandInputForm::class);

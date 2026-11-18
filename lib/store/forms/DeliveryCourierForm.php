@@ -1,6 +1,7 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("iterators/ArrayDataIterator.php");
+include_once("store/utils/cart/Cart.php");
 
 class DeliveryCourierForm extends InputForm
 {

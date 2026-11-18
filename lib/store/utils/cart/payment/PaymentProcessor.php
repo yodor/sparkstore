@@ -1,6 +1,7 @@
 <?php
 include_once("beans/OrdersBean.php");
 include_once("cart/PaymentResult.php");
+include_once("store/beans/OrdersBean.php");
 enum PaymentStatus : int
 {
     case WAITING_PAYMENT = 1;

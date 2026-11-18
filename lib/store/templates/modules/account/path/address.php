@@ -1,4 +1,7 @@
 <?php
+include_once("store/templates/modules/account/content/AccountRowEditor.php");
+include_once("store/beans/ClientAddressesBean.php");
+include_once("store/forms/ClientAddressInputForm.php");
 $config = BeanConfig::Factory();
 $config->contentClass = AccountRowEditor::class;
 $config->beanClass = ClientAddressesBean::class;

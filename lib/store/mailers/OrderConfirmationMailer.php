@@ -4,6 +4,7 @@ include_once("store/beans/OrdersBean.php");
 include_once("store/beans/OrderItemsBean.php");
 include_once("beans/UsersBean.php");
 include_once("store/utils/cart/Cart.php");
+include_once("forms/InputForm.php");
 
 class OrderConfirmationMailer extends Mailer
 {

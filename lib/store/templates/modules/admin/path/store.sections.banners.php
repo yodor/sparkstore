@@ -1,5 +1,9 @@
 <?php
 include_once("store/beans/SectionsBean.php");
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/SectionBannersBean.php");
+include_once("forms/PhotoForm.php");
+include_once("templates/content/BeanGallery.php");
 Template::Condition( new BeanKeyCondition(new SectionsBean(), Module::PathURL("/store/sections"), array("section_title")) );
 
 if (URL::Current()->contains("editID")) {

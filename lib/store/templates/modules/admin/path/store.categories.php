@@ -1,4 +1,10 @@
 <?php
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/ProductCategoriesBean.php");
+include_once("store/forms/ProductCategoryInputForm.php");
+include_once("templates/content/BeanTree.php");
+include_once("components/NestedSetTreeView.php");
+include_once("templates/TemplateBeanContent.php");
 
 if (URL::Current()->contains("editID")) {
     $config = BeanEditor::Configure(ProductCategoriesBean::class, ProductCategoryInputForm::class);

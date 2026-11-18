@@ -2,6 +2,7 @@
 include_once("components/Container.php");
 include_once("components/Link.php");
 include_once("components/Meta.php");
+include_once("store/components/CurrencyLabel.php");
 
 class PriceLabel extends Container {
 

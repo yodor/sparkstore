@@ -238,7 +238,10 @@ abstract class CSVProductExporter extends ProductExporter
             Debug::ErrorLog("Using Deserialized ProductListSelect");
         }
 
-        $select->columns("prodID");
+        //the product ids of the list - the admin list query joins other tables, so its prodID (and the columns of
+        //the order) are read from it as a derived table
+        $select = $select->getAsDerived("export_list");
+        $select->columns("export_list.prodID");
 
 
         $query = new SelectQuery($select);

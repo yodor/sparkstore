@@ -1,4 +1,9 @@
 <?php
+include_once("input/DataInput.php");
+include_once("input/validators/EmptyValueValidator.php");
+include_once("input/processors/InputProcessor.php");
+include_once("input/renderers/SelectField.php");
+include_once("forms/InputForm.php");
 
 class FilterDataInput extends DataInput {
 

@@ -1,4 +1,11 @@
 <?php
+include_once("templates/content/BeanEditor.php");
+include_once("store/beans/VariantOptionsBean.php");
+include_once("store/forms/VariantOptionInputForm.php");
+include_once("store/beans/ProductsBean.php");
+include_once("store/beans/ProductClassesBean.php");
+include_once("objects/events/BeanTransactorEvent.php");
+include_once("store/templates/modules/admin/content/OptionsList.php");
 $config = null;
 if (URL::Current()->contains("editID")) {
 

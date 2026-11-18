@@ -21,6 +21,8 @@ include_once("objects/SparkMap.php");
 include_once("objects/data/LinkedData.php");
 include_once("utils/GETProcessor.php");
 include_once("utils/script/LDJsonScript.php");
+include_once("objects/data/GTMConvParam.php");
+include_once("objects/data/GTMConversionCommand.php");
 
 /**
  * The products list (products module paths 'home', 'category', 'promos', 'search' - ProductListConfig::$list):
