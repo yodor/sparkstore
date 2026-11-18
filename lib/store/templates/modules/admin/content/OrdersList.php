@@ -56,7 +56,7 @@ class OrdersList extends BeanList
 
     protected function initItemActions(ActionCollection $act): void
     {
-        $details = TemplateContent::CreateAction("details", tr("Details"), "/orders/details");
+        $details = TemplateBeanContent::CreateAction("details", tr("Details"), "/orders/details");
         $details->getURL()->add(new DataParameter("orderID"));
         $act->append($details);
 

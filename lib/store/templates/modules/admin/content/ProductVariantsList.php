@@ -88,7 +88,7 @@ class ProductVariantsList extends BeanList
 
     protected function initItemActions(ActionCollection $act): void
     {
-        $gallery = TemplateContent::CreateAction("Photo Gallery", tr("Photo Gallery"), "gallery/");
+        $gallery = TemplateBeanContent::CreateAction("Photo Gallery", tr("Photo Gallery"), "gallery/");
         $gallery->getURL()->add(new DataParameter("pvID"));
         $act->append($gallery);
     }

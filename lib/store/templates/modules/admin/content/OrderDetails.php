@@ -1,4 +1,5 @@
 <?php
+include_once("templates/IContentActions.php");
 include_once("templates/TemplateContent.php");
 include_once("store/components/order/OrderView.php");
 include_once("store/responders/OrderConfirmationRequestResponder.php");
@@ -7,7 +8,7 @@ include_once("store/responders/OrderConfirmationRequestResponder.php");
  * Printable details of one order (?orderID=) - OrderView with the client's invoice details.
  * Page actions: print, send the order confirmation e-mail again.
  */
-class OrderDetails extends TemplateContent
+class OrderDetails extends TemplateContent implements IContentActions
 {
     protected int $orderID = -1;
 
@@ -30,6 +31,11 @@ class OrderDetails extends TemplateContent
 
         $config->title = tr("Order Details") . ": " . $this->orderID;
         parent::setup($config);
+    }
+
+    public function fillPageFilters(Container $filters): void
+    {
+
     }
 
     public function fillPageActions(ActionCollection $collection): void

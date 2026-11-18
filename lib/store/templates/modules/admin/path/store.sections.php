@@ -16,13 +16,13 @@ else {
             $actions = $content->getItemActions()->getActions();
             $actions->append(Action::RowSeparator());
 
-            $actBannersGallery = TemplateContent::CreateAction("Banners Gallery", "Banner Gallery", "banners");
+            $actBannersGallery = TemplateBeanContent::CreateAction("Banners Gallery", "Banner Gallery", "banners");
             $actBannersGallery->getURL()->add(new DataParameter("secID", $content->getBean()->key()));
             $actions->append($actBannersGallery);
 
             $actions->append(Action::RowSeparator());
 
-            $actProducts = TemplateContent::CreateAction("See Products", "See Products", "/store/products");
+            $actProducts = TemplateBeanContent::CreateAction("See Products", "See Products", "/store/products");
             $actProducts->getURL()->add(new DataParameter("filter_section", "section_title"));
             $actProducts->getURL()->add(new URLParameter("filter", "search"));
             $actions->append($actProducts);

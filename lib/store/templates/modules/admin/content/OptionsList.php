@@ -146,7 +146,7 @@ class OptionsList extends BeanList
     {
         parent::initItemActions($act);
         $act->append(Action::RowSeparator());
-        $paramAction = TemplateContent::CreateAction("Parameters", "Parameters", "parameters");
+        $paramAction = TemplateBeanContent::CreateAction("Parameters", "Parameters", "parameters");
         $paramAction->setTooltip(tr("Modify option parameters"));
         $paramAction->getURL()->add(new DataParameter("voID"));
         $act->append($paramAction);

@@ -358,7 +358,7 @@ class ProductsList extends BeanList {
 
         $act->append(Action::RowSeparator());
 
-        $actGallery = TemplateContent::CreateAction("Photo Gallery", "Photo Gallery", "gallery/");
+        $actGallery = TemplateBeanContent::CreateAction("Photo Gallery", "Photo Gallery", "gallery/");
         $actGallery->getURL()->add(new DataParameter("prodID"));
         $act->append($actGallery);
 
@@ -369,14 +369,14 @@ class ProductsList extends BeanList {
 
         $act->append(Action::RowSeparator());
 
-        $actOptions = TemplateContent::CreateAction("Options", "Options", "/store/options/");
+        $actOptions = TemplateBeanContent::CreateAction("Options", "Options", "/store/options/");
         $actOptions->getURL()->add(new DataParameter("prodID"));
         $act->append($actOptions);
 
 
         $act->append(Action::RowSeparator());
 
-        $actVariants = TemplateContent::CreateAction("Variants", "Variants", "variants/");
+        $actVariants = TemplateBeanContent::CreateAction("Variants", "Variants", "variants/");
         $actVariants->getURL()->add(new DataParameter("prodID"));
         $act->append($actVariants);
     }

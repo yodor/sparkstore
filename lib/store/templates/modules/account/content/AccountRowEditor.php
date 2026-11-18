@@ -19,6 +19,18 @@ class AccountRowEditor extends AccountContent
     {
         return BeanConfig::class;
     }
+
+    /**
+     * The bean of the row (BeanConfig beanClass) - this content keeps the layout base of its module
+     * @var DBTableBean|null
+     */
+    protected ?DBTableBean $bean = null;
+
+    public function setup(TemplateConfig $config): void
+    {
+        parent::setup($config);
+        if ($config instanceof BeanConfig) $this->bean = $config->createBean();
+    }
     protected ?InputForm $form = null;
 
     protected int $editID = -1;

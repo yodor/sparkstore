@@ -29,7 +29,7 @@ else {
         $item->icon()->setStorageItem($si);
         $item->icon()->setPhotoSize(0, 32);
 
-        $bannersAction = TemplateContent::CreateAction("banners", "Banners Gallery", "banners");
+        $bannersAction = TemplateBeanContent::CreateAction("banners", "Banners Gallery", "banners");
         $bannersAction->getURL()->add(new DataParameter("catID", $source->getBean()->key()));
         $item->getActions()->append($bannersAction);
 
