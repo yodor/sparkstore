@@ -76,6 +76,12 @@ class StorePageBase extends SparkPage
         return (new UserAuthenticator())->authorize();
     }
 
+    /**
+     * The stylesheet of the store font (Montserrat) - a site sets its own, or a self hosted one
+     * @var string
+     */
+    public static string $fontCSS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap";
+
     protected ?PageSection $_header = null;
     protected ?PageSection $_menu = null;
     protected ?PageSection $_main = null;
@@ -114,7 +120,11 @@ class StorePageBase extends SparkPage
 
         $this->head()->addMeta("robots", "index, follow, snippet");
 
+        //the store font - a link of its own (not an @import inside store.css: loaded in parallel, not after it)
+        $this->head()->addCSS(StorePageBase::$fontCSS);
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
+        //the menu bar on phones and tablets
+        $this->head()->addCSS(Spark::Get(Config::SPARK_LOCAL) . "/css/mobile/MenuBar.css", false, "(max-width: 1024px)");
 
 
 
@@ -225,6 +235,13 @@ class StorePageBase extends SparkPage
         $link = new Link();
         $link->setRelation("preconnect");
         $link->setHref("https://fonts.googleapis.com");
+        $this->head()->items()->append($link);
+
+        //the font files of the store font
+        $link = new Link();
+        $link->setRelation("preconnect");
+        $link->setHref("https://fonts.gstatic.com");
+        $link->setAttribute("crossorigin", "");
         $this->head()->items()->append($link);
 
         $linkgtag = new Link();
