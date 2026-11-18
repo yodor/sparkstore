@@ -1,26 +1,18 @@
 <?php
 //
-// products module - the catalog of the store sites. A product is a content in the site StorePage frame
-// (path/details.php: ProductDetailsContent - a site names its subclass in its own path file). The lists still do
-// their own work: the module routes their paths to the page classes (class/pages, the site subclasses).
+// products module - the catalog of the store sites. Every path is a content in the site StorePage frame; a site
+// names its subclasses of the contents in its own path files (class/templates/modules/products/path).
 // Site init.php runs after it and may add or change paths.
 //
-//  /products/                           the list (search, filters)        ProductListPage
-//  /products/category/<catID>/<slug>/   a category                        ProductListPage
-//  /products/promos/[<catID>/<slug>/]   promotions                        ProductPromoListPage
-//  /products/<prodID>/<slug>/           a product                         ProductDetailsContent (StorePage)
-//  /products/search/[<catID>/<slug>/]   keyword search (noindex)          ProductSearchListPage
+//  /products/                           the list (search, filters)        ProductListContent  (path/home.php)
+//  /products/category/<catID>/<slug>/   a category                        ProductListContent  (path/category.php)
+//  /products/promos/[<catID>/<slug>/]   promotions                        ProductListContent  (path/promos.php)
+//  /products/search/[<catID>/<slug>/]   keyword search (noindex)          ProductListContent  (path/search.php)
+//  /products/<prodID>/<slug>/           a product                         ProductDetailsContent (path/details.php)
 //
 $module = Module::Active();
-if (!$module->pageClass) {
-    include_once("class/pages/ProductListPage.php");
-    $module->pageClass = "ProductListPage";
-}
-$module->addPagePath("category", "ProductListPage", "class/pages/ProductListPage.php");
-//a product: the content of path/details.php in the site StorePage frame
-$module->addPagePath("details", "StorePage", "class/pages/StorePage.php");
-$module->addPagePath("search", "ProductSearchListPage", "store/pages/ProductSearchListPage.php");
-$module->addPagePath("promos", "ProductPromoListPage", "store/pages/ProductPromoListPage.php");
+$module->pageClass = "StorePage";
+
 //the old script of a product (details.php?prodID=) - answered as the product path: one 301 to the product address
 $module->addPathAlias("details.php", "details");
 
