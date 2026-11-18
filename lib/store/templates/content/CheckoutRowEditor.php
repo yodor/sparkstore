@@ -1,4 +1,5 @@
 <?php
+include_once("templates/BeanConfig.php");
 include_once("store/templates/content/CheckoutContent.php");
 include_once("store/forms/processors/UserRowFormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
@@ -9,6 +10,15 @@ include_once("forms/renderers/FormRenderer.php");
  */
 class CheckoutRowEditor extends CheckoutContent
 {
+
+    /**
+     * Works on a bean - BeanConfig
+     * @return string
+     */
+    public static function ConfigClass() : string
+    {
+        return BeanConfig::class;
+    }
     protected ?InputForm $form = null;
 
     protected int $editID = -1;

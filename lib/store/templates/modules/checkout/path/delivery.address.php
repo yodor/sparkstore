@@ -1,5 +1,5 @@
 <?php
-$config = TemplateConfig::Factory();
+$config = BeanConfig::Factory();
 $config->contentClass = CheckoutDeliveryAddress::class;
 $config->beanClass = ClientAddressesBean::class;
 $config->formClass = ClientAddressInputForm::class;

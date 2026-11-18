@@ -20,7 +20,7 @@ if (URL::Current()->contains("editID")) {
     };
 }
 else {
-    $config = TemplateConfig::Factory();
+    $config = BeanConfig::Factory();
 
     $config->contentClass = ProductsList::class;
 

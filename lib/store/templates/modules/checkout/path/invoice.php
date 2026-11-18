@@ -1,5 +1,5 @@
 <?php
-$config = TemplateConfig::Factory();
+$config = BeanConfig::Factory();
 $config->contentClass = CheckoutRowEditor::class;
 $config->beanClass = InvoiceDetailsBean::class;
 $config->formClass = InvoiceDetailsInputForm::class;
