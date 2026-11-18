@@ -18,6 +18,7 @@ include_once("input/DataInputFactory.php");
 
 include_once("beans/MenuItemsBean.php");
 include_once("store/utils/url/StoreMenuLinks.php");
+include_once("store/utils/IMenuAddresses.php");
 include_once("store/utils/url/ProductSearchURL.php");
 include_once("store/beans/SectionsBean.php");
 
@@ -291,7 +292,12 @@ class StorePageBase extends SparkPage
      */
     protected function menuAddresses() : array
     {
-        return array(URL::Requested());
+        $addresses = array(URL::Requested());
+        //the addresses of the content's place (a product: its categories)
+        if ($this->pageContent instanceof IMenuAddresses) {
+            foreach ($this->pageContent->menuAddresses() as $address) $addresses[] = $address;
+        }
+        return $addresses;
     }
 
     protected function selectActiveMenu(): void
@@ -431,6 +437,24 @@ class StorePageBase extends SparkPage
     public function getKeywordSearch(): ?KeywordSearch
     {
         return $this->keyword_search;
+    }
+
+    /**
+     * The 'products list' action of the store (the first item of the product breadcrumbs)
+     * @return Action|null
+     */
+    public function getHomeAction(): ?Action
+    {
+        return $this->home_action;
+    }
+
+    /**
+     * The main section of the frame - where the content goes
+     * @return PageSection|null
+     */
+    public function getMainSection(): ?PageSection
+    {
+        return $this->_main;
     }
 
     public function getMenuBar(): ?MenuBar
@@ -721,18 +745,6 @@ class StorePageBase extends SparkPage
 
 
 
-    public static function ErrorPage(string $message, int $code=404) : void
-    {
-        http_response_code($code);
-        $page = new StorePage();
-        $page->addClassName("ErrorPage $code");
-        $page->startRender();
-        echo "<div class='description'>";
-        echo $message;
-        echo "</div>";
-        $page->finishRender();
-        exit;
-    }
 
 
 
