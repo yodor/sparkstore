@@ -1,3 +1,9 @@
+@layer store {
+
+/* kept from the lower layers: their more specific rules won over the rules of this file before the cascade
+   layers - restated so they still win where they did (remove when this file is reworked) */
+.InputField > .Caption:first-child { padding: 5px; background-color: white; }
+
 .section.main .content {
     padding: 1em;
     box-sizing: border-box;
@@ -19,27 +25,31 @@
     padding-left: 2em;
 }
 
-
-
-.JSONFormDialog[responder='OrderProductFormResponder'] {
+.JSONFormDialog[responder="OrderProductFormResponder"] {
 
 }
 
-.JSONFormDialog[responder='UniCreditProductFormResponder'] {
+.JSONFormDialog[responder="UniCreditProductFormResponder"] {
 
 }
-.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM [field='installmentCount']{
+
+.JSONFormDialog[responder="UniCreditProductFormResponder"] FORM [field="installmentCount"] {
     display:none;
 }
-.JSONFormDialog[responder='UniCreditProductFormResponder'] FORM [field='monthlyPayment']{
+
+.JSONFormDialog[responder="UniCreditProductFormResponder"] FORM [field="monthlyPayment"] {
     display:none;
 }
-.JSONFormDialog[responder='UniCreditProductFormResponder'] .notice .item SPAN {
+
+.JSONFormDialog[responder="UniCreditProductFormResponder"] .notice .item SPAN {
     font-weight:bold;
     white-space: nowrap;
 }
-.JSONFormDialog[responder='UniCreditProductFormResponder'] .unilogo {
+
+.JSONFormDialog[responder="UniCreditProductFormResponder"] .unilogo {
     text-align:center;
     display:block;
     align-self: center;
+}
+
 }

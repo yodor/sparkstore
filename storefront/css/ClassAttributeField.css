@@ -1,26 +1,32 @@
+@layer store {
+
 .ClassAttributeField .FieldElements {
 
     /*flex-direction:column;*/
     display:grid;
     grid-template-columns: auto auto;
 }
+
 .ClassAttributeField .FieldElements .ClassAttributeItem {
     display:contents;
 }
 
-.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_name'] {
+.ClassAttributeField .FieldElements .ClassAttributeItem [data="attribute_name"] {
     justify-self: flex-end;
 }
 
-.ClassAttributeField .FieldElements .ClassAttributeItem [data='attribute_value'] {
+.ClassAttributeField .FieldElements .ClassAttributeItem [data="attribute_value"] {
     justify-self: flex-start;
 }
+
 .ClassAttributeField .FieldElements .ClassAttributeItem INPUT::placeholder {
     font-size:1em;
     font-style:italic;
     color: #cccccc;
 }
 
-.ClassAttributeField .FieldElements .ClassAttributeItem INPUT[type='hidden'] {
+.ClassAttributeField .FieldElements .ClassAttributeItem INPUT[type="hidden"] {
     display: none;
+}
+
 }

@@ -1,4 +1,11 @@
+@layer store {
+
+/* kept from the lower layers: their more specific rules won over the rules of this file before the cascade
+   layers - restated so they still win where they did (remove when this file is reworked) */
+.TreeView .Node .node_actions .Action { color: #50a9f9; }
+
 /* product_list_base.css */
+
 .section.main .content {
     padding:1em;
     text-align:left;
@@ -9,6 +16,7 @@
     gap:1.5em;
     padding-bottom: 5em;
 }
+
 .section.main .content .column {
     box-sizing: border-box;
     text-align:left;
@@ -47,18 +55,21 @@
 .section.main .content .column.left .panel .Caption .toggle {
     display:none;
 }
+
 .panel .Caption .toggle {
     display:flex;
     align-items:center;
     justify-items:center;
     gap:0.5em;
 }
+
 .panel .Caption .toggle .icon {
     background-repeat:no-repeat;
     background-size:contain;
     aspect-ratio:1/1;
     width:2em;
 }
+
 .panel .Caption .toggle .label {
     color:var(--theme-accent-dark);
 }
@@ -85,7 +96,6 @@
     font-size: 1.2em;
 }
 
-
 .TreeView .Node:hover {
     background-color: var(--theme-accent);
 }
@@ -101,29 +111,29 @@
     font-weight:bold !important;
 }
 
-.TreeView .Node[active='1'] {
+.TreeView .Node[active="1"] {
     background-color: var(--theme-accent);
 }
 
-.TreeView .Node[active='1'] .Handle .Button {
+.TreeView .Node[active="1"] .Handle .Button {
     filter: var(--theme-filter-colorize-white);
 }
 
-.TreeView .Node[active='1'] .Action {
+.TreeView .Node[active="1"] .Action {
     color: white;
     font-weight:normal !important;
     text-decoration:none !important;
     font-weight:bold !important;
 }
 
-
-
 .panel.filters FORM {
     width:100%;
 }
+
 .panel.filters FORM input {
     width:100%;
 }
+
 .panel .Caption .label:after {
     content:"";
 }
@@ -169,6 +179,7 @@
     /*text-align:left;*/
     padding-top:0;
 }
+
 .section.main .category_description {
     padding:1em;
     font-size:120%;
@@ -181,6 +192,7 @@
     font-weight: inherit;
     unicode-bidi: inherit;
 }
+
 .section.main .category_description A:any-link {
     color:var(--theme-accent);
 }
@@ -196,9 +208,11 @@
     color: #aaaaaa;
     font-weight:bold;
 }
+
 .ActiveFilters .title {
 
 }
+
 .ActiveFilters .item {
     display: flex;
     gap:0.5em;
@@ -212,9 +226,11 @@
 .ActiveFilters .item .label {
 
 }
+
 .ActiveFilters .item .label:after {
     content:":";
 }
+
 .ActiveFilters .item .clear {
     color: red;
     font-weight: bold;
@@ -226,69 +242,70 @@
     border: 1px solid #cccccc;
     display:inline-block;
 }
+
 .ActiveFilters button {
     /*margin-left:1em;*/
 }
+
 .ListEmpty {
     margin-top:1em;
     font-size:1.5em;
     padding:1em;
     border: 1px solid #cccccc;
 }
+
 /* product_list_mobile.css */
+
 @media (max-width: 900px) {
-    .ResultViewFooter {
+.ResultViewFooter {
         flex-direction: column;
         gap:0.5em;
     }
-    .ItemView .viewport {
+.ItemView .viewport {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
 @media (max-width: 570px) {
-    .section.main .content  {
+.section.main .content {
         grid-template-columns: auto;
         grid-template-rows: min-content min-content auto;
     }
-    .section.main .content .BreadcrumbList {
+.section.main .content .BreadcrumbList {
         grid-column: span 1;
     }
-    .section.main .content .column.left {
+.section.main .content .column.left {
         padding-right:0;
     }
-
-    .section.main .content .category_path {
+.section.main .content .category_path {
         padding-left:20px;
         padding-right:20px;
     }
-    .section.main .content .column.left .panel .viewport {
+.section.main .content .column.left .panel .viewport {
         display:none;
     }
-    .section.main .content .column.left .panel .Caption {
+.section.main .content .column.left .panel .Caption {
         color:inherit;
         padding-top:0.5em;
         padding-bottom:0.5em;
     }
-    .section.main .content .column.left .panel .Caption .toggle {
+.section.main .content .column.left .panel .Caption .toggle {
         display:flex;
         width: 100%;
         height: auto;
     }
-
-    .section.main .content .column.left .panel .Caption .toggle+span {
+.section.main .content .column.left .panel .Caption .toggle+span {
         display:none;
     }
-
-    .section.main .content .column.left .panel {
+.section.main .content .column.left .panel {
         margin-bottom:0px;
     }
-    .section.main .content .column.left .panel {
+.section.main .content .column.left .panel {
         border-top:1px solid var(--theme-accent);
     }
-    .section.main .content .column.left .panel:last-of-type {
+.section.main .content .column.left .panel:last-of-type {
         border-bottom:1px solid var(--theme-accent);
     }
-
-
+}
 
 }

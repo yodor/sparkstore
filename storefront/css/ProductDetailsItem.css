@@ -1,3 +1,16 @@
+@layer base {
+
+LABEL {
+    text-wrap:wrap;
+    flex-grow:1;
+    max-width:190px;
+    cursor:pointer;
+}
+
+}
+
+@layer store {
+
 .ProductDetailsItem {
     display:flex;
     flex-wrap:wrap;
@@ -69,10 +82,6 @@
     font-weight: bold;
 }
 
-
-
-
-
 .side_pane .group.details .item {
 
 }
@@ -142,26 +151,32 @@
 .side_pane .group.variants .viewport {
     display: block;
 }
+
 .side_pane .group.variants .viewport .item {
     display:block;
     border-bottom: 1px solid #cccccc;
     padding-bottom: 0.5em;
     margin-bottom: 0.5em;
 }
+
 .side_pane .group.variants .viewport .item .name {
     display:inline-block;
 }
+
 .side_pane .group.variants .viewport .item .name:after {
     display:inline-block;
     content: ":";
     margin-right:0.5em;
 }
+
 .side_pane .group.variants .viewport .item .value {
     display:inline-block;
 }
+
 .side_pane .group.variants .viewport .item .list {
     display:block;
 }
+
 .side_pane .group.variants .viewport .item .parameter {
     display:inline-block;
     border:1px solid gray;
@@ -169,11 +184,10 @@
     margin:0.5em;
     cursor:pointer;
 }
+
 .side_pane .group.variants .viewport .item .parameter[selected] {
     border-color:var(--theme-accent-dark);
 }
-
-
 
 .side_pane .group.cart_link {
 
@@ -183,7 +197,6 @@
     gap:1em;
     /*min-width:210px;*/
 }
-
 
 .side_pane .group.cart_link .button {
 
@@ -209,6 +222,7 @@
     gap:0.3em;
     line-height: 100%;
 }
+
 .side_pane .group.cart_link .button SPAN.icon {
 
     background-repeat:no-repeat;
@@ -219,7 +233,8 @@
     flex-grow:0;
 
 }
-.side_pane .group.cart_link .button SPAN,LABEL {
+
+.side_pane .group.cart_link .button SPAN {
     text-wrap:wrap;
     flex-grow:1;
     max-width:190px;
@@ -233,6 +248,7 @@
 .side_pane .group.cart_link .button.cart_add {
 
 }
+
 .side_pane .group.cart_link .button.cart_add .icon {
     background-image:url("../images/cart.svg");
 }
@@ -248,6 +264,7 @@
 .side_pane .group.cart_link .button.order_phone {
 
 }
+
 .side_pane .group.cart_link .button.order_phone .icon {
     background-image:url("../images/phone_icon.svg");
 }
@@ -255,11 +272,10 @@
 .side_pane .group.cart_link .button.query_product {
 
 }
+
 .side_pane .group.cart_link .button.query_product .icon {
     background-image:url("../images/question_icon.svg");
 }
-
-
 
 .side_pane .group.cart_link .button.nostock {
     border-color: var(--theme-accent);
@@ -269,19 +285,20 @@
     background-image:url("../images/notify_icon.svg");
 }
 
-
 .side_pane .group.query_product {
     display:block;
 
 }
+
 .side_pane .group.query_product FORM {
     display:none;
 }
-.side_pane .group.query_product FORM[shown='1'] {
+
+.side_pane .group.query_product FORM[shown="1"] {
     display:block;
 }
 
-.side_pane .group.query_product FORM [field='query'] {
+.side_pane .group.query_product FORM [field="query"] {
     min-height:5em;
     height:5em;
 }
@@ -289,8 +306,6 @@
 .side_pane .summary {
 
 }
-
-
 
 .side_pane .group .item.color_chooser {
     display: block;
@@ -365,10 +380,12 @@
     font-size: 1em;
 
 }
+
 .side_pane .group.sizing .current_size {
     display: block;
     margin-bottom: 0.5em;
 }
+
 .size_chooser .size_button {
     display: inline-block;
     border: 1px solid #cccccc;
@@ -395,14 +412,14 @@
 .side_pane FORM progress {
     display:none;
 }
-.side_pane FORM[working='1'] progress {
+
+.side_pane FORM[working="1"] progress {
     display:inherit;
 }
-.side_pane FORM[working='1'] button {
+
+.side_pane FORM[working="1"] button {
     display:none;
 }
-
-
 
 .tabs {
     text-align:left;
@@ -411,6 +428,7 @@
     flex-grow:1;
     font-size:130%
 }
+
 .tabs .item {
     display:block;
 }
@@ -434,22 +452,24 @@
     margin-top:20px;
     margin-bottom:20px;
 }
+
 .tabs .item.description OBJECT {
 
     margin-top:20px;
     margin-bottom:20px;
 
 }
+
 .tabs .item.description EMBED {
 
     margin-top:20px;
     margin-bottom:20px;
 
 }
+
 .tabs .item.description IMG {
     max-width:100%;
 }
-
 
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button {
     border-color: red;
@@ -457,6 +477,7 @@
     height:62px;
     flex-direction: column;
 }
+
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.icon {
     background-image:url("../images/unicredit-logo.png");
     background-repeat:no-repeat;
@@ -465,6 +486,7 @@
     height:24px;
     width:100%;
 }
+
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.label {
     font-size:70%;
     display:block;
@@ -474,9 +496,11 @@
     margin:0;
 
 }
+
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button SPAN.label:after {
     content:"";
 }
+
 .side_pane .group.cart_link .module.UniCreditPaymentButton .button:hover {
     background-color:red;
     color:white;
@@ -487,6 +511,7 @@
     padding:0;
     margin:0;
 }
+
 .side_pane .group.cart_link .module.TBICreditPaymentButton .button {
     border:0;
     padding:0;
@@ -519,37 +544,38 @@
     flex-grow:0;
 }
 
-
 @media screen and (max-width: 640px) {
-    .tabs .item.description OBJECT {
+.tabs .item.description OBJECT {
         max-width:100% !important;
         width:100% !important;
     }
-    .tabs .item.description IFRAME {
+.tabs .item.description IFRAME {
         max-width:100% !important;
         width:100% !important;
     }
-    .tabs .item.description EMBED {
+.tabs .item.description EMBED {
         max-width:100% !important;
         width:100% !important;
     }
-    .tabs .item.description TABLE {
+.tabs .item.description TABLE {
         max-width:100% !important;
         width:100% !important;
     }
 }
 
 @media screen and (max-width: 490px) {
-    .side_pane .group.pricing {
+.side_pane .group.pricing {
 
         grid-column: span 2;
         align-content: center;
     }
-    .side_pane .group.cart_link {
+.side_pane .group.cart_link {
 
         flex-wrap: wrap;
         grid-column: span 2;
         align-content: center;
 
     }
+}
+
 }

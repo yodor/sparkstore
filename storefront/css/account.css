@@ -1,4 +1,7 @@
+@layer store {
+
 /* account_base.css */
+
 .actions_list .Action {
     color:var(--theme-accent);
 }
@@ -8,6 +11,7 @@
     width:100%;
 
 }
+
 .main .content .columns .column {
     display:table-cell;
     padding:20px;
@@ -28,16 +32,17 @@
     text-align:left;
     /*max-width:430px;*/
 }
+
 .account .panel .FormRenderer {
     width:100%;
     box-sizing: border-box;
 }
 
-
 .account .panel .FormRenderer .InputComponent {
     align-self:stretch;
 }
-.account .panel .FormRenderer .InputComponent input{
+
+.account .panel .FormRenderer .InputComponent input {
     flex-basis:100%;
 }
 
@@ -45,20 +50,22 @@
     border:0;
     width:100%;
 }
+
 .account .login_component .inner {
     display:block;
     width:100%;
     box-sizing: border-box;
 }
+
 .account .login_component .LoginFormRenderer {
     border:0;
     padding:0;
 }
 
-
 .login .main .content .columns {
     display:block;
 }
+
 .login .main .content .columns .column {
     display:block;
     text-align:center;
@@ -71,7 +78,9 @@
 .InputField {
     text-align:left;
 }
-.InputLabel {
+
+/* the labels of the account forms - not the HBox forms (their labels align right) */
+.InputLabel:not(.FormRenderer[layout="HBox"] .InputLabel) {
     text-align:left;
 }
 
@@ -83,12 +92,11 @@
 
 }
 
-
-
 .register_complete .success_message {
     display:block;
     text-align:center;
 }
+
 .register_complete .success_message .tick_mark {
     display:inline-block;
     background-image:url("../images/icon_tick_red.jpg");
@@ -103,8 +111,6 @@
 .register_complete .success_message SPAN {
     display:block;
 }
-
-
 
 .account .columns .column.account_menu {
     width:270px;
@@ -131,9 +137,11 @@
 }
 
 /* account module: the current menu item, logout */
+
 .menu_links .item.selected {
     border-bottom-color:var(--theme-accent, #333333);
 }
+
 .account_menu .logout {
     margin-top:0.5em;
 }
@@ -141,12 +149,22 @@
 .group .item .label:after {
     content: ": ";
 }
+
 .group .FormValueList .item .label:after {
     content: "";
 }
 
+/* the tables of the account (orders list): the same frame as the order lines */
+.account .TableView .viewport {
+    border-collapse:separate;
+    border:1px solid #cccccc;
+    margin-top:20px;
+    margin-bottom:20px;
+    width:100%;
+}
 
-.viewport {
+/* the lines of an order (OrderView) */
+.OrderView .viewport {
 
     display:table;
     border-collapse:separate;
@@ -156,11 +174,11 @@
     width:100%;
 }
 
-.viewport .line {
+.OrderView .viewport .line {
     display: table-row;
 }
 
-.viewport .line SPAN {
+.OrderView .viewport .line SPAN {
     display: table-cell;
     font-weight: bold;
     padding: 5px;
@@ -168,105 +186,106 @@
     text-align: center;
 }
 
-.viewport .line .item {
+.OrderView .viewport .line .item {
     display: table-cell;
     vertical-align: middle;
     border:1px solid #cccccc;
     padding: 5px;
 }
 
-.viewport .line .item.pos {
+.OrderView .viewport .line .item.pos {
     text-align: center;
 }
 
-.viewport .line .item.qty {
+.OrderView .viewport .line .item.qty {
     text-align: center;
 }
 
-.viewport .line .item.price {
+.OrderView .viewport .line .item.price {
     text-align: right;
 }
 
-.viewport .line .item.amount {
+.OrderView .viewport .line .item.amount {
     text-align: right;
 }
 
-.FormRenderer[name='RegisterClient'] .SubmitLine .TextSpace {
+.FormRenderer[name="RegisterClient"] .SubmitLine .TextSpace {
     display: none;
 }
-
 
 .order_details .FormValueList,
 .orders_details .FormValueList {
     margin-top:10px;
     margin-bottom:10px;
 }
+
 .order_details .FormValueList .label,
 .orders_details .FormValueList .label {
     display:none;
 
 }
+
 .order_details .group .item,
 .orders_details .group .item {
     line-height:150%;
 }
+
 .order_details .group .item.photo,
 .orders_details .group .item.photo {
     min-width:64px;
 }
+
 .order_details .group.total,
 .orders_details .group.total {
     text-align:right;
 }
 
-.order_details .ColorButton[action='print'],
-.orders_details .ColorButton[action='print'] {
+.order_details .ColorButton[action="print"],
+.orders_details .ColorButton[action="print"] {
     float:right;
 }
 
 /* account_mobile.css */
 
 @media screen and (max-width: 940px) {
-    .main .content .columns {
+.main .content .columns {
         display:block;
     }
-    .main .content .columns .column {
+.main .content .columns .column {
         display:block;
     }
-    .main .content .columns .column.account_menu {
+.main .content .columns .column.account_menu {
         text-align:center;
         display:block;
     }
-    .main .content .columns .column.account_menu .menu_links {
+.main .content .columns .column.account_menu .menu_links {
         display:inline-block;
         text-align:left;
     }
-    .account .columns .column.account_menu {
+.account .columns .column.account_menu {
         width:auto;
     }
-
-
 }
+
 @media screen and (max-width: 768px) {
-    .order_details .viewport,
+.order_details .viewport,
     .orders_details .viewport {
         display:block;
     }
-    .order_details .viewport .line,
+.order_details .viewport .line,
     .orders_details .viewport .line {
         display:block;
     }
-    .order_details .viewport .line.heading,
+.order_details .viewport .line.heading,
     .orders_details .viewport .line.heading {
         display:none;
         border:0;
     }
-
-    .order_details .viewport .line.heading span:first-child,
+.order_details .viewport .line.heading span:first-child,
     .orders_details .viewport .line.heading span:first-child {
         display:inline-block;
     }
-    .order_details .viewport .line .item,
+.order_details .viewport .line .item,
     .orders_details .viewport .line .item {
         display:block;
         text-align:center;
@@ -274,8 +293,10 @@
 }
 
 @media screen and (max-width: 475px) {
-    .account .panel {
+.account .panel {
         width:100%;
         min-width:auto;
     }
+}
+
 }

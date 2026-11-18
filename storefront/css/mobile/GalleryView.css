@@ -1,3 +1,4 @@
+@layer store {
 
 .GalleryViewItemRenderer {
     margin-right: 0px;
@@ -6,4 +7,6 @@
 
 .GalleryViewItemRenderer .image_slot .ImagePopup IMG {
     width: 100%;
+}
+
 }

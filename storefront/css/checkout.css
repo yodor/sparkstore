@@ -1,8 +1,11 @@
+@layer store {
+
 .CheckoutPage .section.main .content {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .CheckoutPage .base {
     display: flex;
     flex-direction: column;
@@ -47,7 +50,6 @@
     text-decoration: none;
 }
 
-
 .CheckoutPage .navigation .checkout_button .icon {
     display:block;
     min-width:3em;
@@ -62,6 +64,7 @@
     background-size:contain;
     flex-grow:0;
 }
+
 .CheckoutPage .navigation .checkout_button.disabled {
     display:none;
 }
@@ -69,15 +72,19 @@
 .CheckoutPage .navigation .empty .icon {
     background-image:url("../images/cart_clear.svg");
 }
+
 .CheckoutPage .navigation .continue_shopping .icon {
     background-image:url("../images/cart_more.svg");
 }
+
 .CheckoutPage .navigation .checkout .icon {
     background-image:url("../images/cart_checkout.svg");
 }
+
 .CheckoutPage .navigation .edit .icon {
     background-image:url("../images/cart_edit.svg");
 }
+
 .CheckoutPage .base {
     padding:1em;
 
@@ -92,11 +99,11 @@
     flex-basis:100%;
 
 }
+
 .CheckoutPage .base .FormRenderer .InputField TEXTAREA {
     flex-basis:100%;
     min-height:5em;
 }
-
 
 .CheckoutPage .base > .item {
     border-bottom:1px solid #cccccc;
@@ -106,9 +113,11 @@
 .CheckoutPage .base .Caption {
     text-align:left;
 }
+
 .CheckoutPage .base .ColorButton {
     margin-top:1em;
 }
+
 .CheckoutPage .base .FormRenderer .InputLabel {
     margin-bottom:0.2em;
 }
@@ -118,6 +127,7 @@
     padding:1em;
     text-align:center;
 }
+
 .CheckoutPage.complete .base {
     display:flex;
     flex-direction: column;
@@ -125,6 +135,7 @@
     text-align:left;
     gap:1em;
 }
+
 .CheckoutPage.complete .base .tick_mark {
     background-image:url("../images/tick.svg");
     width: 256px;
@@ -133,12 +144,15 @@
     background-size:contain;
     filter: var(--theme-filter-checkout-icon);
 }
+
 .CheckoutPage.complete .label:after {
     content:": ";
 }
+
 .CheckoutPage.guest .section.main .content {
     text-align:center;
 }
+
 .CheckoutPage.guest .base {
     display:inline-flex;
     text-align:center;
@@ -153,13 +167,16 @@
     justify-items: center;
 
 }
+
 .CheckoutPage.guest .base .item .Caption {
     text-align:center;
     padding-top:0;
 }
+
 .CheckoutPage.guest .base .InputComponent {
     width:100%;
 }
+
 .CheckoutPage.guest .base .note {
     text-align:left;
     max-width:25em;
@@ -167,6 +184,7 @@
 }
 
 /*iframe locator*/
+
 .CheckoutPage.delivery_courier .OfficeLocator {
     width:100%;
     max-width:640px;
@@ -175,6 +193,9 @@
     margin-top:2em;
     align-self: center;
 }
+
 .CheckoutPage.delivery_courier .navigation {
     order: unset;
+}
+
 }

@@ -1,3 +1,5 @@
+@layer store {
+
 .NewsPage .section.main>.content {
     display: grid;
     grid-template-columns: 270px auto;
@@ -17,9 +19,11 @@
 }
 
 @media (max-width: 640px) {
-    .NewsPage .section.main>.content {
+.NewsPage .section.main>.content {
         grid-template-columns: auto;
         grid-template-rows: auto;
         padding: 0.5em;
     }
+}
+
 }

@@ -1,3 +1,5 @@
+@layer store {
+
 .SourceRelatedField .FieldElements {
     display: table;
 }
@@ -13,5 +15,7 @@
 
 .SourceRelatedField .FieldElements .SourceAttributeItem .SourceAttributeUnit {
     display: table-cell;
+
+}
 
 }
