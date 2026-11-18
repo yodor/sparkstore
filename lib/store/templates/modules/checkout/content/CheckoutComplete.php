@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/CheckoutContent.php");
+include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("components/LabelSpan.php");
 include_once("components/TextComponent.php");
 

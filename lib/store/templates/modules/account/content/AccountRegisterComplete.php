@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 
 /**
  * After the registration - the activation mail was sent

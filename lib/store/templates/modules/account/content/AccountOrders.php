@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("components/TableView.php");
 include_once("components/renderers/cells/DateCell.php");
 include_once("components/renderers/cells/ActionsCell.php");

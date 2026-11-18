@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("responders/AuthenticatorResponder.php");
 include_once("forms/LoginForm.php");
 include_once("forms/renderers/LoginFormRenderer.php");

@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/CheckoutRowEditor.php");
+include_once("store/templates/modules/checkout/content/CheckoutRowEditor.php");
 include_once("components/Script.php");
 
 /**

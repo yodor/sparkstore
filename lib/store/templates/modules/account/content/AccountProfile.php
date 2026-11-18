@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 include_once("beans/UsersBean.php");

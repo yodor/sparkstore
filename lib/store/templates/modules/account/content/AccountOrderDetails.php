@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("store/components/order/OrderView.php");
 include_once("components/Action.php");
 

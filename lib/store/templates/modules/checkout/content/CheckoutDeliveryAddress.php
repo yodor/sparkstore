@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/CheckoutRowEditor.php");
+include_once("store/templates/modules/checkout/content/CheckoutRowEditor.php");
 
 /**
  * Step 3, door delivery: the registered address of the client (ClientAddressesBean)

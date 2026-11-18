@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/AccountContent.php");
+include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("store/beans/PasswordResetsBean.php");
 include_once("beans/UsersBean.php");
 include_once("auth/PasswordHash.php");

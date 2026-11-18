@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/CheckoutContent.php");
+include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/forms/DeliveryAddressForm.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");

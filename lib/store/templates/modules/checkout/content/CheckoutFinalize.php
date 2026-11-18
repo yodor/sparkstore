@@ -1,6 +1,6 @@
 <?php
-include_once("store/templates/content/CheckoutContent.php");
-include_once("store/templates/content/CheckoutConfirm.php");
+include_once("store/templates/modules/checkout/content/CheckoutContent.php");
+include_once("store/templates/modules/checkout/content/CheckoutConfirm.php");
 include_once("store/utils/OrderProcessor.php");
 include_once("store/mailers/OrderConfirmationMailer.php");
 include_once("store/mailers/OrderConfirmationAdminMailer.php");

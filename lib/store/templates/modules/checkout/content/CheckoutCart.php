@@ -1,5 +1,5 @@
 <?php
-include_once("store/templates/content/CheckoutContent.php");
+include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/utils/cart/CartEntry.php");
 include_once("store/utils/SellableItem.php");
