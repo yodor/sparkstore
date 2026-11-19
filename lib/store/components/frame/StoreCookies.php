@@ -19,7 +19,7 @@ class StoreCookies extends StoreSection
         $this->setAttribute("tabindex", "0");
     }
 
-    public function fill(Container $content, StorePageBase $page) : void
+    public function fill(Container $content, StorePage $page) : void
     {
         $content->items()->append(StoreCookies::InfoPanel());
     }

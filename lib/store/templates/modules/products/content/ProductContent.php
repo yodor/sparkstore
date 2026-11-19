@@ -73,7 +73,7 @@ abstract class ProductContent extends TemplateContent implements IMenuAddresses
     {
         $actions = array();
         $page = SparkPage::Instance();
-        if ($page instanceof StorePageBase && $page->getHomeAction() instanceof Action) {
+        if ($page instanceof StorePage && $page->getHomeAction() instanceof Action) {
             $actions[] = $page->getHomeAction();
         }
 

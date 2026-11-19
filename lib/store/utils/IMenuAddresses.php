@@ -3,7 +3,7 @@
 /**
  * A content that names the addresses of its place for the selection of the main menu (MenuItemList::selectActive):
  * a product or a sub category without its own menu item selects the item of its category or a parent category.
- * StorePageBase adds them after the requested address.
+ * StorePage adds them after the requested address.
  */
 interface IMenuAddresses
 {

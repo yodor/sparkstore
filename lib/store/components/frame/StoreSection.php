@@ -28,17 +28,17 @@ abstract class StoreSection extends PageSection
     /**
      * Build the contents of the section into '$content' (the content container of a section)
      * @param Container $content
-     * @param StorePageBase $page
+     * @param StorePage $page
      * @return void
      */
-    abstract public function fill(Container $content, StorePageBase $page) : void;
+    abstract public function fill(Container $content, StorePage $page) : void;
 
     /**
      * Build the contents of this section for the frame '$page'
-     * @param StorePageBase $page
+     * @param StorePage $page
      * @return void
      */
-    public function initialize(StorePageBase $page) : void
+    public function initialize(StorePage $page) : void
     {
         $this->fill($this->content, $page);
     }

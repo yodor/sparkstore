@@ -16,6 +16,9 @@ include_once("components/renderers/items/TextTreeItem.php");
 include_once("components/Action.php");
 include_once("components/ItemView.php");
 include_once("components/ClosureComponent.php");
+include_once("components/Container.php");
+include_once("storage/StorageItem.php");
+include_once("objects/OrderColumn.php");
 include_once("components/KeywordSearch.php");
 include_once("objects/SparkMap.php");
 include_once("objects/data/LinkedData.php");
@@ -161,7 +164,7 @@ class ProductListContent extends ProductContent
         $this->sections = new SectionsBean();
 
         //the keyword search of the store frame (header)
-        $this->keyword_search = ($page instanceof StorePageBase) ? $page->getKeywordSearch() : null;
+        $this->keyword_search = ($page instanceof StorePage) ? $page->getKeywordSearch() : null;
         if (!($this->keyword_search instanceof KeywordSearch)) $this->keyword_search = new KeywordSearch();
 
         //the canonical address keeps the page from the second page on (?page=2 ...) - page 1 has none
@@ -560,7 +563,7 @@ class ProductListContent extends ProductContent
         }
         else {
             $page = SparkPage::Instance();
-            if ($page instanceof StorePageBase && $page->getHomeAction() instanceof Action) {
+            if ($page instanceof StorePage && $page->getHomeAction() instanceof Action) {
                 $actions[] = $page->getHomeAction();
             }
         }
@@ -692,52 +695,61 @@ class ProductListContent extends ProductContent
     }
 
     /**
-     * The sub categories (with their photo) of the selected category, or the top categories
+     * The sub categories (with their photo) of the selected category, or the top categories. No site shows them
+     * yet (bookshop and mobilevrati override this with nothing) - the default of a store that wants them.
      * @return void
      * @throws Exception
      */
     public function renderChildCategories() : void
     {
-        $sel_catID = $this->treeView->getSelectedID();
-        $catsel = clone $this->treeView->getIterator()->stmt;
+        $parentID = max(0, $this->treeView->getSelectedID());
 
-        $catsel->clearMode();
-        $catsel->fields()->reset();
-        $catsel->fields()->set("parent.catID", "parent.category_name", "parent.lft");
-        $catsel->group_by = "node.catID";
-
-        if ($sel_catID > 0) {
-            $catsel->fields()->reset();
-            $catsel->fields()->set("node.catID", "node.category_name", "node.lft");
-            $catsel->where()->add("parent.catID", $sel_catID);
-            $catsel->where()->add("node.catID", $sel_catID, "<>");
-            $catsel->group_by = "node.catID";
-        }
-        $catsel->order_by = "node.lft ASC";
-
-        $catsel = $catsel->getAsDerived("topcats");
-        $catsel->fields()->set("topcats.catID", "topcats.category_name", "topcats.lft");
-        $catsel->fields()->setExpression("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = topcats.catID)", "pcpID");
-        $catsel->group_by = "catID";
-        $catsel->order_by = "lft ASC";
-
-        $query = new SelectQuery($catsel, "catID");
+        $query = $this->product_categories->query($this->product_categories->key(), "category_name");
+        $query->stmt->alias("(SELECT pcp.pcpID FROM product_category_photos pcp WHERE pcp.catID = product_categories.catID ORDER BY pcp.position ASC LIMIT 1)", "pcpID");
+        $query->stmt->where()->match("parentID", $parentID);
+        $query->stmt->order("lft", OrderDirection::ASC);
         $query->exec();
 
-        echo "<div class='category_list'>";
+        $list = new Container(false);
+        $list->setComponentClass("category_list");
+
         $builder = new CategoryURL();
-        $si = new StorageItem();
-        $si->className = "ProductCategoryPhotosBean";
         while ($result = $query->nextResult()) {
+            $name = (string)$result->get("category_name");
             $builder->setData($result->toArray());
-            $si->id = $result->get("pcpID");
-            $si->setName($result->get("category_name"));
-            echo "<div class='item'>";
-            echo "<a href='{$builder->toString()}' title='{$result->get("category_name")}'><img src='{$si->hrefCrop(128,-1)}' alt='{$result->get("category_name")}'>{$result->get("category_name")}</a>";
-            echo "</div>";
+
+            $link = new Container(false);
+            $link->setTagName("a");
+            $link->setComponentClass("");
+            $link->setAttribute("href", $builder->toString());
+            $link->setAttribute("title", $name);
+
+            if ($result->get("pcpID")) {
+                $si = new StorageItem((int)$result->get("pcpID"), "ProductCategoryPhotosBean");
+                $img = new Component(false);
+                $img->setTagName("img");
+                $img->setComponentClass("");
+                $img->setClosingTagRequired(false);
+                $img->setAttribute("src", $si->hrefCrop(128, -1)->toString());
+                $img->setAttribute("alt", $name);
+                $link->items()->append($img);
+            }
+            $text = new Component(false);
+            $text->setTagName("span");
+            $text->setComponentClass("");
+            $text->setText($name);
+            $link->items()->append($text);
+
+            $item = new Container(false);
+            $item->setComponentClass("item");
+            $item->items()->append($link);
+            $list->items()->append($item);
         }
-        echo "</div>";
         $query->free();
+
+        if ($list->items()->count() > 0) {
+            $list->render();
+        }
     }
 
     /**
@@ -757,7 +769,12 @@ class ProductListContent extends ProductContent
 
         $description = $page ? $page->getMetaDescription() : "";
         if ($description) {
-            echo "<h2 class='Caption category_description seo_description'>{$description}</h2>";
+            $cmp = new Component(false);
+            $cmp->setTagName("h2");
+            $cmp->setComponentClass("Caption");
+            $cmp->setClassName("category_description seo_description");
+            $cmp->setText($description);
+            $cmp->render();
         }
     }
 
@@ -782,9 +799,12 @@ class ProductListContent extends ProductContent
         }
 
         if ($category_description) {
-            echo "<section class='category_description'>";
-            echo $category_description;
-            echo "</section>";
+            //the HTML of the category editor / the store config
+            $cmp = new Component(false);
+            $cmp->setTagName("section");
+            $cmp->setComponentClass("category_description");
+            $cmp->setContents($category_description);
+            $cmp->render();
         }
     }
 

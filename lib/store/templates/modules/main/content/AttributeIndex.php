@@ -71,7 +71,7 @@ class AttributeIndex extends TemplateContent
         $this->list->setItemRenderer($item);
 
         //the header search: the values on this page
-        if ($page instanceof StorePageBase) {
+        if ($page instanceof StorePage) {
             $search = $page->getKeywordSearch();
             $search->setAction(new URL(URL::Requested()->getScriptName()));
             $search->getForm()->setColumns(array("attribute_value"));
@@ -93,7 +93,7 @@ class AttributeIndex extends TemplateContent
     public function processInput(): void
     {
         $page = SparkPage::Instance();
-        $search = ($page instanceof StorePageBase) ? $page->getKeywordSearch() : null;
+        $search = ($page instanceof StorePage) ? $page->getKeywordSearch() : null;
         if ($search instanceof KeywordSearch) $search->processInput();
 
         if ($search instanceof KeywordSearch && $search->isProcessed()) {

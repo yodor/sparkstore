@@ -67,7 +67,7 @@ class ProductDetailsContent extends ProductContent
         $page->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/ProductListItem.css");
 
         //the main landmark of the page
-        if ($page instanceof StorePageBase) {
+        if ($page instanceof StorePage) {
             $page->getMainSection()->content()->setTagName("main");
             $page->getMainSection()->content()->setRole("main");
         }

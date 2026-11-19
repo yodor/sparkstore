@@ -47,7 +47,7 @@ H2 A {
 /* store_base.css */
 
 :root {
-    /* the store font - the core '*' rule reads it (StorePageBase::$fontCSS loads it) */
+    /* the store font - the core '*' rule reads it (StorePage::$fontCSS loads it) */
     --theme-font-family: "Montserrat", "Arial", sans-serif;
     --theme-accent: #ff6600;
     --theme-accent-light: #ff6600;

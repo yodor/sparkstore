@@ -61,7 +61,7 @@ class StoreHeader extends StoreSection
         return $this;
     }
 
-    public function fill(Container $content, StorePageBase $page) : void
+    public function fill(Container $content, StorePage $page) : void
     {
         $content->items()->append(StoreHeader::Logo($this->logoHref));
 

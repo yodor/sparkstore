@@ -5,9 +5,9 @@
 //
 include_once("objects/events/TemplateEvent.php");
 include_once("utils/menu/MenuItem.php");
-include_once("pages/SparkTemplateAdminPage.php");
+include_once("pages/SparkAdminPage.php");
 
-$menu = SparkTemplateAdminPage::Menu() ?? new MenuItemList();
+$menu = SparkAdminPage::Menu() ?? new MenuItemList();
 
 $store = new MenuItem("Store", "store");
 $store->append(new MenuItem("Sections", "sections"));
@@ -46,4 +46,4 @@ foreach ($menu->toArray() as $item) {
     }
 }
 
-SparkTemplateAdminPage::SetMenu($menu);
+SparkAdminPage::SetMenu($menu);

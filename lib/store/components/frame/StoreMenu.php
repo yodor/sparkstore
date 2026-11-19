@@ -55,7 +55,7 @@ class StoreMenu extends StoreSection
         return $this;
     }
 
-    public function fill(Container $content, StorePageBase $page) : void
+    public function fill(Container $content, StorePage $page) : void
     {
         $menuBar = $page->getMenuBar();
         $content->items()->append($menuBar);

@@ -6,7 +6,7 @@ include_once("store/components/frame/StoreFooter.php");
 include_once("store/components/frame/StoreCookies.php");
 
 /**
- * The set up of the store frame (StorePageBase) - a site sets it in its site init (class/templates/init.php):
+ * The set up of the store frame (StorePage) - a site sets it in its site init (class/templates/init.php):
  *
  *  StoreFrame::Stylesheet(Spark::Get(Config::LOCAL) . "/css/store.css");     the site css of the frame
  *  StoreFrame::Header()->setVideo(Spark::Get(Config::LOCAL) . "/images/header_logo");

@@ -17,7 +17,7 @@ class StoreFooter extends StoreSection
         $this->addClassName("footer");
     }
 
-    public function fill(Container $content, StorePageBase $page) : void
+    public function fill(Container $content, StorePage $page) : void
     {
         $social = new Container(false);
         $social->setComponentClass("social");
