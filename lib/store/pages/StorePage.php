@@ -18,7 +18,7 @@ include_once("input/DataInputFactory.php");
 
 include_once("beans/MenuItemsBean.php");
 include_once("store/utils/url/StoreMenuLinks.php");
-include_once("store/utils/IMenuAddresses.php");
+include_once("utils/menu/IMenuAddresses.php");
 include_once("store/utils/url/ProductSearchURL.php");
 include_once("store/beans/SectionsBean.php");
 

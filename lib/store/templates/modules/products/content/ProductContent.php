@@ -5,7 +5,7 @@ include_once("components/Action.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductListURL.php");
-include_once("store/utils/IMenuAddresses.php");
+include_once("utils/menu/IMenuAddresses.php");
 include_once("utils/SEOData.php");
 
 /**
