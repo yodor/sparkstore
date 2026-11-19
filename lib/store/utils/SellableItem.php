@@ -19,6 +19,7 @@ class SellableItem extends SparkObject
     protected string $model = "";
 
     protected string $description = "";
+    protected string $seoTitle = "";
     protected string $seoDescription = "";
     protected string $keywords = "";
 
@@ -235,6 +236,20 @@ class SellableItem extends SparkObject
     public function setDescription(string $description) : void
     {
         $this->description = $description;
+    }
+
+    /**
+     * The SEO title of the product (its <title>) - empty: the title rule of the details content
+     * @return string
+     */
+    public function getSeoTitle() : string
+    {
+        return $this->seoTitle;
+    }
+
+    public function setSeoTitle(string $seoTitle) : void
+    {
+        $this->seoTitle = $seoTitle;
     }
 
     public function getSeoDescription() : string

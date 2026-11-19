@@ -7,7 +7,8 @@ class SectionsBean extends OrderedDataBean
     protected string $createString = "CREATE TABLE `sections` (
   `secID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `section_title` varchar(32) NOT NULL,
-  `section_seodescription` text DEFAULT NULL,
+  `seo_title` varchar(512) DEFAULT NULL,
+  `seo_description` varchar(512) DEFAULT NULL,
   `position` int(11) NOT NULL,
   `home_visible` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`secID`),

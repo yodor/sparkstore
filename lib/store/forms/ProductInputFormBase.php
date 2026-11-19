@@ -1,5 +1,6 @@
 <?php
 include_once("forms/InputForm.php");
+include_once("forms/SEOInputGroup.php");
 include_once("input/DataInputFactory.php");
 
 include_once("store/beans/BrandsBean.php");
@@ -44,18 +45,11 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setLabelKey("brand_name");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Заглавие / SEO заглавие", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Заглавие", 1);
         $field->getRenderer()->input()->setAttribute("size", "50em");
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "product_description", "Описание", 0);
-        $this->addInput($field);
-
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "seo_description", "SEO описание (до 150 символа)", 0);
-        $field->enableTranslator(true);
-        $field->getRenderer()->input()->setAttribute("maxLength","150");
-        $field->getRenderer()->input()->setAttribute("rows","3");
-        $field->getRenderer()->input()->setAttribute("cols","60");
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
@@ -150,6 +144,7 @@ class ProductInputFormBase extends InputForm
         $this->addInput($field1);
         //
 
+        SEOInputGroup::AddTo($this);
     }
 
     public function validate(): void

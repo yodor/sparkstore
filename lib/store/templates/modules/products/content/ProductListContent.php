@@ -493,9 +493,10 @@ class ProductListContent extends ProductContent
     }
 
     /**
-     * Title and description of the list: the category branch (seo title / name, seo description / description),
-     * the section before it, the search before them - [title, description]; an empty title leaves it to the frame
-     * (the selected menu item), then 'All Products' (fallbackTitle())
+     * Title (the <title>) and description of the list: the category branch (SEO title / name, SEO description /
+     * description), the section before it (its SEO title / name, its SEO description), the search before them -
+     * [title, description]; an empty title leaves it to the frame (the selected menu item), then 'All Products'
+     * (fallbackTitle())
      * @return array
      * @throws Exception
      */
@@ -503,28 +504,61 @@ class ProductListContent extends ProductContent
     {
         [$title, $description] = $this->categoryTitleDescription();
 
-        //the section: its seo description
         if ($this->section) {
-            $columns = array();
-            if ($this->sections->haveColumn("section_seodescription")) {
-                $columns[] = "section_seodescription";
-            }
-            $result = $this->sections->getResult("section_title", $this->section, ...$columns);
-            if (isset($result["section_seodescription"]) && $result["section_seodescription"]) {
-                $description = $result["section_seodescription"];
-            }
-            $title = $this->section . ($title ? " - " . $title : "");
+            $section = $this->sectionRow();
+            $description = SEOData::Description($section, $description);
+            $title = $this->joinTitle(SEOData::Title($section, $this->section), $title);
         }
 
+        return array($this->searchTitle($title), $description);
+    }
+
+    /**
+     * The heading of the list (its h1): the names - the category, the section before it, the search before them.
+     * The SEO titles go only to the <title> (listTitleDescription). Empty: the title of the page.
+     * @return string
+     */
+    protected function listHeading() : string
+    {
+        $heading = $this->categoryName();
+        if ($this->section) {
+            $heading = $this->joinTitle($this->section, $heading);
+        }
+        return $this->searchTitle($heading);
+    }
+
+    /**
+     * The row of the selected section: its SEO title and description
+     * @return array
+     * @throws Exception
+     */
+    protected function sectionRow() : array
+    {
+        $result = $this->sections->getResult("section_title", $this->section, SEOInputGroup::TITLE, SEOInputGroup::DESCRIPTION);
+        return is_array($result) ? $result : array();
+    }
+
+    /**
+     * '$first - $rest' ('$first' alone when '$rest' is empty)
+     */
+    protected function joinTitle(string $first, string $rest) : string
+    {
+        return $first . ($rest !== "" ? " - " . $rest : "");
+    }
+
+    /**
+     * '$title' after the search: 'Search results - <keyword> - $title', 'Search results - $title' for the filters
+     */
+    protected function searchTitle(string $title) : string
+    {
         if ($this->keyword_search->isProcessed()) {
-            $search_value = $this->keyword_search->getForm()->getInput("keyword")->getValue();
-            $title = tr("Search results") . " - " . $search_value . ($title ? " - " . $title : "");
+            $search_value = (string)$this->keyword_search->getForm()->getInput("keyword")->getValue();
+            return $this->joinTitle(tr("Search results") . " - " . $search_value, $title);
         }
-        else if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters()) > 0) {
-            $title = tr("Search results") . ($title ? " - " . $title : "");
+        if ($this->filters instanceof ProductListFilter && count($this->filters->getActiveFilters()) > 0) {
+            return $this->joinTitle(tr("Search results"), $title);
         }
-
-        return array($title, $description);
+        return $title;
     }
 
     public function fallbackTitle() : string
@@ -753,18 +787,21 @@ class ProductListContent extends ProductContent
     }
 
     /**
-     * The caption of the list (the final title of the page) and its description
+     * The caption of the list (listHeading(), else the final title of the page) and its description
      * @return void
      */
     protected function renderListHeader() : void
     {
         $page = SparkPage::Instance();
 
+        $heading = $this->listHeading();
+        if ($heading === "") $heading = $page ? $page->getTitle() : (string)$this->config->title;
+
         $cmp = new Component();
         $cmp->setTagName("h1");
         $cmp->setComponentClass("Caption");
         $cmp->setClassName("category_name");
-        $cmp->setText($page ? $page->getTitle() : (string)$this->config->title);
+        $cmp->setText($heading);
         $cmp->render();
 
         $description = $page ? $page->getMetaDescription() : "";

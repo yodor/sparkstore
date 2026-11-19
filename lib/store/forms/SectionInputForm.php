@@ -1,5 +1,6 @@
 <?php
 include_once("forms/InputForm.php");
+include_once("forms/SEOInputGroup.php");
 
 class SectionInputForm extends InputForm
 {
@@ -11,11 +12,10 @@ class SectionInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::TEXT, "section_title", "Секция", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "section_seodescription", "СЕО Описание", 0);
-        $this->addInput($field);
-
         $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта (опция)", 0);
         $this->addInput($field);
+
+        SEOInputGroup::AddTo($this, false);
 
     }
 

@@ -1,5 +1,6 @@
 <?php
 include_once("forms/InputForm.php");
+include_once("forms/SEOInputGroup.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/beans/ProductCategoryPhotosBean.php");
 
@@ -29,13 +30,6 @@ class ProductCategoryInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "category_seotitle", "SEO Заглавие (опция)", 0);
-        $this->addInput($field);
-
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "category_seodescription", "SEO Описание (опция - 150 символа)", 0);
-        $field->getRenderer()->input()?->setAttribute("maxLength", 150);
-        $this->addInput($field);
-
         $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
         $field->getRenderer()->input()->setAttribute("size", "50em");
         $field->getRenderer()->input()->setAttribute("placeholder", "AW-CONVERSION_ID/CONVERSION_LABEL");
@@ -48,6 +42,8 @@ class ProductCategoryInputForm extends InputForm
         $this->addInput($field);
 
         $this->getInput("category_name")->enableTranslator(TRUE);
+
+        SEOInputGroup::AddTo($this);
     }
 
 }

@@ -11,6 +11,7 @@ class ProductsBean extends DBTableBean
   `product_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `subtitle` text DEFAULT NULL,
   `product_description` text DEFAULT NULL,
+  `seo_title` varchar(512) DEFAULT NULL,
   `seo_description` varchar(512) DEFAULT NULL,
   `model` varchar(512) DEFAULT '''''',
   `price` decimal(10,2) unsigned NOT NULL DEFAULT 0.00,

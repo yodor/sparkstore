@@ -6,6 +6,7 @@ include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("store/utils/IMenuAddresses.php");
+include_once("utils/SEOData.php");
 
 /**
  * Base of the products module contents (StorePage frame): the category branch of the page, the breadcrumb, the
@@ -44,9 +45,7 @@ abstract class ProductContent extends TemplateContent implements IMenuAddresses
      */
     protected function loadCategoryPath(int $nodeID) : void
     {
-        $columns = array("catID", "category_name");
-        if ($this->product_categories->haveColumn("category_seotitle")) $columns[] = "category_seotitle";
-        if ($this->product_categories->haveColumn("category_seodescription")) $columns[] = "category_seodescription";
+        $columns = array("catID", "category_name", "seo_title", "seo_description");
         $this->category_path = $this->product_categories->getParentNodes($nodeID, $columns);
     }
 
@@ -95,7 +94,7 @@ abstract class ProductContent extends TemplateContent implements IMenuAddresses
     }
 
     /**
-     * Title and description of the category branch: the seo title or the name of the deepest category, the seo
+     * Title and description of the category branch: the SEO title or the name of the deepest category, the SEO
      * description (or the description) of the deepest category that has one - [title, description]
      * @return array
      */
@@ -104,15 +103,20 @@ abstract class ProductContent extends TemplateContent implements IMenuAddresses
         $title = "";
         $description = "";
         foreach ($this->category_path as $element) {
-            $title = (isset($element["category_seotitle"]) && mb_strlen($element["category_seotitle"]) > 0) ? $element["category_seotitle"] : $element["category_name"];
-            if (isset($element["category_seodescription"]) && mb_strlen($element["category_seodescription"]) > 0) {
-                $description = $element["category_seodescription"];
-            }
-            else if (isset($element["category_description"]) && mb_strlen($element["category_description"]) > 0) {
-                $description = $element["category_description"];
-            }
+            $title = SEOData::Title($element, (string)$element["category_name"]);
+            $description = SEOData::Description($element, (string)($element["category_description"] ?? "")) ?: $description;
         }
         return array($title, $description);
+    }
+
+    /**
+     * The name of the deepest category of the branch - "" without a category
+     * @return string
+     */
+    protected function categoryName() : string
+    {
+        $count = count($this->category_path);
+        return ($count > 0) ? (string)$this->category_path[$count - 1]["category_name"] : "";
     }
 
     public function component() : Component

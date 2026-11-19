@@ -10,7 +10,7 @@ class ProductsSQL extends SQLSelect
         $this->columns(
 
             "p.prodID", "p.catID", "p.brand_name",
-            "p.product_name", "p.product_description", "p.seo_description",
+            "p.product_name", "p.product_description", "p.seo_title", "p.seo_description",
             "p.visible", "p.pclsID", "p.promo_price", "p.price",
             "p.insert_date", "p.update_date", "p.stock_amount"
         );

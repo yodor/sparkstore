@@ -91,7 +91,8 @@ class ProductDetailsContent extends ProductContent
         $this->item->initialize();
         $this->fillBreadCrumb();
 
-        $this->config->title = $this->productTitle();
+        //the SEO title of the product, else the title rule (productTitle)
+        $this->config->title = ($this->sellable->getSeoTitle() !== "") ? $this->sellable->getSeoTitle() : $this->productTitle();
         $page->setMetaDescription($this->productDescription());
     }
 
