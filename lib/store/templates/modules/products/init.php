@@ -13,6 +13,12 @@
 include_once("store/pages/StorePage.php");
 
 $module = Module::Active();
+
+//the addresses with values in them (before: the rewrite rules of the module .htaccess)
+$module->addPattern("([0-9]+)/(.*)", "details", "prodID");
+$module->addPattern("category/([0-9]+)/(.*)", "category", "catID");
+$module->addPattern("promos/([0-9]+)/(.*)", "promos", "catID");
+$module->addPattern("search/([0-9]+)/(.*)", "search", "catID");
 $module->pageClass = StorePage::class;
 
 //the old script of a product (details.php?prodID=) - answered as the product path: one 301 to the product address
