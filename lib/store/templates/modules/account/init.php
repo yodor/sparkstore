@@ -4,10 +4,11 @@
 //
 include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("auth/UserAuthenticator.php");
+include_once("store/pages/StorePage.php");
 
 $module = Module::Active();
 //the site StorePage frame; the account layout is AccountContent
-if (!$module->pageClass) $module->pageClass = "StorePage";
+if (!$module->pageClass) $module->pageClass = StorePage::class;
 $module->addPageCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/account.css");
 if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 

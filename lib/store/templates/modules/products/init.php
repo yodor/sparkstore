@@ -10,8 +10,10 @@
 //  /products/search/[<catID>/<slug>/]   keyword search (noindex)          ProductListContent  (path/search.php)
 //  /products/<prodID>/<slug>/           a product                         ProductDetailsContent (path/details.php)
 //
+include_once("store/pages/StorePage.php");
+
 $module = Module::Active();
-$module->pageClass = "StorePage";
+$module->pageClass = StorePage::class;
 
 //the old script of a product (details.php?prodID=) - answered as the product path: one 301 to the product address
 $module->addPathAlias("details.php", "details");

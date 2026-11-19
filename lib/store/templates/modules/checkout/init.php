@@ -4,10 +4,11 @@
 //
 include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("auth/UserAuthenticator.php");
+include_once("store/pages/StorePage.php");
 
 $module = Module::Active();
 //the site StorePage frame; the checkout layout is CheckoutContent
-if (!$module->pageClass) $module->pageClass = "StorePage";
+if (!$module->pageClass) $module->pageClass = StorePage::class;
 $module->addPageClass("CheckoutPage");
 $module->addPageCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/checkout.css");
 if (!$module->authClass) $module->authClass = UserAuthenticator::class;
