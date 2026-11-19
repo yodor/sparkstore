@@ -1,9 +1,5 @@
 @layer store {
 
-/* kept from the lower layers: their more specific rules won over the rules of this file before the cascade
-   layers - restated so they still win where they did (remove when this file is reworked) */
-.InputField > .Caption:first-child { padding: 5px; background-color: white; }
-
 .section.main .content {
     padding: 1em;
     box-sizing: border-box;
@@ -19,7 +15,7 @@
     margin-top: 1em;
 }
 
-.Caption {
+:where(.section.main .content) .Caption {
     text-align: left;
     background-color: #fafafa;
     padding-left: 2em;

@@ -50,7 +50,7 @@ abstract class AccountContent extends TemplateContent
      */
     protected function createMenuColumn() : Container
     {
-        SparkLoader::Factory(Module::Active()->getPreifx())->include("menu", true);
+        SparkLoader::Factory(Module::Active()->getPrefix())->include("menu", true);
 
         $column = new Container(false);
         $column->setComponentClass("column account_menu");

@@ -1,9 +1,5 @@
 @layer store {
 
-/* kept from the lower layers: their more specific rules won over the rules of this file before the cascade
-   layers - restated so they still win where they did (remove when this file is reworked) */
-.TreeView .Node .node_actions .Action { color: var(--theme-link); }
-
 /* product_list_base.css */
 
 .section.main .content {
