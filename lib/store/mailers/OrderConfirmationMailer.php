@@ -64,7 +64,7 @@ class OrderConfirmationMailer extends Mailer
             $address_form = new InputForm();
             $address_form->unserializeXML($order["delivery_address"]);
             ob_start();
-            $address_form->renderPlain();
+            $address_form->CreatePlainRenderer()->render();
             $message .= ob_get_contents();
             ob_end_clean();
         }
