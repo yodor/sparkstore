@@ -60,7 +60,7 @@ abstract class AccountContent extends TemplateContent
         $column->items()->append($links);
 
         //top level section of the path marks its item
-        $section = explode("/", Template::FormatPath(Module::Active()->getPath(), "/", false))[0] ?? "";
+        $section = explode("/", Module::FormatPath(Module::Active()->getPath(), "/", false))[0] ?? "";
 
         foreach (AccountContent::Menu()->toArray() as $item) {
             if (!($item instanceof MenuItem)) continue;
