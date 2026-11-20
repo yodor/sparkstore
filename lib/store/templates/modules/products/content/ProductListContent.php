@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("store/templates/modules/products/content/ProductContent.php");
 include_once("store/templates/modules/products/content/ProductListConfig.php");
 include_once("store/beans/SellableProducts.php");
@@ -764,7 +765,7 @@ class ProductListContent extends ProductContent
                 $img->setTagName("img");
                 $img->setComponentClass("");
                 $img->setClosingTagRequired(false);
-                $img->setAttribute("src", $si->hrefCrop(128, -1)->toString());
+                $img->setAttribute("src", $si->hrefImage(ImageSize::Small->value)->toString());
                 $img->setAttribute("alt", $name);
                 $link->items()->append($img);
             }

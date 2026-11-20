@@ -60,6 +60,10 @@ H2 A {
     --spark-button-background-color: var(--theme-accent);
     --spark-submit-button-background-color: var(--theme-accent);
 
+    /* the product photos in their square boxes (list items, the gallery, its dots, the cart): contain - the whole
+       photo, cover - the box filled, the photo cut. A site sets it once: ':root { --store-photo-fit: cover; }' */
+    --store-photo-fit: contain;
+
     --spark-button-border-radius: 2em;
     --spark-button-text-transform: uppercase;
     --spark-button-text-color: white;

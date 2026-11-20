@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("components/Container.php");
 include_once("components/LabelSpan.php");
 include_once("components/Image.php");
@@ -202,7 +203,7 @@ class OrderView extends Container
         $photo->setAttribute("href", $url->fullURL()->toString());
         $image = new Image();
         $image->setStorageItem(new StorageItem((int)$item["itemID"], $beanClass));
-        $image->setPhotoSize(100, -1);
+        $image->setPhotoSize(ImageSize::Small);
         $photo->items()->append($image);
         $line->items()->append($photo);
 

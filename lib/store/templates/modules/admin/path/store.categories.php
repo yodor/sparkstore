@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("templates/content/BeanEditor.php");
 include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/forms/ProductCategoryInputForm.php");
@@ -33,7 +34,7 @@ else {
         $si->setName("pcpID");
 //
         $item->icon()->setStorageItem($si);
-        $item->icon()->setPhotoSize(0, 32);
+        $item->icon()->setPhotoSize(0, ImageSize::Tiny);
 
         $bannersAction = TemplateBeanContent::CreateAction("banners", "Banners Gallery", "banners");
         $bannersAction->getURL()->add(new DataParameter("catID", $source->getBean()->key()));

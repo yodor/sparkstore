@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("components/Container.php");
 include_once("components/Image.php");
 include_once("components/TextComponent.php");
@@ -144,10 +145,10 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
 
     }
 
-    public function setPhotoSize(int $width, int $height): void
+    public function setPhotoSize(int|IImageSize $width, int|IImageSize $height = 0) : void
     {
-        $this->width = $width;
-        $this->height = $height;
+        $this->width = ImageSizes::Pixels($width);
+        $this->height = ImageSizes::Pixels($height);
         $iterator = $this->image_preview->items()->iterator();
         while ($popup = $iterator->next()) {
             if ($popup instanceof ImagePopup) {

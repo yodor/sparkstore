@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/StoreImageSize.php");
 include_once("responders/RequestResponder.php");
 include_once("components/Action.php");
 include_once("storage/StorageItem.php");
@@ -355,7 +356,7 @@ class FacebookCSVExporter extends CSVProductExporter
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1);
+            $image_link = $item->getMainPhoto()->hrefImage(StoreImageSize::Large->value);
             $image_link = new URL($image_link);
         }
         $this->values["image_link"] = $image_link->fullURL();
@@ -414,7 +415,7 @@ class GoogleCSVExporter extends CSVProductExporter
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1)->fullURL();
+            $image_link = $item->getMainPhoto()->hrefImage(StoreImageSize::Large->value)->fullURL();
         }
         $this->values["productImageUrl"] = $image_link;
 
@@ -472,7 +473,7 @@ class GoogleMerchantCSVExporter extends CSVProductExporter
 
         $image_link = "";
         if ($item->getMainPhoto() instanceof StorageItem) {
-            $image_link = $item->getMainPhoto()->hrefImage(640, -1)->fullURL();
+            $image_link = $item->getMainPhoto()->hrefImage(StoreImageSize::Large->value)->fullURL();
         }
         $this->values["image_link"] = $image_link;
 

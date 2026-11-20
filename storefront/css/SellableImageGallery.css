@@ -36,7 +36,7 @@
     display: block;
 
     box-sizing: border-box;
-    object-fit: cover;
+    object-fit: var(--store-photo-fit);
     width: calc(100cqw);
     height: calc(100cqw);
 }
@@ -125,7 +125,7 @@
 
 .SellableImageGallery .dots .dot IMG {
     aspect-ratio: 1/1;
-    object-fit: cover;
+    object-fit: var(--store-photo-fit);
     display:block;
     width:100%;
     height:100%;

@@ -1,4 +1,6 @@
 <?php
+include_once("store/utils/StoreImageSize.php");
+include_once("utils/ImageSizes.php");
 include_once("components/renderers/items/ListItem.php");
 include_once("components/renderers/IHeadContents.php");
 include_once("components/renderers/IPhotoRenderer.php");
@@ -138,7 +140,7 @@ class ProductPhoto extends Action implements IDataResultConsumer
         $this->image->setAttribute("itemprop", "image");
         $this->image->setStorageItem(new StorageItem());
 
-        $this->image->setPhotoSize(275,275);
+        $this->image->setPhotoSize(StoreImageSize::Item, StoreImageSize::Item);
 
         $this->items()->append($this->image);
 
@@ -308,7 +310,7 @@ class ProductListItem extends ListItem implements IHeadContents, IPhotoRenderer,
         return $arr;
     }
 
-    public function setPhotoSize(int $width, int $height): void
+    public function setPhotoSize(int|IImageSize $width, int|IImageSize $height = 0) : void
     {
         $this->productPhoto->getImage()->setPhotoSize($width, $height);
     }

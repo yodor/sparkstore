@@ -184,10 +184,8 @@ class ProductDetailsContent extends ProductContent
             $width = $this->item->getGallery()->getPhotoWidth();
             $height = $this->item->getGallery()->getPhotoHeight();
             $imageURL = $main_photo->hrefImage($width, $height)->fullURL();
+            //no image:width / image:height - the size and the box are bounds, the real size follows the photo
             $page->head()->addOGTag("image", $imageURL);
-            //the box of the image - a side of 0 is not known (auto)
-            if ($width > 0) $page->head()->addOGTag("image:width", $width);
-            if ($height > 0) $page->head()->addOGTag("image:height", $height);
             $page->head()->addOGTag("image:alt", $this->sellable->getTitle());
             $page->head()->addMeta("twitter:card", "summary_large_image");
             $page->head()->addMeta("twitter:image", $imageURL);

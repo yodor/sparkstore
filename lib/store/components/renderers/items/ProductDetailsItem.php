@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/StoreImageSize.php");
 include_once("components/Component.php");
 include_once("store/utils/SellableItem.php");
 
@@ -89,7 +90,7 @@ class ProductDetailsItem extends Container implements IHeadContents
         $this->setAttribute("productID", $this->sellable->getProductID());
 
         $this->gallery = new SellableImageGallery($this->sellable);
-        $this->gallery->setPhotoSize(640,640);
+        $this->gallery->setPhotoSize(StoreImageSize::Large, StoreImageSize::Large);
         $this->items()->append($this->gallery);
 
         $this->side_pane = new DetailsSidePane($this->sellable);

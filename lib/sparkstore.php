@@ -8,6 +8,11 @@ Spark::Set(StoreConfig::LOGO_NAME, "logo_header.svg");
 //the store default (sparkstore/storefront/images) - INSTALL_PATH was never set
 Spark::Set(StoreConfig::LOGO_PATH, dirname(__DIR__) . "/storefront/images/");
 
+//the image sizes of the store (the product list items, the product page) next to the core ones - a site disables
+//or adds sizes in config/settings.php (a disabled size stays disabled) or config/app.php
+include_once("store/utils/StoreImageSize.php");
+ImageSizes::Enable(...StoreImageSize::cases());
+
 Spark::Set(StoreConfig::DEFAULT_CURRENCY, "EUR");
 Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");
 

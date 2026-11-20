@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("templates/content/BeanList.php");
 
 include_once("store/beans/ProductsBean.php");
@@ -387,7 +388,7 @@ class ProductsList extends BeanList {
 
         $tableView = $this->tableView();
 
-        $ticr1 = new ImageCell(275, 0);
+        $ticr1 = new ImageCell(ImageSize::Small);
         $ticr1->setBean(new ProductPhotosBean());
         $ticr1->setLimit(1);
         $tableView->getColumn("cover_photo")->setCellRenderer($ticr1);

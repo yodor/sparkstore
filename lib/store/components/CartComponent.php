@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/StoreImageSize.php");
 include_once("components/Component.php");
 include_once("components/renderers/cells/TableCell.php");
 
@@ -211,7 +212,7 @@ class CartListItem extends Container {
         $this->image = new ImageStorage();
         $this->image->setTagName("a");
         $this->image->setURL(new ProductURL());
-        $this->image->image()->setPhotoSize(0,275);
+        $this->image->image()->setPhotoSize(0, StoreImageSize::Item);
         $tdProduct->items()->append($this->image);
 
         $this->label = new TextComponent();

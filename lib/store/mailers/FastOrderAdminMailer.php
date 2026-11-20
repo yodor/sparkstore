@@ -1,4 +1,5 @@
 <?php
+include_once("utils/ImageSizes.php");
 include_once("mailers/Mailer.php");
 include_once("store/forms/FastOrderProductForm.php");
 include_once("store/utils/SellableItem.php");
@@ -86,7 +87,7 @@ class FastOrderAdminMailer extends Mailer
         //a product without photos has no main photo
         $si = $item->getMainPhoto();
         if ($si) {
-            $src = new URL($si->hrefImage(256,256));
+            $src = new URL($si->hrefImage(ImageSize::Thumbnail->value, ImageSize::Thumbnail->value));
             $result .= "<img src='{$src->fullURL()}'>";
         }
         $result .= "</td>";

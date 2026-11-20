@@ -91,7 +91,7 @@
 }
 
 .CartComponent .item .ImageStorage IMG {
-    object-fit: contain;
+    object-fit: var(--store-photo-fit);
     max-width: 100px;
     max-height: 100px;
     min-width:100px;
