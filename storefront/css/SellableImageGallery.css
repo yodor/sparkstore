@@ -9,101 +9,30 @@
     container-type: inline-size;
 }
 
-.SellableImageGallery .preview {
-
-    position:relative;
-    box-sizing: border-box;
-
-    display: flex;
-    flex-direction: row;
-
+.SellableImageGallery .viewport {
     container-type: inline-size;
-    transition: 0.5s ease-in-out;
-
 }
 
-.SellableImageGallery .preview.sliding {
-    transition: none;
-}
-
-.SellableImageGallery .preview .item {
-
-    display:grid;
-    flex-shrink: 0;
-}
-
-.SellableImageGallery .preview .item IMG {
-    display: block;
-
+/* the photos in square boxes - the whole photo or the box filled (--store-photo-fit) */
+.SellableImageGallery .viewport .item IMG {
     box-sizing: border-box;
     object-fit: var(--store-photo-fit);
     width: calc(100cqw);
     height: calc(100cqw);
 }
 
-.SellableImageGallery .preview .arrow.prev {
-    left:0;
-    top:50%;
-    margin-top:-25px;
-    background-image:url("../../sparkfront/images/gallery_left.png");
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-
-}
-
-.SellableImageGallery .preview .arrow.next {
-    right:0;
-    top:50%;
-    margin-top:-25px;
-    background-image:url("../../sparkfront/images/gallery_right.png");
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-
-/**/
-
+/* the arrows in the middle of the photo (the dots are under it) */
 .SellableImageGallery .nav-arrow {
-    position: absolute;
     top: calc(100cqw/2);
-    transform: translateY(-50%);
     width: 1.67em;
-    /*height: 1.67em;*/
-    background: rgba(0,0,0,0.2);
-    color: white;
     font-size: 2.4em;
-    text-align: center;
     line-height: 1.67em;
-    cursor: pointer;
-    /*border-radius: 50%;*/
-    transition: background 0.3s;
-
     font-family: "Monospaced", monospace;
-
-    box-sizing:border-box;
-}
-
-.SellableImageGallery .nav-arrow:hover { background: rgba(0,0,0,0.8); }
-
-.SellableImageGallery .nav-arrow.prev {
-    left: 0px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.SellableImageGallery .nav-arrow.next {
-    right: 0px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-
+    box-sizing: border-box;
 }
 
 .SellableImageGallery .dots {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     gap:1em;
-    justify-content: center;
-    margin-top:1em;
 }
 
 .SellableImageGallery .dots .dot {

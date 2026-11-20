@@ -1,45 +1,39 @@
 <?php
-include_once("utils/ImageSizes.php");
-include_once("components/Container.php");
-include_once("components/Image.php");
+include_once("components/ImageSlider.php");
 include_once("components/TextComponent.php");
-include_once("components/ImagePopup.php");
-
 include_once("storage/StorageItem.php");
-
 include_once("store/utils/SellableItem.php");
 
-
-class SellableImageGallery extends Container implements IPhotoRenderer {
-
+/**
+ * The photos of a product (the product page): the core ImageSlider with photo dots, the main photo first
+ * (fetchpriority high), the promo / sold out label and the sold out blend.
+ *
+ *   figure.ImageSlider.SellableImageGallery (+ .promo, .nostock)
+ *     .viewport > a.ImagePopup.item > img
+ *     .nav-arrow.prev / .next, .dots > .dot.image > img
+ *     .blend, .discount_label
+ */
+class SellableImageGallery extends ImageSlider
+{
     protected SellableItem $sellable;
-    protected Container $image_preview;
 
-    protected int $width = 0;
-    protected int $height = 0;
-
-    public function __construct(SellableItem $item, bool $chained_component_class = true)
+    public function __construct(SellableItem $item)
     {
-        parent::__construct($chained_component_class);
+        parent::__construct();
 
         $this->sellable = $item;
 
         $this->setTagName("figure");
-        $this->setComponentClass("SellableImageGallery");
-
-        $this->setAttribute("role","region");
+        $this->setAttribute("role", "region");
         $this->setAttribute("aria-label", "Product image gallery");
         $this->setAttribute("draggable", "false");
 
-        $this->image_preview = new Container(false);
-        $this->image_preview->setComponentClass("preview");
-        $this->image_preview->setAttribute("draggable", "false");
+        $this->setDots(SliderDots::IMAGE);
+        $this->setPriority(true);
 
-        $this->items()->append($this->image_preview);
-
-        $blend_pane = new TextComponent();
-        $blend_pane->setComponentClass("blend");
-        $this->items()->append($blend_pane);
+        $blend = new TextComponent();
+        $blend->setComponentClass("blend");
+        $this->items()->append($blend);
 
         $label = new TextComponent();
         $label->setComponentClass("discount_label");
@@ -48,123 +42,41 @@ class SellableImageGallery extends Container implements IPhotoRenderer {
         if ($this->sellable->isPromotion()) {
 
             $discountPercent = $this->sellable->getPriceInfo()->getDiscountPercent();
-            if ($discountPercent==0) {
+            if ($discountPercent == 0) {
                 $discountPercent = 100.00 - ((float)($this->sellable->getPriceInfo()->getSellPrice() / $this->sellable->getPriceInfo()->getOldPrice()) * 100.00);
             }
-            if ($discountPercent>0) {
-                $discountPercent = round($discountPercent,2);
-                $label->setContents(" -" . $discountPercent . "%");
+            if ($discountPercent > 0) {
+                $label->setContents(" -" . round($discountPercent, 2) . "%");
             }
             else {
-                $label->setContents("Промо");
+                $label->setText(tr("Промо"));
             }
 
             $this->addClassName("promo");
         }
 
-
-        $stock_amount = $this->sellable->getStockAmount();
-        if ($stock_amount<1) {
-            $label->setContents("Изчерпан");
+        if ($this->sellable->getStockAmount() < 1) {
+            $label->setText(tr("Изчерпан"));
             $this->addClassName("nostock");
         }
 
-        $gallery_items = $this->sellable->galleryItems();
+        foreach ($this->sellable->galleryItems() as $pos => $storageItem) {
 
-        foreach($gallery_items as $pos=>$storageItem) {
+            if (!($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
-            if (! ($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
-
-            $image_popup = new ImagePopup($storageItem);
-            $image_popup->setTagName("span");
-            $image_popup->addClassName("item");
-            $image_popup->setAttribute("draggable", "false");
-
-            $image = $image_popup->image();
-            $image->setPhotoSize($this->width, $this->height);
-            $image->setUseSizeAttributes(true);
-
-            //set alt only most important + src
-            //alt and src are most important for seo. if there are product variants / colors / append them here
-            $imageTitle = "View ".($pos+1)." of ".$this->sellable->getTitle();
-
-            $image->setAttribute("alt", $imageTitle);
-            $image->getStorageItem()->setName($this->sellable->getTitle());
-
-            if ($pos>0) {
-                $image->setAttribute("loading", "lazy");
-            }
-            else {
-                $image->setAttribute("fetchpriority","high");
-            }
-
-            $image->setAttribute("draggable", "false");
-            $this->image_preview->items()->append($image_popup);
-
+            //alt and src matter most for the search engines (variants / colors would go here)
+            $popup = $this->addImage($storageItem, null, "View " . ($pos + 1) . " of " . $this->sellable->getTitle());
+            //the popup and the slider show the photos without a caption
+            $popup->removeAttribute("title");
+            $popup->image()->getStorageItem()->setName($this->sellable->getTitle());
+            $popup->image()->setUseSizeAttributes(true);
         }
-
-        $max_pos = count(array_keys($gallery_items));
-        $this->image_preview->setAttribute("max_pos",$max_pos);
-
-
-
-
-    }
-
-    public function requiredScript(): array
-    {
-        $result =  parent::requiredScript();
-        $result[] = Spark::Get(Config::SPARK_LOCAL)."/js/SwipeListener.js";
-        $result[] = Spark::Get(StoreConfig::STORE_LOCAL)."/js/ImageSlider.js";
-        return $result;
     }
 
     public function requiredStyle(): array
     {
         $result = parent::requiredStyle();
-        $result[] = Spark::Get(StoreConfig::STORE_LOCAL)."/css/SellableImageGallery.css";
+        $result[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/SellableImageGallery.css";
         return $result;
     }
-
-    public function finishRender(): void
-    {
-        parent::finishRender();
-        ?>
-        <script type='text/javascript'>
-            onPageLoad(function() {
-                const imageSlider = new ImageSlider();
-                imageSlider.setClass(".ProductDetailsItem");
-                imageSlider.containerClass = ".SellableImageGallery";
-                imageSlider.viewportClass = ".preview";
-                imageSlider.autoplayEnabled = false;
-                imageSlider.dotStyle = ImageSlider.DOT_STYLE_IMAGE;
-                imageSlider.initialize();
-            });
-        </script>
-        <?php
-
-    }
-
-    public function setPhotoSize(int|IImageSize $width, int|IImageSize $height = 0) : void
-    {
-        $this->width = ImageSizes::Pixels($width);
-        $this->height = ImageSizes::Pixels($height);
-        $iterator = $this->image_preview->items()->iterator();
-        while ($popup = $iterator->next()) {
-            if ($popup instanceof ImagePopup) {
-                $popup->image()->setPhotoSize($width, $height);
-            }
-        }
-    }
-
-    public function getPhotoWidth(): int
-    {
-        return $this->width;
-    }
-
-    public function getPhotoHeight(): int
-    {
-        return $this->height;
-    }
 }
-?>

@@ -98,33 +98,14 @@
     cursor: pointer;
 }
 
-/*fading banners*/
+/* fading banners: the core slider stacks them and fades the current one in (ImageSlider fade) - the box keeps
+   the banner shape before they load */
 
 .NavigationListItem .banners.fade .viewport {
-    display: block;
-    position:relative;
+    display: grid;
+    width: 100%;
     aspect-ratio: 3.14;
-    overflow:hidden;
-    width:100%;
 }
-
-/*last item from html load order is on top and visible by default.
-ImageFader moves the first as last during initialize*/
-
-.NavigationListItem .banners.fade .viewport .item {
-    position:absolute;
-    left:0;
-    top:0;
-    display:block;
-}
-
-/*ImageFader take the first and make it running before re-appending it as last so fadeIn*/
-
-.NavigationListItem .banners.fade .viewport .item.running {
-    animation: fadeIn 1s ease-in-out; /* 'forwards' retains the final state */
-}
-
-/*fading banners*/
 
 /* keeps the place of a tape that is loaded later - no jump when it arrives */
 

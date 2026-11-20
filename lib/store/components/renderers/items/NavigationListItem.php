@@ -1,10 +1,10 @@
 <?php
 include_once("components/renderers/items/DataIteratorItem.php");
 include_once("components/Action.php");
-include_once("components/Image.php");
 include_once("storage/StorageItem.php");
 include_once("store/components/ProductsTape.php");
-include_once("components/InlineScript.php");
+include_once("components/ImageSlider.php");
+include_once("utils/url/URL.php");
 
 enum BannerEffect : int
 {
@@ -13,64 +13,22 @@ enum BannerEffect : int
     case FADE = 2;
 
 }
-class FadeEffectScript extends InlineScript
-{
-
-    protected function finalize(): void
-    {
-        $this->enableOnPageLoad();
-        $name = $this->getName();
-        $code = <<<JS
-let fader = new ImageFader();
-fader.setClass(".NavigationListItem");
-fader.setName("$name");
-fader.containerClass = ".banners";
-fader.viewportClass = ".viewport";
-fader.initialize();
-// fader.setupFadeDelayed(3000);
-fader.setupFade();
-JS;
-        $this->setCode($code);
-        parent::finalize();
-    }
-}
-
-class SlideEffectScript extends InlineScript
-{
-
-    protected function finalize(): void
-    {
-        $this->enableOnPageLoad();
-        $name = $this->getName();
-        $code = <<<JS
-let slider = new ImageSlider();
-slider.setClass(".NavigationListItem");
-slider.setName("$name");
-slider.containerClass = ".banners";
-slider.viewportClass = ".viewport";
-slider.autoplayEnabled = false;
-slider.initialize();
-JS;
-        $this->setCode($code);
-        parent::finalize();
-    }
-}
-
 class NavigationListItem extends DataIteratorItem
 {
     protected Action $action;
     protected Container $container;
 
     protected Component $span;
-    protected Image $image;
     protected StorageItem $si;
 
     protected ProductsTape $tape;
     protected Component $tapePlaceholder;
 
-    protected Container $banners;
-    protected Container $viewport;
-    protected Container $bannerItem;
+    /**
+     * The banners of the item (the core ImageSlider) - slide or fade (BannerEffect)
+     * @var ImageSlider
+     */
+    protected ImageSlider $banners;
 
     const int EFFECT_NONE = 0;
     const int EFFECT_SLIDE = 1;
@@ -104,24 +62,13 @@ class NavigationListItem extends DataIteratorItem
         $this->span->setAttribute("itemprop", "name");
         $this->action->items()->append($this->span);
 
-        $this->banners = new Container(false);
-        $this->banners->setComponentClass("banners");
+        $this->banners = new ImageSlider();
+        $this->banners->addClassName("banners");
+        //the first banner of every item is in view - not lazy
+        $this->banners->setPriority(true);
         $this->items()->append($this->banners);
 
-        $this->viewport = new Container(false);
-        $this->viewport->setComponentClass("viewport");
-        $this->banners->items()->append($this->viewport);
-
-        $this->bannerItem = new Container(false);
-        $this->bannerItem->setTagName("A");
-        $this->bannerItem->setComponentClass("item");
-        $this->bannerItem->setAttribute("draggable", "false");
-
         $this->si = new StorageItem();
-        $this->image = new Image();
-        $this->image->setAttribute("loading", "lazy");
-        $this->image->setAttribute("draggable", "false");
-        $this->image->setStorageItem($this->si);
 
         $this->tape = new ProductsTape();
         //random products - every render is different, a cache entry would never be read again
@@ -140,9 +87,6 @@ class NavigationListItem extends DataIteratorItem
     public function requiredScript(): array
     {
         $arr = parent::requiredScript();
-        $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/js/SwipeListener.js";
-        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageSlider.js";
-        $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/ImageFader.js";
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/js/NavigationTapes.js";
         return $arr;
     }
@@ -151,7 +95,6 @@ class NavigationListItem extends DataIteratorItem
     {
         $arr = parent::requiredStyle();
         $arr[] = Spark::Get(StoreConfig::STORE_LOCAL) . "/css/NavigationListItem.css";
-        $arr[] = Spark::Get(Config::SPARK_LOCAL) . "/css/animations.css";
         return $arr;
     }
 
@@ -182,50 +125,20 @@ class NavigationListItem extends DataIteratorItem
 
         $this->span->setText($this->label);
 
-        $this->viewport->items()->clear();
-
-        $this->image->setTitle($this->label);
-
-        $this->bannerItem->removeAttribute("href");
-        $this->bannerItem->items()->clear();
-
+        $this->banners->clear();
+        $this->banners->setName("banners-" . $this->getValue());
+        $this->applyEffect();
 
         $imagesKey = $this->si->getValueKey();
-
-        if ($imagesKey) {
-            $images = $data[$imagesKey];
-
-            if ($imagesKey && $images) {
-
-                $images = explode(",", $images);
-                if (count($images) > 0) {
-
-                    foreach ($images as $idx => $imageData) {
-                        $parts = explode("|", $imageData);
-                        $imageID = $parts[0] ?? -1;
-                        $link    = $parts[1] ?? ""; // Or any suitable default
-
-                        $this->si->id = $imageID;
-                        $this->image->setStorageItem($this->si);
-                        if (!$link) {
-                            $link = $this->action->getURL();
-                        }
-                        $this->image->removeAttribute("fetchpriority");
-                        $this->image->removeAttribute("loading");
-                        if ($idx>0) {
-                            $this->image->setAttribute("loading", "lazy");
-                        }
-                        else {
-                            $this->image->setAttribute("fetchpriority", "high");
-                        }
-                        $this->bannerItem->setAttribute("href", $link);
-                        $this->bannerItem->items()->clear();
-                        $this->bannerItem->items()->append(clone $this->image);
-                        $this->viewport->items()->append(clone $this->bannerItem);
-                    }
-
-                }
-
+        $images = $imagesKey ? (string)($data[$imagesKey] ?? "") : "";
+        if ($images !== "") {
+            //'<id>|<link>,...' - a banner without its own link goes to the item
+            foreach (explode(",", $images) as $imageData) {
+                $parts = explode("|", $imageData);
+                $this->si->id = (int)($parts[0] ?? -1);
+                $link = (string)($parts[1] ?? "");
+                $url = ($link !== "") ? new URL($link) : clone $this->action->getURL();
+                $this->banners->addImage($this->si, $url, $this->label);
             }
         }
 
@@ -269,9 +182,12 @@ class NavigationListItem extends DataIteratorItem
         return $this->si;
     }
 
-    public function getImage() : Image
+    /**
+     * The banners of the item
+     */
+    public function getBanners() : ImageSlider
     {
-        return $this->image;
+        return $this->banners;
     }
 
     /**
@@ -280,40 +196,35 @@ class NavigationListItem extends DataIteratorItem
      */
     public function bannersCount() : int
     {
-        return $this->bannerItem->items()->count();
+        return $this->banners->count();
     }
 
-    public function finishRender(): void
+    /**
+     * The slider set up of the effect of this item (setEffectForName, else the default)
+     */
+    protected function applyEffect() : void
     {
-        parent::finishRender();
-
-        if ($this->viewport->items()->count()>1) {
-            $name = $this->getName();
-
-            $effect = $this->effect;
-            if (isset($this->effectForName[$name])) {
-                $effect = $this->effectForName[$name];
-            }
-
-            switch ($effect) {
-
-                case BannerEffect::SLIDE:
-                    $script = new SlideEffectScript();
-                    $script->setName($name);
-                    $script->render();
-                    break;
-
-                case BannerEffect::FADE:
-                    $script = new FadeEffectScript();
-                    $script->setName($name);
-                    $script->render();
-                    break;
-
-                case BannerEffect::NONE:
-                    break;
-            }
+        $effect = $this->effectForName[$this->getName()] ?? $this->effect;
+        switch ($effect) {
+            case BannerEffect::FADE:
+                $this->banners->setEffect(SliderEffect::FADE);
+                $this->banners->setArrows(false);
+                $this->banners->setDots(SliderDots::NONE);
+                $this->banners->setAutoplay(true, 4500);
+                break;
+            case BannerEffect::SLIDE:
+                $this->banners->setEffect(SliderEffect::SLIDE);
+                $this->banners->setArrows(true);
+                $this->banners->setDots(SliderDots::SIMPLE);
+                $this->banners->setAutoplay(false);
+                break;
+            case BannerEffect::NONE:
+                $this->banners->setEffect(SliderEffect::SLIDE);
+                $this->banners->setArrows(false);
+                $this->banners->setDots(SliderDots::NONE);
+                $this->banners->setAutoplay(false);
+                break;
         }
-
     }
 
 }
