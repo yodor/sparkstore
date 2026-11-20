@@ -7,6 +7,7 @@ class StorePromosBean extends DBTableBean
   `spID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
+  `target` enum('Product','Category') NOT NULL DEFAULT 'Category',
   `targetID` int(11) unsigned NOT NULL,
   `discount_percent` int(11) NOT NULL,
   PRIMARY KEY (`spID`),
