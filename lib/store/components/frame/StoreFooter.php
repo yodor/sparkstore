@@ -30,6 +30,8 @@ class StoreFooter extends StoreSection
             "terms" => DynamicPageURL::Group("terms")->toString(),
             "contacts" => Spark::Get(Config::LOCAL) . "/contacts",
             "phone" => "",
+            //the cookie choice again (SparkCookies)
+            "cookies" => "javascript:document.sparkCookies.open()",
         );
 
         $cfg = new ConfigBean();

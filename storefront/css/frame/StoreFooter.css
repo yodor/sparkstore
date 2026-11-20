@@ -88,4 +88,8 @@
 
 }
 
+.section.footer .content .social .slot.cookies {
+    background-image:url("../../images/cookie_icon.svg");
+}
+
 }

@@ -24,6 +24,7 @@ class GTMViewItemEvent extends GTMCommand
             "quantity" => 1,
         );
 
-        $this->addParameter("items", $items);
+        //GA4 reads items as a list
+        $this->addParameter("items", array($items));
     }
 }

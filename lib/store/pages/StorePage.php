@@ -43,7 +43,6 @@ include_once("store/components/ProductsTape.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("objects/data/GTMConvParam.php");
 include_once("objects/data/GTMConversionCommand.php");
-include_once("objects/data/GTMConsentCommand.php");
 include_once("store/components/frame/StoreFrame.php");
 
 
@@ -141,8 +140,6 @@ class StorePage extends SparkPage
 
 
 
-        //update consent
-        $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/cookies.js");
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
         $config = ConfigBean::Factory();
@@ -154,9 +151,7 @@ class StorePage extends SparkPage
         }
 
 
-        //default consent fired from sparkGTM
-//        $default_consent = new GTMConsentCommand();
-//        $this->head()->addScript($default_consent->script());
+        //the consent (default denied, the stored choice) is set by sparkfront js/SparkGTM.js before these commands
 
         $googleID_analytics = $config->get("googleID_analytics");
         $googleID_ads = $config->get("googleID_ads");

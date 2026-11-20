@@ -2,6 +2,8 @@
 include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("components/LabelSpan.php");
 include_once("components/TextComponent.php");
+include_once("store/objects/data/GTMPurchaseEvent.php");
+include_once("pages/SparkPage.php");
 
 /**
  * After the order: thanks and the number of the order just made (session 'checkout.orderID' - set by finalize;
@@ -30,6 +32,12 @@ class CheckoutComplete extends CheckoutContent
             $orderNumber->label()->setContents(tr("Номер на поръчката"));
             $orderNumber->span()->setContents((string)$orderID);
             $page->base()->items()->append($orderNumber);
+
+            //GA4 'purchase' once per order (a reload of the page does not count it again)
+            if ((int)Session::Get("checkout.purchaseSent", 0) !== $orderID) {
+                Session::Set("checkout.purchaseSent", $orderID);
+                SparkPage::Instance()?->head()->addScript(new GTMPurchaseEvent($orderID));
+            }
         }
 
         $page->base()->items()->append(new TextComponent(tr("Ще се свържем с Вас относно детайли за Вашата поръчка")));
