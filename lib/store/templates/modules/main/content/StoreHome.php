@@ -40,7 +40,7 @@ class StoreHome extends TemplateContent
         $this->cmp->items()->append($navigation);
 
         //the cart 'continue shopping' comes back here
-        Session::Set("shopping.list", URL::Requested()->toString());
+        Session::SetIfActive("shopping.list", URL::Requested()->toString());
     }
 
     public function component(): Component

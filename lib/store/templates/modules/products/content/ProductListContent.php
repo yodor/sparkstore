@@ -443,7 +443,7 @@ class ProductListContent extends ProductContent
         if (mb_strlen($description) > 0) $page?->setMetaDescription($description);
 
         //the cart 'continue shopping' comes back here
-        Session::Set("shopping.list", $this->currentURL()->toString());
+        Session::SetIfActive("shopping.list", $this->currentURL()->toString());
     }
 
     protected function processFilters() : void

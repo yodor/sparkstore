@@ -25,7 +25,7 @@ class CheckoutCart extends CheckoutContent
         $page->getCartComponent()->setPostURL(Module::PathURL("cart"));
         $page->getCartComponent()->initialize();
 
-        Session::Set("checkout.navigation.back", Module::PathURL("cart")->toString());
+        Session::SetIfActive("checkout.navigation.back", Module::PathURL("cart")->toString());
 
         if ($cart->itemsCount() > 0) {
             //clear: a POST form, sent by the left button
@@ -66,6 +66,16 @@ class CheckoutCart extends CheckoutContent
             switch ($change) {
                 case "add":
                     $this->add($cart);
+                    //the first product of a visitor (no list remembered without a session): 'continue shopping'
+                    //goes back to the page it was added from
+                    if (!Session::Contains("shopping.list")) {
+                        $referer = (string)($_SERVER["HTTP_REFERER"] ?? "");
+                        $host = (string)parse_url("//" . ($_SERVER["HTTP_HOST"] ?? ""), PHP_URL_HOST);
+                        if ($referer !== "" && $host !== "" && strcasecmp((string)parse_url($referer, PHP_URL_HOST), $host) === 0) {
+                            $query = (string)parse_url($referer, PHP_URL_QUERY);
+                            Session::Set("shopping.list", (string)parse_url($referer, PHP_URL_PATH) . (($query !== "") ? "?" . $query : ""));
+                        }
+                    }
                     break;
                 case "increment":
                     $cart->increment($hash);

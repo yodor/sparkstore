@@ -85,9 +85,10 @@ class Cart
         }
 
         if (is_null($cart)) {
+            //a new cart is empty - stored at its first change (the checkout contents store() it): a visitor who
+            //only reads gets no session
             Debug::ErrorLog("Creating new instance of Cart");
             $cart = new Cart();
-            $cart->store();
         }
 
 
