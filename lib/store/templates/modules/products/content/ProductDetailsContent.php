@@ -176,8 +176,9 @@ class ProductDetailsContent extends ProductContent
         if (!($this->sellable instanceof SellableItem) || !($this->item instanceof ProductDetailsItem)) return;
 
         $page->head()->addOGTag("type", "product");
-        $page->head()->addOGTag("product:price:amount", $this->sellable->getPriceInfo()->getSellPrice());
-        $page->head()->addOGTag("product:price:currency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
+        //Facebook product tags: 'product:' without 'og:'
+        $page->head()->addPropertyTag("product:price:amount", sprintf("%0.2f", $this->sellable->getPriceInfo()->getSellPrice()));
+        $page->head()->addPropertyTag("product:price:currency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
 
         $main_photo = $this->sellable->getMainPhoto();
         if ($main_photo instanceof StorageItem) {

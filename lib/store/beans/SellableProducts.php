@@ -78,18 +78,18 @@ class SellableProducts extends DBViewBean
         foreach ($attributes as $name => $value) {
 
             if ($name && $value) {
+                //the names match in lower case, the values keep their own (names of people, publishers)
                 $attributeName = mb_strtolower($name);
-                $attributeValue = mb_strtolower($value);
                 $found = false;
                 foreach ($supported as $itemProp=>$matches) {
                     if (in_array($attributeName, $matches)) {
                         $found = true;
-                        $function_supported($itemProp, $attributeValue);
+                        $function_supported($itemProp, $value);
                         break;
                     }
                 }
                 if (!$found) {
-                    $unsupported[$attributeName] = $attributeValue;
+                    $unsupported[$name] = $value;
                 }
             }
         }

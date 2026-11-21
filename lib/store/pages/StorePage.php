@@ -201,13 +201,16 @@ class StorePage extends SparkPage
         $organization = new LinkedData("Organization");
         $organization->set("name", Spark::Get(Config::SITE_TITLE));
         $organization->set("url", Spark::Get(Config::SITE_URL));
-        $organization->set("logo", Spark::Get(Config::SITE_URL)."/images/logo_header.svg");
-        $contactPoint = new LinkedData("ContactPoint");
-        $contactPoint->set("telephone", $phone);
-        $contactPoint->set("contactType", "sales");
-        $contactPoint->set("areaServed", substr(Spark::Get(Config::DEFAULT_LANGUAGE_ISO3), 0, 2));
-        $contactPoint->set("availableLanguage", Spark::Get(Config::DEFAULT_LANGUAGE));
-        $organization->set("contactPoint", $contactPoint->toArray());
+        $organization->set("logo", rtrim((string)Spark::Get(Config::SITE_URL), "/") . "/images/logo_header.svg");
+        //a contact point only with a phone (the store config 'phone_orders')
+        if ($phone) {
+            $contactPoint = new LinkedData("ContactPoint");
+            $contactPoint->set("telephone", $phone);
+            $contactPoint->set("contactType", "sales");
+            $contactPoint->set("areaServed", strtoupper(substr((string)Spark::Get(Config::DEFAULT_LANGUAGE_ISO3), 0, 2)));
+            $contactPoint->set("availableLanguage", Spark::Get(Config::DEFAULT_LANGUAGE));
+            $organization->set("contactPoint", $contactPoint->toArray());
+        }
 
         $orgScript = new LDJsonScript();
         $orgScript->setLinkedData($organization);
@@ -221,8 +224,9 @@ class StorePage extends SparkPage
 
         $entryPoint = new LinkedData("EntryPoint");
 
-        $entryURL = new ProductListURL();
-        $entryURL->add(new URLParameter("filter","search"));
+        //the product search of the products module (the old list address answers it with a 301)
+        $entryURL = new ProductSearchURL();
+        $entryURL->add(new URLParameter("filter", "search"));
         $entryURL->add(new LiteralURLParameter("keyword", "{search_term_string}"));
 
         $entryPoint->set("urlTemplate", $entryURL->fullURL());

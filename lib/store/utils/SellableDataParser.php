@@ -160,20 +160,29 @@ class SellableDataParser
         $description = $item->getDescription();
         $seoDescription = $item->getSeoDescription();
         if ($seoDescription) $description = $seoDescription;
-        $product->set("description", strip_tags($description));
+        //plain text: no tags, the entities as their characters, one space
+        $description = html_entity_decode(strip_tags((string)$description), ENT_QUOTES | ENT_HTML5, "UTF-8");
+        $product->set("description", trim((string)preg_replace("/\s+/u", " ", $description)));
 
         if (!is_null($productURL)) {
             $product->set("url", $productURL->fullURL());
         }
         $product->set("category", $item->getCategoryName());
 
-        $product->set("brand", $item->getBrandName());
+        if ($item->getBrandName()) {
+            $brand = new LinkedData("Brand");
+            $brand->set("name", $item->getBrandName());
+            $product->set("brand", $brand->toArray());
+        }
 
         $photos = $item->galleryItems();
         $urls = array();
         foreach ($photos as $si) {
             if ($si instanceof StorageItem) {
-                $urls[] = $si->hrefFull()->fullURL()->toString();
+                //the slug name of the gallery photos - one address per photo
+                $photo = clone $si;
+                $photo->setName($item->getTitle());
+                $urls[] = $photo->hrefFull()->fullURL()->toString();
             }
         }
         $product->set("image", $urls);
@@ -184,6 +193,10 @@ class SellableDataParser
             $availability = "https://schema.org/InStock";
         }
         $offer->set("availability", $availability);
+        $offer->set("itemCondition", "https://schema.org/NewCondition");
+        if (!is_null($productURL)) {
+            $offer->set("url", $productURL->fullURL());
+        }
 
         $offer->set("price", sprintf("%0.2f", $item->getPriceInfo()->getSellPrice()));
         $offer->set("priceCurrency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
