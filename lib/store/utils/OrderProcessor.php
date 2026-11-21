@@ -4,7 +4,7 @@
 include_once("store/utils/cart/Cart.php");
 include_once("store/beans/OrdersBean.php");
 include_once("store/beans/OrderItemsBean.php");
-include_once("store/beans/CourierAddressesBean.php");
+include_once("store/courier/CourierOffices.php");
 include_once("store/beans/ClientAddressesBean.php");
 include_once("store/forms/DeliveryAddressForm.php");
 include_once("store/forms/ClientAddressInputForm.php");
@@ -80,7 +80,6 @@ class OrderProcessor
             $db->transaction();
 
             $orders = new OrdersBean();
-            $eab = new CourierAddressesBean();
 
             $items = $cart->items();
 
@@ -108,15 +107,11 @@ class OrderProcessor
 
             }
             else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
-                $qry = $eab->queryField("userID", $userID, 1, "office");
-                $qry->exec();
-                if ($ekont_address = $qry->next()) {
-                    $order["delivery_address"] = $ekont_address["office"];
-                    $qry->free();
-                }
-                else {
-                    throw new Exception("Недостъпен адрес за доставка");
-                }
+                //the office of the list of the courier: its text and its key (the shipments need the key)
+                $office = CourierOffices::Chosen($userID, $courier->getID());
+                if (is_null($office)) throw new Exception("Недостъпен адрес за доставка");
+                $order["delivery_address"] = $office["office"];
+                $order["delivery_office"] = $office["office_key"];
 
             }
             else {

@@ -2,7 +2,8 @@
 include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/forms/ClientAddressInputForm.php");
 include_once("store/forms/InvoiceDetailsInputForm.php");
-include_once("store/forms/CourierOfficeInputForm.php");
+include_once("store/courier/CourierOffices.php");
+include_once("components/TextComponent.php");
 include_once("forms/InputForm.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
@@ -88,9 +89,11 @@ class CheckoutConfirm extends CheckoutContent
             $section->button()->setAttribute("href", Module::PathURL("delivery/address")->toString());
         }
         else {
-            $form = new CourierOfficeInputForm();
-            $form->getInput("office")->setLabel("Офис на куриер");
-            $section->value()->items()->append($this->rowView($form, new CourierAddressesBean(), $userID));
+            //the office of the list of the courier (CourierOffices)
+            $office = new TextComponent();
+            $office->setComponentClass("office");
+            $office->setText((string)(CourierOffices::Chosen($userID, $cart->getDelivery()->getSelectedCourier()->getID())["office"] ?? ""));
+            $section->value()->items()->append($office);
             $section->button()->setAttribute("href", Module::PathURL("delivery/courier")->toString());
         }
         $page->base()->items()->append($section);

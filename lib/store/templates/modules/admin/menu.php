@@ -25,7 +25,10 @@ $orders->append(new MenuItem("Sent", "sent"));
 $orders->append(new MenuItem("Completed", "completed"));
 $orders->append(new MenuItem("Canceled", "canceled"));
 $orders->append(new MenuItem("All", "all"));
-$orders->append(new MenuItem("Delivery", "delivery"));
+$delivery = new MenuItem("Delivery", "delivery");
+//the office lists of the couriers (the checkout office step)
+$delivery->append(new MenuItem("Courier Offices", "offices"));
+$orders->append($delivery);
 $clients = new MenuItem("Clients", "clients");
 
 $menu->prepend($clients);

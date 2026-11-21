@@ -16,6 +16,7 @@ class OrdersBean extends DBTableBean
   `delivery_courier` int(11) NOT NULL,
   `delivery_option` int(11) NOT NULL,
   `delivery_address` text NOT NULL DEFAULT '',
+  `delivery_office` varchar(32) DEFAULT NULL,
   `note` varchar(512) NOT NULL,
   `require_invoice` tinyint(1) DEFAULT 0,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp(),

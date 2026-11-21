@@ -2,7 +2,7 @@
 include_once("templates/TemplateContent.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/beans/ClientAddressesBean.php");
-include_once("store/beans/CourierAddressesBean.php");
+include_once("store/courier/CourierOffices.php");
 include_once("store/beans/InvoiceDetailsBean.php");
 include_once("store/components/CartComponent.php");
 include_once("store/components/CheckoutSections.php");
@@ -161,7 +161,8 @@ abstract class CheckoutContent extends TemplateContent
             if (!CheckoutContent::HaveRow(new ClientAddressesBean(), $userID)) return "delivery/address";
         }
         else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
-            if (!CheckoutContent::HaveRow(new CourierAddressesBean(), $userID)) return "delivery/courier";
+            //an office of the list of the courier (CourierOffices) - a typed or closed one is chosen again
+            if (is_null(CourierOffices::Chosen($userID, $courier->getID()))) return "delivery/courier";
         }
 
         if ($cart->getRequireInvoice() && !CheckoutContent::HaveRow(new InvoiceDetailsBean(), $userID)) return "invoice";
