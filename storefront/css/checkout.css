@@ -198,4 +198,16 @@
     order: unset;
 }
 
+/* the office step: the office chooser centered under the buttons */
+.CheckoutPage .CourierOffice {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 40em;
+    margin: 1em auto 0;
+}
+
+.CheckoutPage .CourierOffice .OptionFinder {
+    max-width: none;
+}
+
 }
