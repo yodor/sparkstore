@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/cart/DeliveryPolicy.php");
 include_once("pages/SparkPage.php");
 
 include_once("utils/script/LDJsonScript.php");
@@ -182,8 +183,9 @@ class StorePage extends SparkPage
             $contactPoint = new LinkedData("ContactPoint");
             $contactPoint->set("telephone", $phone);
             $contactPoint->set("contactType", "sales");
-            $contactPoint->set("areaServed", strtoupper(substr((string)Spark::Get(Config::DEFAULT_LANGUAGE_ISO3), 0, 2)));
-            $contactPoint->set("availableLanguage", Spark::Get(Config::DEFAULT_LANGUAGE));
+            //the country of the store (Orders > Delivery) and the language of the site by its English name ('Bulgarian')
+            $contactPoint->set("areaServed", DeliveryPolicy::Country());
+            $contactPoint->set("availableLanguage", Locale::getDisplayLanguage(Translator::Instance()->activeCodeISO2(), "en"));
             $organization->set("contactPoint", $contactPoint->toArray());
         }
 
