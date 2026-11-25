@@ -9,10 +9,10 @@ class SectionInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(InputType::TEXT, "section_title", "Секция", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "section_title", "Section", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта (опция)", 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Show on the home page of the site (option)", 0);
         $this->addInput($field);
 
         SEOInputGroup::AddTo($this, false);

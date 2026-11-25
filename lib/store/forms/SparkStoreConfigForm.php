@@ -98,7 +98,7 @@ class SparkStoreConfigForm extends InputForm
         $field = DataInputFactory::Create(InputType::TEXT, "uncr_otp_pass", "OTP Pass", 0);
         $this->addInput($field, $grp_uncr);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "uncr_kop", "КОП", 0);
+        $field = DataInputFactory::Create(InputType::TEXT, "uncr_kop", "KOP", 0);
         $this->addInput($field, $grp_uncr);
 
         $field = DataInputFactory::Create(InputType::CHECKBOX, "uncr_test", "Enable testing environemnt", 0);

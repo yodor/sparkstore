@@ -45,11 +45,11 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setLabelKey("brand_name");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Заглавие", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Title", 1);
         $field->getRenderer()->input()->setAttribute("size", "50em");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "product_description", "Описание", 0);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "product_description", "Description", 0);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
@@ -57,30 +57,30 @@ class ProductInputFormBase extends InputForm
         $field->getRenderer()->input()->setAttribute("placeholder", "AW-CONVERSION_ID/CONVERSION_LABEL");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "price", "Продажна цена", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "price", "Sell Price", 1);
         $field->setValidator(new NumericValidator(false,false));
         $field->setValue(0.0);
         $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL), ""));
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "promo_price", "Промо цена", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "promo_price", "Promo Price", 1);
         $field->setValidator(new NumericValidator(true,false));
         $field->setValue(0.0);
         $field->getRenderer()->getAddonContainer()->items()->append(new TextComponent(Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL), ""));
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "stock_amount", "Стокова наличност", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "stock_amount", "Stock Amount", 1);
         //default stock amount
         $field->setValidator(new NumericValidator(true,false));
         $field->setValue(1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::CHECKBOX, "visible", "Видим (в продажба)", 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "visible", "Visible (on sale)", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимки", 1);
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Photos", 1);
         $pphotos = new ProductPhotosBean();
         $field->getProcessor()->setTransactBean($pphotos);
         $field->getProcessor()->setTransactBeanItemLimit(20);
@@ -115,17 +115,17 @@ class ProductInputFormBase extends InputForm
         $rend->getItemRenderer()->setValueKey($pcb->key());
         $rend->getItemRenderer()->setLabelKey("class_name");
 
-        $rend->setDefaultOption("Без клас", "null");
+        $rend->setDefaultOption("No class", "null");
 
 
         $this->addInput($field);
 
 
-        $this->addInput(ClassAttributeField::Create("value", "Атрибути", 0));
+        $this->addInput(ClassAttributeField::Create("value", "Attributes", 0));
 
 
         //
-        $field1 = new ArrayDataInput("feature", "Особености", 0);
+        $field1 = new ArrayDataInput("feature", "Features", 0);
         $field1->source_label_visible = TRUE;
 
         $field1->setValidator(new EmptyValueValidator());

@@ -9,20 +9,20 @@ class BrandInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(InputType::TEXT, "brand_name", "Име на марка", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "brand_name", "Brand Name", 1);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::TEXT, "url", "URL", 0);
         $field->setValidator(new URLValidator());
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "summary", "Описание", 0);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "summary", "Description", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимка", 0);
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Photo", 0);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Показвай в 'Начало' на сайта", 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "home_visible", "Show on the home page of the site", 0);
         $this->addInput($field);
 
     }

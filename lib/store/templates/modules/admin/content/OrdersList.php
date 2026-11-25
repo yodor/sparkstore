@@ -16,7 +16,7 @@ class OrdersList extends BeanList
      */
     const array TRANSITIONS = array(
         OrdersBean::STATUS_PROCESSING => array(OrdersBean::STATUS_SENT => "Confirm Sending", OrdersBean::STATUS_CANCELED => "Cancel Order"),
-        OrdersBean::STATUS_SENT => array(OrdersBean::STATUS_COMPLETED => "Потвърди завършване"),
+        OrdersBean::STATUS_SENT => array(OrdersBean::STATUS_COMPLETED => "Confirm Completion"),
     );
 
     protected string $status = "";
@@ -74,6 +74,8 @@ class OrdersList extends BeanList
         $view = $this->tableView();
         $view->getColumn("order_date")->setCellRenderer(new DateCell());
         $view->getColumn("userID")->setCellRenderer(new OrderClientCell());
+        //the status in the language of the page (Processing - В обработка)
+        $view->getColumn("status")->getCellRenderer()->translation_enabled = true;
         $view->setDefaultOrder(new OrderColumn("order_date", OrderDirection::DESC));
     }
 

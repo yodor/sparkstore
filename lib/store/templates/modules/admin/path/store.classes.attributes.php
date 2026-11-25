@@ -17,7 +17,7 @@ if (URL::Current()->contains("editID")) {
 
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
             $className = Template::Condition()->getData("class_name");
-            $content->config()->title = "Изберете входен етикет за добавяне към клас: " . $className;
+            $content->config()->title = tr("Choose an input label to add to the class: ") . $className;
             $content->getForm()->setProductClassID(Template::Condition()->getID());
         }
     };
@@ -27,7 +27,7 @@ if (URL::Current()->contains("editID")) {
 else {
     $config = BeanList::Configure(ProductClassAttributesBean::class);
 
-    $config->listFields = array("pcaID"=>"ID", "name"=>"Входен Етикет");
+    $config->listFields = array("pcaID"=>"ID", "name"=>"Input Label");
 
     $sel = SQLSelect::Table(" product_class_attributes pca LEFT JOIN attributes attr ON attr.attrID = pca.attrID");
     $sel->columns("pca.pcaID", "pca.pclsID", "attr.name", "attr.attrID");
@@ -40,7 +40,7 @@ else {
         if (!($content instanceof BeanList)) throw new Exception("Event source if not TemplateContent");
 
         if ($event->isEvent(TemplateEvent::CONTENT_SETUP)) {
-            $content->config()->title = "Входни етикети към клас: ".Template::Condition()->getData("class_name");
+            $content->config()->title = tr("Input labels of the class: ") . Template::Condition()->getData("class_name");
         }
         else if ($event->isEvent(TemplateEvent::CONTENT_INITIALIZED)) {
 
@@ -50,7 +50,7 @@ else {
 
             //responders already initialized
             $responder = RequestController::Get("DeleteItemResponder");
-            $responder->setConfirmDialogText("Всички продукти от този клас ще загубят съдържанието на етикета. Потвърдете?");
+            $responder->setConfirmDialogText("All the products of this class will lose the contents of the label. Confirm?");
 
         }
 

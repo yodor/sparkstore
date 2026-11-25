@@ -41,13 +41,13 @@ opt.option_name,
         $actions = $content->getItemActions()->getActions();
         $actions->append(Action::RowSeparator());
 
-        $optionsAction = TemplateBeanContent::CreateAction("Options", "Options", "/store/options");
+        $optionsAction = TemplateBeanContent::CreateAction("Options", tr("Options"), "/store/options");
         $optionsAction->getURL()->add(new DataParameter("pclsID"));
         $actions->append($optionsAction);
 
         $actions->append(Action::RowSeparator());
 
-        $attributesAction = TemplateBeanContent::CreateAction("Attributes", "Attributes", "attributes");
+        $attributesAction = TemplateBeanContent::CreateAction("Attributes", tr("Attributes"), "attributes");
         $attributesAction->getURL()->add(new DataParameter("pclsID"));
 
         $actions->append($attributesAction);

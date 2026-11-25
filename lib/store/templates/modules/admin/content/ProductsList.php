@@ -41,11 +41,12 @@ class SectionChooserScript extends InlineScript implements IPageComponent
 {
     protected function finalize() : void
     {
+        $title = json_encode(tr("Choose sections"), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
         $code = <<<JS
         function showSectionChooserForm(prodID)
         {
             let section_chooser = new JSONFormDialog();
-            section_chooser.setTitle("Изберете секции: ");
+            section_chooser.setTitle($title);
             section_chooser.setResponder("SectionChooserFormResponder");
             section_chooser.getJSONRequest().setParameter("prodID", prodID);
             section_chooser.show();
@@ -60,11 +61,12 @@ class ImportUpdateScript extends InlineScript implements IPageComponent
 {
     protected function finalize() : void
     {
+        $title = json_encode(tr("Choose a file"), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
         $code = <<<JS
         function showImportUpdateDialog()
         {
             let import_dialog = new JSONFormDialog();
-            import_dialog.setTitle("Изберете файл: ");
+            import_dialog.setTitle($title);
             import_dialog.setResponder("ImportUpdateFormResponder");
             import_dialog.show();
         }
@@ -92,7 +94,7 @@ class ProductsList extends BeanList {
 
         $action = new Action("import_update");
         $action->getURL()->fromString("javascript:showImportUpdateDialog()");
-        $action->setTooltip("Import product data from external edit");
+        $action->setTooltip(tr("Import product data from external edit"));
         $collection->append($action);
     }
 
@@ -144,7 +146,7 @@ class ProductsList extends BeanList {
             "p.price"
         );
 
-        $this->search->getForm()->getInput("keyword")->getRenderer()->input()->setAttribute("placeholder", "Търси продукт");
+        $this->search->getForm()->getInput("keyword")->getRenderer()->input()->setAttribute("placeholder", tr("Search a product"));
         $this->search->getForm()->setColumns($search_fields);
         $this->search->getForm()->getRenderer()->setMethod(FormRenderer::METHOD_GET);
 
@@ -225,7 +227,7 @@ class ProductsList extends BeanList {
         $rend->getItemRenderer()->setLabelKey("category_name");
 
         if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
+            $rend->setDefaultOption("--- All ---");
         }
 
         //$rend->input()?->setAttribute("onChange", "this.form.requestSubmit()");
@@ -245,7 +247,7 @@ class ProductsList extends BeanList {
         $rend->getItemRenderer()->setLabelKey("brand_name");
 
         if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
+            $rend->setDefaultOption("--- All ---");
         }
 
         //$rend->input()?->setAttribute("onChange", "this.form.submit()");
@@ -265,7 +267,7 @@ class ProductsList extends BeanList {
         $rend->getItemRenderer()->setLabelKey("section_title");
 
         if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
+            $rend->setDefaultOption("--- All ---");
         }
 
         //$rend->input()?->setAttribute("onChange", "this.form.submit()");
@@ -284,7 +286,7 @@ class ProductsList extends BeanList {
         $rend->getItemRenderer()->setLabelKey("class_name");
 
         if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- Всички ---");
+            $rend->setDefaultOption("--- All ---");
         }
 
         //$rend->input()?->setAttribute("onChange", "this.form.submit()");
@@ -359,25 +361,27 @@ class ProductsList extends BeanList {
 
         $act->append(Action::RowSeparator());
 
-        $actGallery = TemplateBeanContent::CreateAction("Photo Gallery", "Photo Gallery", "gallery/");
+        $actGallery = TemplateBeanContent::CreateAction("Photo Gallery", tr("Photo Gallery"), "gallery/");
         $actGallery->getURL()->add(new DataParameter("prodID"));
         $act->append($actGallery);
 
         $act->append(Action::RowSeparator());
 
-        $act->append(new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key()))));
+        $actSections = new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key())));
+        $actSections->setContents(tr("Sections"));
+        $act->append($actSections);
 
 
         $act->append(Action::RowSeparator());
 
-        $actOptions = TemplateBeanContent::CreateAction("Options", "Options", "/store/options/");
+        $actOptions = TemplateBeanContent::CreateAction("Options", tr("Options"), "/store/options/");
         $actOptions->getURL()->add(new DataParameter("prodID"));
         $act->append($actOptions);
 
 
         $act->append(Action::RowSeparator());
 
-        $actVariants = TemplateBeanContent::CreateAction("Variants", "Variants", "variants/");
+        $actVariants = TemplateBeanContent::CreateAction("Variants", tr("Variants"), "variants/");
         $actVariants->getURL()->add(new DataParameter("prodID"));
         $act->append($actVariants);
     }

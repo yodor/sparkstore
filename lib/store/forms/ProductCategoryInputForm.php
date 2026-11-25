@@ -11,10 +11,10 @@ class ProductCategoryInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(InputType::TEXT, "category_name", "Име на категория", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "category_name", "Category Name", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "parentID", "Родителска категория", 1);
+        $field = DataInputFactory::Create(InputType::NESTED_SELECT, "parentID", "Parent Category", 1);
 
         $pcats = new ProductCategoriesBean();
 
@@ -27,7 +27,7 @@ class ProductCategoryInputForm extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "category_description", "Описание (до 2000 символа)", 0);
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "category_description", "Description (up to 2000 characters)", 0);
         $this->addInput($field);
 
         $field = DataInputFactory::Create(InputType::TEXT, "conversionID", "Conversion Tag", 0);
@@ -35,7 +35,7 @@ class ProductCategoryInputForm extends InputForm
         $field->getRenderer()->input()->setAttribute("placeholder", "AW-CONVERSION_ID/CONVERSION_LABEL");
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Снимка", 0);
+        $field = DataInputFactory::Create(InputType::SESSION_IMAGE, "photo", "Photo", 0);
         $field->getProcessor()->setTransactBean(new ProductCategoryPhotosBean());
         $field->getProcessor()->setTransactBeanItemLimit(1);
 

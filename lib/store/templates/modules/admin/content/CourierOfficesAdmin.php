@@ -39,11 +39,11 @@ class CourierOfficesAdmin extends TemplateContent
         if (isset($couriers[$id])) {
             try {
                 $count = CourierOffices::Sync($id);
-                Session::SetAlert($couriers[$id]->getTitle() . ": " . tr("заредени офиси") . " " . $count);
+                Session::SetAlert($couriers[$id]->getTitle() . ": " . tr("offices loaded") . " " . $count);
             }
             catch (Exception $e) {
                 Debug::ErrorLog("Courier offices sync $id: " . $e->getMessage());
-                Session::SetAlert($couriers[$id]->getTitle() . ": " . tr("списъкът не беше обновен") . " - " . $e->getMessage());
+                Session::SetAlert($couriers[$id]->getTitle() . ": " . tr("the list was not updated") . " - " . $e->getMessage());
             }
         }
         header("Location: " . Module::PathURL("", URL::Current()));
@@ -69,8 +69,8 @@ class CourierOfficesAdmin extends TemplateContent
             $form->items()->append($title);
 
             $text = ($status["count"] > 0)
-                ? tr("Офиси") . ": " . $status["count"] . ", " . tr("обновени") . ": " . $status["updated"]
-                : tr("Няма зареден списък");
+                ? tr("Offices") . ": " . $status["count"] . ", " . tr("updated") . ": " . $status["updated"]
+                : tr("No list loaded");
             $info = new TextComponent(htmlspecialchars($text));
             $info->setTagName("p");
             $form->items()->append($info);
@@ -81,7 +81,7 @@ class CourierOfficesAdmin extends TemplateContent
             $button->setAttribute("type", "submit");
             $button->setAttribute("name", CourierOfficesAdmin::KEY_SYNC);
             $button->setAttribute("value", (string)$id);
-            $button->setText(tr("Обнови офисите"));
+            $button->setText(tr("Update the offices"));
             $form->items()->append($button);
 
             $this->cmp->items()->append($form);

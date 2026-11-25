@@ -64,7 +64,7 @@ class ProductVariantsList extends BeanList
         $this->container = new Container(false);
         $this->container->setComponentClass("ProductVariants");
 
-        $caption = new TextComponent(tr("Варианти за този продукт - избираеми преди покупка"));
+        $caption = new TextComponent(tr("Variants of this product - chosen before the purchase"));
         $caption->setComponentClass("Caption");
         $this->container->items()->append($caption);
         $this->container->items()->append(new FormRenderer($this->form));

@@ -34,12 +34,12 @@ class OptionsList extends BeanList
 
         $this->setListFields(array("voID"=>"ID", "position"=>"Position", "option_name"=>"Option Name", "parameters"=>"Parameters"));
 
-        $this->product_filter = new GETProcessor("Продукт", "prodID");
+        $this->product_filter = new GETProcessor(tr("Product"), "prodID");
         //manipulate the bean select
         $this->product_filter->setSQLSelect($bean->select());
 
 
-        $this->class_filter = new GETProcessor("Опции към клас", "pclsID");
+        $this->class_filter = new GETProcessor(tr("Options of a class"), "pclsID");
         //manipulate the bean select
         $this->class_filter->setSQLSelect($bean->select());
 
@@ -146,7 +146,7 @@ class OptionsList extends BeanList
     {
         parent::initItemActions($act);
         $act->append(Action::RowSeparator());
-        $paramAction = TemplateBeanContent::CreateAction("Parameters", "Parameters", "parameters");
+        $paramAction = TemplateBeanContent::CreateAction("Parameters", tr("Parameters"), "parameters");
         $paramAction->setTooltip(tr("Modify option parameters"));
         $paramAction->getURL()->add(new DataParameter("voID"));
         $act->append($paramAction);

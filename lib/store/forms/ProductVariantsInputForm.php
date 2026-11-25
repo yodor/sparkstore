@@ -20,13 +20,13 @@ class ProductVariantsInputForm extends InputForm
 
         $this->voptions = new VariantOptionsBean();
 
-        $group_normal = new InputGroup("normal_options", "Основни опции");
+        $group_normal = new InputGroup("normal_options", "Main options");
         $this->addGroup($group_normal);
 
-        $group_class = new InputGroup("class_options", "Опции от продуктовия клас");
+        $group_class = new InputGroup("class_options", "Options of the product class");
         $this->addGroup($group_class);
 
-        $group_product = new InputGroup("product_options", "Други опции на продукта");
+        $group_product = new InputGroup("product_options", "Other options of the product");
         $this->addGroup($group_product);
 
         $products = new ProductsBean();
