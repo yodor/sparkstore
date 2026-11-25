@@ -42,6 +42,7 @@ include_once("store/utils/url/CategoryURL.php");
 include_once("store/components/ProductsTape.php");
 include_once("store/utils/url/ProductListURL.php");
 include_once("objects/data/GTMConvParam.php");
+include_once("store/objects/data/GTMItems.php");
 include_once("objects/data/GTMConversionCommand.php");
 include_once("store/components/frame/StoreFrame.php");
 
@@ -118,6 +119,8 @@ class StorePage extends SparkPage
 
         $this->head()->addOGTag("url", $this->currentURL()->fullURL()->toString());
 
+        //GA4 events of the previous request (a POST that redirected here - the cart add)
+        GTMItems::Flush($this->head());
     }
 
     protected function headInitialize() : void

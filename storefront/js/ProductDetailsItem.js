@@ -152,6 +152,9 @@ function showOrderProductForm() {
  */
 function initiateCall(phone, conversionID) {
 
+    //GA4: a call is a lead
+    gtag('event', 'generate_lead', {lead_type: 'phone'});
+
     if (conversionID) {
         document.sparkGTM.emitConversion(conversionID);
     }

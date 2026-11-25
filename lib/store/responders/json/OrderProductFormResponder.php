@@ -1,4 +1,5 @@
 <?php
+include_once("store/objects/data/GTMItems.php");
 include_once("responders/json/JSONFormResponder.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/forms/FastOrderProductForm.php");
@@ -64,9 +65,12 @@ class OrderProductFormResponder extends JSONFormResponder
 
         $config = ConfigBean::Factory();
         $config->setSection("marketing_config");
+        //GA4 generate_lead (a fast order is an order by mail - not a purchase), and the Ads conversion when set
+        $lead = GTMItems::Event("generate_lead", array(GTMItems::Item($this->sellable)), $this->sellable->getPriceInfo()->getSellPrice(), array("lead_type" => "fast_order"));
+        $resp->gtm = array($lead);
         $conversionID = $config->get(GTMConvParam::FAST_ORDER->value);
         if ($conversionID) {
-            $resp->gtm = new GTMConversionCommand($conversionID);
+            $resp->gtm[] = new GTMConversionCommand($conversionID);
         }
 
     }

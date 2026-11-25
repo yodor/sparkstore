@@ -3,6 +3,8 @@ include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/forms/ClientAddressInputForm.php");
 include_once("store/forms/InvoiceDetailsInputForm.php");
 include_once("store/courier/CourierOffices.php");
+include_once("store/objects/data/GTMItems.php");
+include_once("pages/SparkPage.php");
 include_once("components/TextComponent.php");
 include_once("forms/InputForm.php");
 include_once("forms/processors/FormProcessor.php");
@@ -68,6 +70,8 @@ class CheckoutConfirm extends CheckoutContent
         if ($missing !== "") $this->redirect($missing);
 
         Session::Set("checkout.navigation.back", Module::PathURL("confirm")->toString());
+
+        $this->analyticsEvents($cart, $userID);
 
         $page = $this->page();
         $courier = $cart->getDelivery()->getSelectedCourier();
@@ -140,6 +144,36 @@ class CheckoutConfirm extends CheckoutContent
     /**
      * Plain view of the client's row of '$bean' in '$form'
      */
+    /**
+     * GA4 begin_checkout - once for the content of the cart; add_shipping_info - once for the delivery chosen
+     * (a reload or a 'change' that changes nothing sends nothing)
+     */
+    protected function analyticsEvents(Cart $cart, int $userID) : void
+    {
+        $head = SparkPage::Instance()?->head();
+        if (is_null($head)) return;
+
+        $signature = array();
+        foreach ($cart->items() as $hash => $entry) {
+            if ($entry instanceof CartEntry) $signature[] = $hash . ":" . $entry->getQuantity();
+        }
+        $signature = implode(",", $signature);
+        if (Session::Get("gtm.checkout", "") !== $signature) {
+            Session::Set("gtm.checkout", $signature);
+            $head->addScript(GTMItems::CartEvent("begin_checkout", $cart));
+        }
+
+        $courier = $cart->getDelivery()->getSelectedCourier();
+        $option = $courier?->getSelectedOption();
+        if (is_null($courier) || is_null($option)) return;
+        $office = ($option->getID() == DeliveryOption::COURIER_OFFICE) ? (string)(CourierOffices::Chosen($userID, $courier->getID())["office_key"] ?? "") : "";
+        $shipping = $courier->getID() . ":" . $option->getID() . ":" . $office . "|" . $signature;
+        if (Session::Get("gtm.shipping", "") !== $shipping) {
+            Session::Set("gtm.shipping", $shipping);
+            $head->addScript(GTMItems::CartEvent("add_shipping_info", $cart, array("shipping_tier" => $courier->getTitle() . " - " . $option->getTitle())));
+        }
+    }
+
     protected function rowView(InputForm $form, DBTableBean $bean, int $userID) : Component
     {
         $row = $bean->getResult("userID", (string)$userID, $bean->key());

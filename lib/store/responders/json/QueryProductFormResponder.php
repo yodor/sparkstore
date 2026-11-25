@@ -29,6 +29,7 @@ class QueryProductFormResponder extends StoreContactFormResponder
         $this->mailSubject = "Запитване за продукт на: " . Spark::Get(Config::SITE_DOMAIN);
         $this->acceptedMessage = "Заявката Ви беше приета";
         $this->conversionParam = GTMConvParam::QUERY_PRODUCT;
+        $this->leadType = "product_query";
     }
 
     protected function createForm(): InputForm

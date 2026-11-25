@@ -1,5 +1,6 @@
 <?php
 include_once("objects/data/GTMCommand.php");
+include_once("store/objects/data/GTMItems.php");
 
 class GTMViewItemEvent extends GTMCommand
 {
@@ -13,18 +14,7 @@ class GTMViewItemEvent extends GTMCommand
     {
         $this->addParameter("currency", Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         $this->addParameter("value", $sellable->getPriceInfo()->getSellPrice());
-        $items = array(
-            "item_id" => $sellable->getProductID(),
-            "item_name" => $sellable->getTitle(),
-            "affiliation" => Spark::Get(Config::SITE_DOMAIN),
-            "index" => 0,
-            "item_brand" => $sellable->getBrandName(),
-            "item_category" => $sellable->getCategoryName(),
-            "price" => $sellable->getPriceInfo()->getSellPrice(),
-            "quantity" => 1,
-        );
-
-        //GA4 reads items as a list
-        $this->addParameter("items", array($items));
+        //GA4 reads items as a list - the item shape of every store event (GTMItems)
+        $this->addParameter("items", array(GTMItems::Item($sellable)));
     }
 }
