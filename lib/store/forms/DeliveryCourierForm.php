@@ -26,6 +26,8 @@ class DeliveryCourierForm extends InputForm
         $radio->setIterator($data);
         $radio->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);
         $radio->getItemRenderer()->setLabelKey(ArrayDataIterator::KEY_VALUE);
+        //the whole item (the logo of the courier and its name - checkout.css) chooses it
+        $radio->getItemRenderer()->setTagName("label");
 
         $this->addInput($field);
 

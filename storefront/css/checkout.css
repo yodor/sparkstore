@@ -210,4 +210,38 @@
     max-width: none;
 }
 
+/* the courier step: the logo of each courier before its name (storefront/images/couriers - by the
+   DeliveryCourier id: 1 Econt, 2 Speedy) */
+.CheckoutPage .delivery_courier .FieldElements {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.CheckoutPage .delivery_courier .RadioItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.3em 0;
+}
+
+.CheckoutPage .delivery_courier .RadioItem span::before {
+    content: "";
+    display: inline-block;
+    width: 6.5em;
+    height: 1.8em;
+    margin-right: 0.6em;
+    vertical-align: middle;
+    background: no-repeat left center / contain;
+}
+
+.CheckoutPage .delivery_courier .RadioItem:has(input[value="1"]) span::before {
+    background-image: url("../images/couriers/econt.svg");
+}
+
+.CheckoutPage .delivery_courier .RadioItem:has(input[value="2"]) span::before {
+    background-image: url("../images/couriers/speedy.svg");
+}
+
 }
