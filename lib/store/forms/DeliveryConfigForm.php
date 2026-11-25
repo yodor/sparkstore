@@ -3,6 +3,7 @@ include_once("forms/InputForm.php");
 include_once("input/validators/NumericValidator.php");
 include_once("iterators/ArrayDataIterator.php");
 include_once("store/utils/cart/Cart.php");
+include_once("store/utils/cart/DeliveryPolicy.php");
 
 class DeliveryConfigForm extends InputForm
 {
@@ -60,6 +61,31 @@ class DeliveryConfigForm extends InputForm
 
         }
 
+        //the delivery and return terms for the search engines (DeliveryPolicy) - as the terms page says them
+        $group = new InputGroup("policy", tr("Условия за търсачките (Google): доставка и връщане"));
+        $this->addGroup($group);
+
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_COUNTRY, tr("Държава на доставка (код, напр. BG)"), 1);
+        $field->setValue(DeliveryPolicy::DEFAULT_COUNTRY);
+        $this->addInput($field, $group);
+
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MIN, tr("Срок за доставка - от (работни дни)"), 1);
+        $field->setValue((string)DeliveryPolicy::DEFAULT_DAYS_MIN);
+        $field->setValidator(new NumericValidator(false, false));
+        $this->addInput($field, $group);
+
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MAX, tr("Срок за доставка - до (работни дни)"), 1);
+        $field->setValue((string)DeliveryPolicy::DEFAULT_DAYS_MAX);
+        $field->setValidator(new NumericValidator(false, false));
+        $this->addInput($field, $group);
+
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_RETURN_DAYS, tr("Срок за връщане (дни от получаването, 0 - без връщане)"), 1);
+        $field->setValue((string)DeliveryPolicy::DEFAULT_RETURN_DAYS);
+        $field->setValidator(new NumericValidator(true, false));
+        $this->addInput($field, $group);
+
+        $field = DataInputFactory::Create(InputType::CHECKBOX, DeliveryPolicy::KEY_FREE_RETURN, tr("Безплатно връщане (транспортът за сметка на магазина)"), 0);
+        $this->addInput($field, $group);
     }
 
 }

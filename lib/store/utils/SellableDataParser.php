@@ -9,6 +9,7 @@ include_once("store/beans/ProductPhotosBean.php");
 include_once("store/beans/ProductVariantsBean.php");
 include_once("store/beans/SellableProducts.php");
 include_once("objects/data/LinkedData.php");
+include_once("store/utils/cart/DeliveryPolicy.php");
 
 class SellableDataParser
 {
@@ -204,6 +205,12 @@ class SellableDataParser
         $priceValidUntil = date("Y-m-d", strtotime("+1 year"));
         $offer->set("priceValidUntil", $priceValidUntil);
 
+        //the delivery and return terms (DeliveryPolicy - the admin delivery settings)
+        $returnPolicy = DeliveryPolicy::ReturnPolicy();
+        $offer->set("hasMerchantReturnPolicy", $returnPolicy);
+        $shipping = DeliveryPolicy::ShippingDetails(Spark::Get(StoreConfig::DEFAULT_CURRENCY));
+        if (count($shipping) > 0) $offer->set("shippingDetails", $shipping);
+
         if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
             $offerEUR = new LinkedData("Offer");
             $offerEUR->set("availability", $availability);
@@ -211,6 +218,9 @@ class SellableDataParser
             $offerEUR->set("price", $eurPrice);
             $offerEUR->set("priceCurrency", Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
             $offerEUR->set("priceValidUntil", $priceValidUntil);
+            $offerEUR->set("hasMerchantReturnPolicy", $returnPolicy);
+            $shipping = DeliveryPolicy::ShippingDetails(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
+            if (count($shipping) > 0) $offerEUR->set("shippingDetails", $shipping);
 
             $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());
         }
