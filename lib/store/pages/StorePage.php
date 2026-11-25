@@ -82,10 +82,11 @@ class StorePage extends SparkPage
     }
 
     /**
-     * The stylesheet of the store font (Montserrat) - a site sets its own, or a self hosted one
+     * The stylesheet of the store font - "" (default): Montserrat 500 self hosted (storefront/css/fonts.css, the
+     * Cyrillic file preloaded); a site sets its own stylesheet address (a local one, or a font service)
      * @var string
      */
-    public static string $fontCSS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap";
+    public static string $fontCSS = "";
 
     /**
      * The sections of the frame (StoreFrame - null when a site disabled one); the main section holds the content
@@ -125,13 +126,28 @@ class StorePage extends SparkPage
     protected function headInitialize() : void
     {
         parent::headInitialize();
+        //the css and the js in bundles - fewer requests before the page renders
+        $this->head()->enableBundles(Spark::GetBoolean(Config::ASSET_BUNDLES));
 
         $this->description = "";
 
         $this->head()->addMeta("robots", "index, follow, snippet");
 
         //the store font - a link of its own (not an @import inside store.css: loaded in parallel, not after it)
-        $this->head()->addCSS(StorePage::$fontCSS);
+        if (StorePage::$fontCSS === "") {
+            $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/fonts.css");
+            //the text of the page is Cyrillic - its font file before the stylesheet asks for it
+            $preload = new Link();
+            $preload->setRelation("preload");
+            $preload->setHref(Spark::Get(StoreConfig::STORE_LOCAL) . "/fonts/montserrat-cyrillic-500-normal.woff2");
+            $preload->setAttribute("as", "font");
+            $preload->setAttribute("type", "font/woff2");
+            $preload->setAttribute("crossorigin", "");
+            $this->head()->items()->append($preload);
+        }
+        else {
+            $this->head()->addCSS(StorePage::$fontCSS);
+        }
         $this->head()->addCSS(Spark::Get(StoreConfig::STORE_LOCAL) . "/css/store.css");
         //the menu bar on phones and tablets
         $this->head()->addCSS(Spark::Get(Config::SPARK_LOCAL) . "/css/mobile/MenuBar.css", false, "(max-width: 1024px)");
@@ -202,18 +218,6 @@ class StorePage extends SparkPage
         $this->head()->addOGTag("site_name", Spark::Get(Config::SITE_TITLE));
         $this->head()->addOGTag("type", "website");
 
-
-        $link = new Link();
-        $link->setRelation("preconnect");
-        $link->setHref("https://fonts.googleapis.com");
-        $this->head()->items()->append($link);
-
-        //the font files of the store font
-        $link = new Link();
-        $link->setRelation("preconnect");
-        $link->setHref("https://fonts.gstatic.com");
-        $link->setAttribute("crossorigin", "");
-        $this->head()->items()->append($link);
 
         $linkgtag = new Link();
         $linkgtag->setRelation("dns-prefetch");
