@@ -67,6 +67,10 @@ H2 A {
     /* the muted text - captions, the breadcrumb, notes: grey with the contrast of WCAG AA on white (4.5:1) */
     --store-muted-text: #767676;
 
+    /* the discount / no-stock badge of the product photos - the theme accent; a site sets its own colours */
+    --store-discount-background: var(--theme-accent);
+    --store-discount-color: #ffffff;
+
     --spark-button-border-radius: 2em;
     --spark-button-text-transform: uppercase;
     --spark-button-text-color: white;
