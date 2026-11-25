@@ -21,14 +21,9 @@
     height: calc(100cqw);
 }
 
-/* the arrows in the middle of the photo (the dots are under it) */
-.SellableImageGallery .nav-arrow {
-    top: calc(100cqw/2);
-    width: 1.67em;
-    font-size: 2.4em;
-    line-height: 1.67em;
-    font-family: "Monospaced", monospace;
-    box-sizing: border-box;
+/* the arrows (the ImageSlider default) in the middle of the square photo - the dots are under it */
+.SellableImageGallery {
+    --spark-slider-arrow-top: calc(100cqw / 2);
 }
 
 .SellableImageGallery .dots {
