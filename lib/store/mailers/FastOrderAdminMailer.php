@@ -97,9 +97,6 @@ class FastOrderAdminMailer extends Mailer
         $result .= "Продукт: ".Spark::AttributeValue($item->getTitle());
         $result .= "\r\n";
         $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".Spark::Get(StoreConfig::DEFAULT_CURRENCY);
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $result .= "Цена: ".formatPrice($item->getPriceInfo()->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-        }
         $result .= "\r\n";
 
         if ($item->variantsCount()>0) {

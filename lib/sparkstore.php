@@ -16,12 +16,6 @@ ImageSizes::Enable(...StoreImageSize::cases());
 Spark::Set(StoreConfig::DEFAULT_CURRENCY, "EUR");
 Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");
 
-//show double prices - convert from default currency to EURO
-Spark::Set(StoreConfig::DOUBLE_PRICE_ENABLED, false);
-Spark::Set(StoreConfig::DOUBLE_PRICE_CURRENCY, "BGN");
-Spark::Set(StoreConfig::DOUBLE_PRICE_SYMBOL, "лв.");
-Spark::Set(StoreConfig::DOUBLE_PRICE_RATE, (1/1.95583));
-
 //slugified URLs
 Spark::Set(Config::STORAGE_ITEM_SLUG, TRUE);
 

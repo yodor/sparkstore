@@ -46,12 +46,6 @@ class ProductDetails extends Action implements IDataResultConsumer
         $this->priceLabel->setComponentClass("PriceTag");
         $this->items()->append($this->priceLabel);
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $eurLabel = new PriceLabel();
-            $eurLabel->addClassName("left");
-            $eurLabel->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
-            $this->priceLabel->items()->append($eurLabel);
-        }
 
         $curLabel = new PriceLabel();
         $curLabel->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
@@ -78,24 +72,6 @@ class ProductDetails extends Action implements IDataResultConsumer
         }
         $validity = date("Y-m-d", strtotime("+1 year"));
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $eurLabel = $this->priceLabel->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-            if ($eurLabel instanceof PriceLabel) {
-                $eurLabel->availability()->setHref($availability);
-                $eurLabel->validUntil()->setContent($validity);
-                $eurLabel->priceOld()->setAmount(null);
-                if ($this->item->isPromo()) {
-                    $eurLabel->priceOld()->setAmount(($this->data["price"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)));
-                }
-
-                $eurLabel->priceSell()->setAmount(($this->data["sell_price"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)));
-
-                if (!$this->item->isProductLinkedDataEnabled()) {
-                    $eurLabel->disableLinkedData();
-                }
-            }
-
-        }
 
         $defLabel = $this->priceLabel->items()->getByName(Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         if ($defLabel instanceof PriceLabel) {

@@ -43,25 +43,4 @@ class StoreConfig {
      */
     const string DEFAULT_CURRENCY_SYMBOL = "DEFAULT_CURRENCY_SYMBOL";
 
-    /**
-     * Show double prices - convert from default currency to DOUBLE_PRICE_CURRENCY using DOUBLE_PRICE_RATE
-     * Default(bool): false
-     */
-    const string DOUBLE_PRICE_ENABLED = "DOUBLE_PRICE_ENABLED";
-    /**
-     * ISO3 Currency name
-     * Default(string): BGN
-     */
-    const string DOUBLE_PRICE_CURRENCY = "DOUBLE_PRICE_CURRENCY";
-    /**
-     *  Currency symbol
-     * Default(string): лв.
-     */
-    const string DOUBLE_PRICE_SYMBOL = "DOUBLE_PRICE_SYMBOL";
-    /**
-     * Currency rate to the main currency as 1/rate
-     * Default(float): (1/1.95583)
-     */
-    const string DOUBLE_PRICE_RATE = "DOUBLE_PRICE_RATE";
-
 }

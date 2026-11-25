@@ -93,10 +93,6 @@
     padding-top: 0;
 }
 
-.ProductListItem .details .PriceTag .PriceLabel.left {
-    align-items: flex-start;
-}
-
 .ProductListItem .details .PriceTag .PriceLabel .CurrencyLabel {
     min-height:1em;
 }

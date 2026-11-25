@@ -363,24 +363,6 @@ class DetailsSidePane extends Container
         }
         $grp->items()->append($item);
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-
-            $item = new PriceLabel();
-            $item->addClassName("item");
-            $item->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
-            $item->disableLinkedData();
-
-            $item->priceOld()->setAmount(null);
-            if ($this->sellable->isPromotion()) {
-                $item->priceOld()->setAmount($priceInfo->getOldPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            }
-            $item->priceSell()->setAmount(null);
-            if ($priceInfo->getSellPrice() > 0) {
-                $item->priceSell()->setAmount($priceInfo->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            }
-            $grp->items()->append($item);
-        }
-
         $this->items()->append($grp);
 
     }

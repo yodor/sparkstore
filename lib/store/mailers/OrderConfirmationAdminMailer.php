@@ -106,9 +106,6 @@ class OrderConfirmationAdminMailer extends Mailer
         }
         $message .= "Цена доставка: $delivery_text\r\n";
         $message .= "Поръчка oбщо: " . formatPrice($order["total"], Spark::Get(StoreConfig::DEFAULT_CURRENCY)) . "\r\n";
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $message .= "Поръчка oбщо: " . formatPrice($order["total"] / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE), Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY)) . "\r\n";
-        }
 
         $message .= "\r\n";
         $message .= "\r\n";

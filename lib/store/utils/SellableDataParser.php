@@ -206,37 +206,13 @@ class SellableDataParser
         $offer->set("priceValidUntil", $priceValidUntil);
 
         //the delivery and return terms (DeliveryPolicy - the admin delivery settings)
-        $returnPolicy = DeliveryPolicy::ReturnPolicy();
-        $offer->set("hasMerchantReturnPolicy", $returnPolicy);
+        $offer->set("hasMerchantReturnPolicy", DeliveryPolicy::ReturnPolicy());
         $shipping = DeliveryPolicy::ShippingDetails(Spark::Get(StoreConfig::DEFAULT_CURRENCY));
         if (count($shipping) > 0) $offer->set("shippingDetails", $shipping);
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $offerEUR = new LinkedData("Offer");
-            $offerEUR->set("availability", $availability);
-            $eurPrice = sprintf("%0.2f", ($item->getPriceInfo()->getSellPrice() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE)));
-            $offerEUR->set("price", $eurPrice);
-            $offerEUR->set("priceCurrency", Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-            $offerEUR->set("priceValidUntil", $priceValidUntil);
-            $offerEUR->set("hasMerchantReturnPolicy", $returnPolicy);
-            $shipping = DeliveryPolicy::ShippingDetails(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            if (count($shipping) > 0) $offerEUR->set("shippingDetails", $shipping);
-
-            $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());
-        }
-        else {
-            $product->set("offers", $offer->toArray());
-        }
-
-        //TODO: multiple priceCurrency eg EUR/USD
-        // $product->set("offers", array($offerEUR->toArray(), $offerUSD->toArray()));
-        // or setArray using variadic parameters
-        // $product->setArray("offers", $offer->toArray(), $offerEUR->toArray());
-
+        $product->set("offers", $offer->toArray());
 
         return $product;
-
     }
-
 
 }

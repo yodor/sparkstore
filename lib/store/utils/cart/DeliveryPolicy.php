@@ -71,10 +71,10 @@ class DeliveryPolicy
     }
 
     /**
-     * The shipping of an offer in '$currency' (the courier prices divided by '$rate' - the second price of the store):
-     * a list of OfferShippingDetails, empty when no courier option is enabled
+     * The shipping of an offer in '$currency' (the courier prices): a list of OfferShippingDetails, empty when no
+     * courier option is enabled
      */
-    public static function ShippingDetails(string $currency, float $rate = 1.0) : array
+    public static function ShippingDetails(string $currency) : array
     {
         $min = DeliveryPolicy::Days(DeliveryPolicy::KEY_DAYS_MIN, DeliveryPolicy::DEFAULT_DAYS_MIN);
         $max = max($min, DeliveryPolicy::Days(DeliveryPolicy::KEY_DAYS_MAX, DeliveryPolicy::DEFAULT_DAYS_MAX));
@@ -86,7 +86,7 @@ class DeliveryPolicy
                 "@type" => "OfferShippingDetails",
                 "shippingRate" => array(
                     "@type" => "MonetaryAmount",
-                    "value" => sprintf("%0.2f", ($rate > 0) ? $price / $rate : $price),
+                    "value" => sprintf("%0.2f", $price),
                     "currency" => $currency,
                 ),
                 "shippingDestination" => array("@type" => "DefinedRegion", "addressCountry" => $country),

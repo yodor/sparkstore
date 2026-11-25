@@ -33,13 +33,6 @@ class SummaryItem extends Container
         $this->value = new Container(false);
         $this->value->setComponentClass("value");
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
-            $eurPrice->disableLinkedData();
-
-            $this->value->items()->append($eurPrice);
-        }
 
         $this->price = new PriceLabel();
         $this->price->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
@@ -49,18 +42,6 @@ class SummaryItem extends Container
 
         $this->items()->append($this->value);
     }
-    protected function finalize(): void
-    {
-        parent::finalize();
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $priceLabel = $this->value->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-            if ($priceLabel instanceof PriceLabel) {
-                $priceLabel->priceSell()->setAmount($this->price->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            }
-        }
-
-    }
-
     public function label(): Container
     {
         return $this->label;
@@ -251,12 +232,6 @@ class CartListItem extends Container {
         $tdPrice->setComponentClass("");
         $tdPrice->setAttribute("field", "price");
         $tdPrice->items()->append(new TextComponent(tr("Price"), "mobile-label"));
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $eurPrice = new PriceLabel();
-            $eurPrice->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
-            $eurPrice->disableLinkedData();
-            $tdPrice->items()->append($eurPrice);
-        }
         $this->price = new PriceLabel();
         $this->price->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
         $this->price->disableLinkedData();
@@ -268,12 +243,6 @@ class CartListItem extends Container {
         $tdLineTotal->setAttribute("field", "line-total");
         $tdLineTotal->items()->append(new TextComponent(tr("Total"),"mobile-label"));
 
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $eurLine = new PriceLabel();
-            $eurLine->setCurrencyLabels(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY), Spark::Get(StoreConfig::DOUBLE_PRICE_SYMBOL));
-            $eurLine->disableLinkedData();
-            $tdLineTotal->items()->append($eurLine);
-        }
 
         $this->lineTotal = new PriceLabel();
         $this->lineTotal->setCurrencyLabels(Spark::Get(StoreConfig::DEFAULT_CURRENCY), Spark::Get(StoreConfig::DEFAULT_CURRENCY_SYMBOL));
@@ -304,22 +273,6 @@ class CartListItem extends Container {
 
             $this->actIncrement->setRenderEnabled(false);
             $this->actDecrement->setRenderEnabled(false);
-        }
-        if (Spark::GetBoolean(StoreConfig::DOUBLE_PRICE_ENABLED)) {
-            $tdPrice = $this->items()->getByAttribute("price", "field");
-            $eurPrice = $tdPrice->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-            if ($eurPrice instanceof PriceLabel) {
-                if ($this->price->priceOld()->getAmount()) {
-                    $eurPrice->priceOld()->setAmount($this->price->priceOld()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-                }
-                $eurPrice->priceSell()->setAmount($this->price->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            }
-
-            $tdLine = $this->items()->getByAttribute("line-total", "field");
-            $eurPrice = $tdLine->items()->getByName(Spark::Get(StoreConfig::DOUBLE_PRICE_CURRENCY));
-            if ($eurPrice instanceof PriceLabel) {
-                $eurPrice->priceSell()->setAmount($this->lineTotal->priceSell()->getAmount() / Spark::GetFloat(StoreConfig::DOUBLE_PRICE_RATE));
-            }
         }
     }
 
