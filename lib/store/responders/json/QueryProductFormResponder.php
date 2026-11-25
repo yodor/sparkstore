@@ -21,13 +21,13 @@ class QueryProductFormResponder extends StoreContactFormResponder
         $productURL->setProductID($sellable->getProductID());
         $productURL->setProductName($sellable->getTitle());
 
-        $details = array(tr("Код") => (string)$sellable->getProductID());
+        $details = array(tr("Code") => (string)$sellable->getProductID());
         $price = $sellable->getPriceInfo()->getSellPrice();
-        if ($price > 0) $details[tr("Цена")] = html_entity_decode(strip_tags(formatPrice($price)), ENT_QUOTES | ENT_HTML5, "UTF-8");
+        if ($price > 0) $details[tr("Price")] = html_entity_decode(strip_tags(formatPrice($price)), ENT_QUOTES | ENT_HTML5, "UTF-8");
         $this->setAbout($sellable->getTitle(), $productURL, $details);
 
-        $this->mailSubject = "Запитване за продукт на: " . Spark::Get(Config::SITE_DOMAIN);
-        $this->acceptedMessage = "Заявката Ви беше приета";
+        $this->mailSubject = tr("Product query at: ") . Spark::Get(Config::SITE_DOMAIN);
+        $this->acceptedMessage = "Your request was accepted";
         $this->conversionParam = GTMConvParam::QUERY_PRODUCT;
         $this->leadType = "product_query";
     }

@@ -18,7 +18,7 @@ function getSelectedVariants()
             let selected_parameter = variant.querySelector(".parameter[selected]");
 
             if (!selected_parameter) {
-                throw new Error("Изберете опция за " + option_name);
+                throw new Error(tr("Select an option for %s", option_name));
             }
 
             result[option_name] = selected_parameter.getAttribute("value");
@@ -51,7 +51,7 @@ function addToCart(conversionID) {
     //let stock_amount = parseInt(document.querySelector(".stock_amount .value").innerText);
 
     // if (stock_amount < 1) {
-    //     showAlert("В момента няма наличност от този артикул");
+    //     showAlert("This item is not in stock at the moment");
     //     return;
     // }
 
@@ -109,14 +109,14 @@ function bytesToBase64(bytes) {
 
 function showNotifyInstockForm() {
     let notify_dialog = new JSONFormDialog();
-    notify_dialog.setTitle("Уведоми ме при наличност");
+    notify_dialog.setTitle(tr("Notify me when in stock"));
     notify_dialog.setResponder("NotifyInstockFormResponder");
     notify_dialog.show();
 }
 
 function showProductQueryForm() {
     let query_dialog = new JSONFormDialog();
-    query_dialog.setTitle("Запитване");
+    query_dialog.setTitle(tr("Query"));
     query_dialog.setResponder("QueryProductFormResponder");
     query_dialog.show();
 }
@@ -134,7 +134,7 @@ function showOrderProductForm() {
     }
 
     let order_dialog = new JSONFormDialog();
-    order_dialog.setTitle("Бърза поръчка");
+    order_dialog.setTitle(tr("Fast order"));
     order_dialog.setResponder("OrderProductFormResponder");
 
     const keys = Object.keys(selected_variants);

@@ -45,12 +45,17 @@ class StoreFooter extends StoreSection
             $items["phone"] = "tel:$phone";
         }
 
+        //the titles of the links (their tooltip and accessible name)
+        $titles = array("facebook" => "Facebook", "instagram" => "Instagram", "youtube" => "YouTube",
+            "terms" => tr("Terms and Conditions"), "contacts" => tr("Contacts"), "phone" => tr("Phone"),
+            "cookies" => tr("Cookies"));
+
         foreach ($items as $name => $href) {
             if (!$href) continue;
             $item = Button::Action("", $href);
             $item->setComponentClass("slot");
             $item->addClassName($name);
-            $item->setTitle($name);
+            $item->setTitle($titles[$name]);
             $social->items()->append($item);
         }
     }

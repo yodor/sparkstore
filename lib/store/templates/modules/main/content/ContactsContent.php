@@ -14,7 +14,7 @@ include_once("store/responders/json/StoreContactFormResponder.php");
  * store config 'maps_url'.
  *
  * Path file settings (TemplateConfig data):
- *  - button   the text of the enquiry button, default "Изпрати запитване"
+ *  - button   the text of the enquiry button, default "Send an enquiry" (translated)
  *
  * Markup (the store css .StorePage.contacts): h1.Caption, a.ColorButton.ContactsButton, div.columns >
  * div.column.map > div.panel.map > iframe#google_map, div.column.addresses > div.details > div.item.city|address|email|phone
@@ -26,7 +26,7 @@ class ContactsContent extends TemplateContent
         //the enquiry dialog - its JSON requests are processed with the page
         new StoreContactFormResponder();
 
-        $button = (string)($this->config->data["button"] ?? "Изпрати запитване");
+        $button = tr((string)($this->config->data["button"] ?? "Send an enquiry"));
 
         $this->cmp = new Container(false);
 
@@ -129,10 +129,10 @@ class ContactsContent extends TemplateContent
         $details->items()->append($address);
 
         $email = trim(strip_tags((string)$row["email"]));
-        $details->items()->append($this->link("item email", "Email: ", "mailto:", $email));
+        $details->items()->append($this->link("item email", tr("Email") . ": ", "mailto:", $email));
 
         $phone = trim(strip_tags((string)$row["phone"]));
-        $details->items()->append($this->link("item phone", "Телефон: ", "tel:", $phone));
+        $details->items()->append($this->link("item phone", tr("Phone") . ": ", "tel:", $phone));
 
         return $details;
     }
@@ -180,6 +180,6 @@ JS;
 
     protected function getContentTitle(): string
     {
-        return "Контакти";
+        return tr("Contacts");
     }
 }

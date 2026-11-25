@@ -82,6 +82,9 @@ class ProductDetailsItem extends Container implements IHeadContents
 
         $this->setTagName("section");
 
+        //the texts of ProductDetailsItem.js
+        SparkPage::Instance()->head()->addTexts("Select an option for %s", "Notify me when in stock", "Query", "Fast order");
+
         $this->sellable = $item;
 
         $this->url = new ProductURL();
@@ -215,7 +218,7 @@ class ProductDetailsItem extends Container implements IHeadContents
         if ($list->items()->count() < 1) return;
 
         $tab = new DetailsTab();
-        $tab->setCaption(tr("Свойства"));
+        $tab->setCaption(tr("Properties"));
         $tab->addClassName("features");
         $tab->getContent()->items()->append($list);
         $tabs->items()->append($tab);
@@ -226,7 +229,7 @@ class ProductDetailsItem extends Container implements IHeadContents
     {
         if ($this->sellable->getDescription()) {
             $tab = new DetailsTab();
-            $tab->setCaption(tr("Описание"));
+            $tab->setCaption(tr("Description"));
             $tab->addClassName("description");
 
             $tab->getContent()->addClassName("long_description");
@@ -245,7 +248,7 @@ class ProductDetailsItem extends Container implements IHeadContents
             $tab = new DetailsTab();
             $tab->setClassName("description");
             $tab->addClassName("howtoorder");
-            $tab->setCaption(tr("Как да поръчам?"));
+            $tab->setCaption(tr("How to order?"));
             $tab->getContent()->addClassName("long_description");
             $tab->getContent()->setContents($text);
             $tabs->items()->append($tab);

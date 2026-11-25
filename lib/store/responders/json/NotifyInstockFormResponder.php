@@ -37,14 +37,14 @@ class NotifyInstockFormResponder extends JSONFormResponder
         $query->exec();
 
         if ($query->next()) {
-            $resp->message = tr("Вече сте абониран");
+            $resp->message = tr("You are already subscribed");
             return;
         }
         $data = array("email"=>$email, "prodID"=>$this->sellable->getProductID());
 
         $bean->insert($data);
 
-        $resp->message = tr("Заявката Ви беще приета");
+        $resp->message = tr("Your request was accepted");
     }
 
 }

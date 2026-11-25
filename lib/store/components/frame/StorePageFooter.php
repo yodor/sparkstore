@@ -31,7 +31,7 @@ class StorePageFooter extends StoreSection
         $columns->items()->append($columnVoucher);
 
         if ($page->vouchers_enabled) {
-            $columnVoucher->items()->append(Button::ActionButton(tr("Купи ваучер"), "showVoucherForm()"));
+            $columnVoucher->items()->append(Button::ActionButton(tr("Buy a voucher"), "showVoucherForm()"));
         }
 
         $columnLinks = new Container(false);

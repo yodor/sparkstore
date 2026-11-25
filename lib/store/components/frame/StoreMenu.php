@@ -45,7 +45,7 @@ class StoreMenu extends StoreSection
     }
 
     /**
-     * The placeholder of the keyword search (default: 'Търси ...')
+     * The placeholder of the keyword search (default: tr('Search ...'))
      * @param string $text
      * @return $this
      */

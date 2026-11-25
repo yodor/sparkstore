@@ -30,7 +30,7 @@ class VariantPriceFormResponder extends JSONFormResponder
         parent::onProcessSuccess($resp);
 
 
-        $resp->message = tr("Заявката Ви беще приета");
+        $resp->message = tr("Your request was accepted");
     }
 
 }

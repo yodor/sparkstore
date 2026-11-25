@@ -7,14 +7,14 @@ class VariantPriceForm extends InputForm {
     {
         parent::__construct();
 
-        $input = DataInputFactory::Create(InputType::SELECT, "variant_name", "Опция име", 1);
+        $input = DataInputFactory::Create(InputType::SELECT, "variant_name", "Option Name", 1);
         $this->addInput($input);
 
-        $input = DataInputFactory::Create(InputType::SELECT, "variant_value", "Стойност", 1);
+        $input = DataInputFactory::Create(InputType::SELECT, "variant_value", "Value", 1);
 
         $this->addInput($input);
 //
-//        $input = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Снимки", 0);
+//        $input = DataInputFactory::Create(DataInputFactory::SESSION_IMAGE, "photo", "Photos", 0);
 //        $this->addInput($input);
 
     }

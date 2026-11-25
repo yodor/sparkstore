@@ -178,7 +178,7 @@ class CartListItem extends Container {
         $this->actRemove->setComponentClass("");
         $this->actRemove->setAttribute("action", "remove");
         $this->actRemove->setContents("&#8855;");
-        $this->actRemove->setTitle("Remove");
+        $this->actRemove->setTitle(tr("Remove"));
 
         $tdPosition = new Container(false);
         $tdPosition->setComponentClass("");

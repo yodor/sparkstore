@@ -2,5 +2,5 @@
 //the contacts page (ContactsContent): addresses, map, the enquiry dialog
 include_once("store/templates/modules/main/content/ContactsContent.php");
 $config = ContactsContent::Configure();
-$config->title = tr("Контакти");
+$config->title = tr("Contacts");
 $config->requireAuth = false;

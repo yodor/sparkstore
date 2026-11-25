@@ -9,7 +9,7 @@ class SectionNavigation extends NavigationList
     public function __construct()
     {
         parent::__construct();
-        $this->setAttribute("aria-label", "Product Sections");
+        $this->setAttribute("aria-label", tr("Product Sections"));
     }
 
     public function createImagesColumn(SQLSelect $select): void

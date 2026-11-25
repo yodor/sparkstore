@@ -25,7 +25,7 @@ class SellableImageGallery extends ImageSlider
 
         $this->setTagName("figure");
         $this->setAttribute("role", "region");
-        $this->setAttribute("aria-label", "Product image gallery");
+        $this->setAttribute("aria-label", tr("Product image gallery"));
         $this->setAttribute("draggable", "false");
 
         $this->setDots(SliderDots::IMAGE);
@@ -49,14 +49,14 @@ class SellableImageGallery extends ImageSlider
                 $label->setContents(" -" . round($discountPercent, 2) . "%");
             }
             else {
-                $label->setText(tr("Промо"));
+                $label->setText(tr("Promo"));
             }
 
             $this->addClassName("promo");
         }
 
         if ($this->sellable->getStockAmount() < 1) {
-            $label->setText(tr("Изчерпан"));
+            $label->setText(tr("Out of stock"));
             $this->addClassName("nostock");
         }
 
@@ -65,7 +65,7 @@ class SellableImageGallery extends ImageSlider
             if (!($storageItem instanceof StorageItem)) throw new Exception("Expected StorageItem gallery element");
 
             //alt and src matter most for the search engines (variants / colors would go here)
-            $popup = $this->addImage($storageItem, null, "View " . ($pos + 1) . " of " . $this->sellable->getTitle());
+            $popup = $this->addImage($storageItem, null, tr("View %s of %s", $pos + 1, $this->sellable->getTitle()));
             //the popup and the slider show the photos without a caption
             $popup->removeAttribute("title");
             $popup->image()->getStorageItem()->setName($this->sellable->getTitle());

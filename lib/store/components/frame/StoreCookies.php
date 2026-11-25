@@ -18,7 +18,7 @@ class StoreCookies extends StoreSection
         $this->addClassName("cookies");
         //a div: role 'dialog' is not allowed on an aside
         $this->setTagName("div");
-        $this->setAttribute("aria-label", "Cookie Consent");
+        $this->setAttribute("aria-label", tr("Cookie Consent"));
         $this->setAttribute("role", "dialog");
         $this->setAttribute("tabindex", "0");
     }

@@ -12,7 +12,7 @@ class CategoryNavigation extends NavigationList
     public function __construct()
     {
         parent::__construct();
-        $this->setAttribute("aria-label", "Product Categories");
+        $this->setAttribute("aria-label", tr("Product Categories"));
     }
 
     public function setParentID(int $parentID) : void

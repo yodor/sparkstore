@@ -2,10 +2,10 @@ function showVoucherForm()
 {
     let voucher_dialog = new JSONFormDialog();
     voucher_dialog.setResponder("VoucherFormResponder");
-    voucher_dialog.setTitle("Kупи Ваучер");
+    voucher_dialog.setTitle(tr("Buy a voucher"));
 
     let dialog = new MessageDialog()
-    dialog.setText("Ще получите Вашият ваучер по куриер");
+    dialog.setText(tr("You will receive your voucher by courier"));
 
     dialog.buttonAction = function (action) {
 

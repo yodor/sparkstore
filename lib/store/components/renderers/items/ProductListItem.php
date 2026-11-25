@@ -167,12 +167,12 @@ class ProductPhoto extends Action implements IDataResultConsumer
                 $this->discountLabel->setContents(" -".$discountPercent."%");
             }
             else {
-                $this->discountLabel->setContents("Промо");
+                $this->discountLabel->setContents(tr("Promo"));
             }
         }
 
         if ($this->data["stock_amount"]<1) {
-            $this->discountLabel->setContents("Изчерпан");
+            $this->discountLabel->setContents(tr("Out of stock"));
             $this->blend->setRenderEnabled(true);
         }
         if ($this->discountLabel->getContents()) {

@@ -318,8 +318,8 @@ class ProductListContent extends ProductContent
      */
     protected function initSortFields() : void
     {
-        $this->view->getPaginator()->addOrderColumn(OrderColumn::Labeled("prodID", "Най-нови", OrderDirection::DESC));
-        $this->view->getPaginator()->addOrderColumn(OrderColumn::Labeled("sell_price", "Цена", OrderDirection::ASC));
+        $this->view->getPaginator()->addOrderColumn(OrderColumn::Labeled("prodID", "Newest", OrderDirection::DESC));
+        $this->view->getPaginator()->addOrderColumn(OrderColumn::Labeled("sell_price", "Price", OrderDirection::ASC));
     }
 
     /**

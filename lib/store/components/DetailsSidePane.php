@@ -389,7 +389,7 @@ class DetailsSidePane extends Container
                 $btnNoStock = new CartButton();
                 $btnNoStock->setClassName("nostock");
                 $btnNoStock->setURL(new URL("javascript:showNotifyInstockForm()"));
-                $btnNoStock->setTitle(tr("Уведоми ме при наличност"));
+                $btnNoStock->setTitle(tr("Notify me when in stock"));
                 $grp->items()->append($btnNoStock);
             }
         }
@@ -400,14 +400,14 @@ class DetailsSidePane extends Container
                 $btnFastOrder->setClassName("cart_add");
                 $btnFastOrder->addClassName("fast");
                 $btnFastOrder->setURL(new URL("javascript:showOrderProductForm()"));
-                $btnFastOrder->setTitle(tr("Бърза поръчка"));
+                $btnFastOrder->setTitle(tr("Fast order"));
                 $grp->items()->append($btnFastOrder);
             }
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER)) {
                 $btnCartAdd = new CartButton();
                 $btnCartAdd->setClassName("cart_add");
                 $btnCartAdd->setURL(new URL("javascript:addToCart('" . Marketing::Get(GTMConvParam::CART_ADD->value) . "')"));
-                $btnCartAdd->setTitle(tr("Купи"));
+                $btnCartAdd->setTitle(tr("Buy"));
                 $grp->items()->append($btnCartAdd);
             }
         }
@@ -431,7 +431,7 @@ class DetailsSidePane extends Container
             $btnQueryProduct = new CartButton();
             $btnQueryProduct->setClassName("query_product");
             $btnQueryProduct->setURL(new URL("javascript:showProductQueryForm()"));
-            $btnQueryProduct->setTitle(tr("Запитване") );
+            $btnQueryProduct->setTitle(tr("Query"));
             $grp->items()->append($btnQueryProduct);
         }
 

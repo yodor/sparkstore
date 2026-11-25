@@ -22,7 +22,7 @@ class OrderSection extends Container
         $this->value->setComponentClass("value");
         $this->items()->append($this->value);
 
-        $this->button = Button::Action( tr("Промени"), "", "ColorButton");
+        $this->button = Button::Action( tr("Change"), "", "ColorButton");
         $this->items()->append($this->button);
     }
     public function value() : Container

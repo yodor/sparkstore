@@ -90,8 +90,8 @@ class StoreHeader extends StoreSection
         }
         $link = new Action();
         $link->setTagName("a");
-        $link->setAttribute("aria-label", "logo");
-        $link->setAttribute("title", "logo");
+        $link->setAttribute("aria-label", tr("Home"));
+        $link->setAttribute("title", tr("Home"));
         $link->setURL(new URL($href));
         $link->setComponentClass("logo");
         return $link;

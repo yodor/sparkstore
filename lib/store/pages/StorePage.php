@@ -313,7 +313,7 @@ class StorePage extends SparkPage
         $ksc = new KeywordSearch();
 
         //just initialize the keyword form here. Search fields are initialized in ProductsListPage as form is submitted there
-        $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", "Търси ...");
+        $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("placeholder", tr("Search ..."));
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("autocomplete", "off");
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("min-chars", "3");
         $ksc->getForm()->getInput("keyword")->getRenderer()->input()?->setAttribute("id", "search-keyword");
@@ -321,15 +321,15 @@ class StorePage extends SparkPage
         $ksc->setMethod(FormRenderer::METHOD_GET);
         //the search of the products module (/products/search/ - not indexed)
         $ksc->setAction(new ProductSearchURL());
-        $ksc->setAttribute("aria-label", "Product Search Form");
+        $ksc->setAttribute("aria-label", tr("Product Search Form"));
 
         $ksc->getButton("search")->setContents("");
         $ksc->getButton("search")->setComponentClass("");
-        $ksc->getButton("search")->setAttribute("aria-label", "Search Products");
+        $ksc->getButton("search")->setAttribute("aria-label", tr("Search Products"));
 
         $ksc->getButton("clear")->setContents("");
         $ksc->getButton("clear")->setComponentClass("");
-        $ksc->getButton("clear")->setAttribute("aria-label", "Clear Search");
+        $ksc->getButton("clear")->setAttribute("aria-label", tr("Clear Search"));
 
         $this->keyword_search = $ksc;
 
@@ -356,6 +356,7 @@ class StorePage extends SparkPage
         if ($this->vouchers_enabled) {
             $voucher_handler = new VoucherFormResponder();
             $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");
+            $this->head()->addTexts("Buy a voucher", "You will receive your voucher by courier");
         }
 
         $home = StoreFrame::GetHomeAction();

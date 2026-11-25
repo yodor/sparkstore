@@ -12,7 +12,7 @@ include_once("store/components/frame/StoreCookies.php");
  *  StoreFrame::Header()->setVideo(Spark::Get(Config::LOCAL) . "/images/header_logo");
  *  StoreFrame::Menu()->setCustomerGroup(false);
  *  StoreFrame::Disable(StoreFrame::PAGE_FOOTER);
- *  StoreFrame::HomeAction("Начало", Spark::Get(Config::LOCAL) . "/");        the first breadcrumb item
+ *  StoreFrame::HomeAction(tr("Home"), Spark::Get(Config::LOCAL) . "/");        the first breadcrumb item
  *  StoreFrame::Use(StoreFrame::HEADER, MyHeader::class);                     a section of its own (a subclass)
  *
  * The frame of every store module page takes its sections from here.

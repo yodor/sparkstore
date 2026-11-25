@@ -36,7 +36,7 @@ class TapeSameCategory extends ProductsTape
         $this->getAction()->setURL($categoryURL);
 
         $this->addClassName("same_category");
-        $this->setCaption(tr("Още продукти от тази категория"));
+        $this->setCaption(tr("More products of this category"));
 
         $this->list_item->disableProductLinkedData();
     }

@@ -102,10 +102,10 @@ class ProductDetailsContent extends ProductContent
     {
         http_response_code(404);
         $page->head()->addMeta("robots", "noindex");
-        $this->config->title = "Продуктът не е намерен";
+        $this->config->title = tr("Product not found");
         $message = new TextComponent("", "description");
         $message->setTagName("div");
-        $message->setText("Този продукт е недостъпен.");
+        $message->setText(tr("This product is not available."));
         $this->cmp->items()->append($message);
     }
 

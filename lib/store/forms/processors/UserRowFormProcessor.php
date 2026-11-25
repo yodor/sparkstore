@@ -23,7 +23,7 @@ class UserRowFormProcessor extends FormProcessor
 
         if ($this->getStatus() != IFormProcessor::STATUS_OK) return;
 
-        if ($this->userID < 1) throw new Exception(tr("Тази функция изисква регистрация"));
+        if ($this->userID < 1) throw new Exception(tr("This function needs a registration"));
 
         $dbt = new BeanTransactor($this->bean, $this->editID);
         $dbt->appendValue("userID", $this->userID);
