@@ -21,8 +21,11 @@ class DeliveryOption {
         return $this->id;
     }
 
+    /**
+     * The title in the language of the page (the title is an English text - a key of the language packs)
+     */
     public function getTitle() : string {
-        return $this->title;
+        return tr($this->title);
     }
 
     public function getPrice() : float  {

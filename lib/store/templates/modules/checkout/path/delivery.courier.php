@@ -3,4 +3,4 @@ include_once("store/templates/modules/checkout/content/CheckoutDeliveryCourier.p
 
 $config = TemplateConfig::Factory();
 $config->contentClass = CheckoutDeliveryCourier::class;
-$config->title = tr("Избор на офис на куриер за доставка");
+$config->title = tr("Choose a courier office for the delivery");

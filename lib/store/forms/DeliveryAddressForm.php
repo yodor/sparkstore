@@ -20,7 +20,7 @@ class DeliveryAddressForm extends InputForm
 
         $data = new ArrayDataIterator($option_values);
 
-        $field = DataInputFactory::Create(InputType::RADIO, "delivery_option", "Изберете адрес за доставка", 1);
+        $field = DataInputFactory::Create(InputType::RADIO, "delivery_option", "Choose a delivery address", 1);
         $radio = $field->getRenderer();
         $radio->setIterator($data);
         $radio->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);

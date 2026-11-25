@@ -21,15 +21,15 @@ class AccountPassword extends AccountContent
 
         $renderer = new FormRenderer($this->form);
         $renderer->setName("ForgotPassword");
-        $renderer->getSubmitButton()->setContents(tr("Изпрати"));
+        $renderer->getSubmitButton()->setContents(tr("Send"));
 
         $panel = new Container(false);
         $panel->setComponentClass("");
-        $panel->items()->append(AccountContent::Text(tr("Въведете Вашият email aдрес от момента на регистрация в сайта и натиснете бутон 'Изпрати'")));
-        $panel->items()->append(AccountContent::Text(tr("Ще получите писмо с връзка за смяна на паролата.")));
+        $panel->items()->append(AccountContent::Text(tr("Enter the email address you registered with and press 'Send'")));
+        $panel->items()->append(AccountContent::Text(tr("You will receive a mail with a link to change your password.")));
         $panel->items()->append($renderer);
 
-        $this->addColumn(AccountContent::Column(tr("Забравена парола"), $panel));
+        $this->addColumn(AccountContent::Column(tr("Forgotten password"), $panel));
     }
 
     public function processInput() : void
@@ -68,11 +68,11 @@ class AccountPassword extends AccountContent
         catch (Exception $e) {
             Debug::ErrorLog("Password reset failed for '$email': " . $e->getMessage());
         }
-        $this->redirect("login", tr("Ако този e-mail е регистриран, на него беше изпратена връзка за смяна на паролата"));
+        $this->redirect("login", tr("If this email is registered, a link to change the password was sent to it"));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Забравена парола");
+        return tr("Forgotten password");
     }
 }

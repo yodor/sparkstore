@@ -7,7 +7,7 @@ include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("utils/menu/MenuItem.php");
 $menu = AccountContent::Menu();
 
-$menu->append(new MenuItem(tr("История на поръчките"), "orders"));
-$menu->append(new MenuItem(tr("Регистриран адрес"), "address"));
-$menu->append(new MenuItem(tr("Детайли за фактуриране"), "invoice"));
-$menu->append(new MenuItem(tr("Редакция на профил"), "profile"));
+$menu->append(new MenuItem(tr("Order history"), "orders"));
+$menu->append(new MenuItem(tr("Registered address"), "address"));
+$menu->append(new MenuItem(tr("Invoice details"), "invoice"));
+$menu->append(new MenuItem(tr("Edit profile"), "profile"));

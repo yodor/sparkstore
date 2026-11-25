@@ -34,7 +34,7 @@ class CheckoutDeliveryCourier extends CheckoutContent
         $this->ensureCartItems();
         $courier = $this->courier();
         $office = CourierOffices::Find($courier->getID(), trim((string)$_POST[CheckoutDeliveryCourier::FIELD]));
-        if (is_null($office)) $this->redirect("delivery/courier", tr("Моля, изберете офис от списъка"));
+        if (is_null($office)) $this->redirect("delivery/courier", tr("Please choose an office from the list"));
 
         CourierOffices::Choose(Module::Active()->getUserID(), $courier->getID(), $office);
 
@@ -63,14 +63,14 @@ class CheckoutDeliveryCourier extends CheckoutContent
         $label = new Component(false);
         $label->setTagName("label");
         $label->setComponentClass("caption");
-        $label->setText(tr("Офис") . " (" . $courier->getTitle() . ")");
+        $label->setText(tr("Office") . " (" . $courier->getTitle() . ")");
         $form->items()->append($label);
 
         $status = CourierOffices::Status($courier->getID());
         if ($status["count"] < 1) {
             $empty = new Component(false);
             $empty->setComponentClass("empty");
-            $empty->setText(tr("Списъкът с офиси на куриера не е наличен в момента. Моля, свържете се с нас."));
+            $empty->setText(tr("The list of the courier offices is not available at the moment. Please contact us."));
             $form->items()->append($empty);
         }
         else {
@@ -84,8 +84,8 @@ class CheckoutDeliveryCourier extends CheckoutContent
 
             $finder = new OptionFinder(CheckoutDeliveryCourier::FIELD);
             $finder->setSource($source);
-            $finder->setPlaceholder(tr("Въведете населено място"));
-            $finder->setHints(tr("Въведете първите букви на населеното място"), tr("Няма офис в това населено място"));
+            $finder->setPlaceholder(tr("Enter a town"));
+            $finder->setHints(tr("Type the first letters of the town"), tr("No office in this town"));
 
             $chosen = CourierOffices::Chosen(Module::Active()->getUserID(), $courier->getID());
             if (is_array($chosen)) {
@@ -97,12 +97,12 @@ class CheckoutDeliveryCourier extends CheckoutContent
         $page->base()->items()->append($form);
 
         $name = json_encode(CheckoutDeliveryCourier::FORM);
-        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
-        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms[$name].submit();");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Back"), "edit", $this->backURL());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Continue"), "checkout", "javascript:document.forms[$name].submit();");
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Избор на офис на куриер за доставка");
+        return tr("Choose a courier office for the delivery");
     }
 }

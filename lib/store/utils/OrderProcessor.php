@@ -60,13 +60,13 @@ class OrderProcessor
 
         $cart = Cart::Instance();
 
-        if ($cart->itemsCount() < 1) throw new Exception("Вашата кошница е празна");
-        if (is_null($cart->getDelivery()->getSelectedCourier())) throw new Exception("Не сте избрали куриер");
-        if (is_null($cart->getDelivery()->getSelectedCourier()->getSelectedOption())) throw new Exception("Не сте избрали адрес за доставка");
+        if ($cart->itemsCount() < 1) throw new Exception(tr("Your cart is empty"));
+        if (is_null($cart->getDelivery()->getSelectedCourier())) throw new Exception(tr("No courier chosen"));
+        if (is_null($cart->getDelivery()->getSelectedCourier()->getSelectedOption())) throw new Exception(tr("No delivery address chosen"));
 
         if ($userID < 1) {
             Debug::ErrorLog("Login required ... ");
-            throw new Exception("Изисква регистриран потребител");
+            throw new Exception(tr("Needs a registered user"));
         }
 
         Debug::ErrorLog("Using userID='$userID'");
@@ -109,13 +109,13 @@ class OrderProcessor
             else if ($option->getID() == DeliveryOption::COURIER_OFFICE) {
                 //the office of the list of the courier: its text and its key (the shipments need the key)
                 $office = CourierOffices::Chosen($userID, $courier->getID());
-                if (is_null($office)) throw new Exception("Недостъпен адрес за доставка");
+                if (is_null($office)) throw new Exception(tr("The delivery address is not available"));
                 $order["delivery_address"] = $office["office"];
                 $order["delivery_office"] = $office["office_key"];
 
             }
             else {
-                throw new Exception("Недостъпен начин на доставка");
+                throw new Exception(tr("The delivery method is not available"));
             }
 
             $order["note"] = $cart->getNote();

@@ -18,13 +18,13 @@ class RegisterForm extends LoginForm {
         const password = this.form.password.value.trim();
         const repeat = this.form.password_repeat ? this.form.password_repeat.value.trim() : password;
 
-        if (password !== repeat) throw "Паролите не съвпадат";
+        if (password !== repeat) throw tr("The passwords do not match");
 
         if (this.passwordOptional && password.length < 1) {
             this.form.challenge.value = "";
             return;
         }
-        if (password.length < 6) throw "Необходими са поне 6 символа";
+        if (password.length < 6) throw tr("At least 6 characters");
 
         //the trimmed values are sent - the server compares them too
         this.form.password.value = password;

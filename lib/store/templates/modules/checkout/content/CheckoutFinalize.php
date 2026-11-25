@@ -48,7 +48,7 @@ class CheckoutFinalize extends CheckoutContent
             if (!(new OrderErrorAdminMailer($details))->send()) {
                 error_log("Unable to send the order error mail");
             }
-            $this->redirect("confirm", tr("Възникна грешка при обработка на Вашата поръчка.") . " " . tr("Моля, опитайте отново или се свържете с нас."));
+            $this->redirect("confirm", tr("Your order could not be processed.") . " " . tr("Please try again or contact us."));
         }
 
         //mail failures are logged by Mailer::send() - the order is made

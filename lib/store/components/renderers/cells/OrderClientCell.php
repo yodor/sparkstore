@@ -25,7 +25,7 @@ class OrderClientCell extends TableCell
         $client = $this->client ?? $this->clients->getByID($this->userID, "fullname", "email", "phone");
 
         echo "<div class='group client_data'>";
-        foreach (array("fullname" => tr("Име"), "email" => tr("E-Mail"), "phone" => tr("Телефон")) as $key => $label) {
+        foreach (array("fullname" => tr("Name"), "email" => tr("E-Mail"), "phone" => tr("Phone")) as $key => $label) {
             echo "<div class='item $key'>";
             echo "<label>" . $label . "</label>";
             //entered by the client

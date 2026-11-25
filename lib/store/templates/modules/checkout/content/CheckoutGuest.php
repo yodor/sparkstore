@@ -29,20 +29,20 @@ class CheckoutGuest extends CheckoutContent
         $this->form = new ClientAddressInputForm(true);
         $renderer = new FormRenderer($this->form);
 
-        $section = new OrderSection(tr("Бърза поръчка"), "fast_order");
+        $section = new OrderSection(tr("Fast order"), "fast_order");
         $note = new Component(false);
         $note->addClassName("note");
-        $note->setContents(Spark::AttributeValue(tr("Въведете само вашето име и телефон.")) . "<BR><BR>" .
-            Spark::AttributeValue(tr("Наш консултант ще ви се обади в рамките на няколко минути, за да уточним адреса за доставка, начина на плащане и всички детайли по вашата поръчка.")));
+        $note->setContents(Spark::AttributeValue(tr("Enter only your name and phone.")) . "<BR><BR>" .
+            Spark::AttributeValue(tr("Our consultant will call you within a few minutes to agree the delivery address, the payment and all the details of your order.")));
         $section->value()->items()->append($note);
         $section->value()->items()->append($renderer);
         $section->button()->setRenderEnabled(false);
         $page->base()->items()->append($section);
 
-        $section = new OrderSection(tr("Нормална поръчка"), "login");
+        $section = new OrderSection(tr("Regular order"), "login");
         $note = new Component(false);
         $note->addClassName("note");
-        $note->setText(tr("Влезте в акаунта си или се регистрирайте."));
+        $note->setText(tr("Log in to your account or register."));
         $section->value()->items()->append($note);
         $section->button()->setContents(tr("Continue"));
         $section->button()->setAttribute("href", Spark::Get(Config::LOCAL) . "/account/login");
@@ -62,13 +62,13 @@ class CheckoutGuest extends CheckoutContent
         if ($proc->getStatus() !== IFormProcessor::STATUS_OK) return;
 
         $cart = Cart::Instance();
-        if ($cart->itemsCount() < 1) $this->redirect("cart", tr("Вашата кошница е празна"));
+        if ($cart->itemsCount() < 1) $this->redirect("cart", tr("Your cart is empty"));
         if (!$this->form->isFastOrder()) throw new Exception("Incorrect InputForm - fast_order flag not set");
 
         //the order is only this mail - keep the cart when it did not go out
         $mailer = new FastOrderAdminMailer($this->form);
         if (!$mailer->send()) {
-            Session::SetAlert(tr("Поръчката не беше изпратена. Моля, опитайте отново по-късно или ни се обадете."));
+            Session::SetAlert(tr("The order was not sent. Please try again later or call us."));
             return;
         }
         $cart->clear();
@@ -79,6 +79,6 @@ class CheckoutGuest extends CheckoutContent
 
     protected function getContentTitle() : string
     {
-        return tr("Клиенти");
+        return tr("Customers");
     }
 }

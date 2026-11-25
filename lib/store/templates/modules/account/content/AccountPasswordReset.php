@@ -30,24 +30,24 @@ class AccountPasswordReset extends AccountContent
         $this->resets = new PasswordResetsBean();
         $this->userID = $this->resets->userID((string)($_GET["token"] ?? ""));
         if ($this->userID < 1) {
-            $this->redirect("password", tr("Връзката за смяна на паролата е невалидна или изтекла. Моля, заявете нова."));
+            $this->redirect("password", tr("The password link is invalid or has expired. Please ask for a new one."));
         }
 
         $this->form = new InputForm();
         $this->form->setName("PasswordResetForm");
-        $this->form->addInput(DataInputFactory::Create(InputType::PASSWORD, "password", tr("Нова парола"), 1));
-        $this->form->addInput(DataInputFactory::Create(InputType::PASSWORD, "password_repeat", tr("Повторете новата парола"), 1));
+        $this->form->addInput(DataInputFactory::Create(InputType::PASSWORD, "password", tr("New password"), 1));
+        $this->form->addInput(DataInputFactory::Create(InputType::PASSWORD, "password_repeat", tr("Repeat the new password"), 1));
 
         $renderer = new FormRenderer($this->form);
         $renderer->setAttribute("autocomplete", "off");
-        $renderer->getSubmitButton()->setContents(tr("Запиши"));
+        $renderer->getSubmitButton()->setContents(tr("Save"));
 
         $panel = new Container(false);
         $panel->setComponentClass("");
-        $panel->items()->append(AccountContent::Text(tr("Въведете новата парола - поне 6 символа.")));
+        $panel->items()->append(AccountContent::Text(tr("Enter the new password - at least 6 characters.")));
         $panel->items()->append($renderer);
 
-        $this->addColumn(AccountContent::Column(tr("Смяна на парола"), $panel));
+        $this->addColumn(AccountContent::Column(tr("Change password"), $panel));
     }
 
     public function processInput() : void
@@ -68,11 +68,11 @@ class AccountPasswordReset extends AccountContent
         $this->form->getInput("password_repeat")->setValue("");
 
         if (mb_strlen($password) < AccountPasswordReset::MIN_LENGTH) {
-            Session::SetAlert(tr("Невалидна дължина на парола"));
+            Session::SetAlert(tr("Invalid password length"));
             return;
         }
         if (strcmp($password, $repeat) !== 0) {
-            Session::SetAlert(tr("Паролите не съвпадат"));
+            Session::SetAlert(tr("The passwords do not match"));
             return;
         }
 
@@ -81,17 +81,17 @@ class AccountPasswordReset extends AccountContent
         $hash = new PasswordHash($password);
         if (!$users->update($this->userID, array("password" => $hash->getValue()))) {
             Debug::ErrorLog("Password reset: update of user {$this->userID} failed: " . $users->getDB()->getError());
-            Session::SetAlert(tr("Паролата не беше сменена. Моля, опитайте отново по-късно."));
+            Session::SetAlert(tr("The password was not changed. Please try again later."));
             return;
         }
         //used - the link does not work again
         $this->resets->clear($this->userID);
 
-        $this->redirect("login", tr("Паролата беше сменена успешно. Влезте с новата парола."));
+        $this->redirect("login", tr("The password was changed. Log in with the new password."));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Смяна на парола");
+        return tr("Change password");
     }
 }

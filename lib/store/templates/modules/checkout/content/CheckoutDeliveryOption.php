@@ -34,8 +34,8 @@ class CheckoutDeliveryOption extends CheckoutContent
         $page->base()->addClassName("delivery_address");
         $page->base()->items()->append($renderer);
 
-        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
-        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms.DeliveryAddress.submit();");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Back"), "edit", $this->backURL());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Continue"), "checkout", "javascript:document.forms.DeliveryAddress.submit();");
     }
 
     public function processInput() : void
@@ -60,7 +60,7 @@ class CheckoutDeliveryOption extends CheckoutContent
 
         $option = $courier->getSelectedOption();
         if (is_null($option)) {
-            Session::SetAlert(tr("Изберете начин на доставка"));
+            Session::SetAlert(tr("Choose a delivery method"));
             return;
         }
         if ($option->getID() == DeliveryOption::COURIER_OFFICE) $this->redirect("delivery/courier");
@@ -69,6 +69,6 @@ class CheckoutDeliveryOption extends CheckoutContent
 
     protected function getContentTitle() : string
     {
-        return tr("Начин на доставка");
+        return tr("Delivery method");
     }
 }

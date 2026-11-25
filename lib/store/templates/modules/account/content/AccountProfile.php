@@ -4,6 +4,7 @@ include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 include_once("beans/UsersBean.php");
 include_once("components/InlineScript.php");
+include_once("forms/renderers/LoginFormRenderer.php");
 
 /**
  * Profile of the client - the registration form without the e-mail (not editable) and the terms.
@@ -17,6 +18,7 @@ class AccountProfile extends AccountContent
     {
         SparkPage::Instance()->head()->addJS(Spark::Get(Config::SPARK_LOCAL) . "/js/LoginForm.js");
         SparkPage::Instance()->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL) . "/js/RegisterForm.js");
+        SparkPage::Instance()->head()->addTexts("The passwords do not match", "At least 6 characters", ...LoginFormScript::SCRIPT_TEXTS);
 
         $this->form = new RegisterClientInputForm();
         $this->form->removeInput("accept_terms");
@@ -24,9 +26,9 @@ class AccountProfile extends AccountContent
         $this->loadUser();
 
         $renderer = new FormRenderer($this->form);
-        $renderer->getSubmitButton()->setContents(tr("Запиши"));
+        $renderer->getSubmitButton()->setContents(tr("Save"));
 
-        $this->addColumn(AccountContent::Column(tr("Клиентски профил"), $renderer));
+        $this->addColumn(AccountContent::Column(tr("Customer profile"), $renderer));
 
         //challenge of a new password, the repeat check; the password is optional here
         $script = new InlineScript(true);
@@ -50,7 +52,7 @@ class AccountProfile extends AccountContent
         $hint = $this->form->getInput("password")->getRenderer()->getAddonContainer();
         $hint->items()->clear();
         $text = new Component(false);
-        $text->setText(tr("Попълнете само при смяна на паролата - поне 6 символа"));
+        $text->setText(tr("Fill in only to change the password - at least 6 characters"));
         $hint->items()->append($text);
     }
 
@@ -63,7 +65,7 @@ class AccountProfile extends AccountContent
         $proc->process($this->form);
 
         if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
-            $this->redirect("profile", tr("Профилът беше променен успешно"));
+            $this->redirect("profile", tr("The profile was updated"));
         }
         else if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
             Session::SetAlert($proc->getMessage());
@@ -73,6 +75,6 @@ class AccountProfile extends AccountContent
 
     protected function getContentTitle() : string
     {
-        return tr("Клиентски профил");
+        return tr("Customer profile");
     }
 }

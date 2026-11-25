@@ -136,7 +136,7 @@ abstract class CheckoutContent extends TemplateContent
     protected function ensureCartItems() : void
     {
         if (Cart::Instance()->itemsCount() < 1) {
-            $this->redirect("cart", tr("Вашата кошница е празна"));
+            $this->redirect("cart", tr("Your cart is empty"));
         }
     }
 

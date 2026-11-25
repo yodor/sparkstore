@@ -66,8 +66,8 @@ class CheckoutRowEditor extends CheckoutContent
         $page->base()->items()->append($renderer);
 
         $name = json_encode($this->form->getName());
-        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
-        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms[$name].submit();");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Back"), "edit", $this->backURL());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Continue"), "checkout", "javascript:document.forms[$name].submit();");
     }
 
     /**

@@ -33,13 +33,13 @@ class ActivateProfileFormProcessor extends FormProcessor
         try {
             $affected_rows = $users->activate($email, $confirm_code);
             if ($affected_rows == 0) {
-                throw new Exception(tr("Грешка при активация на профил. Проверете активационния код и опитайте отново."));
+                throw new Exception(tr("The profile could not be activated. Check the activation code and try again."));
             }
             else if ($affected_rows == 1) {
                 //OK
             }
             else if ($affected_rows > 1) {
-                throw new Exception(tr("Този профил е вече активиран"));
+                throw new Exception(tr("This profile is already activated"));
             }
         }
         catch (Exception $e) {

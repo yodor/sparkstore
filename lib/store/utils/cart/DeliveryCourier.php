@@ -21,10 +21,10 @@ class DeliveryCourier {
         $this->id = $id;
         $this->title = $title;
 
-        $option1 = new DeliveryOption(DeliveryOption::USER_ADDRESS,"Доставка до адрес", 0.0);
+        $option1 = new DeliveryOption(DeliveryOption::USER_ADDRESS,"Delivery to an address", 0.0);
         $this->options[$option1->getID()] = $option1;
 
-        $option2 = new DeliveryOption(DeliveryOption::COURIER_OFFICE, "Доставка до офис на куриер", 0.0);
+        $option2 = new DeliveryOption(DeliveryOption::COURIER_OFFICE, "Delivery to a courier office", 0.0);
         $this->options[$option2->getID()] = $option2;
 
     }
@@ -56,8 +56,11 @@ class DeliveryCourier {
         return $this->id;
     }
 
+    /**
+     * The title in the language of the page (the title is an English text - a key of the language packs)
+     */
     public function getTitle() : string {
-        return $this->title;
+        return tr($this->title);
     }
 
     /**

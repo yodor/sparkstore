@@ -20,11 +20,11 @@ $store->append(new MenuItem("Products", "products"));
 $store->append(new MenuItem("Promotions", "promos"));
 
 $orders = new MenuItem("Orders", "orders");
-$orders->append(new MenuItem("Active", "active"));
-$orders->append(new MenuItem("Sent", "sent"));
-$orders->append(new MenuItem("Completed", "completed"));
-$orders->append(new MenuItem("Canceled", "canceled"));
-$orders->append(new MenuItem("All", "all"));
+$orders->append(new MenuItem("Active Orders", "active"));
+$orders->append(new MenuItem("Sent Orders", "sent"));
+$orders->append(new MenuItem("Completed Orders", "completed"));
+$orders->append(new MenuItem("Canceled Orders", "canceled"));
+$orders->append(new MenuItem("All Orders", "all"));
 $delivery = new MenuItem("Delivery", "delivery");
 //the office lists of the couriers (the checkout office step)
 $delivery->append(new MenuItem("Courier Offices", "offices"));

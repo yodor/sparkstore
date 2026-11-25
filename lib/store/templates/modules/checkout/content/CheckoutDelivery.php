@@ -30,8 +30,8 @@ class CheckoutDelivery extends CheckoutContent
         $page->base()->addClassName("delivery_courier");
         $page->base()->items()->append($renderer);
 
-        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", $this->backURL());
-        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Продължи"), "checkout", "javascript:document.forms.DeliveryCourier.submit();");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Back"), "edit", $this->backURL());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Continue"), "checkout", "javascript:document.forms.DeliveryCourier.submit();");
     }
 
     public function processInput() : void
@@ -53,7 +53,7 @@ class CheckoutDelivery extends CheckoutContent
         $cart->getDelivery()->setSelectedCourier($courierID);
         $cart->store();
         if (is_null($cart->getDelivery()->getSelectedCourier())) {
-            Session::SetAlert(tr("Изберете куриер за доставка"));
+            Session::SetAlert(tr("Choose a delivery courier"));
             return;
         }
         $this->nextStep("delivery/option");
@@ -61,6 +61,6 @@ class CheckoutDelivery extends CheckoutContent
 
     protected function getContentTitle() : string
     {
-        return tr("Избор на куриер");
+        return tr("Choose a courier");
     }
 }

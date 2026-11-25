@@ -57,10 +57,10 @@ class OrderProductFormResponder extends JSONFormResponder
         $mailer = new FastOrderAdminMailer($this->form, $this->sellable);
         //the order is only this mail - the client must know when it did not go out
         if (!$mailer->send()) {
-            throw new Exception(tr("Поръчката не беше изпратена. Моля, опитайте отново по-късно или ни се обадете."));
+            throw new Exception(tr("The order was not sent. Please try again later or call us."));
         }
 
-        $resp->message = tr("Поръчката Ви беше приета");
+        $resp->message = tr("Your order was accepted");
 
         //GA4 generate_lead (a fast order is an order by mail - not a purchase), and the Ads conversion when set
         $lead = GTMItems::Event("generate_lead", array(GTMItems::Item($this->sellable)), $this->sellable->getPriceInfo()->getSellPrice(), array("lead_type" => "fast_order"));

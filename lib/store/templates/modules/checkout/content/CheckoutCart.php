@@ -41,15 +41,15 @@ class CheckoutCart extends CheckoutContent
             $clear->items()->append(new Input("hidden", "cart", "clear"));
             $page->base()->items()->append($clear);
 
-            $this->navigation(CheckoutContent::NAV_LEFT, tr("Изпразни кошницата"), "empty", "javascript:document.forms.CartClear.submit();");
+            $this->navigation(CheckoutContent::NAV_LEFT, tr("Empty the cart"), "empty", "javascript:document.forms.CartClear.submit();");
         }
 
         $href = (string)Session::Get("shopping.list", (new ProductListURL())->toString());
-        $this->navigation(CheckoutContent::NAV_CENTER, tr("Продължи пазаруването"), "continue_shopping", $href);
+        $this->navigation(CheckoutContent::NAV_CENTER, tr("Continue shopping"), "continue_shopping", $href);
 
         if ($cart->itemsCount() > 0) {
             //the cashier: confirm opens what is missing (login, delivery ...)
-            $this->navigation(CheckoutContent::NAV_RIGHT, tr("Каса"), "checkout", Module::PathURL("confirm")->toString());
+            $this->navigation(CheckoutContent::NAV_RIGHT, tr("Checkout"), "checkout", Module::PathURL("confirm")->toString());
         }
     }
 
@@ -96,7 +96,7 @@ class CheckoutCart extends CheckoutContent
         }
         catch (Exception $e) {
             Debug::ErrorLog("Cart change '$change' failed: " . $e->getMessage());
-            Session::SetAlert(tr("Грешка") . ": " . $e->getMessage());
+            Session::SetAlert(tr("Error") . ": " . $e->getMessage());
         }
         //the cart page again - no change on reload
         $this->redirect("cart");
@@ -135,7 +135,7 @@ class CheckoutCart extends CheckoutContent
         }
         catch (Exception $e) {
             Debug::ErrorLog("Cart add failed: " . $e->getMessage());
-            Session::SetAlert(tr("Този продукт е недостъпен.") . " " . tr("Грешка") . ": " . $e->getMessage());
+            Session::SetAlert(tr("This product is not available.") . " " . tr("Error") . ": " . $e->getMessage());
             header("Location: " . (new ProductListURL())->toString());
             exit;
         }
@@ -143,6 +143,6 @@ class CheckoutCart extends CheckoutContent
 
     protected function getContentTitle() : string
     {
-        return tr("Съдържание на кошницата");
+        return tr("Cart contents");
     }
 }

@@ -36,13 +36,13 @@ class AccountLogin extends AccountContent
         $inner->items()->append($form);
         $login->items()->append($inner);
 
-        $this->addColumn(AccountContent::Column(Spark::Get(Config::SITE_TITLE) . " - " . tr("вход"), $login, "login"));
+        $this->addColumn(AccountContent::Column(Spark::Get(Config::SITE_TITLE) . " - " . tr("login"), $login, "login"));
 
         $register = new Action();
         $register->setURL(Module::PathURL("register"));
         $register->setClassName("ColorButton");
-        $register->setText(tr("Регистрация"));
-        $this->addColumn(AccountContent::Column(tr("Все още нямате профил ?"), $register, "register"));
+        $register->setText(tr("Registration"));
+        $this->addColumn(AccountContent::Column(tr("No profile yet?"), $register, "register"));
 
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Expires: 0");
@@ -50,6 +50,6 @@ class AccountLogin extends AccountContent
 
     protected function getContentTitle() : string
     {
-        return tr("Вход клиенти");
+        return tr("Customer login");
     }
 }

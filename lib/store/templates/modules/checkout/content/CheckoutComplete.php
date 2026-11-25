@@ -22,14 +22,14 @@ class CheckoutComplete extends CheckoutContent
 
         $caption = new Component(false);
         $caption->setComponentClass("caption");
-        $caption->setText(tr("Благодарим Ви че пазарувахте при нас!"));
+        $caption->setText(tr("Thank you for shopping with us!"));
         $page->base()->items()->append($caption);
 
         $orderID = (int)Session::Get("checkout.orderID", 0);
         if ($orderID > 0) {
             $orderNumber = new LabelSpan();
             $orderNumber->addClassName("order_number");
-            $orderNumber->label()->setContents(tr("Номер на поръчката"));
+            $orderNumber->label()->setContents(tr("Order number"));
             $orderNumber->span()->setContents((string)$orderID);
             $page->base()->items()->append($orderNumber);
 
@@ -40,11 +40,11 @@ class CheckoutComplete extends CheckoutContent
             }
         }
 
-        $page->base()->items()->append(new TextComponent(tr("Ще се свържем с Вас относно детайли за Вашата поръчка")));
+        $page->base()->items()->append(new TextComponent(tr("We will contact you about the details of your order")));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Завършена поръчка");
+        return tr("Order complete");
     }
 }

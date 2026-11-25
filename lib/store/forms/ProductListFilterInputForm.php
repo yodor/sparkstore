@@ -76,7 +76,7 @@ class FilterDataInput extends DataInput {
         $renderer->getItemRenderer()->setValueKey($this->getName());
         $renderer->getItemRenderer()->setLabelKey($this->getName());
         if ($renderer instanceof SelectField) {
-            $renderer->setDefaultOption("--- Всички ---");
+            $renderer->setDefaultOption("--- All ---");
         }
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
@@ -147,7 +147,7 @@ class ProductAttributeFilter extends SelectFilter {
         $renderer->getItemRenderer()->setValueKey("value");
         $renderer->getItemRenderer()->setLabelKey("value");
         if ($renderer instanceof SelectField) {
-            $renderer->setDefaultOption("--- Всички ---");
+            $renderer->setDefaultOption("--- All ---");
         }
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
     }
@@ -201,7 +201,7 @@ class ProductVariantFilter extends SelectFilter {
         $renderer->getItemRenderer()->setValueKey("option_value");
         $renderer->getItemRenderer()->setLabelKey("option_value");
         if ($renderer instanceof SelectField) {
-            $renderer->setDefaultOption("--- Всички ---");
+            $renderer->setDefaultOption("--- All ---");
         }
 
         $renderer->input()?->setAttribute("onChange", "javascript:applyFilter(this)");
@@ -250,9 +250,9 @@ class ProductListFilterInputForm extends InputForm {
 //        $this->addInput(new ColorFilter());
 //        $this->addInput(new SizeFilter());
 
-        $this->getGroup(InputForm::DEFAULT_GROUP)->setTitle("Основни");
-        $this->group_attributes = new InputGroup(self::GROUP_ATTRIBUTES, "Етикети");
-        $this->group_variants = new InputGroup(self::GROUP_VARIANTS, "Варианти");
+        $this->getGroup(InputForm::DEFAULT_GROUP)->setTitle("Main");
+        $this->group_attributes = new InputGroup(self::GROUP_ATTRIBUTES, "Labels");
+        $this->group_variants = new InputGroup(self::GROUP_VARIANTS, "Variants");
 
         $this->addGroup($this->group_attributes);
         $this->addGroup($this->group_variants);

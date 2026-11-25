@@ -18,22 +18,22 @@ class AccountRegisterComplete extends AccountContent
         $title = new Component(false);
         $title->setTagName("h1");
         $title->setComponentClass("Caption");
-        $title->setText(tr("Благодарим Ви че се регистрирахте при нас"));
+        $title->setText(tr("Thank you for registering with us"));
         $message->items()->append($title);
 
-        foreach (array(tr("Ще получите e-mail за активация на профила си."),
-                     tr("След активация ще можете да променяте своята лична информация и адрес за доставка.")) as $text) {
+        foreach (array(tr("You will receive an email to activate your profile."),
+                     tr("After the activation you can change your personal details and delivery address.")) as $text) {
             $line = new Component(false);
             $line->setTagName("span");
             $line->setText($text);
             $message->items()->append($line);
         }
 
-        $this->addColumn(AccountContent::Column(tr("Успешна регистрация"), $message));
+        $this->addColumn(AccountContent::Column(tr("Registration complete"), $message));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Успешна регистрация");
+        return tr("Registration complete");
     }
 }

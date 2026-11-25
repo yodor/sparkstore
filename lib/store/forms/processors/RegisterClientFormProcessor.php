@@ -26,8 +26,8 @@ class RegisterClientFormProcessor extends FormProcessor
 
             if ($email_exists) {
 
-                $form->getInput("email")->setError("Този имейл адрес е вече регистриран.");
-                throw new Exception(tr("Вие избрахте регистрирация, но имейлът е вече регистриран при нас. Ако сте регистриран клиент изберете вход за регистриран потребител."));
+                $form->getInput("email")->setError(tr("This email address is already registered."));
+                throw new Exception(tr("You chose to register, but the email is already registered with us. If you are a registered customer, choose the login for registered users."));
             }
 
             $urow = array();
@@ -41,11 +41,11 @@ class RegisterClientFormProcessor extends FormProcessor
                 $urow["fullname"] = $fullname;
             }
             catch (Exception $e) {
-                throw new Exception(tr("Невалидно име"));
+                throw new Exception(tr("Invalid name"));
             }
 
             $email = strtolower(trim($form->getInput("email")->getValue()));
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL))  throw new Exception(tr("Невалиден email адрес"));
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))  throw new Exception(tr("Invalid email address"));
             $urow["email"] = $email;
 
             $urow["phone"] = $form->getInput("phone")->getValue();
@@ -62,13 +62,13 @@ class RegisterClientFormProcessor extends FormProcessor
             $urow["confirm_code"] = $confirm_code;
 
             $userID = $users->insert($urow);
-            if ($userID<1) throw new Exception(tr("Неуспешна регистрация. Моля опитайте по късно или се свържете с нас."));
+            if ($userID<1) throw new Exception(tr("The registration failed. Please try again later or contact us."));
 
             $mailer = new RegisterCustomerActivationMailer($urow["fullname"], $urow["email"], $confirm_code);
             if (!$mailer->send()) {
                 //without the activation mail the account cannot be activated - remove it so the client can register again
                 $users->delete($userID);
-                throw new Exception(tr("Писмото за активация не беше изпратено. Моля, опитайте отново по-късно или се свържете с нас."));
+                throw new Exception(tr("The activation mail was not sent. Please try again later or contact us."));
             }
 
             //auto activate or RegisterCustomerActivationMailer
@@ -86,7 +86,7 @@ class RegisterClientFormProcessor extends FormProcessor
                 //check if email exists and is for different ID
                 $existingID = $users->email2id($email);
                 if ((int)$existingID != (int)$this->editID) {
-                    throw new Exception("Този e-mail адрес е вече регистриран");
+                    throw new Exception(tr("This email address is already registered."));
                 }
             }
 
@@ -100,7 +100,7 @@ class RegisterClientFormProcessor extends FormProcessor
                 $urow["password"] = $this->processPassword($form);
             }
 
-            if (!$users->update($this->editID, $urow)) throw new Exception("Грешка при обновяване на профила: " . $users->getDB()->getError());
+            if (!$users->update($this->editID, $urow)) throw new Exception(tr("The profile could not be updated: ") . $users->getDB()->getError());
 
         }
     }
@@ -114,7 +114,7 @@ class RegisterClientFormProcessor extends FormProcessor
     protected function processPassword(InputForm $form) : string
     {
         $password = $form->getInput("password")->getValue();
-        if (strlen($password)<6) throw new Exception(tr("Невалидна дължина на парола"));
+        if (strlen($password)<6) throw new Exception(tr("Invalid password length"));
 
         $client_hmac = $form->getInput("challenge")->getValue();
         if (strlen($client_hmac)<32) throw new Exception(tr("Incorrect token challenge"));

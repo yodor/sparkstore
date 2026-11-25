@@ -12,7 +12,7 @@ class ActivateProfileInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "confirm_code", "Активационен код", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "confirm_code", "Activation code", 1);
         $this->addInput($field);
 
     }

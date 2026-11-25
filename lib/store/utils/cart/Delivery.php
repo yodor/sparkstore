@@ -11,10 +11,10 @@ class Delivery
 
     public function __construct()
     {
-        $courier1 = new DeliveryCourier(DeliveryCourier::COURIER_EKONT, "Еконт");
+        $courier1 = new DeliveryCourier(DeliveryCourier::COURIER_EKONT, "Econt");
         $this->couriers[$courier1->getID()] = $courier1;
 
-        $courier2 = new DeliveryCourier(DeliveryCourier::COURIER_SPEEDY, "Спиди");
+        $courier2 = new DeliveryCourier(DeliveryCourier::COURIER_SPEEDY, "Speedy");
         $this->couriers[$courier2->getID()] = $courier2;
     }
 

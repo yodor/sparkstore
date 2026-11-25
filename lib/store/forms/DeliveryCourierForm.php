@@ -20,7 +20,7 @@ class DeliveryCourierForm extends InputForm
 
         $data = new ArrayDataIterator($option_values);
 
-        $field = DataInputFactory::Create(InputType::RADIO, "delivery_courier", "Изберете куриер за доставка", 1);
+        $field = DataInputFactory::Create(InputType::RADIO, "delivery_courier", "Choose a delivery courier", 1);
 
         $radio = $field->getRenderer();
         $radio->setIterator($data);

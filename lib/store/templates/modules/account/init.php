@@ -16,4 +16,4 @@ if (!$module->authClass) $module->authClass = UserAuthenticator::class;
 $module->addPublicPath("login", "register", "register/complete", "activate", "password", "password/reset");
 
 //a client path without login (expired session, a link): the login page says why
-$module->loginAlert = "Моля, влезте в профила си";
+$module->loginAlert = "Please log in to your profile";

@@ -16,16 +16,17 @@ class AccountOrders extends AccountContent
         $query = $orders->queryFull();
 
         //pieces of each order (the outer column needs its table name - inside the subquery 'orderID' is oi.orderID)
-        $query->stmt->alias("(SELECT concat(sum(oi.qty),' бр.') FROM order_items oi WHERE oi.orderID = orders.orderID)", "item_count");
+        $pieces = str_replace(array("\\", "'"), array("\\\\", "''"), tr("pcs."));
+        $query->stmt->alias("(SELECT concat(sum(oi.qty),' " . $pieces . "') FROM order_items oi WHERE oi.orderID = orders.orderID)", "item_count");
         $query->stmt->where()->match("userID", Module::Active()->getUserID());
 
         $view = new TableView($query);
         $view->setDefaultOrder(new OrderColumn("order_date", OrderDirection::DESC));
 
-        $view->addColumn(new TableColumn("orderID", tr("Номер")));
-        $view->addColumn(new TableColumn("order_date", tr("Дата")));
-        $view->addColumn(new TableColumn("item_count", tr("Продукти")));
-        $view->addColumn(new TableColumn("total", tr("Сума")));
+        $view->addColumn(new TableColumn("orderID", tr("Number")));
+        $view->addColumn(new TableColumn("order_date", tr("Date")));
+        $view->addColumn(new TableColumn("item_count", tr("Products")));
+        $view->addColumn(new TableColumn("total", tr("Amount")));
         $view->addColumn(new TableColumn("status", tr("Status")));
         $view->addColumn(new TableColumn("actions", tr("Actions")));
 
@@ -33,14 +34,14 @@ class AccountOrders extends AccountContent
         $view->getColumn("status")->getCellRenderer()->translation_enabled = true;
 
         $act = new ActionsCell();
-        $act->getActions()->append(new Action(tr("Покажи детайли"), Module::PathURL("orders/details")->toString(), array(new DataParameter("orderID"))));
+        $act->getActions()->append(new Action(tr("Show details"), Module::PathURL("orders/details")->toString(), array(new DataParameter("orderID"))));
         $view->getColumn("actions")->setCellRenderer($act);
 
-        $this->addColumn(AccountContent::Column(tr("История на поръчките"), $view));
+        $this->addColumn(AccountContent::Column(tr("Order history"), $view));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("История на поръчките");
+        return tr("Order history");
     }
 }

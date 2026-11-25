@@ -14,7 +14,7 @@ class AccountOrderDetails extends AccountContent
 
         $view = new OrderView();
         if (!$view->setOrder((int)($_GET["orderID"] ?? -1), Module::Active()->getUserID())) {
-            $this->redirect("orders", tr("Няма достъп до тази поръчка"));
+            $this->redirect("orders", tr("No access to this order"));
         }
 
         $panel = new Container(false);
@@ -32,11 +32,11 @@ class AccountOrderDetails extends AccountContent
 
         $panel->items()->append($view);
 
-        $this->addColumn(AccountContent::Column(tr("Детайли за поръчка"), $panel, "details"));
+        $this->addColumn(AccountContent::Column(tr("Order details"), $panel, "details"));
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Детайли за поръчка");
+        return tr("Order details");
     }
 }

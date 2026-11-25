@@ -11,10 +11,10 @@ class RegisterClientInputForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Name", 1);
 
         $label = new Component();
-        $label->setContents(tr("Вашето пълно име"));
+        $label->setContents(tr("Your full name"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -24,17 +24,17 @@ class RegisterClientInputForm extends InputForm
         $field = DataInputFactory::Create(InputType::EMAIL, "email", "Email", 1);
 
         $label = new Component();
-        $label->setContents(tr("Ще получите e-mail за потвърждение"));
+        $label->setContents(tr("You will receive a confirmation email"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Phone", 1);
 
         $label = new Component();
-        $label->setContents(tr("За контакт при доставка"));
+        $label->setContents(tr("For contact on delivery"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
@@ -43,19 +43,19 @@ class RegisterClientInputForm extends InputForm
 
 
 
-        $field = DataInputFactory::Create(InputType::PASSWORD, "password", "Парола", 1);
+        $field = DataInputFactory::Create(InputType::PASSWORD, "password", "Password", 1);
         $field->setValidator(new AnyValueValidator());
         $field->getRenderer()->setAttribute("autocomplete","off");
         $this->addInput($field);
 
         $label = new Component();
-        $label->setContents(tr("Необходими са поне 6 символа"));
+        $label->setContents(tr("At least 6 characters"));
 
 //        $field->getRenderer()->setAddonRenderMode(InputField::ADDON_MODE_OUSIDE);
         $field->getRenderer()->getAddonContainer()->items()->append($label);
 
         //the client sees what gets stored - checked here and before submit (RegisterForm.js)
-        $field = DataInputFactory::Create(InputType::PASSWORD, "password_repeat", "Повторете паролата", 1);
+        $field = DataInputFactory::Create(InputType::PASSWORD, "password_repeat", "Repeat the password", 1);
         $field->setValidator(new AnyValueValidator());
         $field->getRenderer()->setAttribute("autocomplete","off");
         $field->getProcessor()->skip_transaction = TRUE;
@@ -68,7 +68,7 @@ class RegisterClientInputForm extends InputForm
         $this->addInput($field);
 
         $termsURL = DynamicPageURL::Group("terms");
-        $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Приемам <a href='{$termsURL->fullURL()}'>Общите условия</a>", 1);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", tr("I accept the <a href='%s'>Terms and Conditions</a>", $termsURL->fullURL()), 1);
         $this->addInput($field);
 
 
@@ -86,8 +86,8 @@ class RegisterClientInputForm extends InputForm
         $password = (string)$this->getInput("password")->getValue();
         $repeat = (string)$this->getInput("password_repeat")->getValue();
         if (strcmp($password, $repeat) !== 0) {
-            $this->getInput("password_repeat")->setError(tr("Паролите не съвпадат"));
-            throw new Exception(tr("Паролите не съвпадат"));
+            $this->getInput("password_repeat")->setError(tr("The passwords do not match"));
+            throw new Exception(tr("The passwords do not match"));
         }
     }
 

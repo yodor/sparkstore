@@ -17,29 +17,29 @@ class ClientAddressInputForm extends InputForm
         parent::__construct();
         $this->fast_order = $fast_order;
 
-        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Name", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Phone", 1);
         $field->setValidator(new SimplePhoneValidator());
         $this->addInput($field);
 
         if (!$this->fast_order) {
-            $field = DataInputFactory::Create(InputType::TEXT, "city", "Град", 1);
+            $field = DataInputFactory::Create(InputType::TEXT, "city", "City", 1);
             $this->addInput($field);
 
-            $field = DataInputFactory::Create(InputType::TEXT, "postcode", "Пощенски код", 1);
+            $field = DataInputFactory::Create(InputType::TEXT, "postcode", "Postcode", 1);
             $this->addInput($field);
 
-            $field = DataInputFactory::Create(InputType::TEXT, "address1", "Адрес (ред 1)", 1);
+            $field = DataInputFactory::Create(InputType::TEXT, "address1", "Address (line 1)", 1);
             $this->addInput($field);
 
-            $field = DataInputFactory::Create(InputType::TEXT, "address2", "Адрес (ред 2)", 0);
+            $field = DataInputFactory::Create(InputType::TEXT, "address2", "Address (line 2)", 0);
             $this->addInput($field);
         }
         else {
 
-            $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "Премам общите условия на сайта" , 1);
+            $field = DataInputFactory::Create(InputType::CHECKBOX, "accept_terms", "I accept the terms and conditions of the site" , 1);
             $this->addInput($field);
         }
 

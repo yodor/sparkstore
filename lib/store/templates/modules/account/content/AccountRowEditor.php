@@ -49,7 +49,7 @@ class AccountRowEditor extends AccountContent
         }
 
         $renderer = new FormRenderer($this->form);
-        $renderer->getSubmitButton()->setContents(tr("Запиши"));
+        $renderer->getSubmitButton()->setContents(tr("Save"));
         $this->addColumn(AccountContent::Column($this->config->title, $renderer));
     }
 
@@ -66,7 +66,7 @@ class AccountRowEditor extends AccountContent
         $proc->process($this->form);
 
         if ($proc->getStatus() == IFormProcessor::STATUS_OK) {
-            $this->redirect(str_replace(".", "/", $this->config->filename), tr("Промените бяха записани успешно"));
+            $this->redirect(str_replace(".", "/", $this->config->filename), tr("The changes were saved"));
         }
         else if ($proc->getStatus() == IFormProcessor::STATUS_ERROR) {
             Session::SetAlert($proc->getMessage());

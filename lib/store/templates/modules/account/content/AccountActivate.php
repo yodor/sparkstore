@@ -18,7 +18,7 @@ class AccountActivate extends AccountContent
         $renderer = new FormRenderer($this->form);
         $renderer->setMethod(FormRenderer::METHOD_GET);
 
-        $this->addColumn(AccountContent::Column(tr("Активация на профил"), $renderer));
+        $this->addColumn(AccountContent::Column(tr("Profile activation"), $renderer));
     }
 
     public function processInput() : void
@@ -29,15 +29,15 @@ class AccountActivate extends AccountContent
         $proc->process($this->form);
 
         if ($proc->getStatus() === IFormProcessor::STATUS_OK) {
-            $this->redirect("login", tr("Успешна активация на профил"));
+            $this->redirect("login", tr("The profile is activated"));
         }
         else if ($proc->getStatus() === IFormProcessor::STATUS_ERROR) {
-            Session::SetAlert(tr("Възникна грешка при активация на профила") . "<div class='error'>" . htmlspecialchars($proc->getMessage()) . "</div>");
+            Session::SetAlert(tr("The profile could not be activated") . "<div class='error'>" . htmlspecialchars($proc->getMessage()) . "</div>");
         }
     }
 
     protected function getContentTitle() : string
     {
-        return tr("Активация на профил");
+        return tr("Profile activation");
     }
 }

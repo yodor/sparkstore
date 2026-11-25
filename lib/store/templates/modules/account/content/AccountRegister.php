@@ -3,6 +3,7 @@ include_once("store/templates/modules/account/content/AccountContent.php");
 include_once("store/forms/RegisterClientInputForm.php");
 include_once("store/forms/processors/RegisterClientFormProcessor.php");
 include_once("components/InlineScript.php");
+include_once("forms/renderers/LoginFormRenderer.php");
 
 /**
  * Registration of a new client - the activation mail is sent by RegisterClientFormProcessor
@@ -15,18 +16,19 @@ class AccountRegister extends AccountContent
     {
         SparkPage::Instance()->head()->addJS(Spark::Get(Config::SPARK_LOCAL) . "/js/LoginForm.js");
         SparkPage::Instance()->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL) . "/js/RegisterForm.js");
+        SparkPage::Instance()->head()->addTexts("The passwords do not match", "At least 6 characters", ...LoginFormScript::SCRIPT_TEXTS);
 
         $this->form = new RegisterClientInputForm();
         $this->form->getInput("token")->setValue(Module::Active()->getAuthenticator()->produceLoginToken());
 
         $renderer = new FormRenderer($this->form);
         $renderer->setAttribute("autocomplete", "off");
-        $renderer->getSubmitButton()->setContents(tr("Регистрация"));
+        $renderer->getSubmitButton()->setContents(tr("Registration"));
 
         $component = new Container(false);
         $component->setComponentClass("register_component");
         $component->items()->append($renderer);
-        $this->addColumn(AccountContent::Column(tr("Нова регистрация"), $component, "register"));
+        $this->addColumn(AccountContent::Column(tr("New registration"), $component, "register"));
 
         $script = new InlineScript(true);
         $name = json_encode($this->form->getName());
@@ -52,6 +54,6 @@ class AccountRegister extends AccountContent
 
     protected function getContentTitle() : string
     {
-        return tr("Регистрация");
+        return tr("Registration");
     }
 }

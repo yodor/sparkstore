@@ -8,13 +8,13 @@ class FastOrderProductForm extends InputForm
     {
         parent::__construct();
 
-        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Име", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "fullname", "Name", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Телефон", 1);
+        $field = DataInputFactory::Create(InputType::TEXT, "phone", "Phone", 1);
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "address", "Адрес за доставка", 1);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "address", "Delivery address", 1);
         $this->addInput($field);
 
     }

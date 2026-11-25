@@ -22,15 +22,15 @@ class DeliveryConfigForm extends InputForm
         foreach ($couriers as $courierID=>$courier) {
             if (!$courier instanceof DeliveryCourier) continue;
 
-            $group = new InputGroup("courier_$courierID", "Куриер: {$courier->getTitle()}");
+            $group = new InputGroup("courier_$courierID", tr("Courier") . ": " . $courier->getTitle());
             $this->addGroup($group);
 
-            $aw1 = new ArrayDataIterator(array(1=>"Разрешени", 0=>"Забранени"));
+            $aw1 = new ArrayDataIterator(array(1=>tr("Enabled"), 0=>tr("Disabled")));
 
             $field = DataInputFactory::Create(
                 InputType::RADIO,
                 $delivery->configPrefix($courierID, "enabled"),
-                tr("Доставки"),
+                tr("Deliveries"),
                 1);
             $field->getRenderer()->setIterator($aw1);
             $field->getRenderer()->getItemRenderer()->setValueKey(ArrayDataIterator::KEY_ID);
@@ -45,13 +45,13 @@ class DeliveryConfigForm extends InputForm
 
                 $field = DataInputFactory::Create(
                     InputType::CHECKBOX, $courier->configPrefix($optionID, "enabled"),
-                    tr("Опция")." - ".$option->getTitle(),
+                    tr("Option")." - ".$option->getTitle(),
                     0);
                 $this->addInput($field, $group);
 
                 $field = DataInputFactory::Create(
                     InputType::TEXT, $courier->configPrefix($optionID, "price"),
-                    tr("Цена"),
+                    tr("Price"),
                     1);
 
                 $field->setValidator(new NumericValidator(true,true));
@@ -62,29 +62,29 @@ class DeliveryConfigForm extends InputForm
         }
 
         //the delivery and return terms for the search engines (DeliveryPolicy) - as the terms page says them
-        $group = new InputGroup("policy", tr("Условия за търсачките (Google): доставка и връщане"));
+        $group = new InputGroup("policy", tr("Terms for the search engines (Google): delivery and returns"));
         $this->addGroup($group);
 
-        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_COUNTRY, tr("Държава на доставка (код, напр. BG)"), 1);
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_COUNTRY, tr("Delivery country (code, e.g. BG)"), 1);
         $field->setValue(DeliveryPolicy::DEFAULT_COUNTRY);
         $this->addInput($field, $group);
 
-        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MIN, tr("Срок за доставка - от (работни дни)"), 1);
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MIN, tr("Delivery time - from (working days)"), 1);
         $field->setValue((string)DeliveryPolicy::DEFAULT_DAYS_MIN);
         $field->setValidator(new NumericValidator(false, false));
         $this->addInput($field, $group);
 
-        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MAX, tr("Срок за доставка - до (работни дни)"), 1);
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_DAYS_MAX, tr("Delivery time - to (working days)"), 1);
         $field->setValue((string)DeliveryPolicy::DEFAULT_DAYS_MAX);
         $field->setValidator(new NumericValidator(false, false));
         $this->addInput($field, $group);
 
-        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_RETURN_DAYS, tr("Срок за връщане (дни от получаването, 0 - без връщане)"), 1);
+        $field = DataInputFactory::Create(InputType::TEXT, DeliveryPolicy::KEY_RETURN_DAYS, tr("Return period (days from the receipt, 0 - no returns)"), 1);
         $field->setValue((string)DeliveryPolicy::DEFAULT_RETURN_DAYS);
         $field->setValidator(new NumericValidator(true, false));
         $this->addInput($field, $group);
 
-        $field = DataInputFactory::Create(InputType::CHECKBOX, DeliveryPolicy::KEY_FREE_RETURN, tr("Безплатно връщане (транспортът за сметка на магазина)"), 0);
+        $field = DataInputFactory::Create(InputType::CHECKBOX, DeliveryPolicy::KEY_FREE_RETURN, tr("Free returns (the store pays the transport)"), 0);
         $this->addInput($field, $group);
     }
 

@@ -68,7 +68,7 @@ class OrderStatusRequestResponder extends RequestResponder
         }
 
         //the client is told after the status is saved - a mail failure does not undo the status
-        $alert = tr("Статусът на поръчката беше обновен");
+        $alert = tr("The order status was updated");
         try {
             $mailer = new OrderStatusMailer($this->orderID, $this->status);
             $sent = $mailer->send();
@@ -78,10 +78,10 @@ class OrderStatusRequestResponder extends RequestResponder
             $sent = false;
         }
         if ($sent) {
-            $alert .= "<BR>" . tr("Потвърждаващ e-mail беше изпратен на клиента");
+            $alert .= "<BR>" . tr("A confirmation email was sent to the customer");
         }
         else {
-            $alert .= "<BR>" . tr("E-mail до клиента не беше изпратен");
+            $alert .= "<BR>" . tr("The email to the customer was not sent");
         }
         Session::SetAlert($alert);
 

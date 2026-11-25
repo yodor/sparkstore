@@ -20,7 +20,7 @@ class RequireInvoiceInputForm extends InputForm
     public function __construct()
     {
         parent::__construct();
-        $input = DataInputFactory::Create(InputType::CHECKBOX, "require_invoice", "Да се издаде фактура", 0);
+        $input = DataInputFactory::Create(InputType::CHECKBOX, "require_invoice", "Issue an invoice", 0);
         $input->getRenderer()->getItemRenderer()->setAttribute("onClick", "javascript:document.forms.RequireInvoiceInputForm.submit()");
         $input->getRenderer()->getItemRenderer()->getInput()->setAttribute("autocomplete", "off");
         $this->addInput($input);
@@ -35,7 +35,7 @@ class OrderNoteInputForm extends InputForm
     public function __construct()
     {
         parent::__construct();
-        $field = DataInputFactory::Create(InputType::TEXTAREA, "note", "Бележка", 0);
+        $field = DataInputFactory::Create(InputType::TEXTAREA, "note", "Note", 0);
         $field->getRenderer()->input()?->setAttribute("maxlength", "200");
         $this->addInput($field);
     }
@@ -77,17 +77,17 @@ class CheckoutConfirm extends CheckoutContent
         $courier = $cart->getDelivery()->getSelectedCourier();
         $option = $courier->getSelectedOption();
 
-        $section = new OrderSection(tr("Куриер за доставка"), "delivery_courier");
+        $section = new OrderSection(tr("Delivery courier"), "delivery_courier");
         $section->value()->setText($courier->getTitle());
         $section->button()->setAttribute("href", Module::PathURL("delivery")->toString());
         $page->base()->items()->append($section);
 
-        $section = new OrderSection(tr("Начин на доставка"), "delivery_type");
+        $section = new OrderSection(tr("Delivery method"), "delivery_type");
         $section->value()->setText($option->getTitle());
         $section->button()->setAttribute("href", Module::PathURL("delivery/option")->toString());
         $page->base()->items()->append($section);
 
-        $section = new OrderSection(tr("Адрес за доставка"), "address");
+        $section = new OrderSection(tr("Delivery address"), "address");
         if ($option->getID() == DeliveryOption::USER_ADDRESS) {
             $section->value()->items()->append($this->rowView(new ClientAddressInputForm(), new ClientAddressesBean(), $userID));
             $section->button()->setAttribute("href", Module::PathURL("delivery/address")->toString());
@@ -107,7 +107,7 @@ class CheckoutConfirm extends CheckoutContent
         $invoiceRenderer = new FormRenderer($this->invoiceForm);
         $invoiceRenderer->getSubmitLine()->setRenderEnabled(false);
 
-        $section = new OrderSection(tr("Фактуриране"), "invoicing");
+        $section = new OrderSection(tr("Invoicing"), "invoicing");
         $section->value()->items()->append($invoiceRenderer);
         if ($cart->getRequireInvoice()) {
             $section->value()->items()->append($this->rowView(new InvoiceDetailsInputForm(), new InvoiceDetailsBean(), $userID));
@@ -122,7 +122,7 @@ class CheckoutConfirm extends CheckoutContent
         $noteRenderer->setAttribute("action", Module::PathURL("finalize")->toString());
         $noteRenderer->getSubmitLine()->setRenderEnabled(false);
 
-        $section = new OrderSection(tr("Бележка към поръчката"), "note");
+        $section = new OrderSection(tr("Order note"), "note");
         $section->value()->items()->append($noteRenderer);
         $section->button()->setRenderEnabled(false);
         $page->base()->items()->append($section);
@@ -130,15 +130,15 @@ class CheckoutConfirm extends CheckoutContent
         $termsURL = DynamicPageURL::Group("terms");
         $note = new Component(false);
         $note->setComponentClass("acceptNote");
-        $note->setContents("<i>" . Spark::AttributeValue(tr("Натискайки бутона 'Потвърди поръчка' Вие се съгласявате с нашите")) . "&nbsp;" .
-            "<a href='" . Spark::AttributeValue($termsURL->fullURL()->toString()) . "'>" . Spark::AttributeValue(tr("Условия за ползване")) . "</a></i>");
+        $note->setContents("<i>" . Spark::AttributeValue(tr("By pressing 'Confirm order' you agree with our")) . "&nbsp;" .
+            "<a href='" . Spark::AttributeValue($termsURL->fullURL()->toString()) . "'>" . Spark::AttributeValue(tr("Terms of use")) . "</a></i>");
         $page->base()->items()->append($note);
 
         //the cart for context - with the delivery of the chosen option
         $page->getCartComponent()->initialize();
 
-        $this->navigation(CheckoutContent::NAV_LEFT, tr("Назад"), "edit", Module::PathURL("cart")->toString());
-        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Потвърди поръчка"), "checkout", "javascript:document.forms.OrderNoteInputForm.submit()");
+        $this->navigation(CheckoutContent::NAV_LEFT, tr("Back"), "edit", Module::PathURL("cart")->toString());
+        $this->navigation(CheckoutContent::NAV_RIGHT, tr("Confirm order"), "checkout", "javascript:document.forms.OrderNoteInputForm.submit()");
     }
 
     /**
@@ -206,6 +206,6 @@ class CheckoutConfirm extends CheckoutContent
 
     protected function getContentTitle() : string
     {
-        return tr("Потвърди поръчка");
+        return tr("Confirm order");
     }
 }

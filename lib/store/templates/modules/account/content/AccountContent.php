@@ -78,7 +78,7 @@ abstract class AccountContent extends TemplateContent
         //under the links - a block of its own
         $logout = new Container(false);
         $logout->setComponentClass("logout");
-        $button = Button::LocationButton(tr("Изход"), Module::PathURL("logout"));
+        $button = Button::LocationButton(tr("Logout"), Module::PathURL("logout"));
         $button->setAttribute("action", "logout");
         $logout->items()->append($button);
         $column->items()->append($logout);
