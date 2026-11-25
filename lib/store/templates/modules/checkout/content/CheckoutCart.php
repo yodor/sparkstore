@@ -1,5 +1,6 @@
 <?php
 include_once("store/objects/data/GTMItems.php");
+include_once("objects/data/GTMQueue.php");
 include_once("store/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/utils/cart/CartEntry.php");
@@ -130,7 +131,7 @@ class CheckoutCart extends CheckoutContent
 
             $cart->addItem(new CartEntry($sellable));
             //GA4 add_to_cart - on the cart page after the redirect
-            GTMItems::Queue(GTMItems::Event("add_to_cart", array(GTMItems::Item($sellable)), $sellable->getPriceInfo()->getSellPrice()));
+            GTMQueue::Queue(GTMItems::Event("add_to_cart", array(GTMItems::Item($sellable)), $sellable->getPriceInfo()->getSellPrice()));
         }
         catch (Exception $e) {
             Debug::ErrorLog("Cart add failed: " . $e->getMessage());

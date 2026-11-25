@@ -1,4 +1,5 @@
 <?php
+include_once("utils/script/Marketing.php");
 include_once("utils/ImageSizes.php");
 include_once("store/templates/modules/products/content/ProductContent.php");
 include_once("store/templates/modules/products/content/ProductListConfig.php");
@@ -26,7 +27,6 @@ include_once("objects/data/LinkedData.php");
 include_once("utils/GETProcessor.php");
 include_once("utils/script/LDJsonScript.php");
 include_once("objects/data/GTMConvParam.php");
-include_once("objects/data/GTMConversionCommand.php");
 
 /**
  * The products list (products module paths 'home', 'category', 'promos', 'search' - ProductListConfig::$list):
@@ -174,12 +174,8 @@ class ProductListContent extends ProductContent
         }
         $page?->head()->addCanonicalParameter(...(new CategoryURL())->getParameterNames());
 
-        $config = ConfigBean::Factory();
-        $config->setSection("marketing_config");
-        $conversionID = $config->get(GTMConvParam::VIEW_PLP->value);
-        if ($conversionID) {
-            $page?->head()->addScript(new GTMConversionCommand($conversionID));
-        }
+        $conversion = Marketing::Conversion(GTMConvParam::VIEW_PLP);
+        if ($conversion) $page?->head()->addScript($conversion);
 
         $this->bean = $this->createSellableProducts();
         if ($list === ProductListConfig::LIST_PROMOS) {

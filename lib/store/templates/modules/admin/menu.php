@@ -40,7 +40,6 @@ foreach ($menu->toArray() as $item) {
     if ($item instanceof MenuItem && strcmp($item->getHref(), "content") === 0) {
         $config = new MenuItem("Config", "config");
         $config->append(new MenuItem("Base", "base", "list"));
-        $config->append(new MenuItem("Marketing", "marketing", "list"));
         $item->prepend($config);
         $item->append(new MenuItem("Photo Gallery", "photogallery"));
         $item->append(new MenuItem("Logo", "logo"));

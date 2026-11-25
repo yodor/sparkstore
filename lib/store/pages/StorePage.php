@@ -41,9 +41,8 @@ include_once("store/utils/url/ProductURL.php");
 include_once("store/utils/url/CategoryURL.php");
 include_once("store/components/ProductsTape.php");
 include_once("store/utils/url/ProductListURL.php");
-include_once("objects/data/GTMConvParam.php");
-include_once("store/objects/data/GTMItems.php");
-include_once("objects/data/GTMConversionCommand.php");
+include_once("utils/script/Marketing.php");
+include_once("objects/data/GTMQueue.php");
 include_once("store/components/frame/StoreFrame.php");
 
 
@@ -120,7 +119,7 @@ class StorePage extends SparkPage
         $this->head()->addOGTag("url", $this->currentURL()->fullURL()->toString());
 
         //GA4 events of the previous request (a POST that redirected here - the cart add)
-        GTMItems::Flush($this->head());
+        GTMQueue::Flush($this->head());
     }
 
     protected function headInitialize() : void
@@ -145,54 +144,11 @@ class StorePage extends SparkPage
 
         $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/menusticky.js");
 
+        //the tracking of the site (Settings > Marketing) - the consent (default denied, the stored choice) is set by
+        //sparkfront js/SparkGTM.js before these commands
+        Marketing::AddTo($this->head());
+
         $config = ConfigBean::Factory();
-        $config->setSection("marketing_config");
-
-        $facebookID_pixel = $config->get("facebookID_pixel");
-        if ($facebookID_pixel) {
-            $this->head()->addScript(new FBPixel($facebookID_pixel));
-        }
-
-
-        //the consent (default denied, the stored choice) is set by sparkfront js/SparkGTM.js before these commands
-
-        $googleID_analytics = $config->get("googleID_analytics");
-        $googleID_ads = $config->get("googleID_ads");
-
-        $gtag = null;
-        if ($googleID_ads) {
-            $gtag = new GTAG($googleID_ads);
-        }
-        else if ($googleID_analytics) {
-            $gtag = new GTAG($googleID_analytics);
-        }
-
-        if ($gtag instanceof GTAG) {
-
-            $this->head()->addScript($gtag);
-
-            if ($googleID_ads) {
-                $cmd = new GTMCommand();
-                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-                $cmd->setType($googleID_ads);
-                $this->head()->addScript($cmd);
-            }
-
-            if ($googleID_analytics) {
-                $cmd = new GTMCommand();
-                $cmd->setCommand(GTMCommand::COMMAND_CONFIG);
-                $cmd->setType($googleID_analytics);
-                $this->head()->addScript($cmd);
-            }
-
-            //any page conversion
-            $conversionID = $config->get(GTMConvParam::VIEW_ANY_PAGE->value);
-            if ($conversionID) {
-                $cmd = new GTMConversionCommand($conversionID);
-                $this->head()->addScript($cmd);
-            }
-        }
-
         $config->setSection("store_config");
         $phone = $config->get("phone_orders");
 

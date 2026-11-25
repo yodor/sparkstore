@@ -1,4 +1,5 @@
 <?php
+include_once("utils/script/Marketing.php");
 include_once("store/templates/modules/products/content/ProductContent.php");
 include_once("store/beans/SellableProducts.php");
 include_once("store/beans/ProductViewLogBean.php");
@@ -72,12 +73,8 @@ class ProductDetailsContent extends ProductContent
             $page->getMainSection()->content()->setRole("main");
         }
 
-        $config = ConfigBean::Factory();
-        $config->setSection("marketing_config");
-        $conversionID = $config->get(GTMConvParam::VIEW_PDP->value);
-        if ($conversionID) {
-            $page->head()->addScript(new GTMConversionCommand($conversionID));
-        }
+        $conversion = Marketing::Conversion(GTMConvParam::VIEW_PDP);
+        if ($conversion) $page->head()->addScript($conversion);
 
         $viewItemEvent = new GTMViewItemEvent();
         $viewItemEvent->setSellable($this->sellable);

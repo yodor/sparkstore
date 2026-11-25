@@ -2,17 +2,13 @@
 include_once("objects/data/GTMCommand.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/utils/cart/Cart.php");
-include_once("pages/HTMLHead.php");
 
 /**
  * GA4 e-commerce for the store: one item shape for every event (view_item, add_to_cart, begin_checkout, purchase,
- * generate_lead), and the events queued for the next page - an event of a POST that redirects (the cart add) is
- * sent on the page after the redirect (StorePage::headFinalize), so the navigation does not lose it.
+ * generate_lead). An event of a POST that redirects (the cart add) goes through the core GTMQueue.
  */
 class GTMItems
 {
-    const string SESSION_QUEUE = "gtm.queue";
-
     /**
      * The GA4 item of a product
      */
@@ -57,35 +53,5 @@ class GTMItems
             $items[] = GTMItems::Item($entry->getItem(), $index++, $entry->getQuantity(), $entry->getPrice());
         }
         return GTMItems::Event($name, $items, $cart->getItemsTotal(), $parameters);
-    }
-
-    /**
-     * Send '$event' on the next page
-     */
-    public static function Queue(GTMCommand $event) : void
-    {
-        $queue = Session::Get(GTMItems::SESSION_QUEUE, array());
-        if (!is_array($queue)) $queue = array();
-        //a few at most - a visitor who never reaches a page does not grow the session
-        $queue = array_slice(array_merge($queue, array($event->jsonSerialize())), -5);
-        Session::Set(GTMItems::SESSION_QUEUE, $queue);
-    }
-
-    /**
-     * The queued events into '$head' - once (no session is started for it)
-     */
-    public static function Flush(HTMLHead $head) : void
-    {
-        if (!Session::Contains(GTMItems::SESSION_QUEUE)) return;
-        $queue = Session::Get(GTMItems::SESSION_QUEUE, array());
-        Session::Remove(GTMItems::SESSION_QUEUE);
-        if (!is_array($queue)) return;
-        foreach ($queue as $data) {
-            if (!is_array($data) || empty($data["command"]) || empty($data["type"])) continue;
-            $command = new GTMCommand((string)$data["command"]);
-            $command->setType((string)$data["type"]);
-            if (isset($data["parameters"]) && is_array($data["parameters"])) $command->setParameters($data["parameters"]);
-            $head->addScript($command);
-        }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+include_once("utils/script/Marketing.php");
 include_once("objects/data/GTMConvParam.php");
 include_once("components/LabelSpan.php");
 include_once("store/utils/unicr/UniCreditPaymentButton.php");
@@ -405,8 +406,7 @@ class DetailsSidePane extends Container
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER)) {
                 $btnCartAdd = new CartButton();
                 $btnCartAdd->setClassName("cart_add");
-                $config->setSection("marketing_config");
-                $btnCartAdd->setURL(new URL("javascript:addToCart('{$config->get(GTMConvParam::CART_ADD->value)}')"));
+                $btnCartAdd->setURL(new URL("javascript:addToCart('" . Marketing::Get(GTMConvParam::CART_ADD->value) . "')"));
                 $btnCartAdd->setTitle(tr("Купи"));
                 $grp->items()->append($btnCartAdd);
             }
@@ -421,8 +421,7 @@ class DetailsSidePane extends Container
             if ($this->isButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER)) {
                 $btnPhoneOrder = new CartButton();
                 $btnPhoneOrder->setClassName("order_phone");
-                $config->setSection("marketing_config");
-                $btnPhoneOrder->setURL(new URL("javascript:initiateCall('$phone','{$config->get(GTMConvParam::PHONE_CALL->value)}')"));
+                $btnPhoneOrder->setURL(new URL("javascript:initiateCall('$phone','" . Marketing::Get(GTMConvParam::PHONE_CALL->value) . "')"));
                 $btnPhoneOrder->setTitle($phone);
                 $grp->items()->append($btnPhoneOrder);
             }
