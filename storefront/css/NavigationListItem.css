@@ -53,10 +53,23 @@
     aspect-ratio: 3.14;
 }
 
-/* keeps the place of a tape that is loaded later - no jump when it arrives */
+/* keeps the place of a tape that is loaded later - no jump when it arrives (the height of a loaded tape: one row
+   of products on wide screens, two on phones - a site with other product boxes sets its own) */
 
 .NavigationListItem .TapePlaceholder {
-    min-height: 22em;
+    min-height: 30em;
+}
+
+@media (max-width: 1024px) {
+    .NavigationListItem .TapePlaceholder {
+        min-height: 24em;
+    }
+}
+
+@media (max-width: 640px) {
+    .NavigationListItem .TapePlaceholder {
+        min-height: 46em;
+    }
 }
 
 }

@@ -37,7 +37,7 @@
 }
 
 .section.main .content .column.left .panel .Caption {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     font-weight: normal;
     display: block;
     padding-top:0;
@@ -201,7 +201,7 @@
     flex-wrap: wrap;
     flex-direction: row;
 
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     font-weight:bold;
 }
 

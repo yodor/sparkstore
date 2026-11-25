@@ -87,7 +87,7 @@
 .InputField .addon {
     /*display:block;*/
     font-size:90%;
-    color:#aaaaaa;
+    color: var(--store-muted-text);
     font-style: italic;
 
 }

@@ -64,13 +64,16 @@ H2 A {
        photo, cover - the box filled, the photo cut. A site sets it once: ':root { --store-photo-fit: cover; }' */
     --store-photo-fit: contain;
 
+    /* the muted text - captions, the breadcrumb, notes: grey with the contrast of WCAG AA on white (4.5:1) */
+    --store-muted-text: #767676;
+
     --spark-button-border-radius: 2em;
     --spark-button-text-transform: uppercase;
     --spark-button-text-color: white;
 }
 
 .Caption {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     padding-left:0;
     padding-right:0;
     display: block;
@@ -93,13 +96,13 @@ SPAN.label:after {
 }
 
 .BreadcrumbList .BreadcrumbListItem {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     text-transform: uppercase;
     font-size: 1.2em;
 }
 
 .BreadcrumbList .Action {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     text-transform: uppercase;
 }
 
@@ -140,11 +143,11 @@ SPAN.label:after {
 
 A.Caption {
     text-decoration:none;
-    color: #aaaaaa;
+    color: var(--store-muted-text);
 }
 
 A.Caption:visited {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     text-decoration:none;
 }
 
@@ -154,7 +157,7 @@ A.Caption:hover {
 }
 
 A.Caption:active {
-    color: #aaaaaa;
+    color: var(--store-muted-text);
     text-decoration:none;
 }
 
