@@ -18,11 +18,6 @@ class InstockProductMailer extends Mailer
         $this->subject = tr("In stock again at %s", Spark::Get(Config::SITE_DOMAIN));
     }
 
-    public function setRecipient(string $client_email) : void
-    {
-        $this->to = $client_email;
-    }
-
     public function setProduct(string $product_name, ProductURL $product_link) : void
     {
         $this->product_name = $product_name;
