@@ -1,6 +1,7 @@
 <?php
 include_once("beans/ConfigBean.php");
 include_once("store/utils/cart/DeliveryCourier.php");
+include_once("store/courier/Couriers.php");
 
 class Delivery
 {
@@ -11,11 +12,10 @@ class Delivery
 
     public function __construct()
     {
-        $courier1 = new DeliveryCourier(DeliveryCourier::COURIER_EKONT, "Econt");
-        $this->couriers[$courier1->getID()] = $courier1;
-
-        $courier2 = new DeliveryCourier(DeliveryCourier::COURIER_SPEEDY, "Speedy");
-        $this->couriers[$courier2->getID()] = $courier2;
+        //the couriers of the store (Couriers - Econt, Speedy and the registered ones)
+        foreach (Couriers::All() as $id => $courier) {
+            $this->couriers[$id] = new DeliveryCourier($id, $courier->title());
+        }
     }
 
     public function initialize()

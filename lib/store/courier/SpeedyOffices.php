@@ -5,21 +5,20 @@ include_once("store/courier/CourierAPI.php");
 /**
  * Speedy offices: POST https://api.speedy.bg/v1/location/office/ {countryId: 100} - every office and locker of
  * Bulgaria in one answer (~1400, 3.5 MB). Kept: type OFFICE, cash accepted, pick up allowed, valid today.
- * The account: config/speedy.php of the site (not in git) returning array('username' => .., 'password' => ..).
+ * The account: SpeedyCourier::account() - the admin Orders > Delivery (or config/speedy.php of an older site).
  */
 class SpeedyOffices implements ICourierOffices
 {
     const string URL = "https://api.speedy.bg/v1/location/office/";
     const int COUNTRY_BULGARIA = 100;
 
+    public function __construct(protected SpeedyCourier $courier)
+    {
+    }
+
     public function fetch() : array
     {
-        $file = Spark::Get(Config::APP_PATH) . "/config/speedy.php";
-        if (!is_file($file)) throw new Exception("Speedy account not configured (config/speedy.php)");
-        $account = include($file);
-        if (!is_array($account) || empty($account["username"]) || empty($account["password"])) {
-            throw new Exception("config/speedy.php: username and password expected");
-        }
+        $account = $this->courier->account();
 
         $json = CourierAPI::Post(SpeedyOffices::URL, array(
             "userName" => (string)$account["username"],

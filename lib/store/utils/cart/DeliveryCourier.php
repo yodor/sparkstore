@@ -5,6 +5,7 @@ include_once("store/utils/cart/DeliveryOption.php");
 class DeliveryCourier {
 
     const int NONE = 0;
+    //the built-in couriers (Couriers: EcontCourier::ID, SpeedyCourier::ID)
     const int COURIER_EKONT = 1;
     const int COURIER_SPEEDY = 2;
 
@@ -61,15 +62,6 @@ class DeliveryCourier {
      */
     public function getTitle() : string {
         return tr($this->title);
-    }
-
-    /**
-     * return all the supported delivery couriers
-     * @return int[]
-     */
-    public static function Supported() : array
-    {
-        return array(DeliveryCourier::COURIER_EKONT);//, DeliveryCourier::COURIER_SPEEDY);
     }
 
     public function setSelectedOption(int $id) : void

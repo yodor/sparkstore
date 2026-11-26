@@ -4,6 +4,7 @@ include_once("input/validators/NumericValidator.php");
 include_once("iterators/ArrayDataIterator.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/utils/cart/DeliveryPolicy.php");
+include_once("store/courier/Couriers.php");
 
 class DeliveryConfigForm extends InputForm
 {
@@ -55,9 +56,11 @@ class DeliveryConfigForm extends InputForm
                     1);
 
                 $field->setValidator(new NumericValidator(true,true));
-                // 	    $field->getRenderer()->addon_content = "лв.";
                 $this->addInput($field, $group);
             }
+
+            //the courier's own settings (an API account)
+            Couriers::Get((int)$courierID)?->settings($this, $group);
 
         }
 

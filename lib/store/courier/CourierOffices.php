@@ -1,7 +1,6 @@
 <?php
 include_once("store/courier/ICourierOffices.php");
-include_once("store/courier/SpeedyOffices.php");
-include_once("store/courier/EcontOffices.php");
+include_once("store/courier/Couriers.php");
 include_once("store/beans/CourierOfficesBean.php");
 include_once("store/beans/CourierAddressesBean.php");
 include_once("store/utils/cart/DeliveryCourier.php");
@@ -19,11 +18,7 @@ class CourierOffices
      */
     public static function Source(int $courier) : ?ICourierOffices
     {
-        return match ($courier) {
-            DeliveryCourier::COURIER_SPEEDY => new SpeedyOffices(),
-            DeliveryCourier::COURIER_EKONT => new EcontOffices(),
-            default => null,
-        };
+        return Couriers::Get($courier)?->offices();
     }
 
     /**
