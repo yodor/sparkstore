@@ -11,7 +11,7 @@ class FastOrderAdminMailer extends Mailer
 {
 
     /**
-     * Used to mail the fast order to admin
+     * Used to mail the fast order to admin - the mail template store/mails/fast_order_admin.php
      * If SellableItem $item is not null and $form is FastOrderProductForm mail single item
      * If $form is ClientAddressInputForm mail all items in the cart
      * @param InputForm $form
@@ -23,100 +23,67 @@ class FastOrderAdminMailer extends Mailer
 
         parent::__construct();
 
-        Debug::ErrorLog ("Preparing message ...");
-
         $this->to = Spark::Get(StoreConfig::ORDER_EMAIL);
-        $this->subject = "Бърза поръчка на ".Spark::Get(Config::SITE_DOMAIN);
+        $this->subject = tr("Fast order at %s", Spark::Get(Config::SITE_DOMAIN));
 
-        $message = "Здравейте, \r\n\r\n";
-        $message .= "Беше направена бърза поръчка на ". Spark::Get(Config::SITE_DOMAIN);
-        $message .= "\r\n\r\n";
-
-        //visitor text - escaped
-        $message .= "Име: ".Spark::AttributeValue((string)$form->getInput("fullname")->getValue());
-        $message .= "\r\n";
-        $message .= "Телефон: ".Spark::AttributeValue((string)$form->getInput("phone")->getValue());
-        $message .= "\r\n";
-        if ($form->haveInput("address")) {
-            $message .= "Адрес: " . Spark::AttributeValue((string)$form->getInput("address")->getValue());
-            $message .= "\r\n";
-        }
-
-        $message .= "Поръчани продукти:\r\n\r\n";
-
-
-        $message .= "<table border=1>";
-
+        $items = array();
         //fast order cart items
         if ($form instanceof ClientAddressInputForm) {
             $cart = Cart::Instance();
-            if ($cart->itemsCount()<1) throw new Exception(tr("Your shopping cart is empty"));
-            $items = $cart->items();
-            foreach ($items as $itemHash=>$cartEntry) {
+            if ($cart->itemsCount()<1) throw new Exception(tr("Your cart is empty"));
+            foreach ($cart->items() as $cartEntry) {
                 if ($cartEntry instanceof CartEntry) {
-                    $message .= $this->renderSellableItem($cartEntry->getItem());
+                    $items[] = $this->itemData($cartEntry->getItem(), $cartEntry->getQuantity());
                 }
             }
         }
         else if ($item instanceof SellableItem && $form instanceof FastOrderProductForm) {
-            $message .= $this->renderSellableItem($item);
+            $items[] = $this->itemData($item, 1);
         }
         else {
-            throw new Exception(tr("Incorrect CTOR input parameters"));
+            throw new Exception("Incorrect CTOR input parameters");
         }
 
-        $message .= "</table>";
-
-
-        $message .= "\r\n\r\n";
-
-
-        $this->body = $message; //send() wraps it in the HTML document
-
-        Debug::ErrorLog ("Message contents prepared ...");
-
-
+        //entered by the visitor - the template escapes it
+        $this->useTemplate("fast_order_admin", array(
+            "fullname" => (string)$form->getInput("fullname")->getValue(),
+            "phone" => (string)$form->getInput("phone")->getValue(),
+            "address" => $form->haveInput("address") ? (string)$form->getInput("address")->getValue() : "",
+            "items" => $items,
+        ));
     }
 
-    protected function renderSellableItem(SellableItem $item) : string
+    /**
+     * The values of an ordered item for the template: title, url, photo, price_html, qty, options (name => value)
+     */
+    protected function itemData(SellableItem $item, int $qty) : array
     {
-        $result = "";
-
-        $result .= "<tr>";
-        $result .= "<td>";
+        $photo = "";
         //a product without photos has no main photo
         $si = $item->getMainPhoto();
         if ($si) {
-            $src = new URL($si->hrefImage(ImageSize::Thumbnail->value, ImageSize::Thumbnail->value));
-            $result .= "<img src='{$src->fullURL()}'>";
+            $photo = (string)(new URL($si->hrefImage(ImageSize::Thumbnail->value, ImageSize::Thumbnail->value)))->fullURL();
         }
-        $result .= "</td>";
 
-        $result .= "<td>";
-
-        $result .= "Продукт: ".Spark::AttributeValue($item->getTitle());
-        $result .= "\r\n";
-        $result .= "Цена: ".$item->getPriceInfo()->getSellPrice()." ".Spark::Get(StoreConfig::DEFAULT_CURRENCY);
-        $result .= "\r\n";
-
+        $options = array();
         if ($item->variantsCount()>0) {
-            $options = $item->getVariantNames();
-            foreach ($options as $idx=>$option_name) {
+            foreach ($item->getVariantNames() as $option_name) {
                 $vitem = $item->getVariant($option_name);
-                $result .= Spark::AttributeValue($vitem->getName()).": ".Spark::AttributeValue((string)$vitem->getSelected());
-                $result .= "\r\n";
+                $options[(string)$vitem->getName()] = (string)$vitem->getSelected();
             }
         }
-
 
         $productURL = new ProductURL();
         $productURL->setProductID($item->getProductID());
         $productURL->setProductName($item->getTitle());
-        $result .= "<a href='{$productURL->fullURL()}'>Виж продукта</a>";
-        $result .= "\r\n";
-        $result .= "</td>";
-        $result .= "</tr>";
 
-        return $result;
+        return array(
+            "title" => $item->getTitle(),
+            "url" => (string)$productURL->fullURL(),
+            "photo" => $photo,
+            "price_html" => formatPrice($item->getPriceInfo()->getSellPrice()),
+            "qty" => $qty,
+            "options" => $options,
+        );
     }
 }

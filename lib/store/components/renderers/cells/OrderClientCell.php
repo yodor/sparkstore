@@ -27,7 +27,8 @@ class OrderClientCell extends TableCell
         echo "<div class='group client_data'>";
         foreach (array("fullname" => tr("Name"), "email" => tr("E-Mail"), "phone" => tr("Phone")) as $key => $label) {
             echo "<div class='item $key'>";
-            echo "<label>" . $label . "</label>";
+            //span.label - the ': ' after it comes from the '.group .item .label' rule (AdminTemplatePageBase.css)
+            echo "<span class='label'>" . $label . "</span> ";
             //entered by the client
             echo "<span>" . Spark::AttributeValue((string)($client[$key] ?? "")) . "</span>";
             echo "</div>";

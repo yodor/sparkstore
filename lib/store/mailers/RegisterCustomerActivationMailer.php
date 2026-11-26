@@ -1,6 +1,11 @@
 <?php
 include_once("mailers/Mailer.php");
+include_once("utils/url/URL.php");
+include_once("utils/url/URLParameter.php");
 
+/**
+ * The activation of a new client profile - the mail template store/mails/register_activation.php
+ */
 class RegisterCustomerActivationMailer extends Mailer
 {
 
@@ -9,40 +14,18 @@ class RegisterCustomerActivationMailer extends Mailer
         parent::__construct();
 
         $this->to = $email;
-
-        $this->subject = "Успешна Регистрация";
-
-        $message = "Здравейте, " . Spark::AttributeValue($fullname) . "\r\n\r\n";
-        $message .= "Изпращаме Ви това съобщение за да Ви уведомим че, регистрацията Ви на " . Spark::Get(Config::SITE_DOMAIN) . " е завършена успешно.";
-        $message .= "\r\n\r\n";
-
-        $message .= "За да активирате Вашият профил проследете връзката за активация по долу.";
-        $message .= "\r\n\r\n";
+        $this->subject = tr("Profile activation at %s", Spark::Get(Config::SITE_DOMAIN));
 
         $activationURL = new URL(Spark::Get(Config::LOCAL)."/account/activate");
         $activationURL->add(new URLParameter("email", $email));
         $activationURL->add(new URLParameter("confirm_code", $confirm_code));
         $activationURL->add(new URLParameter("SubmitForm", "ActivateProfileInputForm"));
-        $message .= "<a href='{$activationURL->fullURL()}'>Активация на профил</a>";
 
-        $message .= "\r\n\r\n";
-        $message .= "\r\n\r\n";
-
-        $message .= $activationURL->fullURL();
-
-        $message .= "\r\n\r\n";
-        $message .= "\r\n\r\n";
-
-        $message .= "Код за активация на профил: $confirm_code";
-
-        $message .= "\r\n\r\n";
-        $message .= "\r\n\r\n";
-
-        $message .= "Поздрави,\r\n";
-        $message .= Spark::Get(Config::SITE_DOMAIN);
-
-        $this->body = $message; //send() wraps it in the HTML document
-
+        $this->useTemplate("register_activation", array(
+            "fullname" => $fullname,
+            "link" => (string)$activationURL->fullURL(),
+            "code" => $confirm_code,
+        ));
     }
 
 }

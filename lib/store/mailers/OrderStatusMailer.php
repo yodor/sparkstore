@@ -1,8 +1,13 @@
 <?php
 include_once("mailers/Mailer.php");
+include_once("utils/url/URL.php");
+include_once("utils/url/URLParameter.php");
 include_once("store/beans/OrdersBean.php");
 include_once("beans/UsersBean.php");
 
+/**
+ * The new status of an order - to the client - the mail template store/mails/order_status.php
+ */
 class OrderStatusMailer extends Mailer
 {
 
@@ -13,31 +18,21 @@ class OrderStatusMailer extends Mailer
         $orders = new OrdersBean();
         $order = $orders->getByID($orderID, "userID");
 
-        $userID = (int)$order["userID"];
-
         $users = new UsersBean();
-        $user = $users->getByID($userID, "userID", "fullname", "email", "phone");
+        $user = $users->getByID((int)$order["userID"], "fullname", "email");
 
-        $this->to = $user["email"];
+        $this->to = (string)$user["email"];
+        $this->subject = tr("Your order No %s at %s", $orderID, Spark::Get(Config::SITE_DOMAIN));
 
-        $this->subject = "Вашата поръчка от ".Spark::Get(Config::SITE_DOMAIN);
+        $url = new URL(Spark::Get(Config::LOCAL) . "/account/orders/details");
+        $url->add(new URLParameter("orderID", (string)$orderID));
 
-        $message = "Здравейте, {$user["fullname"]}\r\n\r\n";
-
-        $message .= "Състоянието на Вашата поръчка от " . Spark::Get(Config::SITE_DOMAIN) . " беше обновено: ";
-
-        $message .= tr($status) . "\r\n";
-        $message .= "\r\n\r\n";
-
-        $message .= "\r\n\r\n";
-
-        $message .= "Поздрави,";
-        $message .= "\r\n";
-        $message .= Spark::Get(Config::SITE_DOMAIN);
-
-
-        $this->body = $message; //send() wraps it in the HTML document
-
+        $this->useTemplate("order_status", array(
+            "orderID" => $orderID,
+            "status" => $status,
+            "fullname" => (string)$user["fullname"],
+            "account_url" => (string)$url->fullURL(),
+        ));
     }
 
 }

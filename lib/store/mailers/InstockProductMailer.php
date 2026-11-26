@@ -2,6 +2,9 @@
 include_once("mailers/Mailer.php");
 include_once("store/utils/url/ProductURL.php");
 
+/**
+ * A product is in stock again - to a client who asked to be notified - the mail template store/mails/instock.php
+ */
 class InstockProductMailer extends Mailer
 {
 
@@ -12,7 +15,7 @@ class InstockProductMailer extends Mailer
     public function __construct()
     {
         parent::__construct();
-        $this->subject = "Отново в наличност на ".Spark::Get(Config::SITE_DOMAIN);
+        $this->subject = tr("In stock again at %s", Spark::Get(Config::SITE_DOMAIN));
     }
 
     public function setRecipient(string $client_email) : void
@@ -28,30 +31,10 @@ class InstockProductMailer extends Mailer
 
     public function prepareMessage() : void
     {
-
         if (is_null($this->product_link) || !$this->product_name || !$this->to) {
             throw new Exception("Object initialization incomplete.");
         }
-
-        Debug::ErrorLog ("Preparing message contents ...");
-
-        $message  = "Здравейте, ";
-        $message .= "\r\n";
-        $message .= "Търсеният от Вас продукт е отново в наличност при нас.";
-        $message .= "\r\n";
-
-        $message .= "Продукт: ";
-        $message .= "\r\n";
-        $message .= "<a href='{$this->product_link->fullURL()}'>{$this->product_name}</a>";
-        $message .= "\r\n";
-        $message .= "\r\n";
-
-        $message .= "Поздрави,\r\n";
-        $message .= Spark::Get(Config::SITE_DOMAIN);
-
-        $this->body = $message; //send() wraps it in the HTML document
-
-        Debug::ErrorLog ("Message contents prepared ...");
+        $this->useTemplate("instock", array("product" => $this->product_name, "url" => (string)$this->product_link->fullURL()));
     }
 
 }
