@@ -5,7 +5,7 @@
    the panel's are restated here - hidden after the choice, its padding - and it sits above the bottom bar */
 
 .section.cookies {
-    bottom: 3.25em;
+    bottom: var(--store-footer-height);
     display: none;
 }
 

@@ -17,12 +17,14 @@ class StoreFooter extends StoreSection
         $this->addClassName("footer");
     }
 
-    public function fill(Container $content, StorePage $page) : void
+    /**
+     * The links of the store footer, in their order: name => array(href, title) - only the links that have an
+     * address (the social links and the phone from the store config). A site frame with its own footer shows the same
+     * links: terms, contacts, the cookie choice.
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function Links() : array
     {
-        $social = new Container(false);
-        $social->setComponentClass("social");
-        $content->items()->append($social);
-
         $items = array(
             "facebook" => "",
             "instagram" => "",
@@ -37,12 +39,12 @@ class StoreFooter extends StoreSection
         $cfg = new ConfigBean();
         $cfg->setSection("store_config");
         foreach (array("facebook" => "facebook_url", "instagram" => "instagram_url", "youtube" => "youtube_url") as $name => $setting) {
-            $href = $cfg->get($setting);
+            $href = trim((string)$cfg->get($setting));
             if ($href) $items[$name] = $href;
         }
-        $phone = $cfg->get("phone_orders");
+        $phone = trim((string)$cfg->get("phone_orders"));
         if ($phone) {
-            $items["phone"] = "tel:$phone";
+            $items["phone"] = "tel:" . preg_replace("/[^0-9+]/", "", $phone);
         }
 
         //the titles of the links (their tooltip and accessible name)
@@ -50,12 +52,25 @@ class StoreFooter extends StoreSection
             "terms" => tr("Terms and Conditions"), "contacts" => tr("Contacts"), "phone" => tr("Phone"),
             "cookies" => tr("Cookies"));
 
+        $links = array();
         foreach ($items as $name => $href) {
             if (!$href) continue;
-            $item = Button::Action("", $href);
+            $links[$name] = array($href, $titles[$name]);
+        }
+        return $links;
+    }
+
+    public function fill(Container $content, StorePage $page) : void
+    {
+        $social = new Container(false);
+        $social->setComponentClass("social");
+        $content->items()->append($social);
+
+        foreach (StoreFooter::Links() as $name => $link) {
+            $item = Button::Action("", $link[0]);
             $item->setComponentClass("slot");
             $item->addClassName($name);
-            $item->setTitle($titles[$name]);
+            $item->setTitle($link[1]);
             $social->items()->append($item);
         }
     }

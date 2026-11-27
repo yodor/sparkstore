@@ -65,6 +65,7 @@
     top: 0;
     background-color: var(--store-discount-background);
     color: var(--store-discount-color);
+    text-shadow: var(--store-discount-text-shadow);
     border-radius: 25px;
     padding: 10px;
     margin-top:10px;

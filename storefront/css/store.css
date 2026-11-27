@@ -70,6 +70,12 @@ H2 A {
     /* the discount / no-stock badge of the product photos - the theme accent; a site sets its own colours */
     --store-discount-background: var(--theme-accent);
     --store-discount-color: #ffffff;
+    /* an outline of the badge text, for a light accent: e.g. '0 0 2px #000, 0 0 2px #000' */
+    --store-discount-text-shadow: none;
+
+    /* the height of the fixed bottom bar (StoreFooter: 36px icons + 0.5em padding) - the cookie panel sits on it; a
+       site with its own footer sets its height */
+    --store-footer-height: 3.25em;
 
     --spark-button-border-radius: 2em;
     --spark-button-text-transform: uppercase;
