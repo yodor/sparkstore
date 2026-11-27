@@ -1,4 +1,5 @@
 <?php
+include_once("templates/Module.php");
 include_once("store/utils/StoreImageSize.php");
 include_once("components/Component.php");
 include_once("components/renderers/cells/TableCell.php");
@@ -347,7 +348,7 @@ class CartComponent extends Container implements IHeadContents
     public function __construct()
     {
         parent::__construct(false);
-        $this->postURL = new URL(Spark::Get(Config::LOCAL) . "/checkout/cart");
+        $this->postURL = Module::URL("checkout", "/cart") ?? new URL(Spark::Get(Config::LOCAL) . "/checkout/cart");
     }
 
 

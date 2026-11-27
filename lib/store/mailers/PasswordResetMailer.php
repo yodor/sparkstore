@@ -2,7 +2,7 @@
 include_once("mailers/Mailer.php");
 
 /**
- * The password reset link of a client - the mail template store/mails/password_reset.php
+ * The password reset link of a client - the mail template store/features/shop/mails/password_reset.php
  */
 class PasswordResetMailer extends Mailer
 {

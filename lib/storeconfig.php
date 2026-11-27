@@ -20,7 +20,7 @@ class StoreConfig {
     const string LOGO_PATH = "LOGO_PATH";
 
     /**
-     * The shop's e-mail: receives orders (checkout, fast orders, vouchers) and the contact and product enquiries.
+     * The shop's e-mail: receives orders (checkout, fast orders) and the contact and product enquiries.
      * Set in config/store.php, the admin value (Content → Config → Base, 'email_orders') wins when not empty.
      * Default(string): DEFAULT_SERVICE_EMAIL
      */

@@ -1,4 +1,5 @@
 <?php
+include_once("features/Features.php");
 include_once("utils/script/Marketing.php");
 include_once("objects/data/GTMConvParam.php");
 include_once("components/LabelSpan.php");
@@ -139,9 +140,10 @@ class DetailsSidePane extends Container
     {
         $this->setButtonEnabled(DetailsSidePane::BUTTON_QUERY_PRODUCT, true);
         $this->setButtonEnabled(DetailsSidePane::BUTTON_NOTIFY_INSTOCK, true);
-        $this->setButtonEnabled(DetailsSidePane::BUTTON_FAST_ORDER, true);
+        //the order buttons of the features the site has: Fast Order (fast_order), Buy (shop)
+        $this->setButtonEnabled(DetailsSidePane::BUTTON_FAST_ORDER, Features::Enabled("fast_order"));
         $this->setButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER, true);
-        $this->setButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER, true);
+        $this->setButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER, Features::Enabled("shop"));
     }
 
     public function initializePaymentButtons() : void

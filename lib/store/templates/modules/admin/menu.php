@@ -1,7 +1,7 @@
 <?php
 //
 // admin module - store menu, included after the core menu.php: store sections first, then the core
-// menu (Content, Settings); store configuration, photo gallery, logo and contact addresses under Content
+// menu (Content, Settings) - the features add theirs after it (shop: Orders, Clients); store configuration, photo gallery, logo and contact addresses under Content
 //
 include_once("objects/events/TemplateEvent.php");
 include_once("utils/menu/MenuItem.php");
@@ -19,20 +19,7 @@ $store->append(new MenuItem("Options", "options"));
 $store->append(new MenuItem("Products", "products"));
 $store->append(new MenuItem("Promotions", "promos"));
 
-$orders = new MenuItem("Orders", "orders");
-$orders->append(new MenuItem("Active Orders", "active"));
-$orders->append(new MenuItem("Sent Orders", "sent"));
-$orders->append(new MenuItem("Completed Orders", "completed"));
-$orders->append(new MenuItem("Canceled Orders", "canceled"));
-$orders->append(new MenuItem("All Orders", "all"));
-$delivery = new MenuItem("Delivery", "delivery");
-//the office lists of the couriers (the checkout office step)
-$delivery->append(new MenuItem("Courier Offices", "offices"));
-$orders->append($delivery);
-$clients = new MenuItem("Clients", "clients");
-
-$menu->prepend($clients);
-$menu->prepend($orders);
+//Orders and Clients: the shop feature adds them after Store (features/shop/templates/modules/admin/menu.php)
 $menu->prepend($store);
 
 //store configuration under Content

@@ -16,6 +16,11 @@ ImageSizes::Enable(...StoreImageSize::cases());
 Spark::Set(StoreConfig::DEFAULT_CURRENCY, "EUR");
 Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");
 
+//the features of the store - a site enables the ones it has in config/include.php: Features::Enable("shop", "fast_order")
+include_once("features/Features.php");
+Features::Register(__DIR__ . "/store/features/shop");
+Features::Register(__DIR__ . "/store/features/fast_order");
+
 //slugified URLs
 Spark::Set(Config::STORAGE_ITEM_SLUG, TRUE);
 

@@ -3,7 +3,7 @@ include_once("mailers/Mailer.php");
 include_once("store/mailers/OrderMailData.php");
 
 /**
- * A new order - to the shop (StoreConfig::ORDER_EMAIL) - the mail template store/mails/order_confirmation_admin.php
+ * A new order - to the shop (StoreConfig::ORDER_EMAIL) - the mail template store/features/shop/mails/order_confirmation_admin.php
  */
 class OrderConfirmationAdminMailer extends Mailer
 {

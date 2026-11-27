@@ -32,7 +32,6 @@ include_once("store/beans/ProductCategoriesBean.php");
 include_once("store/utils/cart/Cart.php");
 include_once("beans/DynamicPagesBean.php");
 include_once("utils/url/DynamicPageURL.php");
-include_once("store/responders/json/VoucherFormResponder.php");
 include_once("store/utils/TawktoScript.php");
 
 include_once("dialogs/json/JSONFormDialog.php");
@@ -98,8 +97,6 @@ class StorePage extends SparkPage
     protected ?PageSection $_footer = null;
     protected ?PageSection $_cookies = null;
     protected ?PageSection $_page_footer = null;
-
-    public bool $vouchers_enabled = false;
 
     /**
      * Apply additional og and twitter meta data - copy title and description
@@ -353,12 +350,6 @@ class StorePage extends SparkPage
             foreach ($section->stylesheets() as $href) {
                 $this->head()->addCSS($href);
             }
-        }
-
-        if ($this->vouchers_enabled) {
-            $voucher_handler = new VoucherFormResponder();
-            $this->head()->addJS(Spark::Get(StoreConfig::STORE_LOCAL)."/js/vouchers.js");
-            $this->head()->addTexts("Buy a voucher", "You will receive your voucher by courier");
         }
 
         $home = StoreFrame::GetHomeAction();

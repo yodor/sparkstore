@@ -2,7 +2,7 @@
 include_once("mailers/Mailer.php");
 
 /**
- * An order could not be finalized - to the shop - the mail template store/mails/order_error_admin.php
+ * An order could not be finalized - to the shop - the mail template store/features/shop/mails/order_error_admin.php
  */
 class OrderErrorAdminMailer extends Mailer
 {

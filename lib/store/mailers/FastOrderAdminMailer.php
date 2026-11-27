@@ -11,7 +11,7 @@ class FastOrderAdminMailer extends Mailer
 {
 
     /**
-     * Used to mail the fast order to admin - the mail template store/mails/fast_order_admin.php
+     * Used to mail the fast order to admin - the mail template store/features/fast_order/mails/fast_order_admin.php
      * If SellableItem $item is not null and $form is FastOrderProductForm mail single item
      * If $form is ClientAddressInputForm mail all items in the cart
      * @param InputForm $form

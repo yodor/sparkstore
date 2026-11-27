@@ -1,4 +1,5 @@
 <?php
+include_once("templates/Module.php");
 include_once("store/beans/OrdersBean.php");
 include_once("store/beans/OrderItemsBean.php");
 include_once("beans/UsersBean.php");
@@ -9,7 +10,7 @@ include_once("input/renderers/CheckField.php");
 include_once("components/renderers/cells/DateCell.php");
 
 /**
- * The values of an order for its mails (store/mails/order_summary.php and the order mails): the order, the client,
+ * The values of an order for its mails (store/features/shop/mails/order_summary.php and the order mails): the order, the client,
  * the delivery, the items and the totals. Texts are as stored (the templates escape them); the '_html' values are
  * HTML already (prices with the currency, the address of the order).
  */
@@ -34,9 +35,9 @@ class OrderMailData
         $courier->setSelectedOption($order["delivery_option"]);
         $option = $courier->getSelectedOption();
 
-        $accountURL = new URL(Spark::Get(Config::LOCAL) . "/account/orders/details");
+        $accountURL = Module::URL("account", "/orders/details") ?? new URL(Spark::Get(Config::LOCAL) . "/account/orders/details");
         $accountURL->add(new URLParameter("orderID", (string)$orderID));
-        $adminURL = new URL(Spark::Get(Config::LOCAL) . "/admin/orders/details");
+        $adminURL = Module::URL("admin", "/orders/details") ?? new URL(Spark::Get(Config::LOCAL) . "/admin/orders/details");
         $adminURL->add(new URLParameter("orderID", (string)$orderID));
 
         $deliveryPrice = (float)$order["delivery_price"];

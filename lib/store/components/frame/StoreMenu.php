@@ -4,6 +4,8 @@ include_once("components/Action.php");
 include_once("components/MenuBar.php");
 include_once("components/KeywordSearch.php");
 include_once("store/utils/cart/Cart.php");
+include_once("templates/Module.php");
+include_once("utils/url/URL.php");
 
 /**
  * The menu of the store frame: the main menu (the menu bar of the frame) with the groups - the keyword search
@@ -100,30 +102,34 @@ class StoreMenu extends StoreSection
 
         $icon_contents = "<span class='icon'></span>";
 
-        $button_account = new Action();
-        $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/login");
-        $button_account->setAttribute("title", tr("Account"));
-        $button_account->setClassName("button account");
-        $button_account->setContents($icon_contents);
-        if ($logged) {
-            $button_account->getURL()->fromString(Spark::Get(Config::LOCAL) . "/account/");
-            $button_account->addClassName("logged");
+        //the account and the cart of the shop feature - a catalog has none (the modules are not routed)
+        $account = Module::URL("account", $logged ? "/" : "/login");
+        if ($account instanceof URL) {
+            $button_account = new Action();
+            $button_account->getURL()->fromString($account->toString());
+            $button_account->setAttribute("title", tr("Account"));
+            $button_account->setClassName("button account");
+            $button_account->setContents($icon_contents);
+            if ($logged) $button_account->addClassName("logged");
+            $container->items()->append($button_account);
         }
-        $container->items()->append($button_account);
 
-        $button_cart = new Action();
-        $button_cart->getURL()->fromString(Spark::Get(Config::LOCAL) . "/checkout/cart");
-        $button_cart->setAttribute("title", tr("Cart"));
-        $button_cart->addClassName("button cart");
+        $cart = Module::URL("checkout", "/cart");
+        if ($cart instanceof URL) {
+            $button_cart = new Action();
+            $button_cart->getURL()->fromString($cart->toString());
+            $button_cart->setAttribute("title", tr("Cart"));
+            $button_cart->addClassName("button cart");
 
-        $button_contents = $icon_contents;
-        $cart_items = Cart::Instance()->itemsCount();
-        if ($cart_items > 0) {
-            $button_cart->setAttribute("item_count", $cart_items);
-            $button_contents .= "<span class='items_dot'>$cart_items</span>";
+            $button_contents = $icon_contents;
+            $cart_items = Cart::Instance()->itemsCount();
+            if ($cart_items > 0) {
+                $button_cart->setAttribute("item_count", $cart_items);
+                $button_contents .= "<span class='items_dot'>$cart_items</span>";
+            }
+            $button_cart->setContents($button_contents);
+            $container->items()->append($button_cart);
         }
-        $button_cart->setContents($button_contents);
-        $container->items()->append($button_cart);
 
         return $container;
     }

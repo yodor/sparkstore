@@ -2,8 +2,9 @@
 include_once("deploy/SiteDeployment.php");
 
 /**
- * The deployment of a store site - the core site (SiteDeployment) with the store layer: the store modules
- * (products, account, checkout), config/include.php (sparkstore on the include path) and config/store.php, the
+ * The deployment of a store site - the core site (SiteDeployment) with the store layer: the products module, the
+ * features of the store (--features, default shop and fast_order: the checkout and the account come with the shop),
+ * config/include.php (sparkstore on the include path, the features) and config/store.php, the
  * frame of the store (StoreFrame, set up in the site init class/templates/init.php - no page class of its own),
  * the storefront link. A store site needs its database (--db).
  */
@@ -11,6 +12,12 @@ class StoreDeployment extends SiteDeployment
 {
     //the sparkstore checkout as the web server sees it (default: this checkout)
     public string $sparkstorePath = "";
+
+    /**
+     * The store features of a new site (config/include.php) - --features=shop,fast_order; --features= a catalog
+     * @var array<string>
+     */
+    public array $features = array("shop", "fast_order");
 
     public function __construct()
     {
@@ -35,13 +42,22 @@ class StoreDeployment extends SiteDeployment
 
     public function usage() : string
     {
-        return parent::usage() . "  [--sparkstore=<path>] - the sparkstore checkout as the web server sees it (default: this one)\n";
+        return parent::usage() . "  [--sparkstore=<path>] - the sparkstore checkout as the web server sees it (default: this one)\n"
+            . "  [--features=shop,fast_order] - the store features of a new site (empty: a catalog)\n";
     }
 
     protected function argument(string $name, ?string $value) : void
     {
         if ($name === "sparkstore") {
             $this->sparkstorePath = rtrim((string)$value, "/");
+            return;
+        }
+        if ($name === "features") {
+            $features = array_values(array_filter(array_map("trim", explode(",", (string)$value))));
+            foreach ($features as $feature) {
+                if (!in_array($feature, array("shop", "fast_order"), true)) throw new Exception("--features: shop, fast_order - '$feature'");
+            }
+            $this->features = $features;
             return;
         }
         parent::argument($name, $value);
@@ -55,7 +71,8 @@ class StoreDeployment extends SiteDeployment
 
     protected function routes() : array
     {
-        return array_merge(parent::routes(), array("products", "account", "checkout"));
+        //checkout and account: routed by the shop feature
+        return array_merge(parent::routes(), array("products"));
     }
 
     protected function frontLinks() : array
@@ -78,6 +95,7 @@ class StoreDeployment extends SiteDeployment
 
     /**
      * config/include.php - sparkstore on the include path (next to sparkbox: a relative path, else the absolute one)
+     * and the features of the site
      */
     protected function includeFile() : string
     {
@@ -86,7 +104,9 @@ class StoreDeployment extends SiteDeployment
             ? "Spark::PathParts(Spark::Get(Config::SPARKBOX_PATH), \"..\", " . var_export(basename($this->sparkstorePath), true) . ", \"lib\")"
             : var_export($this->sparkstorePath . "/lib", true);
         return "<?php\n//sparkstore/lib on the include path and in the loader locations (prefix 'store')\n"
-            . "Spark::IncludePath($path, \"store\");\n\n//boot sparkstore\ninclude_once(\"sparkstore.php\");\n";
+            . "Spark::IncludePath($path, \"store\");\n\n//boot sparkstore\ninclude_once(\"sparkstore.php\");\n"
+            . "\n//the store features of the site (none: a catalog)\n"
+            . ((count($this->features) > 0) ? "Features::Enable(\"" . implode("\", \"", $this->features) . "\");\n" : "//Features::Enable(\"shop\", \"fast_order\");\n");
     }
 
     /**

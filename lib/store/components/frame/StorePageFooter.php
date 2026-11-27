@@ -6,9 +6,8 @@ include_once("beans/DynamicPagesBean.php");
 include_once("utils/url/DynamicPageURL.php");
 
 /**
- * The page footer of the store frame (after the content of every page): the voucher button (the frame has
- * vouchers enabled), the links to the pages marked 'footer_page', the contacts of the store config (phone, e-mail,
- * address, working hours)
+ * The page footer of the store frame (after the content of every page): an empty first column, the links to the
+ * pages marked 'footer_page', the contacts of the store config (phone, e-mail, address, working hours)
  */
 class StorePageFooter extends StoreSection
 {
@@ -26,13 +25,10 @@ class StorePageFooter extends StoreSection
         $columns->setComponentClass("columns");
         $content->items()->append($columns);
 
-        $columnVoucher = new Container(false);
-        $columnVoucher->setComponentClass("column voucher");
-        $columns->items()->append($columnVoucher);
-
-        if ($page->vouchers_enabled) {
-            $columnVoucher->items()->append(Button::ActionButton(tr("Buy a voucher"), "showVoucherForm()"));
-        }
+        //the first of the three columns stays empty (it held the voucher button) - the footer keeps its layout
+        $columnFirst = new Container(false);
+        $columnFirst->setComponentClass("column first");
+        $columns->items()->append($columnFirst);
 
         $columnLinks = new Container(false);
         $columnLinks->setComponentClass("column page_links");
