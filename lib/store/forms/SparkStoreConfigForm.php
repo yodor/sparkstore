@@ -46,7 +46,7 @@ class SparkStoreConfigForm extends InputForm
 
         //the product page of the catalog - the buttons on until saved off; the order buttons come with the features
         $grp_productPage = new InputGroup("productPage", "Product Page");
-        $grp_productPage->setDescription("The buttons and the stock amount of the product page. Fast Order and Buy come with the store features of the site.");
+        $grp_productPage->setDescription("The buttons, the stock amount and a note of the product page. Fast Order and Buy come with the store features of the site.");
         $this->addGroup($grp_productPage);
 
         $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::BUTTON_QUERY, "Product query button", 0);
@@ -63,6 +63,9 @@ class SparkStoreConfigForm extends InputForm
 
         $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::SHOW_STOCK, "Show the stock amount", 0);
         $field->setValue(0);
+        $this->addInput($field, $grp_productPage);
+
+        $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, ProductPageSettings::NOTE, "Note under the buttons (every product page)", 0);
         $this->addInput($field, $grp_productPage);
 
 

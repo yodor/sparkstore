@@ -136,6 +136,20 @@ class DetailsSidePane extends Container
         $this->initVariantsGroup();
         $this->initPricingGroup();
         $this->initCartLinkGroup();
+        $this->initNoteGroup();
+    }
+
+    /**
+     * The note of the product pages under the buttons (Content > Config > Product Page) - HTML of the editor
+     */
+    protected function initNoteGroup() : void
+    {
+        $note = ProductPageSettings::Note();
+        if ($note === "") return;
+        $grp = new SidePaneGroup();
+        $grp->setClassName("note");
+        $grp->setContents("<div class='text'>" . $note . "</div>");
+        $this->items()->append($grp);
     }
 
     public function initializeCartButtons() : void
