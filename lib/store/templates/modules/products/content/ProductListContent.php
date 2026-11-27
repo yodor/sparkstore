@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/CatalogParts.php");
 include_once("utils/script/Marketing.php");
 include_once("utils/ImageSizes.php");
 include_once("store/templates/modules/products/content/ProductContent.php");
@@ -185,16 +186,19 @@ class ProductListContent extends ProductContent
         }
 
         $this->property_filter = new SparkMap();
-        $section_filter = new GETProcessor("section", "section");
-        $section_filter->setClosure(function(GETProcessor $filter) {
-            $filter->setTitle($filter->getValue());
-            $clause = new SQLClause();
-            $value = $filter->getValue();
-            $clause->setExpression("product_sections LIKE :section_name");
-            $clause->bind(":section_name", "%$value%");
-            $filter->getClauseCollection()->append($clause);
-        });
-        $this->property_filter->set($section_filter->getName(), $section_filter);
+        //the section filter (?section=) - with the sections catalog part only (the view has no product_sections without it)
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            $section_filter = new GETProcessor("section", "section");
+            $section_filter->setClosure(function(GETProcessor $filter) {
+                $filter->setTitle($filter->getValue());
+                $clause = new SQLClause();
+                $value = $filter->getValue();
+                $clause->setExpression("product_sections LIKE :section_name");
+                $clause->bind(":section_name", "%$value%");
+                $filter->getClauseCollection()->append($clause);
+            });
+            $this->property_filter->set($section_filter->getName(), $section_filter);
+        }
 
         $this->category_filter = new GETProcessor("catID", "catID");
 

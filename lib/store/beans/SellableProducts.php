@@ -2,6 +2,7 @@
 include_once("beans/DBViewBean.php");
 include_once("store/utils/ProductsSQL.php");
 include_once("store/beans/ProductAttributes.php");
+include_once("templates/Module.php");
 
 class SellableProducts extends DBViewBean
 {
@@ -33,13 +34,56 @@ class SellableProducts extends DBViewBean
 
         }
 
-        $this->createString = "CREATE VIEW IF NOT EXISTS $table_name AS (".SellableProducts::$Products->getSQL().")";
+        //the view carries the version of its select as a column name: a changed select (the store, the site class, a
+        //catalog part switched on or off) recreates it - read from the DESCRIBE the bean does anyway, no extra query
+        $select = clone SellableProducts::$Products;
+        $version = SellableProducts::VERSION_PREFIX . substr(md5($select->getSQL()), 0, 12);
+        $select->alias("1", $version);
+        $sql = $select->getSQL();
+
+        $this->createString = "CREATE VIEW IF NOT EXISTS $table_name AS ($sql)";
 
         parent::__construct($table_name);
 
+        if (!isset($this->columns[$version])) {
+            $this->replaceView($table_name, $sql);
+        }
+
+        //the columns without the version column
+        $columns = array_filter($this->columnNames(), fn(string $name) => !str_starts_with($name, SellableProducts::VERSION_PREFIX));
         $this->select->columns()->reset();
-        $this->select->columns(...$this->columnNames());
+        $this->select->columns(...$columns);
         $this->prkey = "prodID";
+    }
+
+    /**
+     * The prefix of the version column of the view
+     */
+    const string VERSION_PREFIX = "view_version_";
+
+    /**
+     * Recreate the view with the current select - only inside a module request (the site init has set the site's
+     * select), so a plain script without the site init does not replace the site's view with the store default
+     * @param string $table_name
+     * @param string $sql
+     * @return void
+     */
+    protected function replaceView(string $table_name, string $sql) : void
+    {
+        if (Module::Active() === null) {
+            Debug::ErrorLog("View '$table_name' is not of the current select - recreated at the next page request");
+            return;
+        }
+        try {
+            static::CreateTable("CREATE OR REPLACE VIEW $table_name AS ($sql)");
+            DBTableBean::ForgetColumnTypes($table_name);
+            $this->initColumnTypes();
+            Debug::ErrorLog("View '$table_name' recreated with the current select");
+        }
+        catch (Exception $e) {
+            //the old view keeps working
+            Debug::ErrorLog("View '$table_name' not recreated: " . $e->getMessage());
+        }
     }
 
     static public function DefaultGrouping()

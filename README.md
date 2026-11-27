@@ -49,6 +49,19 @@ its columns, filters, search columns or row actions, the product editor none of 
 orders the list columns with `listFields` - columns of a disabled part are dropped. The storefront follows the data.
 `lib/store/utils/CatalogParts.php` lists what each part covers.
 
+## The products view and promotions
+
+The storefront reads the products from the view `sellable_products` (`SellableProducts`), built from `ProductsSQL`
+in small parts - `base()`, `photo()`, `promotion()`, `sellPrice()`, `parts()` (the enabled catalog parts),
+`extend()`. A site changes one part by overriding its method in a subclass set with
+`SellableProducts::SetProductsSelect()` in its site init (mobilevrati: `extend()` adds the brand of the product).
+The view carries the version of its select as a column name (`view_version_<hash>`) and is recreated by itself at the
+first page request after the select changes - a store update, the site class, a catalog part switched on or off.
+
+Promotions (Store > Promotions, `store_promos`): a discount in percent on a category (with its sub categories) or a
+section, from the start date to the end date, both days included. The best active one counts; it wins over the
+product's own promo price - never both.
+
 ## Courier offices (Speedy, Econt)
 
 The checkout office step chooses the office from a local copy of the couriers' office lists (`courier_offices`):
