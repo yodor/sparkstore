@@ -1,6 +1,8 @@
 @layer store {
 
+/* the size of the item text - the item is the same wherever it is shown (the list, the tapes, the home) */
 .ProductListItem {
+    font-size: 0.8rem;
     border:1px solid #eeeeee;
     container-type: inline-size;
     box-sizing: border-box;

@@ -3,7 +3,6 @@
 .section.main .content {
     padding: 1em;
     box-sizing: border-box;
-    font-size:80%;
     display:grid;
     grid-template-rows: min-content auto;
     gap:1.5em;

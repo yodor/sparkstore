@@ -27,7 +27,8 @@ LABEL {
 
     text-align: left;
 
-    font-size: 1em;
+    /* the size of the side pane text (its parts are relative to it: the name, the price, the buttons) */
+    font-size: 0.8rem;
 
     box-sizing: border-box;
 
@@ -321,7 +322,6 @@ LABEL {
     display:block;
     clear:both;
     flex-grow:1;
-    font-size:130%
 }
 
 .tabs .item {
