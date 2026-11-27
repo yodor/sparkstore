@@ -1,5 +1,7 @@
 <?php
 include_once("features/Features.php");
+include_once("beans/ConfigBean.php");
+include_once("store/utils/ProductPageSettings.php");
 include_once("utils/script/Marketing.php");
 include_once("objects/data/GTMConvParam.php");
 include_once("components/LabelSpan.php");
@@ -138,11 +140,12 @@ class DetailsSidePane extends Container
 
     public function initializeCartButtons() : void
     {
-        $this->setButtonEnabled(DetailsSidePane::BUTTON_QUERY_PRODUCT, true);
-        $this->setButtonEnabled(DetailsSidePane::BUTTON_NOTIFY_INSTOCK, true);
+        //the catalog buttons by the settings of Content > Config
+        $this->setButtonEnabled(DetailsSidePane::BUTTON_QUERY_PRODUCT, ProductPageSettings::Get(ProductPageSettings::BUTTON_QUERY));
+        $this->setButtonEnabled(DetailsSidePane::BUTTON_NOTIFY_INSTOCK, ProductPageSettings::Get(ProductPageSettings::BUTTON_NOTIFY));
+        $this->setButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER, ProductPageSettings::Get(ProductPageSettings::BUTTON_PHONE));
         //the order buttons of the features the site has: Fast Order (fast_order), Buy (shop)
         $this->setButtonEnabled(DetailsSidePane::BUTTON_FAST_ORDER, Features::Enabled("fast_order"));
-        $this->setButtonEnabled(DetailsSidePane::BUTTON_PHONE_ORDER, true);
         $this->setButtonEnabled(DetailsSidePane::BUTTON_CART_ORDER, Features::Enabled("shop"));
     }
 
@@ -264,11 +267,24 @@ class DetailsSidePane extends Container
         $this->items()->append($grp);
     }
 
+    /**
+     * The stock amount of the product (the setting 'show the stock amount') - empty without it; a site may fill the
+     * group itself (getGroup("stock_amount"))
+     */
     protected function initStockAmountGroup() : void
     {
         $grp = new SidePaneGroup();
         $grp->setClassName("stock_amount");
         $this->items()->append($grp);
+        if (!ProductPageSettings::Get(ProductPageSettings::SHOW_STOCK)) return;
+
+        $stock_amount = $this->sellable->getStockAmount();
+        $item = new LabelSpan();
+        $item->setComponentClass("item");
+        $item->span()->setComponentClass("value");
+        $item->label()->setText(tr("Availability"));
+        $item->span()->setText(($stock_amount > 0) ? tr("%s pcs.", $stock_amount) : tr("Out of stock"));
+        $grp->items()->append($item);
     }
 
     protected function initAttributesGroup() : void

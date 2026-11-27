@@ -2,7 +2,8 @@
 include_once("deploy/SiteDeployment.php");
 
 /**
- * The deployment of a store site - the core site (SiteDeployment) with the store layer: the products module, the
+ * The deployment of a store site - the core site (SiteDeployment) with the store layer: the products module (the
+ * layer routes admin, pages, products - config/routes.php gets news and faq), the
  * features of the store (--features, default shop and fast_order: the checkout and the account come with the shop),
  * config/include.php (sparkstore on the include path, the features) and config/store.php, the
  * frame of the store (StoreFrame, set up in the site init class/templates/init.php - no page class of its own),
@@ -71,8 +72,8 @@ class StoreDeployment extends SiteDeployment
 
     protected function routes() : array
     {
-        //checkout and account: routed by the shop feature
-        return array_merge(parent::routes(), array("products"));
+        //admin, pages, products: routed by the store layer (sparkstore.php); checkout and account: by the shop feature
+        return array_values(array_diff(parent::routes(), array("admin", "pages")));
     }
 
     protected function frontLinks() : array

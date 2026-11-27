@@ -1,6 +1,7 @@
 <?php
 include_once("forms/InputForm.php");
 include_once("input/DataInputFactory.php");
+include_once("store/utils/ProductPageSettings.php");
 
 class SparkStoreConfigForm extends InputForm
 {
@@ -42,6 +43,27 @@ class SparkStoreConfigForm extends InputForm
 
         $field = DataInputFactory::Create(InputType::MCE_TEXTAREA, "products_howtoorder", "How To Order Description", 0);
         $this->addInput($field,$grp_productInfo);
+
+        //the product page of the catalog - the buttons on until saved off; the order buttons come with the features
+        $grp_productPage = new InputGroup("productPage", "Product Page");
+        $grp_productPage->setDescription("The buttons and the stock amount of the product page. Fast Order and Buy come with the store features of the site.");
+        $this->addGroup($grp_productPage);
+
+        $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::BUTTON_QUERY, "Product query button", 0);
+        $field->setValue(1);
+        $this->addInput($field, $grp_productPage);
+
+        $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::BUTTON_NOTIFY, "Notify when in stock button", 0);
+        $field->setValue(1);
+        $this->addInput($field, $grp_productPage);
+
+        $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::BUTTON_PHONE, "Phone order button (the phone above)", 0);
+        $field->setValue(1);
+        $this->addInput($field, $grp_productPage);
+
+        $field = DataInputFactory::Create(InputType::CHECKBOX, ProductPageSettings::SHOW_STOCK, "Show the stock amount", 0);
+        $field->setValue(0);
+        $this->addInput($field, $grp_productPage);
 
 
 //

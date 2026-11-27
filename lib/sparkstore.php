@@ -18,6 +18,8 @@ Spark::Set(StoreConfig::DEFAULT_CURRENCY_SYMBOL, "&euro;");
 
 //the features of the store - a site enables the ones it has in config/include.php: Features::Enable("shop", "fast_order")
 include_once("features/Features.php");
+//every store site: the admin, the pages (the terms) and the products (the catalog) - config/routes.php adds news, faq
+Features::LayerRoutes("admin", "pages", "products");
 Features::Register(__DIR__ . "/store/features/shop");
 Features::Register(__DIR__ . "/store/features/fast_order");
 
