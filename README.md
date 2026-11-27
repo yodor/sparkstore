@@ -35,6 +35,20 @@ Features::Enable("fast_order");           // a catalog with fast orders
                                           // nothing: a catalog
 ```
 
+## Catalog parts
+
+Brands, sections, classes (with their attributes) and variants (options) are optional parts of the product data, all
+on by default. A site switches off the ones it does not use in its site init (`class/templates/init.php`):
+
+```php
+CatalogParts::Disable(CatalogParts::BRANDS, CatalogParts::VARIANTS);   // the bookshop
+```
+
+A disabled part leaves the admin as a whole: its pages answer 404 and leave the menu, the products list has none of
+its columns, filters, search columns or row actions, the product editor none of its inputs. A site still chooses and
+orders the list columns with `listFields` - columns of a disabled part are dropped. The storefront follows the data.
+`lib/store/utils/CatalogParts.php` lists what each part covers.
+
 ## Courier offices (Speedy, Econt)
 
 The checkout office step chooses the office from a local copy of the couriers' office lists (`courier_offices`):

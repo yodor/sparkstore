@@ -13,6 +13,7 @@ include_once("store/responders/json/ImportUpdateFormResponder.php");
 include_once("store/utils/DownloadCSVProducts.php");
 include_once("components/InlineScript.php");
 include_once("store/beans/ProductViewLogBean.php");
+include_once("store/utils/CatalogParts.php");
 
 class ScrollTopCookiesScript extends InlineScript implements IPageComponent
 {
@@ -78,8 +79,46 @@ JS;
 
 class ProductsList extends BeanList {
 
+    /**
+     * The list columns of each catalog part
+     * @return array<string, string[]>
+     */
+    public static function PartFields() : array
+    {
+        return array(
+            CatalogParts::BRANDS => array("brand_name"),
+            CatalogParts::SECTIONS => array("sections"),
+            CatalogParts::CLASSES => array("class_name", "product_attributes"),
+            CatalogParts::VARIANTS => array("product_variants"),
+        );
+    }
+
     protected DownloadCSVProducts $dcsv_responder;
     protected ImportUpdateFormResponder $import_responder;
+
+    /**
+     * The columns without those of the disabled catalog parts
+     * @param array<string, string> $fields name => title
+     * @return array<string, string>
+     */
+    public static function EnabledFields(array $fields) : array
+    {
+        foreach (ProductsList::PartFields() as $part => $names) {
+            if (CatalogParts::Enabled($part)) continue;
+            foreach ($names as $name) unset($fields[$name]);
+        }
+        return $fields;
+    }
+
+    /**
+     * The columns a site chooses (listFields) - those of a disabled catalog part are left out
+     * @param array $list_fields
+     * @return void
+     */
+    public function setListFields(array $list_fields) : void
+    {
+        parent::setListFields(ProductsList::EnabledFields($list_fields));
+    }
 
     public function fillPageActions(ActionCollection $collection): void
     {
@@ -108,8 +147,10 @@ class ProductsList extends BeanList {
 
         new ImportUpdateScript();
 
-        new SectionChooserFormResponder();
-        new SectionChooserScript();
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            new SectionChooserFormResponder();
+            new SectionChooserScript();
+        }
 
         new ScrollTopCookiesScript();
 
@@ -117,12 +158,13 @@ class ProductsList extends BeanList {
 
         $this->setBean(new ProductsBean());
 
+        //the columns - those of a disabled catalog part are left out (CatalogParts); a site chooses and orders them
+        //with listFields
         $this->fields = array(
             "cover_photo"=>"Cover Photo",
             "category_name"=>"Category",
             "brand_name"=>"Brand",
             "product_name"=>"Product Name",
-
             "sections"=>"Sections",
             "class_name"=>"Class",
             "product_attributes"=>"Attributes",
@@ -131,20 +173,13 @@ class ProductsList extends BeanList {
             "promo_price"=>"Promo Price",
             "stock_amount"=>"Stock Amount",
             "visible"=>"Visible",
-            //"importID"=>"ImportID"
-
         );
+        $this->fields = ProductsList::EnabledFields($this->fields);
 
-        $search_fields = array("p.product_name",
-            "category_name",
-            "class_name",
-            "p.brand_name",
-            "p.prodID",
-            "section_title",
-//            "product_attributes",
-//            "product_variants",
-            "p.price"
-        );
+        $search_fields = array("p.product_name", "category_name", "p.prodID", "p.price");
+        if (CatalogParts::Enabled(CatalogParts::CLASSES)) $search_fields[] = "class_name";
+        if (CatalogParts::Enabled(CatalogParts::BRANDS)) $search_fields[] = "p.brand_name";
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) $search_fields[] = "section_title";
 
         $this->search->getForm()->getInput("keyword")->getRenderer()->input()->setAttribute("placeholder", tr("Search a product"));
         $this->search->getForm()->setColumns($search_fields);
@@ -162,50 +197,60 @@ class ProductsList extends BeanList {
         $qry->stmt->columns(
             "p.prodID",
             "p.product_name",
-            "p.brand_name",
             "p.visible",
             "p.price",
             "p.promo_price",
             "p.stock_amount",
+            "p.insert_date",
+            "p.update_date",
+            "p.catID",
         );
 
         $qry->stmt->alias("(SELECT pp.ppID FROM product_photos pp WHERE pp.prodID = p.prodID ORDER BY pp.position ASC LIMIT 1)", "cover_photo");
-        //$qry->stmt->alias("(SELECT group_concat(s.section_title SEPARATOR '<BR>' ) FROM product_sections ps JOIN sections s ON s.secID=ps.secID AND ps.prodID=p.prodID)", "sections");
 
-        $qry->stmt->alias("(SELECT 
-        GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
-        FROM product_class_attribute_values pcav 
-        JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
-        JOIN attributes a ON a.attrID = pca.attrID
-        WHERE pcav.prodID = p.prodID )", "product_attributes");
-
-        $qry->stmt->alias("(SELECT 
-    GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
-    (SELECT 
-        CONCAT(vo.option_name, ':', GROUP_CONCAT(vo.option_value ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR ';')) as label,
-        p1.prodID
-        FROM product_variants pv 
-        JOIN variant_options vo ON vo.voID = pv.voID 
-        JOIN products p1 ON p1.prodID = pv.prodID
-    GROUP BY vo.option_name
-    ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
-
-
-
-
-        $qry->stmt->columns("pcls.class_name", "pc.category_name", "pvl.order_counter", "pvl.view_counter");
-
-        $qry->stmt->alias("GROUP_CONCAT(DISTINCT s.section_title SEPARATOR '<BR>')", "sections");
+        $qry->stmt->columns("pc.category_name", "pvl.order_counter", "pvl.view_counter");
 
         $qry->stmt->from(" products p ")
-            ->leftJoin("product_classes pcls")->on("pcls.pclsID = p.pclsID")
             ->leftJoin("product_categories pc")->on("pc.catID = p.catID")
-            ->leftJoin("product_view_log pvl")->on("pvl.prodID = p.prodID")
-            ->leftJoin("product_sections ps")->on("ps.prodID = p.prodID")
-            ->leftJoin("sections s")->on("s.secID = ps.secID");
+            ->leftJoin("product_view_log pvl")->on("pvl.prodID = p.prodID");
 
-        $qry->stmt->group_by = " p.prodID ";
+        if (CatalogParts::Enabled(CatalogParts::BRANDS)) {
+            $qry->stmt->columns("p.brand_name");
+        }
 
+        if (CatalogParts::Enabled(CatalogParts::CLASSES)) {
+            $qry->stmt->columns("pcls.class_name");
+            $qry->stmt->from()->leftJoin("product_classes pcls")->on("pcls.pclsID = p.pclsID");
+
+            $qry->stmt->alias("(SELECT 
+            GROUP_CONCAT(CONCAT(a.name,':', cast(pcav.value as char)) ORDER BY a.attrID ASC SEPARATOR '<BR>')
+            FROM product_class_attribute_values pcav 
+            JOIN product_class_attributes pca ON pca.pcaID = pcav.pcaID 
+            JOIN attributes a ON a.attrID = pca.attrID
+            WHERE pcav.prodID = p.prodID )", "product_attributes");
+        }
+
+        if (CatalogParts::Enabled(CatalogParts::VARIANTS)) {
+            $qry->stmt->alias("(SELECT 
+            GROUP_CONCAT(label SEPARATOR '<BR>') FROM 
+            (SELECT 
+                CONCAT(vo.option_name, ':', GROUP_CONCAT(vo.option_value ORDER BY vo.prodID, vo.pclsID ASC, vo.parentID ASC, vo.position ASC SEPARATOR ';')) as label,
+                p1.prodID
+                FROM product_variants pv 
+                JOIN variant_options vo ON vo.voID = pv.voID 
+                JOIN products p1 ON p1.prodID = pv.prodID
+            GROUP BY vo.option_name
+            ) AS temp WHERE temp.prodID = p.prodID)", "product_variants");
+        }
+
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            //the sections of a product, and section_title for the section filter and the keyword search
+            $qry->stmt->alias("GROUP_CONCAT(DISTINCT s.section_title SEPARATOR '<BR>')", "sections");
+            $qry->stmt->from()
+                ->leftJoin("product_sections ps")->on("ps.prodID = p.prodID")
+                ->leftJoin("sections s")->on("s.secID = ps.secID");
+            $qry->stmt->group_by = " p.prodID ";
+        }
 
         $this->setIterator($qry);
     }
@@ -236,62 +281,66 @@ class ProductsList extends BeanList {
         $form->insertInputBefore($field, "keyword");
 
 
-        $field = DataInputFactory::Create(InputType::SELECT, "filter_brand", "Brand", 0);
-        $field->skip_search_filter_processing = true;
+        if (CatalogParts::Enabled(CatalogParts::BRANDS)) {
+            $field = DataInputFactory::Create(InputType::SELECT, "filter_brand", "Brand", 0);
+            $field->skip_search_filter_processing = true;
 
-        $bean1 = new BrandsBean();
-        $rend = $field->getRenderer();
+            $bean1 = new BrandsBean();
+            $rend = $field->getRenderer();
 
-        $rend->setIterator($bean1->query($bean1->key(), "brand_name"));
-        $rend->getItemRenderer()->setValueKey("brand_name");
-        $rend->getItemRenderer()->setLabelKey("brand_name");
+            $rend->setIterator($bean1->query($bean1->key(), "brand_name"));
+            $rend->getItemRenderer()->setValueKey("brand_name");
+            $rend->getItemRenderer()->setLabelKey("brand_name");
 
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- All ---");
+            if ($rend instanceof SelectField) {
+                $rend->setDefaultOption("--- All ---");
+            }
+
+            //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+
+
+            $form->insertInputBefore($field, "keyword");
         }
 
-        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            $field = DataInputFactory::Create(InputType::SELECT, "filter_section", "Section", 0);
+            $field->skip_search_filter_processing = true;
 
+            $rend = $field->getRenderer();
+            $sb = new SectionsBean();
 
-        $form->insertInputBefore($field, "keyword");
+            $rend->setIterator($sb->query($sb->key(),"section_title"));
+            $rend->getItemRenderer()->setValueKey("section_title");
+            $rend->getItemRenderer()->setLabelKey("section_title");
 
+            if ($rend instanceof SelectField) {
+                $rend->setDefaultOption("--- All ---");
+            }
 
-        $field = DataInputFactory::Create(InputType::SELECT, "filter_section", "Section", 0);
-        $field->skip_search_filter_processing = true;
+            //$rend->input()?->setAttribute("onChange", "this.form.submit()");
 
-        $rend = $field->getRenderer();
-        $sb = new SectionsBean();
-
-        $rend->setIterator($sb->query($sb->key(),"section_title"));
-        $rend->getItemRenderer()->setValueKey("section_title");
-        $rend->getItemRenderer()->setLabelKey("section_title");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- All ---");
+            $form->insertInputBefore($field, "keyword");
         }
 
-        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
+        if (CatalogParts::Enabled(CatalogParts::CLASSES)) {
+            $field = DataInputFactory::Create(InputType::SELECT, "filter_class", "Product Class", 0);
+            $field->skip_search_filter_processing = true;
 
-        $form->insertInputBefore($field, "keyword");
+            $rend = $field->getRenderer();
+            $sb = new ProductClassesBean();
 
+            $rend->setIterator($sb->query($sb->key(),"class_name"));
+            $rend->getItemRenderer()->setValueKey("class_name");
+            $rend->getItemRenderer()->setLabelKey("class_name");
 
-        $field = DataInputFactory::Create(InputType::SELECT, "filter_class", "Product Class", 0);
-        $field->skip_search_filter_processing = true;
+            if ($rend instanceof SelectField) {
+                $rend->setDefaultOption("--- All ---");
+            }
 
-        $rend = $field->getRenderer();
-        $sb = new ProductClassesBean();
+            //$rend->input()?->setAttribute("onChange", "this.form.submit()");
 
-        $rend->setIterator($sb->query($sb->key(),"class_name"));
-        $rend->getItemRenderer()->setValueKey("class_name");
-        $rend->getItemRenderer()->setLabelKey("class_name");
-
-        if ($rend instanceof SelectField) {
-            $rend->setDefaultOption("--- All ---");
+            $form->insertInputBefore($field, "keyword");
         }
-
-        //$rend->input()?->setAttribute("onChange", "this.form.submit()");
-
-        $form->insertInputBefore($field, "keyword");
     }
 
     public function processInput() : void
@@ -365,25 +414,27 @@ class ProductsList extends BeanList {
         $actGallery->getURL()->add(new DataParameter("prodID"));
         $act->append($actGallery);
 
-        $act->append(Action::RowSeparator());
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            $act->append(Action::RowSeparator());
 
-        $actSections = new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key())));
-        $actSections->setContents(tr("Sections"));
-        $act->append($actSections);
+            $actSections = new Action("Sections", "javascript:showSectionChooserForm(%prodID%)", array(new DataParameter("prodID", $this->bean->key())));
+            $actSections->setContents(tr("Sections"));
+            $act->append($actSections);
+        }
 
+        if (CatalogParts::Enabled(CatalogParts::VARIANTS)) {
+            $act->append(Action::RowSeparator());
 
-        $act->append(Action::RowSeparator());
+            $actOptions = TemplateBeanContent::CreateAction("Options", tr("Options"), "/store/options/");
+            $actOptions->getURL()->add(new DataParameter("prodID"));
+            $act->append($actOptions);
 
-        $actOptions = TemplateBeanContent::CreateAction("Options", tr("Options"), "/store/options/");
-        $actOptions->getURL()->add(new DataParameter("prodID"));
-        $act->append($actOptions);
+            $act->append(Action::RowSeparator());
 
-
-        $act->append(Action::RowSeparator());
-
-        $actVariants = TemplateBeanContent::CreateAction("Variants", tr("Variants"), "variants/");
-        $actVariants->getURL()->add(new DataParameter("prodID"));
-        $act->append($actVariants);
+            $actVariants = TemplateBeanContent::CreateAction("Variants", tr("Variants"), "variants/");
+            $actVariants->getURL()->add(new DataParameter("prodID"));
+            $act->append($actVariants);
+        }
     }
 
     public function initialize() : void

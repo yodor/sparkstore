@@ -17,6 +17,7 @@ include_once("store/beans/ProductPhotosBean.php");
 
 include_once("store/input/renderers/ClassAttributeField.php");
 include_once("input/validators/NumericValidator.php");
+include_once("store/utils/CatalogParts.php");
 
 class ProductInputFormBase extends InputForm
 {
@@ -36,14 +37,17 @@ class ProductInputFormBase extends InputForm
 
         $this->addInput($field);
 
-        $field = DataInputFactory::Create(InputType::SELECT, "brand_name", tr("Brand"), 1);
-        $rend = $field->getRenderer();
-        $brands = new BrandsBean();
+        //the inputs of the optional catalog parts (CatalogParts) - brand, sections, class with its attributes
+        if (CatalogParts::Enabled(CatalogParts::BRANDS)) {
+            $field = DataInputFactory::Create(InputType::SELECT, "brand_name", tr("Brand"), 1);
+            $rend = $field->getRenderer();
+            $brands = new BrandsBean();
 
-        $rend->setIterator($brands->query($brands->key(), "brand_name"));
-        $rend->getItemRenderer()->setValueKey("brand_name");
-        $rend->getItemRenderer()->setLabelKey("brand_name");
-        $this->addInput($field);
+            $rend->setIterator($brands->query($brands->key(), "brand_name"));
+            $rend->getItemRenderer()->setValueKey("brand_name");
+            $rend->getItemRenderer()->setLabelKey("brand_name");
+            $this->addInput($field);
+        }
 
         $field = DataInputFactory::Create(InputType::TEXT, "product_name", "Title", 1);
         $field->getRenderer()->input()->setAttribute("size", "50em");
@@ -88,41 +92,43 @@ class ProductInputFormBase extends InputForm
         $this->addInput($field);
 
 
-        //
-        $field = new ArrayDataInput("secID", tr("Section"), 0);
-        $proc = new InputProcessor($field);
-        $proc->transact_bean_skip_empty_values = true;
-        $proc->merge_with_target_loaded = false;
+        if (CatalogParts::Enabled(CatalogParts::SECTIONS)) {
+            $field = new ArrayDataInput("secID", tr("Section"), 0);
+            $proc = new InputProcessor($field);
+            $proc->transact_bean_skip_empty_values = true;
+            $proc->merge_with_target_loaded = false;
 
-        $renderer = new CheckField($field);
-        //$renderer = new SelectMultipleField($field);
+            $renderer = new CheckField($field);
+            //$renderer = new SelectMultipleField($field);
 
-        $rend = $field->getRenderer();
-        $sb = new SectionsBean();
-        $rend->setIterator($sb->query($sb->key(),"section_title"));
-        $rend->getItemRenderer()->setValueKey($sb->key());
-        $rend->getItemRenderer()->setLabelKey("section_title");
+            $rend = $field->getRenderer();
+            $sb = new SectionsBean();
+            $rend->setIterator($sb->query($sb->key(),"section_title"));
+            $rend->getItemRenderer()->setValueKey($sb->key());
+            $rend->getItemRenderer()->setLabelKey("section_title");
 
-        $product_sections = new ProductSectionsBean();
-        $field->getProcessor()->setTransactBean($product_sections);
-        $this->addInput($field);
+            $product_sections = new ProductSectionsBean();
+            $field->getProcessor()->setTransactBean($product_sections);
+            $this->addInput($field);
+        }
 
-        $field = DataInputFactory::Create(InputType::RADIO, "pclsID", tr("Product Class"), 0);
-        $rend = $field->getRenderer();
-        $pcb = new ProductClassesBean();
+        if (CatalogParts::Enabled(CatalogParts::CLASSES)) {
+            $field = DataInputFactory::Create(InputType::RADIO, "pclsID", tr("Product Class"), 0);
+            $rend = $field->getRenderer();
+            $pcb = new ProductClassesBean();
 
-        $rend->setIterator($pcb->query($pcb->key(), "class_name"));
-        $rend->getItemRenderer()->setValueKey($pcb->key());
-        $rend->getItemRenderer()->setLabelKey("class_name");
+            $rend->setIterator($pcb->query($pcb->key(), "class_name"));
+            $rend->getItemRenderer()->setValueKey($pcb->key());
+            $rend->getItemRenderer()->setLabelKey("class_name");
 
-        $rend->setDefaultOption("No class", "null");
-
-
-        $this->addInput($field);
+            $rend->setDefaultOption("No class", "null");
 
 
-        $this->addInput(ClassAttributeField::Create("value", "Attributes", 0));
+            $this->addInput($field);
 
+
+            $this->addInput(ClassAttributeField::Create("value", "Attributes", 0));
+        }
 
         //
         $field1 = new ArrayDataInput("feature", "Features", 0);
@@ -163,6 +169,7 @@ class ProductInputFormBase extends InputForm
     public function loadBeanData($editID, DBTableBean $bean): array
     {
         $result = parent::loadBeanData($editID, $bean);
+        if (!$this->haveInput("value")) return $result;
         $renderer = $this->getInput("value")->getRenderer();
         if ($renderer instanceof ClassAttributeField) {
 
@@ -178,6 +185,7 @@ class ProductInputFormBase extends InputForm
 
         parent::loadPostData($data);
 
+        if (!$this->haveInput("value")) return;
         $renderer = $this->getInput("value")->getRenderer();
         if ($renderer instanceof ClassAttributeField) {
             if (isset($data["pclsID"])) {

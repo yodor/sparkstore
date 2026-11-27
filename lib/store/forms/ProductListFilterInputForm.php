@@ -1,4 +1,5 @@
 <?php
+include_once("store/utils/CatalogParts.php");
 include_once("input/DataInput.php");
 include_once("input/validators/EmptyValueValidator.php");
 include_once("input/processors/InputProcessor.php");
@@ -244,9 +245,11 @@ class ProductListFilterInputForm extends InputForm {
     public function __construct()
     {
         parent::__construct();
-        $input = new BrandFilter();
-        $input->getRenderer()->input()?->setAttribute("size", "1");
-        $this->addInput($input);
+        if (CatalogParts::Enabled(CatalogParts::BRANDS)) {
+            $input = new BrandFilter();
+            $input->getRenderer()->input()?->setAttribute("size", "1");
+            $this->addInput($input);
+        }
 //        $this->addInput(new ColorFilter());
 //        $this->addInput(new SizeFilter());
 
