@@ -7,7 +7,7 @@ include_once("store/features/shop/mailers/OrderConfirmationAdminMailer.php");
 include_once("store/features/shop/mailers/OrderStatusMailer.php");
 include_once("store/features/shop/mailers/OrderErrorAdminMailer.php");
 include_once("store/features/shop/mailers/RegisterCustomerActivationMailer.php");
-include_once("store/features/shop/mailers/PasswordResetMailer.php");
+include_once("mailers/PasswordResetMailer.php");
 include_once("store/mailers/StoreMailSamples.php");
 include_once("store/beans/OrdersBean.php");
 include_once("templates/Module.php");
