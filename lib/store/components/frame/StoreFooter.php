@@ -60,18 +60,46 @@ class StoreFooter extends StoreSection
         return $links;
     }
 
-    public function fill(Container $content, StorePage $page) : void
+    /**
+     * The icons of the store links (StoreIcons.css): a container 'StoreIcons social' with one link per icon - the
+     * links of '$names' that have an address, in the order of Links(); all of them without '$names'. A site frame
+     * shows them in its own bar (with StoreFooter::IconsStylesheet() in its stylesheets).
+     * @param string[]|null $names facebook, instagram, youtube, terms, contacts, phone, cookies
+     * @return Container
+     */
+    public static function Icons(?array $names = null) : Container
     {
-        $social = new Container(false);
-        $social->setComponentClass("social");
-        $content->items()->append($social);
+        $icons = new Container(false);
+        $icons->setComponentClass("StoreIcons");
+        $icons->addClassName("social");
 
         foreach (StoreFooter::Links() as $name => $link) {
+            if (!is_null($names) && !in_array($name, $names, true)) continue;
             $item = Button::Action("", $link[0]);
             $item->setComponentClass("slot");
             $item->addClassName($name);
             $item->setTitle($link[1]);
-            $social->items()->append($item);
+            $item->setAttribute("aria-label", $link[1]);
+            $icons->items()->append($item);
         }
+        return $icons;
+    }
+
+    /**
+     * The stylesheet of the icons
+     */
+    public static function IconsStylesheet() : string
+    {
+        return Spark::Get(StoreConfig::STORE_LOCAL) . "/css/frame/StoreIcons.css";
+    }
+
+    public function stylesheets() : array
+    {
+        return array_merge(array(StoreFooter::IconsStylesheet()), parent::stylesheets());
+    }
+
+    public function fill(Container $content, StorePage $page) : void
+    {
+        $content->items()->append(StoreFooter::Icons());
     }
 }

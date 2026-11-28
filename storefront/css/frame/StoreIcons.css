@@ -1,0 +1,34 @@
+@layer store {
+
+/* the icons of the store links (StoreFooter::Icons - the footer, a site frame's contacts bar): one link per icon,
+   the store svg icons (black). A frame sets their size and colour with the tokens:
+     --store-icon-size (36px), --store-icon-image-size (cover - the icon fills the box), --store-icon-filter
+     (none; 'invert(1)' - white icons on a dark bar) */
+
+.StoreIcons {
+    display:inline-flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:1em;
+}
+
+.StoreIcons .slot {
+    display:inline-block;
+    width:var(--store-icon-size, 36px);
+    height:var(--store-icon-size, 36px);
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-size:var(--store-icon-image-size, cover);
+    filter:var(--store-icon-filter, none);
+}
+
+.StoreIcons .slot.facebook { background-image:url("../../images/facebook_icon.svg"); }
+.StoreIcons .slot.instagram { background-image:url("../../images/instagram_icon.svg"); }
+.StoreIcons .slot.youtube { background-image:url("../../images/youtube_icon.svg"); }
+.StoreIcons .slot.contacts { background-image:url("../../images/mail_icon.svg"); }
+.StoreIcons .slot.phone { background-image:url("../../images/phone_icon.svg"); }
+.StoreIcons .slot.terms { background-image:url("../../images/document_icon.svg"); }
+.StoreIcons .slot.cookies { background-image:url("../../images/cookie_icon.svg"); }
+
+}

@@ -39,57 +39,14 @@
 .section.footer .content .social A {
     text-decoration: none;
     color:white;
-    filter:invert(1);
+    /* the black icons white on the black bar */
+    --store-icon-filter: invert(1);
 }
 
 .section.footer .content .social A:hover {
     text-decoration: underline;
 }
 
-.section.footer .content .social .slot {
-
-
-    background-position:center center;
-    background-repeat:no-repeat;
-
-    background-size:cover;
-    width:36px;
-    height:36px;
-
-}
-
-.section.footer .content .social .slot.facebook {
-    background-image:url("../../images/facebook_icon.svg");
-
-}
-
-.section.footer .content .social .slot.instagram {
-    background-image:url("../../images/instagram_icon.svg");
-
-}
-
-.section.footer .content .social .slot.contacts {
-    background-image:url("../../images/mail_icon.svg");
-
-}
-
-.section.footer .content .social .slot.youtube {
-    background-image:url("../../images/youtube_icon.svg");
-
-}
-
-.section.footer .content .social .slot.phone {
-    background-image:url("../../images/phone_icon.svg");
-
-}
-
-.section.footer .content .social .slot.terms {
-    background-image:url("../../images/document_icon.svg");
-
-}
-
-.section.footer .content .social .slot.cookies {
-    background-image:url("../../images/cookie_icon.svg");
-}
+/* the icons of the links: StoreIcons.css */
 
 }
