@@ -1,6 +1,9 @@
 <?php
 include_once("beans/DBTableBean.php");
 
+/**
+ * The products - the columns every store site has (the view counters are in product_view_log)
+ */
 class ProductsBean extends DBTableBean
 {
     protected string $createString = "CREATE TABLE `products` (
@@ -9,11 +12,9 @@ class ProductsBean extends DBTableBean
   `brand_name` varchar(255) DEFAULT NULL,
   `pclsID` int(11) unsigned DEFAULT NULL,
   `product_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `subtitle` text DEFAULT NULL,
   `product_description` text DEFAULT NULL,
   `seo_title` varchar(512) DEFAULT NULL,
   `seo_description` varchar(512) DEFAULT NULL,
-  `model` varchar(512) DEFAULT NULL,
   `price` decimal(10,2) unsigned NOT NULL DEFAULT 0.00,
   `buy_price` decimal(10,2) unsigned NOT NULL DEFAULT 0.00,
   `promo_price` decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -23,8 +24,6 @@ class ProductsBean extends DBTableBean
   `importID` int(11) unsigned DEFAULT NULL,
   `insert_date` datetime NOT NULL,
   `update_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `order_counter` int(11) unsigned DEFAULT 0,
-  `view_counter` int(11) unsigned DEFAULT 0,
   PRIMARY KEY (`prodID`),
   KEY `catID` (`catID`),
   KEY `importID` (`importID`),
