@@ -1,7 +1,7 @@
 <?php
 include_once("store/features/shop/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/forms/ClientAddressInputForm.php");
-include_once("store/mailers/FastOrderAdminMailer.php");
+include_once("store/features/fast_order/mailers/FastOrderAdminMailer.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 include_once("features/Features.php");

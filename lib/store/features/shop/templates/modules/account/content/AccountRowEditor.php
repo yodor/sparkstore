@@ -1,7 +1,7 @@
 <?php
 include_once("templates/BeanConfig.php");
 include_once("store/features/shop/templates/modules/account/content/AccountContent.php");
-include_once("store/forms/processors/UserRowFormProcessor.php");
+include_once("store/features/shop/forms/processors/UserRowFormProcessor.php");
 include_once("forms/renderers/FormRenderer.php");
 
 /**

@@ -29,6 +29,10 @@ enables in `config/include.php` after `include_once("sparkstore.php")` (see "Fea
 - `fast_order` (`lib/store/features/fast_order`): the Fast Order button of the product page - a name and a phone
   mailed to the shop, no stored order; the checkout guest page offers it too.
 
+A feature folder holds its templates, mails, language pack (`lang/`) and the classes only it uses (`forms`,
+`mailers`, `responders`, `components`); the data model (beans, cart, delivery, `OrderProcessor`, `OrderMailData`)
+stays in the store library.
+
 ```php
 Features::Enable("shop", "fast_order");   // a shop
 Features::Enable("fast_order");           // a catalog with fast orders

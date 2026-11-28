@@ -13,19 +13,19 @@
     color:white;
 }
 
+/* two columns side by side - one under the other on narrow screens */
 .pageFooter .columns {
-    display:table;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
     width:100%;
     min-height:200px;
     margin-bottom:48px;
 }
 
 .pageFooter .columns .column {
-    display:table-cell;
-    width:33%;
-    min-width:33%;
+    flex:1 1 20em;
     text-align:center;
-    vertical-align: middle;
     font-size:1.2em;
     line-height:180%;
 }

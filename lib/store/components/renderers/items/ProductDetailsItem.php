@@ -8,7 +8,7 @@ include_once("store/beans/ProductPhotosBean.php");
 
 
 include_once("store/responders/json/QueryProductFormResponder.php");
-include_once("store/responders/json/OrderProductFormResponder.php");
+include_once("store/features/fast_order/responders/json/OrderProductFormResponder.php");
 include_once("store/responders/json/NotifyInstockFormResponder.php");
 
 include_once("store/utils/tbi/TBIFusionPaymentButton.php");

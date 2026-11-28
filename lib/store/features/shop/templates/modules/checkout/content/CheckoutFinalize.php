@@ -2,9 +2,9 @@
 include_once("store/features/shop/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/features/shop/templates/modules/checkout/content/CheckoutConfirm.php");
 include_once("store/utils/OrderProcessor.php");
-include_once("store/mailers/OrderConfirmationMailer.php");
-include_once("store/mailers/OrderConfirmationAdminMailer.php");
-include_once("store/mailers/OrderErrorAdminMailer.php");
+include_once("store/features/shop/mailers/OrderConfirmationMailer.php");
+include_once("store/features/shop/mailers/OrderConfirmationAdminMailer.php");
+include_once("store/features/shop/mailers/OrderErrorAdminMailer.php");
 
 /**
  * The order - only from the order button of confirm (POST with the note). Every step must be filled. The

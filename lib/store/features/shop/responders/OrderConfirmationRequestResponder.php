@@ -1,6 +1,6 @@
 <?php
 include_once("responders/RequestResponder.php");
-include_once("store/mailers/OrderConfirmationMailer.php");
+include_once("store/features/shop/mailers/OrderConfirmationMailer.php");
 
 /**
  * Sends the order confirmation e-mail of an order to its client again

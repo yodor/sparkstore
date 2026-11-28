@@ -1,7 +1,7 @@
 <?php
 include_once("responders/RequestResponder.php");
 
-include_once("store/mailers/OrderStatusMailer.php");
+include_once("store/features/shop/mailers/OrderStatusMailer.php");
 include_once("store/beans/OrdersBean.php");
 
 class OrderStatusRequestResponder extends RequestResponder

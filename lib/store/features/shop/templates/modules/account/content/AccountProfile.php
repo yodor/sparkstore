@@ -1,7 +1,7 @@
 <?php
 include_once("store/features/shop/templates/modules/account/content/AccountContent.php");
-include_once("store/forms/RegisterClientInputForm.php");
-include_once("store/forms/processors/RegisterClientFormProcessor.php");
+include_once("store/features/shop/forms/RegisterClientInputForm.php");
+include_once("store/features/shop/forms/processors/RegisterClientFormProcessor.php");
 include_once("beans/UsersBean.php");
 include_once("components/InlineScript.php");
 include_once("forms/renderers/LoginFormRenderer.php");

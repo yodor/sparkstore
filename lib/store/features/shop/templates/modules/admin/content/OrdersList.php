@@ -2,7 +2,7 @@
 include_once("templates/content/BeanList.php");
 include_once("store/beans/OrdersBean.php");
 include_once("store/utils/OrderListSQL.php");
-include_once("store/responders/OrderStatusRequestResponder.php");
+include_once("store/features/shop/responders/OrderStatusRequestResponder.php");
 include_once("store/components/renderers/cells/OrderClientCell.php");
 include_once("components/renderers/cells/DateCell.php");
 

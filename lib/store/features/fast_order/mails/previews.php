@@ -2,9 +2,9 @@
 /**
  * The mail of the fast order for the admin preview (MailPreviews) - the first product of the store
  */
-include_once("store/mailers/FastOrderAdminMailer.php");
+include_once("store/features/fast_order/mailers/FastOrderAdminMailer.php");
 include_once("store/mailers/StoreMailSamples.php");
-include_once("store/forms/FastOrderProductForm.php");
+include_once("store/features/fast_order/forms/FastOrderProductForm.php");
 include_once("store/utils/SellableItem.php");
 
 return array(

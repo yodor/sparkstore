@@ -3,8 +3,8 @@ include_once("utils/script/Marketing.php");
 include_once("store/objects/data/GTMItems.php");
 include_once("responders/json/JSONFormResponder.php");
 include_once("store/utils/SellableItem.php");
-include_once("store/forms/FastOrderProductForm.php");
-include_once("store/mailers/FastOrderAdminMailer.php");
+include_once("store/features/fast_order/forms/FastOrderProductForm.php");
+include_once("store/features/fast_order/mailers/FastOrderAdminMailer.php");
 
 class OrderProductFormResponder extends JSONFormResponder
 {

@@ -1,8 +1,8 @@
 <?php
 include_once("store/features/shop/templates/modules/account/content/AccountContent.php");
-include_once("store/forms/ForgotPasswordInputForm.php");
+include_once("store/features/shop/forms/ForgotPasswordInputForm.php");
 include_once("store/beans/PasswordResetsBean.php");
-include_once("store/mailers/PasswordResetMailer.php");
+include_once("store/features/shop/mailers/PasswordResetMailer.php");
 include_once("beans/UsersBean.php");
 include_once("forms/processors/FormProcessor.php");
 include_once("forms/processors/IFormProcessor.php");

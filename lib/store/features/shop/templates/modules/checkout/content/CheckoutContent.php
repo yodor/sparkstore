@@ -4,8 +4,8 @@ include_once("store/utils/cart/Cart.php");
 include_once("store/beans/ClientAddressesBean.php");
 include_once("store/courier/CourierOffices.php");
 include_once("store/beans/InvoiceDetailsBean.php");
-include_once("store/components/CartComponent.php");
-include_once("store/components/CheckoutSections.php");
+include_once("store/features/shop/components/CartComponent.php");
+include_once("store/features/shop/components/CheckoutSections.php");
 
 /**
  * Content of the checkout module - the layout of the checkout pages in the store frame: the heading (the page

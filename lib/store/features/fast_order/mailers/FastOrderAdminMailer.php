@@ -1,7 +1,7 @@
 <?php
 include_once("utils/ImageSizes.php");
 include_once("mailers/Mailer.php");
-include_once("store/forms/FastOrderProductForm.php");
+include_once("store/features/fast_order/forms/FastOrderProductForm.php");
 include_once("store/utils/SellableItem.php");
 include_once("store/utils/cart/Cart.php");
 include_once("store/utils/url/ProductURL.php");

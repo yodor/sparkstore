@@ -2,7 +2,7 @@
 include_once("templates/IContentActions.php");
 include_once("templates/TemplateContent.php");
 include_once("store/components/order/OrderView.php");
-include_once("store/responders/OrderConfirmationRequestResponder.php");
+include_once("store/features/shop/responders/OrderConfirmationRequestResponder.php");
 
 /**
  * Printable details of one order (?orderID=) - OrderView with the client's invoice details.

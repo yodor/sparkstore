@@ -1,7 +1,7 @@
 <?php
 include_once("store/features/shop/templates/modules/checkout/content/CheckoutContent.php");
 include_once("store/courier/CourierOffices.php");
-include_once("store/responders/json/CourierOfficesResponder.php");
+include_once("store/features/shop/responders/json/CourierOfficesResponder.php");
 include_once("components/OptionFinder.php");
 include_once("components/Container.php");
 include_once("components/Component.php");

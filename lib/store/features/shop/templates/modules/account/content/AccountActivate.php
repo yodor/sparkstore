@@ -1,7 +1,7 @@
 <?php
 include_once("store/features/shop/templates/modules/account/content/AccountContent.php");
-include_once("store/forms/ActivateProfileInputForm.php");
-include_once("store/forms/processors/ActivateProfileFormProcessor.php");
+include_once("store/features/shop/forms/ActivateProfileInputForm.php");
+include_once("store/features/shop/forms/processors/ActivateProfileFormProcessor.php");
 
 /**
  * Activation of a registered profile: the link of the activation mail (e-mail and code in the query)

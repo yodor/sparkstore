@@ -3,7 +3,7 @@ include_once("forms/processors/FormProcessor.php");
 include_once("forms/InputForm.php");
 include_once("beans/UsersBean.php");
 include_once("auth/Authenticator.php");
-include_once("store/mailers/RegisterCustomerActivationMailer.php");
+include_once("store/features/shop/mailers/RegisterCustomerActivationMailer.php");
 
 class RegisterClientFormProcessor extends FormProcessor
 {
