@@ -6,6 +6,10 @@ include_once("store/features/fast_order/mailers/FastOrderAdminMailer.php");
 include_once("store/mailers/StoreMailSamples.php");
 include_once("store/features/fast_order/forms/FastOrderProductForm.php");
 include_once("store/utils/SellableItem.php");
+include_once("mailers/MailPreviews.php");
+
+MailPreviews::SetAddress("fast_orders", tr("Fast orders"), (string)Spark::Get(StoreConfig::ORDER_EMAIL),
+    tr("Content > Config > Base: 'Email (For receiving orders)', else config/store.php: ORDER_EMAIL"));
 
 return array(
     "fast_order_admin" => array(tr("Fast order - to the shop"), function () : Mailer {

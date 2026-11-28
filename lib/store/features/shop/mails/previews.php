@@ -12,6 +12,12 @@ include_once("store/mailers/StoreMailSamples.php");
 include_once("store/beans/OrdersBean.php");
 include_once("templates/Module.php");
 include_once("utils/url/URLParameter.php");
+include_once("mailers/MailPreviews.php");
+
+MailPreviews::SetAddress("orders", tr("New orders (a copy to the shop)"), (string)Spark::Get(StoreConfig::ORDER_EMAIL),
+    tr("Content > Config > Base: 'Email (For receiving orders)', else config/store.php: ORDER_EMAIL"));
+MailPreviews::SetAddress("order_errors", tr("Order errors"), (string)(Spark::Get(StoreConfig::ORDER_ERROR_EMAIL) ?: Spark::Get(StoreConfig::ORDER_EMAIL)),
+    tr("config/store.php: ORDER_ERROR_EMAIL, else the orders address"));
 
 return array(
     "order_confirmation" => array(tr("Order confirmation - to the client (the last order)"), function () : Mailer {
