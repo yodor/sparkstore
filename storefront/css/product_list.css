@@ -59,10 +59,15 @@
 }
 
 .panel .Caption .toggle .icon {
-    background-repeat:no-repeat;
-    background-size:contain;
     aspect-ratio:1/1;
     width:2em;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:center center;
+    mask-position:center center;
+    -webkit-mask-size:contain;
+    mask-size:contain;
+    background-color:var(--store-icon-color);
 }
 
 .panel .Caption .toggle .label {
@@ -70,13 +75,13 @@
 }
 
 .panel.categories .toggle .icon {
-    background-image:url(../images/category_icon.svg);
-    filter:var(--theme-filter-checkout-icon);
+    -webkit-mask-image:url("../images/category_icon.svg");
+    mask-image:url("../images/category_icon.svg");
 }
 
 .panel.filters .toggle .icon {
-    background-image:url(../images/filter_icon.svg);
-    filter:var(--theme-filter-checkout-icon);
+    -webkit-mask-image:url("../images/filter_icon.svg");
+    mask-image:url("../images/filter_icon.svg");
 }
 
 .section.main .content .column.product_list {

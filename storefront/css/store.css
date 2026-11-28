@@ -53,7 +53,6 @@ H2 A {
     --theme-accent-light: #ff6600;
     --theme-accent-dark: #ff6600;
     --theme-filter-colorize-white: invert(1%) sepia(3%) saturate(594%) hue-rotate(235deg) brightness(122%) contrast(100%);
-    --theme-filter-checkout-icon: invert(49%) sepia(51%) saturate(5288%) hue-rotate(2deg) brightness(104%) contrast(103%);
     --theme-filter-colorize-gray: invert(0%) sepia(0%) saturate(3463%) hue-rotate(13deg) brightness(112%) contrast(44%);
     /*red*/
     /*filter: invert(0) brightness(0.30) sepia(1) hue-rotate(310deg) saturate(10);*/
@@ -70,6 +69,10 @@ H2 A {
     /* the discount / no-stock badge of the product photos - the theme accent; a site sets its own colours */
     --store-discount-background: var(--theme-accent);
     --store-discount-color: #ffffff;
+
+    /* the colour of the store's line icons (the checkout buttons, the category / filter toggles, the cart with items,
+       the page footer contacts) - drawn as masks, so any colour: the theme accent by default */
+    --store-icon-color: var(--theme-accent);
     /* an outline of the badge text, for a light accent: e.g. '0 0 2px #000, 0 0 2px #000' */
     --store-discount-text-shadow: none;
 

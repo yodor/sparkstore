@@ -56,11 +56,14 @@
     display:inline-block;
     width:2em;
     height:2em;
-    background-size:85%;
-    filter: var(--theme-filter-checkout-icon);
-    background-repeat:no-repeat;
     vertical-align: top;
-    background-position: center center;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:center center;
+    mask-position:center center;
+    -webkit-mask-size:85%;
+    mask-size:85%;
+    background-color:var(--store-icon-color);
 
 }
 
@@ -70,19 +73,23 @@
 }
 
 .pageFooter .columns .column.address .text.phone .icon {
-    background-image: url("../../images/footer_phone.svg");
+    -webkit-mask-image:url("../../images/footer_phone.svg");
+    mask-image:url("../../images/footer_phone.svg");
 }
 
 .pageFooter .columns .column.address .text.email .icon {
-    background-image:url("../../images/footer_mail.svg");
+    -webkit-mask-image:url("../../images/footer_mail.svg");
+    mask-image:url("../../images/footer_mail.svg");
 }
 
 .pageFooter .columns .column.address .text.location .icon {
-    background-image:url("../../images/footer_location.svg");
+    -webkit-mask-image:url("../../images/footer_location.svg");
+    mask-image:url("../../images/footer_location.svg");
 }
 
 .pageFooter .columns .column.address .text.working_hours .icon {
-    background-image:url("../../images/footer_clock.svg");
+    -webkit-mask-image:url("../../images/footer_clock.svg");
+    mask-image:url("../../images/footer_clock.svg");
 }
 
 .pageFooter .columns .column.page_links .item {

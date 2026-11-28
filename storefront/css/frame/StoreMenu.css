@@ -166,17 +166,21 @@
 }
 
 .section.menu .group.customer_pane .button .icon {
-    filter: invert(0.5);
     display:inline-block;
     width:100%;
     height:100%;
-    background-repeat:no-repeat;
-    background-position:center center;
-    background-size: contain;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:center center;
+    mask-position:center center;
+    -webkit-mask-size:contain;
+    mask-size:contain;
+    background-color:#808080;
 }
 
 .section.menu .group.customer_pane .button.account .icon {
-    background-image:url("../../images/user_icon.svg");
+    -webkit-mask-image:url("../../images/user_icon.svg");
+    mask-image:url("../../images/user_icon.svg");
 }
 
 .section.menu .group.customer_pane .button.account.logged {
@@ -200,11 +204,12 @@
 }
 
 .section.menu .group.customer_pane .button.cart .icon {
-    background-image: url("../../images/cart.svg");
+    -webkit-mask-image:url("../../images/cart.svg");
+    mask-image:url("../../images/cart.svg");
 }
 
 .section.menu .group.customer_pane .button.cart[item_count] .icon {
-    filter: var(--theme-filter-checkout-icon);
+    background-color: var(--store-icon-color);
 }
 
 .section.menu .group.customer_pane .button.cart .items_dot {
